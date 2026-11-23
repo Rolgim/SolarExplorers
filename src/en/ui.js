@@ -1,6 +1,7 @@
 /* Textes d'interface en anglais : clé = texte français tel qu'il est écrit dans le code ou dans body.html. */
 var EN_UI = {
-  'sous la sonde, côté instruments : taille et distance non respectées (schéma de principe)':'below the spacecraft, on the instrument side: size and distance not to scale (schematic)',
+  'orbite en schéma de principe (tailles, altitude, inclinaison et vitesse non respectées)':'schematic orbit (sizes, altitude, inclination and speed not to scale)',
+  'Vue d\'orbite':'Orbit view', 'Pause':'Pause', 'Sonde':'Spacecraft',
   "Solar System Scope, texture « Mars » 2k, d'après des données de la NASA":'Solar System Scope, 2k “Mars” texture, based on NASA data',
   'JPL Horizons (ssd.jpl.nasa.gov), vecteurs héliocentriques, écliptique J2000, UA':'JPL Horizons (ssd.jpl.nasa.gov), heliocentric vectors, ecliptic J2000, astronomical units',
   "Mission et données":"Mission and data",
@@ -63,8 +64,8 @@ var EN_UI = {
   'En construction':'Under construction', 'étape 6':'step 6',
   "Aucune mission pour l'instant : la liste sera choisie d'après ce que la sonde de STAC-PLANET trouve dans le catalogue.":
     'No mission yet: the list will be chosen from what the STAC-PLANET probe finds in the catalogue.',
-  'Les orbites des planètes et la trajectoire réelle de chaque sonde, avec un curseur des années ; un clic sur un corps ouvre sa carte et les empreintes des observations.':
-    'The orbits of the planets and the real trajectory of each probe, with a year slider; clicking a body opens its map and the footprints of the observations.',
+  'Les orbites des planètes et la trajectoire réelle de chaque sonde, avec un curseur des années.':
+    'The orbits of the planets and the real trajectory of each probe, with a year slider.',
   'Domaine spectral, résolution au sol, trajectoires et tableau des instruments.':
     'Spectral range, ground resolution, trajectories and a table of all instruments.',
   '« qui a fait quoi »':'“who did what”',

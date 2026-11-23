@@ -22,7 +22,7 @@ const fonts = '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?fa
 const style = '<style>\n' + r('style.css') + '\n' + r('inst.css') + '\n' + r('site.css') + '\n</style>';
 /* données réelles légères (data/*.json) intégrées à la page : un artifact ne charge rien d'un autre site ; les images restent dans data/ */
 const DD = path.join(__dirname, 'data'), files = {};
-for (const f of fs.readdirSync(DD).filter(f => f.endsWith('.json') && !/^map-/.test(f)).sort())   /* empreintes (map-*.json) : chargées à la demande */ files[f.replace(/\.json$/, '')] = JSON.parse(fs.readFileSync(path.join(DD, f), 'utf8'));
+for (const f of fs.readdirSync(DD).filter(f => f.endsWith('.json')).sort()) files[f.replace(/\.json$/, '')] = JSON.parse(fs.readFileSync(path.join(DD, f), 'utf8'));
 const dataFiles = 'var DATA_FILES = ' + JSON.stringify(files) + ';';
 const scripts = '<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>\n' +
   '<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>\n' +
@@ -36,7 +36,7 @@ if (artifact) {
     '<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,' + encodeURIComponent(fs.readFileSync(path.join(__dirname, 'favicon.svg'), 'utf8')) + '">\n' + fonts + '\n' + style + '\n' + r('body.html') + scripts);
   for (const n of NAMES) fs.writeFileSync(path.join(out, 'models', n + '.txt'), fs.readFileSync(path.join(__dirname, 'models', n + '.glb')).toString('base64'));
   fs.mkdirSync(path.join(out, 'data'), { recursive: true });
-  for (const f of fs.readdirSync(DD).filter(f => /\.(jpg|png)$/.test(f) || /^map-.*\.json$/.test(f))) fs.copyFileSync(path.join(DD, f), path.join(out, 'data', f));
+  for (const f of fs.readdirSync(DD).filter(f => /\.(jpg|png)$/.test(f))) fs.copyFileSync(path.join(DD, f), path.join(out, 'data', f));
   console.log('dist/index.html');
 } else {
   fs.writeFileSync(path.join(__dirname, 'index.html'),

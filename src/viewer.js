@@ -9,19 +9,36 @@ var Viewer = (function(){
 var REDUCED = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 var renderer = null, scene, camera, key, fill, hemi, loader, M = null, host = null, opts = {}, raf = 0, sel = null, hov = null, spin = !REDUCED, ex = 0;
 var C = { az:0.5, el:0.25, dist:20 };
-var models = {}, globe = null, globeFor = null;
-/* corps survolé : grande sphère texturée posée sous la sonde, du côté de ses instruments (schéma de principe : ni la taille ni la distance ne sont à l'échelle) */
+var models = {}, globe = null, globeFor = null, ring = null;
+/* corps survolé et orbite (schéma de principe) : le corps est au centre de la scène, la sonde tourne autour de lui sur une orbite circulaire,
+   côté instruments (nadir) toujours tourné vers le centre. Deux vues : « sonde » (caméra attachée à la sonde, le sol défile dessous) et
+   « orbite » (caméra loin du corps, sonde agrandie). Ni les tailles, ni l'altitude, ni la vitesse, ni l'inclinaison ne sont à l'échelle. */
+var O = { on:false, th:0.6, view:'probe', rb:1, inc:90, last:0, run:!REDUCED, k:1 }, carrier = null, sunDir = null;
+var V2 = { az:0.4, el:0.35, dist:5 };   /* caméra de la vue d'orbite, en rayons du corps */
 function setBody(t, R){
   if (globe){ scene.remove(globe); globe = null; }
   var meta = t.body && (window.DATA_FILES || {})['tex-' + t.body.tex];
+  O.on = !!meta;
   if (!meta) return false;
-  var rb = R * 30, n = new THREE.Vector3(0, -1, 0);   /* nadir ramené vers le bas par prepare() */
+  O.rb = R * 30; O.inc = t.body.inc == null ? 90 : t.body.inc; O.k = O.rb * 0.14 / R;
   var tex = new THREE.TextureLoader().load('data/tex-' + t.body.tex + '.jpg'); tex.encoding = THREE.sRGBEncoding; tex.anisotropy = 4;
-  globe = new THREE.Mesh(new THREE.SphereGeometry(rb, 96, 48), new THREE.MeshStandardMaterial({ map:tex, color:0x9a9a9a, roughness:1, metalness:0 }));
-  globe.position.copy(n).multiplyScalar(rb + R * 2.4);
-  globe.rotation.set(Math.PI / 2, 0, 0);   /* axe des pôles couché vers l'horizon : la sonde survole l'équateur, pas un pôle */
+  globe = new THREE.Mesh(new THREE.SphereGeometry(O.rb, 128, 64), new THREE.MeshStandardMaterial({ map:tex, color:0x9a9a9a, roughness:1, metalness:0 }));
   scene.add(globe); globeFor = t.id;
+  /* trace de l'orbite, visible en vue d'orbite seulement */
+  var i = O.inc * Math.PI / 180, pts = [], ro = O.rb + R * O.k * 2.2;
+  for (var a = 0; a <= 128; a++){ var th = a / 128 * 2 * Math.PI; pts.push(new THREE.Vector3(Math.cos(th) * ro, Math.sin(th) * Math.sin(i) * ro, Math.sin(th) * Math.cos(i) * ro)); }
+  ring = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color:0x8fb8ff, transparent:true, opacity:0.55 }));
+  globe.add(ring);
   return true;
+}
+/* repère de l'orbite au temps th : position p, direction du mouvement vel, verticale locale up */
+function orbitFrame(){
+  var i = O.inc * Math.PI / 180, u = new THREE.Vector3(1, 0, 0), v = new THREE.Vector3(0, Math.sin(i), Math.cos(i));
+  var up = u.clone().multiplyScalar(Math.cos(O.th)).addScaledVector(v, Math.sin(O.th));
+  var vel = u.clone().multiplyScalar(-Math.sin(O.th)).addScaledVector(v, Math.cos(O.th));
+  var alt = O.view === 'orbit' ? M.radius * O.k * 2.2 : M.radius * 2.4;
+  var q = new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().makeBasis(vel, up, vel.clone().cross(up)));
+  return { p:up.clone().multiplyScalar(O.rb + alt), up:up, q:q };
 }
 
 function ok(){ return !!(window.THREE && THREE.GLTFLoader); }
@@ -38,14 +55,16 @@ function init(){
   cv.addEventListener('pointerdown', function(e){ drag = { x:e.clientX, y:e.clientY, moved:false }; cv.setPointerCapture(e.pointerId); spin = false; });
   cv.addEventListener('pointermove', function(e){
     if (drag){ var dx = e.clientX - drag.x, dy = e.clientY - drag.y; if (Math.abs(dx) + Math.abs(dy) > 3) drag.moved = true;
-      C.az -= dx * 0.008; C.el = Math.max(globe ? -0.3 : -1.4, Math.min(1.4, C.el + dy * 0.006)); drag.x = e.clientX; drag.y = e.clientY; cv.classList.add('dragging'); return; }
+      var c = cam(); c.az -= dx * 0.008; c.el = Math.max(globe && O.view === 'probe' ? -0.3 : -1.4, Math.min(1.4, c.el + dy * 0.006)); drag.x = e.clientX; drag.y = e.clientY; cv.classList.add('dragging'); return; }
     var k = pick(e); if (k !== hov){ hov = k; highlight(); cv.classList.toggle('over-part', !!k); }
   });
   cv.addEventListener('pointerup', function(e){ cv.classList.remove('dragging'); if (drag && !drag.moved){ var k = pick(e); select(sel === k ? null : k); if (opts.onPick) opts.onPick(sel); } drag = null; });
   cv.addEventListener('pointerleave', function(){ if (hov){ hov = null; highlight(); } });
-  cv.addEventListener('wheel', function(e){ e.preventDefault(); if (!M) return; C.dist = Math.max(M.radius * 1.1, Math.min(M.radius * 8, C.dist * (1 + Math.sign(e.deltaY) * 0.1))); }, { passive:false });
+  cv.addEventListener('wheel', function(e){ e.preventDefault(); if (!M) return; var f = 1 + Math.sign(e.deltaY) * 0.1;
+    if (cam() === V2) V2.dist = Math.max(1.6, Math.min(10, V2.dist * f)); else C.dist = Math.max(M.radius * 1.1, Math.min(M.radius * 8, C.dist * f)); }, { passive:false });
   return true;
 }
+function cam(){ return O.on && O.view === 'orbit' ? V2 : C; }
 function pick(e){
   if (!M) return null;
   var r = renderer.domElement.getBoundingClientRect(), v = new THREE.Vector2(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
@@ -99,12 +118,27 @@ function highlight(){
     else if (sel) m.color.multiplyScalar(0.5); });
 }
 function resize(){ if (!host || !renderer) return; var w = host.clientWidth, h = host.clientHeight; renderer.setSize(w, h, false); camera.aspect = w / Math.max(1, h); camera.updateProjectionMatrix(); }
-function frame(){
+function frame(now){
   raf = requestAnimationFrame(frame);
   if (!M || !host || !host.isConnected) return;
-  if (spin) C.az += 0.0025;
-  var ce = Math.cos(C.el); camera.position.set(Math.sin(C.az) * ce * C.dist, Math.sin(C.el) * C.dist, Math.cos(C.az) * ce * C.dist); camera.lookAt(0, 0, 0);
+  var dt = O.last ? Math.min(0.1, (now - O.last) / 1000) : 0; O.last = now;
   M.meshes.forEach(function(o){ if (o.userData.base) o.position.copy(o.userData.base).addScaledVector(o.userData.ex, ex); });
+  if (!O.on){
+    if (spin) C.az += 0.0025;
+    carrier.position.set(0, 0, 0); carrier.quaternion.identity(); carrier.scale.setScalar(1);
+    var ce = Math.cos(C.el); camera.up.set(0, 1, 0); camera.position.set(Math.sin(C.az) * ce * C.dist, Math.sin(C.el) * C.dist, Math.cos(C.az) * ce * C.dist); camera.lookAt(0, 0, 0);
+    return renderer.render(scene, camera);
+  }
+  if (O.run) O.th += dt * 2 * Math.PI / (O.view === 'orbit' ? 40 : 120);   /* un tour en 2 min (vue sonde) ou 40 s (vue d'orbite) : accéléré */
+  var F = orbitFrame(), big = O.view === 'orbit';
+  carrier.position.copy(F.p); carrier.quaternion.copy(F.q); carrier.scale.setScalar(big ? O.k : 1); ring.visible = big;
+  if (big){
+    var c2 = Math.cos(V2.el), d = V2.dist * O.rb; camera.up.set(0, 1, 0);
+    camera.position.set(Math.sin(V2.az) * c2 * d, Math.sin(V2.el) * d, Math.cos(V2.az) * c2 * d); camera.lookAt(0, 0, 0);
+  } else {
+    var ce2 = Math.cos(C.el), off = new THREE.Vector3(Math.sin(C.az) * ce2, Math.sin(C.el), Math.cos(C.az) * ce2).multiplyScalar(C.dist).applyQuaternion(F.q);
+    camera.up.copy(F.up); camera.position.copy(F.p).add(off); camera.lookAt(F.p);
+  }
   renderer.render(scene, camera);
 }
 function open(el, t, o){
@@ -113,10 +147,14 @@ function open(el, t, o){
   el.insertBefore(renderer.domElement, el.firstChild); resize();
   if (!raf) { window.addEventListener('resize', resize); frame(); }
   sel = null; hov = null; ex = 0;
-  if (M) scene.remove(M.root);
-  var show = function(R){ M = R; scene.add(M.root); C.az = t.view.az; C.el = t.view.el; C.dist = M.radius * 2 * t.view.dist;
-    key.position.fromArray(t.sun).applyQuaternion(M.q).multiplyScalar(M.radius * 4); fill.position.set(-0.6, -0.2, -0.5); highlight();
-    var hasBody = setBody(t, M.radius); camera.far = M.radius * 200; camera.updateProjectionMatrix();
+  if (M && carrier) carrier.remove(M.root);
+  var show = function(R){ M = R; if (!carrier){ carrier = new THREE.Group(); scene.add(carrier); } carrier.add(M.root); C.az = t.view.az; C.el = t.view.el; C.dist = M.radius * 2 * t.view.dist;
+    var hasBody = setBody(t, M.radius); O.last = 0;
+    /* Soleil : direction fixe dans l'espace, surtout hors du plan de l'orbite pour que la sonde reste éclairée (schéma de principe) */
+    if (hasBody){ var i = O.inc * Math.PI / 180; sunDir = new THREE.Vector3(0.55, 0, 0).add(new THREE.Vector3(0, -Math.cos(i), Math.sin(i)).multiplyScalar(0.8)).add(new THREE.Vector3(0, 0.25, 0)).normalize(); key.position.copy(sunDir).multiplyScalar(O.rb * 4); fill.position.copy(sunDir).multiplyScalar(-O.rb * 4); }
+    else { key.position.fromArray(t.sun).applyQuaternion(M.q).multiplyScalar(M.radius * 4); fill.position.set(-0.6, -0.2, -0.5); }
+    highlight();
+    camera.near = M.radius * 0.02; camera.far = (hasBody ? O.rb * 20 : M.radius * 200); camera.updateProjectionMatrix();
     if (opts.onState) opts.onState('ready', hasBody); };
   if (models[t.id]) return show(models[t.id]);
   if (opts.onState) opts.onState('loading');
@@ -126,5 +164,8 @@ function open(el, t, o){
     .catch(function(){ if (opts.onState) opts.onState('error'); });
 }
 function select(k){ sel = k || null; highlight(); }
-return { open:open, select:select, explode:function(v){ ex = v; }, spin:function(v){ spin = v && !REDUCED; }, reset:function(t){ if (M){ C.az = t.view.az; C.el = t.view.el; C.dist = M.radius * 2 * t.view.dist; } }, available:ok };
+return { open:open, select:select, explode:function(v){ ex = v; }, spin:function(v){ spin = v && !REDUCED; },
+  reset:function(t){ if (M){ C.az = t.view.az; C.el = t.view.el; C.dist = M.radius * 2 * t.view.dist; V2.az = 0.4; V2.el = 0.35; V2.dist = 5; } },
+  view:function(v){ if (v) O.view = v; return O.view; }, run:function(v){ if (v != null){ O.run = !!v; spin = !!v && !REDUCED; } return O.run; },
+  hasOrbit:function(){ return O.on; }, available:ok };
 })();

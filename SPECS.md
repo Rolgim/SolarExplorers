@@ -30,7 +30,7 @@ Contrainte technique : un artifact ne charge rien d'un autre site (images, tuile
 | Brique | Repris d'Observatories | Ici |
 |---|---|---|
 | Site | `src/` (HTML, CSS, JS sans framework, three.js r128) assemblé par `node build.js` en un seul `index.html` | fait : registre renommé `data-tele.js` → `data-missions.js` ; vue 3D à reprendre avec la première mission |
-| Publication | GitHub Pages + artifact claude.ai (`node build.js artifact` → `dist/`, maquettes en `.txt`) | fait (chaîne) ; Pages et artifact à ouvrir |
+| Publication | GitHub Pages + artifact claude.ai (`node build.js artifact` → `dist/`, maquettes en `.txt`) | fait : GitHub Pages (https://rolgim.github.io/SolarExplorers/) et artifact |
 | Registres | `data-tele.js`, `data-inst.js`, `data-mission.js`, `data-fleet.js`, `src/en/*` | fait, vides ; schéma adapté aux sondes (cibles, survols, mises en orbite, collections STAC) |
 | Maquettes 3D | `tools/models/` : `obj2glb`, segmentation par nœud, allègement, `zfind.mjs` / `zfix.mjs` | fait (outils génériques) ; sources NASA 3D Resources et ESA SCIFLEET |
 | Données réelles | `tools/data/fetch_data.py`, workflow « Données réelles » quotidien | à faire : recettes STAC du PDSSP, PDS, PSA de l'ESA |
@@ -44,7 +44,7 @@ STAC-PLANET est le catalogue STAC du Pôle de données et services Surfaces plan
 
 - Modèle de données : extension [STACPlanet](https://github.com/pdssp/stacplanet) (préfixe `pdssp`), qui s'appuie sur les extensions `ssys` (cibles), `processing`, `product`, `scientific`, `file`, `version` et `projection`. Les champs `platform`, `mission`, `instruments` et `ssys:targets` prennent les valeurs du thésaurus PDSSP.
 - À vérifier par la sonde avant toute recette : adresse de l'API (racine, `/collections`, `/search`), extensions réellement utilisées, liens vers les fichiers (aperçus, COG), nombre d'items par collection.
-- Usages prévus : empreintes des observations sur la carte de chaque corps, aperçus et produits réels dans les pages d'instruments, comptages par mission et par instrument.
+- Usages prévus : aperçus et produits réels dans les pages d'instruments, comptages par mission et par instrument.
 - Compléments : PDS (NASA), PSA (ESA), JPL Horizons pour les trajectoires, NASA 3D Resources et ESA SCIFLEET pour les maquettes, modèles numériques et mosaïques globales sous licence ouverte pour les fonds de cartes. Partenaires nommés par le PDSSP : PSUP, SSHADE, VESPA.
 
 ### Résultats de la sonde (23 novembre 2026, workflow « Sonde », branche `probe-out`)
@@ -71,8 +71,9 @@ Ordre de l'étape 4 : MRO d'abord (HiRISE).
 Pages, sur le modèle du premier site :
 
 - **Mission** : vue 3D de la sonde (pièces, Soleil réel, éclaté), fiche sourcée, page « Mission et données » (instruments, trajet de la lumière, trajectoire, données réelles, chaîne de traitement).
-- **Système solaire** (accueil) : les orbites des planètes et la trajectoire réelle de chaque sonde, avec un curseur des années ; un clic sur un corps ouvre sa carte.
-- **Carte d'un corps** : fond global du corps et empreintes des observations de chaque instrument tirées de STAC-PLANET (zoom, filtres, clic « qui a observé ici »).
+- **Sélection de la sonde** : rangée d'onglets dans l'en-tête (une par mission, avec l'année), comme les onglets d'observatoires du premier site ; on reste sur le même type de page (vue 3D ou « Mission et données ») en changeant de sonde.
+- **Vue 3D en orbite** : la sonde tourne autour du corps qu'elle observe, instruments tournés vers lui. Deux vues : « sonde » (caméra attachée à la sonde, le sol défile dessous) et « orbite » (le corps entier, la trace de l'orbite, sonde agrandie). Schéma de principe signalé : tailles, altitude, inclinaison et vitesse non respectées ; bouton Pause (WCAG 2.2.2), mouvement arrêté si « mouvement réduit ».
+- **Système solaire** (accueil) : les orbites des planètes et la trajectoire réelle de chaque sonde, avec un curseur des années.
 - **Comparer** : sous-pages (domaine spectral, résolution au sol, trajectoires, tableau).
 - **Flotte** : frise des missions par agence et par cible, « qui a fait quoi » sourcé.
 
@@ -85,7 +86,8 @@ Pages, sur le modèle du premier site :
    - fait : maquette NASA 3D Resources « MRO (A) » redécoupée en quatre pièces (`tools/models/mro_cls.js` : antenne grand gain, panneaux, antenne SHARAD, module et instruments) ; fiche sourcée (dossier de presse d'arrivée de la NASA, NSSDCA, Horizons, STAC-PLANET) ; vue 3D allégée (`src/viewer.js` : rotation, zoom, pièces cliquables, vue éclatée) ; page « Mission et données » avec la croisière réelle (Horizons -74, Terre et Mars) et une image CTX réelle (contraste étiré et signalé) ; workflow « Données réelles » ; artifact publié ;
    - HiRISE : le serveur de l'Université d'Arizona refuse les connexions de GitHub Actions, sans miroir trouvé au PDS Imaging Node ; CTX tient lieu de première donnée réelle ;
    - reste à faire : éclairage « Soleil réel », pages d'instruments détaillées (trajet de la lumière, chaîne de traitement), instruments séparés sur la maquette (non distinguables de façon sûre aujourd'hui), orbite autour de Mars, comparaison des sources sur la puissance électrique (2 000 W au plus loin du Soleil selon le dossier de presse, 1 000 W à Mars selon la NSSDCA : non affichée tant que ce n'est pas tranché).
-5. Carte d'un corps (Mars) avec les empreintes STAC.
+   - ajouté le 23 novembre 2026 : Mars Express, LRO, Cassini et MESSENGER (maquettes NASA 3D Resources et ESA SCIFLEET, fiches sourcées, croisières Horizons, une image réelle par mission sauf Cassini : le serveur VIMS refuse GitHub Actions) ; publication sur GitHub Pages (https://rolgim.github.io/SolarExplorers/).
+5. **Sondes en orbite et sélection** — 23 novembre 2026 : onglets de sonde dans l'en-tête ; la sonde tourne autour de son corps (vue sonde, vue d'orbite, pause). La carte d'un corps avec les empreintes STAC a été abandonnée à la demande de l'utilisateur.
 6. Accueil Système solaire, puis Comparer et Flotte.
 
 ## Sources

@@ -16,8 +16,14 @@ function isDark(){ var a = document.documentElement.getAttribute('data-theme'); 
 /* vues d'ensemble : boutons fixes en haut à droite, même graisse quel que soit l'état (règle 6) */
 var VIEWS = [['missions', 'Missions'], ['accueil', 'Système solaire'], ['comparer', 'Comparer'], ['flotte', 'Flotte']];
 function renderHeader(route){
+  /* onglets des sondes, comme les onglets d'observatoires d'Observatories : sur une page de mission, on passe d'une sonde à l'autre
+     en restant sur le même type de page (vue 3D ou « Mission et données ») */
+  var cur = mission(route.replace(/-donnees$/, '')), dat = /-donnees$/.test(route);
+  $('tabs').innerHTML = cur ? '<div class="trow" role="tablist" aria-label="' + T('Sonde') + '">' + MISSIONS.map(function(m){
+    return '<button class="tab" role="tab" data-go="' + m.id + (dat ? '-donnees' : '') + '" aria-selected="' + (m.id === cur.id) + '">' + esc(m.short || m.name) + '<small>' + esc(m.year || '') + '</small></button>';
+  }).join('') + '</div>' : '';
   $('views').innerHTML = '<div class="views">' + VIEWS.map(function(v){
-    var on = route === v[0] || (v[0] === 'missions' && mission(route));
+    var on = route === v[0] || (v[0] === 'missions' && cur);
     return '<button class="vbtn" data-go="' + v[0] + '" aria-pressed="' + !!on + '">' + T(v[1]) + '</button>';
   }).join('') + '</div>';
   var ll = OBS_LANG === 'en' ? 'Lire en français' : 'Read in English';
@@ -65,15 +71,17 @@ function bodyCredit(m){
   var d = m.body && (window.DATA_FILES || {})['tex-' + m.body.tex]; if (!d) return '';
   return '<p class="note">' + T(m.body.name) + ' : ' + T(d.credit) + ' · ' + T('Licence') + ' : <a href="' + esc(d.page) + '" rel="noopener" target="_blank">' + esc(d.license) + '</a></p>';
 }
-var MS = { tab:'fiche', part:null, explode:0 };
+var MS = { tab:'fiche', part:null, explode:0, view:'probe', run:!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) };
 function missionPage(m){
   return '<div class="mission"><section id="stage" class="m-stage" aria-label="' + T('Vue 3D de la sonde') + '">' +
     '<div class="m-hud"><div class="m-name">' + esc(m.name) + '</div><div class="m-sub">' + esc(m.agency) + ' · ' + esc(m.targets.join(', ')) + '</div></div>' +
     '<p class="m-msg" id="m-msg" hidden></p>' +
-    (m.body ? '<p class="m-body-note" id="m-body-note" hidden>' + T(m.body.name) + ' ' + T('sous la sonde, côté instruments : taille et distance non respectées (schéma de principe)') + '</p>' : '') +
+    (m.body ? '<p class="m-body-note" id="m-body-note" hidden>' + T(m.body.name) + ' : ' + T('orbite en schéma de principe (tailles, altitude, inclinaison et vitesse non respectées)') + '</p>' : '') +
     '<div class="m-tools" role="toolbar" aria-label="' + T('Affichage') + '">' +
       '<label class="m-ex"><span>' + T('Éclater') + '</span><input id="m-explode" type="range" min="0" max="100" value="' + Math.round(MS.explode*100) + '" aria-label="' + T('Écarter les pièces') + '"></label>' +
-      '<button class="m-b" id="m-reset">' + T('Recadrer') + '</button></div>' +
+      '<button class="m-b" id="m-reset">' + T('Recadrer') + '</button>' +
+      (m.body ? '<button class="m-b" id="m-view" aria-pressed="' + (MS.view === 'orbit') + '">' + T('Vue d\'orbite') + '</button>' : '') +
+      '<button class="m-b" id="m-run" aria-pressed="' + !MS.run + '">' + T('Pause') + '</button></div>' +
     '<p class="m-hint">' + T('Glisser pour tourner, molette pour zoomer, cliquer une pièce pour l\'identifier') + '</p>' +
     '</section><aside class="m-panel"><h2 class="sr-only">' + esc(m.name) + '</h2>' +
     '<div class="ptl" role="tablist" aria-label="' + T('Contenu du panneau') + '">' +
@@ -90,6 +98,10 @@ function mountMission(m){
   Viewer.select(MS.part); Viewer.explode(MS.explode);
   $('m-explode').addEventListener('input', function(e){ MS.explode = e.target.value / 100; Viewer.explode(MS.explode); });
   $('m-reset').addEventListener('click', function(){ Viewer.reset(m); });
+  /* vue de la sonde (le sol défile dessous) ou vue d'orbite (le corps entier, sonde agrandie) ; pause : arrête l'orbite et la rotation (WCAG 2.2.2) */
+  Viewer.view(MS.view); Viewer.run(MS.run);
+  if ($('m-view')) $('m-view').addEventListener('click', function(e){ MS.view = MS.view === 'orbit' ? 'probe' : 'orbit'; Viewer.view(MS.view); e.currentTarget.setAttribute('aria-pressed', String(MS.view === 'orbit')); });
+  $('m-run').addEventListener('click', function(e){ MS.run = !MS.run; Viewer.run(MS.run); e.currentTarget.setAttribute('aria-pressed', String(!MS.run)); });
 }
 function renderPanel(m){
   document.querySelectorAll('.m-panel .ptab').forEach(function(b){ b.setAttribute('aria-selected', String(b.getAttribute('data-ptab') === MS.tab)); });
@@ -152,7 +164,7 @@ function dataPage(m){
 }
 var PAGES = {
   missions: missionsPage,
-  accueil: function(){ return soon('Système solaire', 'Les orbites des planètes et la trajectoire réelle de chaque sonde, avec un curseur des années ; un clic sur un corps ouvre sa carte et les empreintes des observations.', 'étape 6'); },
+  accueil: function(){ return soon('Système solaire', 'Les orbites des planètes et la trajectoire réelle de chaque sonde, avec un curseur des années.', 'étape 6'); },
   comparer: function(){ return soon('Comparer', 'Domaine spectral, résolution au sol, trajectoires et tableau des instruments.', 'étape 6'); },
   flotte: function(){ return soon('Flotte', 'Frise des missions par agence et par cible, et « qui a fait quoi », chaque ligne sourcée.', 'étape 6'); }
 };
@@ -161,7 +173,7 @@ function route(){
   var r = (location.hash || '').replace(/^#/, '').replace(/^(en|fr)-/, '') || 'accueil';
   var dm = /^(\w+)-donnees$/.exec(r), m = mission(dm ? dm[1] : r);
   if (!m && !PAGES[r]) r = 'accueil';
-  renderHeader(m ? m.id : r);
+  renderHeader(m ? m.id + (dm ? '-donnees' : '') : r);
   $('page').innerHTML = m ? (dm ? dataPage(m) : missionPage(m)) : PAGES[r]();
   $('page').classList.toggle('is-mission', !!(m && !dm));
   if (m && !dm) mountMission(m);
@@ -179,6 +191,14 @@ document.addEventListener('click', function(e){
   if (el.id === 'b-lang'){ var nl = OBS_LANG === 'en' ? 'fr' : 'en'; try { localStorage.setItem('sse-lang', nl); } catch(x){} location.hash = nl + '-' + (location.hash || '').replace(/^#/, '').replace(/^(en|fr)-/, ''); location.reload(); return; }
   if (el.id === 'b-theme'){ var nt = isDark() ? 'light' : 'dark'; document.documentElement.setAttribute('data-theme', nt); try { localStorage.setItem('sse-theme', nt); } catch(x){} route(); $('b-theme').focus(); return; }
   location.hash = el.getAttribute('data-go');
+});
+/* onglets des sondes : flèches gauche/droite, début, fin (motif « tablist ») */
+document.addEventListener('keydown', function(e){
+  var t = e.target.closest && e.target.closest('#tabs [role="tab"]'); if (!t) return;
+  var all = [].slice.call(document.querySelectorAll('#tabs [role="tab"]')), i = all.indexOf(t), n = all.length, j = -1;
+  if (e.key === 'ArrowRight') j = (i + 1) % n; else if (e.key === 'ArrowLeft') j = (i - 1 + n) % n; else if (e.key === 'Home') j = 0; else if (e.key === 'End') j = n - 1;
+  if (j < 0) return; e.preventDefault(); location.hash = all[j].getAttribute('data-go');
+  setTimeout(function(){ var a = document.querySelector('#tabs [aria-selected="true"]'); if (a) a.focus(); }, 0);
 });
 window.addEventListener('hashchange', route);
 OBS_I18N.static();

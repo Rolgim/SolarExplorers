@@ -85,68 +85,7 @@ def body_textures():
         print("texture", k, im.size)
     if bad: raise RuntimeError("textures non récupérées : " + ", ".join(bad))
 
-
-# empreintes des observations (carte d'un corps) : un échantillon des items les plus récents de chaque collection, géométrie simplifiée
-MAP_LAYERS = {
-    "mars": [("mro", "CTX", "ode-mars-mro-ctx-edr", 1200), ("mro", "HiRISE", "ode-mars-mro-hirise-rdrv11", 1200),
-             ("mro", "CRISM", "ode-mars-mro-crism-trdr", 1200), ("mro", "SHARAD", "ode-mars-mro-sharad-rdr", 300),
-             ("mex", "HRSC", "ode-mars-mex-hrsc-rdrv4", 1200), ("mex", "OMEGA", "ode-mars-mex-omega-edr", 1200),
-             ("mex", "MARSIS", "ode-mars-mex-marsis-rdrss", 300)],
-    "moon": [("lro", "LROC NAC", "ode-moon-lro-lroc-cdrnac4", 1200), ("lro", "LROC WAC", "ode-moon-lro-lroc-cdrwac4", 1200),
-             ("lro", "Mini-RF", "ode-moon-lro-mrflro-cdr", 600)],
-    "mercury": [("messenger", "MDIS NAC", "ode-mercury-messenger-mdis-nac-cdrnac", 1200), ("messenger", "MDIS WAC", "ode-mercury-messenger-mdis-wac-cdrwac", 1200)],
-}
-def _thin(pts, n):
-    if len(pts) <= n: return pts
-    step = (len(pts) - 1) / (n - 1); return [pts[round(i * step)] for i in range(n)]
-def _shape(g):
-    """→ ('p', [lon, lat, …]) pour un polygone (contour extérieur, ≤ 12 sommets) ou ('l', […]) pour une trace (≤ 40 points) ; None si rien d'utilisable."""
-    if not g: return None
-    t, c = g.get("type"), g.get("coordinates")
-    if t == "MultiPolygon": t, c = "Polygon", max(c, key=lambda poly: len(poly[0]))
-    if t == "MultiLineString": t, c = "LineString", max(c, key=len)
-    if t == "Polygon": kind, pts = "p", _thin(c[0], 12)
-    elif t == "LineString": kind, pts = "l", _thin(c, 40)
-    else: return None
-    lons = [p[0] for p in pts]
-    if max(lons) - min(lons) > 180: return None          # traverse l'antiméridien : écartée de l'échantillon (signalé par le compte)
-    return kind, [round(v, 2) for p in pts for v in p[:2]]
-def footprints():
-    for body, layers in MAP_LAYERS.items():
-        out = {"body": body, "source": "STAC-PLANET (PDSSP), " + STAC, "fetched": datetime.date.today().isoformat(), "layers": []}
-        for mission, inst, coll, n in layers:
-            items, matched, body_req = [], None, {"collections": [coll], "limit": 500, "sortby": [{"field": "properties.datetime", "direction": "desc"}],
-                                                   "fields": {"include": ["id", "geometry", "properties.datetime", "collection"], "exclude": ["assets", "links"]}}
-            url, skipped = STAC + "/search", 0
-            try:
-                while url and len(items) < n:
-                    r = S.post(url, json=body_req, timeout=180); r.raise_for_status(); j = r.json()
-                    matched = j.get("numberMatched", matched)
-                    for f in j.get("features", []):
-                        sh = _shape(f.get("geometry"))
-                        if not sh: skipped += 1; continue
-                        items.append([f["id"], (f.get("properties") or {}).get("datetime", "")[:10], sh[1]]); kind = sh[0]
-                    nxt = [l for l in j.get("links", []) if l.get("rel") == "next"]
-                    if not nxt or not j.get("features"): break
-                    url = nxt[0]["href"]; body_req = nxt[0].get("body") or body_req
-                    if nxt[0].get("method", "POST").upper() == "GET": body_req = None
-                    if body_req is None:
-                        r = S.get(url, timeout=180); r.raise_for_status(); j = r.json(); url = None
-                        for f in j.get("features", []):
-                            sh = _shape(f.get("geometry"))
-                            if sh: items.append([f["id"], (f.get("properties") or {}).get("datetime", "")[:10], sh[1]]); kind = sh[0]
-            except Exception as e:
-                print("  ÉCHEC couche", coll, repr(e)[:200])
-            items = items[:n]
-            if not items: print("  couche vide", coll); continue
-            dates = sorted(i[1] for i in items if i[1])
-            out["layers"].append({"mission": mission, "instrument": inst, "collection": coll, "kind": kind, "matched": matched,
-                                  "n": len(items), "skipped": skipped, "from": dates[0] if dates else "", "to": dates[-1] if dates else "", "items": items})
-            print("  ", body, inst, len(items), "/", matched, "écartés", skipped)
-        if out["layers"]:
-            json.dump(out, open(os.path.join(DATA, "map-" + body + ".json"), "w"), separators=(",", ":"), ensure_ascii=False)
-
-RECIPES = {"mro_ctx": mro_ctx, "mex_hrsc": mex_hrsc, "lro_lroc": lro_lroc, "messenger_mdis": messenger_mdis, "cassini_vims": cassini_vims, "textures": body_textures, "footprints": footprints}
+RECIPES = {"mro_ctx": mro_ctx, "mex_hrsc": mex_hrsc, "lro_lroc": lro_lroc, "messenger_mdis": messenger_mdis, "cassini_vims": cassini_vims, "textures": body_textures}
 if __name__ == "__main__":
     want = sys.argv[1:] or list(RECIPES)
     bad = 0

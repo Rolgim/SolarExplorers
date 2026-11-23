@@ -15,6 +15,11 @@
 .sk-table th{ font-weight:600; color:var(--ink-2); width:38%; }
 .src{ font-size:11.5px; color:var(--ink-2); }
 .home-link{ color:inherit; text-decoration:none; }
+/* onglets des sondes (comme les onglets d'observatoires) : le titre ne se laisse pas recouvrir ; sur écran moyen, l'année disparaît */
+@media (min-width: 861px){ .brand{ flex:none; } }
+#tabs .tab{ white-space:nowrap; }
+@media (max-width: 860px){ .brand{ padding-right:92px; } .brand h1{ font-size:16px; } #tabs, #tabs .trow{ max-width:100vw; } #tabs .tab{ padding-left:7px; padding-right:7px; font-size:13px; } }
+@media (max-width: 1540px){ #tabs .tab small{ display:none; } #tabs .tab{ padding-left:12px; padding-right:12px; } }
 @media (max-width: 720px){
   #top{ flex-wrap:wrap; gap:0 12px; }
   #views{ order:3; margin-left:0; width:100%; overflow-x:auto; padding-bottom:8px; }
@@ -30,10 +35,11 @@
 .m-name{ font-weight:800; font-stretch:75%; font-size:clamp(24px, 3.4vw, 40px); line-height:1; text-shadow:0 2px 14px #000; }
 .m-sub{ color:#C9CED2; font-size:13px; margin-top:7px; text-shadow:0 1px 8px #000; }
 .m-msg{ position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); margin:0; background:#14171A; color:#fff; padding:8px 12px; font-size:13px; max-width:80%; }
-.m-tools{ position:absolute; left:var(--gl); bottom:44px; display:flex; gap:10px; align-items:center; background:rgba(0,0,0,.72); padding:5px 8px; }
+.m-tools{ position:absolute; left:var(--gl); right:var(--gr); width:max-content; max-width:calc(100% - var(--gl) - var(--gr)); box-sizing:border-box; bottom:44px; display:flex; flex-wrap:wrap; gap:8px 10px; align-items:center; background:rgba(0,0,0,.72); padding:5px 8px; }
 .m-ex{ display:flex; gap:8px; align-items:center; font-size:13px; font-weight:600; }
 .m-ex input{ accent-color:#fff; }
-.m-b{ border:1px solid #98A1A7; background:#14171A; color:#fff; font:600 13px var(--f); padding:5px 10px; cursor:pointer; }
+.m-b{ border:1px solid #98A1A7; background:#14171A; color:#fff; font:600 13px var(--f); padding:5px 10px; cursor:pointer; white-space:nowrap; }
+.m-b[aria-pressed="true"]{ background:#fff; color:#14171A; border-color:#fff; }
 .m-b:focus-visible, .m-ex input:focus-visible{ outline:2px solid #fff; outline-offset:3px; }
 .m-hint{ position:absolute; left:var(--gl); bottom:12px; margin:0; font-size:12px; color:#E3E6E8; background:rgba(0,0,0,.72); padding:2px 8px; }
 .m-panel{ width:min(400px, 42vw); flex:none; overflow-y:auto; background:var(--sheet); padding:14px 18px 32px; border-left:1px solid var(--rule); }

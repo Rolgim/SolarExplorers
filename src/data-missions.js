@@ -11,8 +11,9 @@
      file, bytes, axis, size    maquette (models/<id>.glb) ; size = dimension réelle en mètres le long de axis
      unit                       à la place de axis/size : mètres par unité de la maquette (mesurés sur une pièce de taille connue)
      model                      { src, license } : provenance et licence de la maquette, écrites à côté d'elle (règle 8)
-     body                       { name, tex, nadir } : corps survolé, dessiné sous la sonde (texture data/tex-<tex>.jpg) du côté
-                                nadir (direction des instruments dans le repère de la maquette) ; taille et distance non respectées
+     body                       { name, tex, nadir[, inc] } : corps visé, au centre de la vue (texture data/tex-<tex>.jpg) ; la sonde
+                                tourne autour, nadir (direction des instruments dans le repère de la maquette) vers le centre ; inc :
+                                inclinaison de l'orbite dessinée en degrés (90 : polaire, par défaut) ; orbite schématique
      view, sun                  cadrage initial { az, el, dist, r } (r : rayon de cadrage en mètres si de longues antennes faussent la boîte) ;
                                 direction de la lumière dans le repère de la maquette
      real                       { key, alt } : donnée réelle (data/<key>.jpg et .json, tools/data/fetch_data.py) et son texte alternatif
@@ -203,7 +204,7 @@ var MISSIONS = [
     horizons:'-82', stac:'vim-cassini-',
     file:'models/cassini.glb', bytes:0, unit:1,   /* unités = mètres : antenne grand gain de 4,0 unités pour 4 m */
     model:{ src:'NASA 3D Resources, « Cassini-Huygens (A) »', license:'NASA, usage libre (conditions d\'utilisation des médias de la NASA)', u:'https://github.com/nasa/NASA-3D-Resources' },
-    body:{ name:'Saturne', tex:'saturn', nadir:[0, 0, 1] },   /* face +Z de la maquette, côté palette de télédétection (repérée à l'œil : schéma de principe) */
+    body:{ name:'Saturne', tex:'saturn', nadir:[0, 0, 1], inc:20 },   /* face +Z de la maquette, côté palette de télédétection (repérée à l'œil : schéma de principe) */
     view:{ az:0.6, el:0.2, dist:1.7, r:8 }, sun:[0.5, 0.7, 0.5],
     real:{ key:'cassini-img', alt:"Aperçu d'un cube VIMS de Titan", none:"Pas d'aperçu VIMS pour l'instant : le serveur qui publie les aperçus (Université de Nantes) refuse les connexions venant de GitHub Actions, d'où le site télécharge ses données." },
     desc:"Lancée en 1997, Cassini a tourné autour de Saturne de 2004 à 2017. Elle a largué la sonde européenne Huygens, qui s'est posée sur Titan en 2005, survolé Titan 127 fois et révélé des océans cachés sous la surface de Titan et d'Encelade. Sa mission s'est achevée par une plongée dans Saturne.",
