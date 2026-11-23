@@ -25,6 +25,7 @@ jobs:
       - run: pip install --quiet requests pyyaml
       - name: Sonde
         run: python tools/probe/${{ github.event.inputs.script }} ${{ github.event.inputs.args }}
+        env: { GITHUB_TOKEN: '${{ github.token }}' }
         timeout-minutes: 25        # au-delà, on garde quand même ce que la sonde a écrit
         continue-on-error: true
       - name: Fichiers de la sonde vers la branche probe-out

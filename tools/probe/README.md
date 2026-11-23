@@ -8,4 +8,5 @@ L'espace de travail de Claude n'accède pas aux archives (PDSSP, PDS, PSA, Horiz
 | Script | Rôle |
 |---|---|
 | `probe_stacplanet.py [URL_API]` | STAC-PLANET du PDSSP : découverte de l'adresse de l'API depuis la page publique, racine (`conformsTo`, liens), collections (cible, mission, instrument, extensions, licence), nombre d'items, un item par collection (propriétés, géométrie, assets). Sortie : `stacplanet/probe.md` (tableau), `summary.json`, `collections.json`, `items/<collection>.json`, `page.html`, `log.txt`. |
+| `probe_mro.py` | MRO : maquette du dépôt nasa/NASA-3D-Resources, identifiant JPL Horizons (-74), un item HiRISE de STAC-PLANET et son aperçu. |
 | `fetch_scifleet_models.py` | maquettes ESA SCIFLEET ; `MISSIONS="id1 id2"` choisit les missions, vide = liste seulement. |
