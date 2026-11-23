@@ -47,6 +47,15 @@ STAC-PLANET est le catalogue STAC du Pôle de données et services Surfaces plan
 - Usages prévus : empreintes des observations sur la carte de chaque corps, aperçus et produits réels dans les pages d'instruments, comptages par mission et par instrument.
 - Compléments : PDS (NASA), PSA (ESA), JPL Horizons pour les trajectoires, NASA 3D Resources et ESA SCIFLEET pour les maquettes, modèles numériques et mosaïques globales sous licence ouverte pour les fonds de cartes. Partenaires nommés par le PDSSP : PSUP, SSHADE, VESPA.
 
+### Résultats de la sonde (23 novembre 2026, workflow « Sonde », branche `probe-out`)
+
+- **API** : `https://stac.stacplanet.pdssp.eu` (stac-fastapi, « CNES PDSSP - STAC Planet API », STAC 1.0.0), lue dans la configuration de l'application (`/config/config.stacplanet.json`, champ `STAC_API_URL`). Conformités : `/search` (GET et POST, `fields`, `sort`, `query`, filtre CQL2), `collection-search`, agrégation (`/aggregate`, `/aggregations`). Aucune authentification pour lire.
+- **555 collections**, toutes à plat dans `/collections` (aucun catalogue enfant) : 553 viennent de PDS ODE (fournisseur « NASA PDS Geosciences Node / ODE », licence CC0-1.0) ; 2 seulement viennent d'ailleurs : `vim-cassini-vims-ir` (Titan, 20 672 items, aperçus JPEG/PNG orthographiques et équirectangulaires, cubes ISIS, CC-BY-4.0) et `rosetta-anaglyphs` (67P, OSIRIS-NAC, 0 item, CC-BY-NC-ND-4.0).
+- **Corps** : Mars, Lune, Mercure, Vénus, Titan, 67P. Absents aujourd'hui : HRSC de la FU Berlin, collections IAS/IDOC (l'OMEGA présent est celui d'ODE), PSUP.
+- **Champs** : `ssys:targets` au niveau de la collection ; `mission`, `platform`, `instruments`, `product:type` en `summaries`. Les orthographes du champ `mission` varient pour une même sonde (« MARS RECONNAISSANCE ORBITER » et « Mars Reconnaissance Orbiter », ou « OBSERVING SYSTEM ») : regrouper par `platform` ou par préfixe d'identifiant (`ode-<corps>-<sonde>-<instrument>-<produit>`).
+- **Géométrie** : sur 487 items lus (un par collection), 233 ont une empreinte (Polygon, MultiPolygon, LineString) et 254 n'en ont pas (`geometry: null`, par exemple CRISM CDR) : les empreintes ne seront disponibles que pour une partie des collections.
+- **Fichiers** : hébergés chez les nœuds PDS (pds-geosciences.wustl.edu, ode.rsl.wustl.edu, pds.lroc.im-ldi.com, data.darts.isas.jaxa.jp, hirise.lpl.arizona.edu…). Aperçus prêts : HiRISE (JPEG browse, JP2), CTX (JPEG), HRSC (JPEG), LROC (PNG, GeoTIFF), Kaguya TC (JPEG), Cassini VIMS (JPEG/PNG). Sans aperçu : MDIS (MESSENGER), OMEGA, Magellan (fichiers PDS à convertir en CI).
+
 ## 5. Périmètre proposé (à valider d'après la sonde)
 
 | Mission | Cible | Pourquoi en premier |
@@ -68,7 +77,7 @@ Pages, sur le modèle du premier site :
 ## 6. Étapes
 
 1. **Squelette** — fait (23 novembre 2026) : chaîne d'Observatories (build, tests, workflows, `tools/models`, `tools/probe`), contenu vidé.
-2. **Sonde STAC-PLANET** — script et workflow en place : racine de l'API, collections (corps, mission, instrument, nombre d'items), un item par collection (propriétés, géométrie, assets).
+2. **Sonde STAC-PLANET** — faite le 23 novembre 2026 (résultats en section 4) : racine de l'API, collections (corps, mission, instrument, nombre d'items), un item par collection (propriétés, géométrie, assets).
 3. Choix des missions avec l'utilisatrice, d'après la sonde.
 4. Première mission complète : maquette, fiche, instruments, trajectoire Horizons, une donnée réelle (et retour de la vue 3D d'Observatories).
 5. Carte d'un corps (Mars) avec les empreintes STAC.
