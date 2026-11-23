@@ -1,7 +1,7 @@
 // node view.js in.glb out.png [mode=tex|cls] [up=y]  — six vues (texturées ou colorées par nœud), Playwright + three r128 du dossier vendor
 const { chromium } = require('playwright'); const fs = require('fs'); const path = require('path');
 const [src, out, mode='tex'] = process.argv.slice(2);
-const V = '/home/claude/work/vendor/flat/';
+const V = (process.env.VENDOR || '/home/claude/work/vendor/flat') + '/';
 const html = `<html><body style="margin:0;background:#0e121c"><canvas id=c width=1500 height=1000></canvas>
 <script>${fs.readFileSync(V+'three.min.js','utf8')}</script><script>${fs.readFileSync(V+'GLTFLoader.js','utf8')}</script>
 <script>

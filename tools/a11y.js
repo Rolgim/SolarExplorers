@@ -8,7 +8,7 @@ const ROOT = path.join(__dirname, '..'), PORT = 8125, srv = serve(PORT);
 const AXE = fs.readFileSync(require.resolve('axe-core/axe.min.js'), 'utf8');
 const IDS = [...fs.readFileSync(path.join(ROOT, 'src', 'data-missions.js'), 'utf8').matchAll(/^    id:'(\w+)'/gm)].map(m => m[1]);
 // [hash, clic éventuel une fois la page chargée]
-const PAGES = [['accueil'], ['missions'], ['comparer'], ['flotte'], ...IDS.slice(0, 3).map(i => [i])];
+const PAGES = [['accueil'], ['missions'], ['comparer'], ['flotte'], ...IDS.slice(0, 3).map(i => [i]), ...IDS.slice(0, 3).map(i => [i, '[data-ptab="parts"]']), ...IDS.slice(0, 3).map(i => [i + '-donnees'])];
 (async () => {
   const b = await chromium.launch();
   let total = 0; const seen = {};

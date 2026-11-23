@@ -14,6 +14,8 @@ var OBS_T = function(s){ return s; }, OBS_I18N = { static:function(){} };
     ['name','agency','desc','sections'].forEach(function(k){ if (e[k]) m[k] = e[k]; });
     (m.sections || []).forEach(function(sec, i){ sec.rows.forEach(function(r, j){ var o = frSec && frSec[i] && frSec[i].rows[j]; if (o && o[2]) r[2] = o[2]; }); });
     if (e.refs) Object.keys(e.refs).forEach(function(k){ if (m.refs[k]) m.refs[k].t = e.refs[k]; });
+    if (e.model) m.model.license = e.model.license;
+    (m.parts || []).forEach(function(p){ var q = e.parts && e.parts[p.key]; if (!q) return; p.name = q.name; p.desc = q.desc; if (q.facts) p.facts = p.facts.map(function(f, j){ return [q.facts[j] || f[0], f[1]]; }); });
   });
   OBS_T = function(s){ if (EN_UI[s] != null) return EN_UI[s]; window.__i18nMiss[s] = 1; return s; };
   /* body.html : attributs et textes fixes */

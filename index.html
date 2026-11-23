@@ -559,11 +559,55 @@ svg.optic g.hl{ filter:drop-shadow(0 0 2px var(--mark)) drop-shadow(0 0 4px var(
 .sk-table{ border-collapse:collapse; width:100%; font-size:13.5px; }
 .sk-table th, .sk-table td{ text-align:left; vertical-align:top; padding:6px 8px 6px 0; border-bottom:1px solid var(--rule); }
 .sk-table th{ font-weight:600; color:var(--ink-2); width:38%; }
-.sk-table .src{ font-size:11.5px; color:var(--ink-2); }
+.src{ font-size:11.5px; color:var(--ink-2); }
 .home-link{ color:inherit; text-decoration:none; }
 @media (max-width: 720px){
   #top{ flex-wrap:wrap; gap:0 12px; }
   #views{ order:3; margin-left:0; width:100%; overflow-x:auto; padding-bottom:8px; }
+}
+
+/* ---------- page d'une mission : vue 3D + panneau ---------- */
+#page.is-mission{ padding:0; overflow:hidden; display:flex; }
+.mission{ flex:1; display:flex; min-height:0; min-width:0; }
+.m-stage{ flex:1; position:relative; min-width:0; min-height:420px; background:var(--black); color:#fff; overflow:hidden; }
+.m-stage canvas{ position:absolute; inset:0; width:100%; height:100%; display:block; touch-action:none; cursor:grab; }
+.m-stage canvas.dragging{ cursor:grabbing; } .m-stage canvas.over-part{ cursor:pointer; }
+.m-hud{ position:absolute; left:var(--gl); top:16px; right:var(--gr); pointer-events:none; }
+.m-name{ font-weight:800; font-stretch:75%; font-size:clamp(24px, 3.4vw, 40px); line-height:1; text-shadow:0 2px 14px #000; }
+.m-sub{ color:#C9CED2; font-size:13px; margin-top:7px; text-shadow:0 1px 8px #000; }
+.m-msg{ position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); margin:0; background:#14171A; color:#fff; padding:8px 12px; font-size:13px; max-width:80%; }
+.m-tools{ position:absolute; left:var(--gl); bottom:44px; display:flex; gap:10px; align-items:center; }
+.m-ex{ display:flex; gap:8px; align-items:center; font-size:13px; font-weight:600; }
+.m-ex input{ accent-color:#fff; }
+.m-b{ border:1px solid #98A1A7; background:#14171A; color:#fff; font:600 13px var(--f); padding:5px 10px; cursor:pointer; }
+.m-b:focus-visible, .m-ex input:focus-visible{ outline:2px solid #fff; outline-offset:3px; }
+.m-hint{ position:absolute; left:var(--gl); bottom:12px; margin:0; font-size:12px; color:#C9CED2; }
+.m-panel{ width:min(400px, 42vw); flex:none; overflow-y:auto; background:var(--sheet); padding:14px 18px 32px; border-left:1px solid var(--rule); }
+.m-panel .ptl{ display:flex; gap:4px; border-bottom:1px solid var(--rule); margin-bottom:12px; }
+.m-panel .ptab{ border:0; border-bottom:3px solid transparent; background:transparent; font:600 14px var(--f); color:var(--ink-2); padding:6px 10px; cursor:pointer; }
+.m-panel .ptab[aria-selected="true"]{ color:var(--ink); border-bottom-color:var(--ink); }
+.m-panel .desc{ font-size:14px; line-height:1.5; color:var(--ink-2); }
+.m-panel h3{ font-size:13px; text-transform:uppercase; letter-spacing:.4px; margin:18px 0 4px; }
+.m-panel .cta{ display:block; width:100%; text-align:left; margin-top:20px; border:1.5px solid var(--ink); background:transparent; color:var(--ink); font:700 14px var(--f); padding:10px 12px; cursor:pointer; }
+.m-panel .cta small{ display:block; font-weight:400; color:var(--ink-2); margin-top:3px; }
+.parts{ list-style:none; margin:0; padding:0; }
+.part > button{ width:100%; text-align:left; border:0; border-bottom:1px solid var(--rule); background:transparent; font:600 14px var(--f); color:var(--ink); padding:9px 2px; cursor:pointer; }
+.part.on > button{ background:var(--mark); color:var(--on-mark); padding-left:8px; }
+.part-body{ font-size:13.5px; line-height:1.45; color:var(--ink-2); padding:4px 2px 10px; }
+.note{ font-size:12px; color:var(--ink-2); margin-top:14px; }
+.sk.wide{ max-width:960px; }
+.crumb{ margin:0; font-size:13px; } .crumb a{ color:var(--ink-2); }
+.traj svg{ width:100%; max-width:520px; height:auto; background:var(--black); display:block; }
+.traj .sun{ fill:#FFD21F; } .traj .orb-e{ fill:none; stroke:#6FA8FF; stroke-width:1.2; } .traj .orb-t{ fill:none; stroke:#E07A4F; stroke-width:1.2; }
+.traj .orb-p{ fill:none; stroke:#fff; stroke-width:2; } .traj .pt-e{ fill:#6FA8FF; } .traj .pt-t{ fill:#E07A4F; }
+.traj text{ fill:#fff; font:12px var(--f); }
+figure{ margin:0 0 10px; } figcaption{ font-size:12.5px; line-height:1.45; color:var(--ink-2); margin-top:6px; }
+.real img{ width:100%; max-width:600px; height:auto; display:block; background:#000; }
+@media (max-width: 720px){
+  #page.is-mission{ overflow-y:auto; display:block; }
+  .mission{ flex-direction:column; }
+  .m-stage{ min-height:56vh; }
+  .m-panel{ width:auto; border-left:0; }
 }
 
 </style>
@@ -581,6 +625,8 @@ svg.optic g.hl{ filter:drop-shadow(0 0 2px var(--mark)) drop-shadow(0 0 4px var(
   <main id="page" tabindex="-1"></main>
   <div id="live" class="sr-only" aria-live="polite"></div>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 <script>
 /* Langue du site : français ou anglais.
    Ordre de décision : préfixe du lien (#en-mro, #fr-mro), puis choix mémorisé, sinon anglais.
@@ -595,6 +641,7 @@ var OBS_LANG = (function(){
 /* nombres : virgule décimale et espace des milliers en français, point et virgule en anglais */
 function OBS_NUM(s){ return OBS_LANG === 'en' ? String(s).replace(/(\d),(\d)/g, '$1.$2').replace(/(\d)[   ](?=\d{3}(\D|$))/g, '$1,') : s; }
 
+var DATA_FILES = {};
 /* =================================================================
    MISSIONS — registre des sondes (équivalent de TELESCOPES dans Observatories, src/data-tele.js).
    Registre : ajouter une mission = une entrée ici (et ses textes dans data-inst, data-mission, data-fleet, en/*) ;
@@ -602,15 +649,71 @@ function OBS_NUM(s){ return OBS_LANG === 'en' ? String(s).replace(/(\d),(\d)/g, 
      id, name, short, year      identifiant (ancre #id), nom complet, nom court, année de lancement
      agency                     agences, en texte (règle 5 : aucune n'est mise en avant)
      targets                    corps visités, du plus important au moins important (noms du thésaurus PDSSP : 'Mars', 'Titan'…)
-     events                     [{ type:'launch'|'flyby'|'orbit'|'landing'|'end', body, date:'AAAA-MM-JJ', ref }] : survols et mises en orbite datés
+     events                     [{ type:'launch'|'arrival'|'flyby'|'orbit'|'landing'|'end', body, date:'AAAA-MM-JJ', ref }] : étapes datées
      horizons                   identifiant JPL Horizons de la sonde (trajectoire, tools/data/fetch_orbits.py)
-     stac                       identifiants des collections STAC-PLANET de la mission (d'après la sonde tools/probe/probe_stacplanet.py)
-     file, bytes, axis, size    maquette (models/<id>.glb), comme dans Observatories ; licence dans src (règle 8)
+     stac                       préfixe des collections STAC-PLANET de la mission (sonde tools/probe/probe_stacplanet.py)
+     file, bytes, axis, size    maquette (models/<id>.glb) ; size = dimension réelle en mètres le long de axis
+     model                      { src, license } : provenance et licence de la maquette, écrites à côté d'elle (règle 8)
+     view, sun                  cadrage initial { az, el, dist } ; direction de la lumière dans le repère de la maquette
+     parts                      pièces cliquables : { key (nom du nœud), name, desc, facts:[[texte, clé de source]] }
      refs                       sources : { clé:{ t:titre, p:éditeur, u:URL } } ; chaque valeur chiffrée cite une clé (règle 1)
      sections                   fiche : [{ title, rows:[[libellé, valeur, clé de source]] }] ; « ≈ » pour l'approximatif (règle 2)
+     desc                       description courte (premier niveau de lecture)
      checked                    date de la dernière vérification des valeurs
 ================================================================= */
 var MISSIONS = [
+  {
+    id:'mro', name:'Mars Reconnaissance Orbiter', short:'MRO', year:'2005',
+    agency:'NASA (JPL) ; radar SHARAD fourni par l\'ASI',
+    targets:['Mars'],
+    events:[
+      { type:'launch', body:'Terre', date:'2005-08-12', ref:'kit' },
+      { type:'arrival', body:'Mars', date:'2006-03-10', ref:'hz' },
+      { type:'orbit', body:'Mars', date:'2006-11', ref:'kit' }
+    ],
+    horizons:'-74', stac:'ode-mars-mro-',
+    file:'models/mro.glb', bytes:2694356, axis:'z', size:13.6,
+    model:{ src:'NASA 3D Resources, « Mars Reconnaissance Orbiter (MRO) (A) »', license:'NASA, usage libre (conditions d\'utilisation des médias de la NASA)', u:'https://github.com/nasa/NASA-3D-Resources' },
+    view:{ az:0.55, el:0.28, dist:1.6 }, sun:[0.6, 0.7, 0.4],
+    desc:"Lancée en 2005, MRO tourne autour de Mars sur une orbite basse presque polaire. Sa caméra HiRISE voit des détails de la taille d'une table, CTX cartographie la planète entière, CRISM en dresse la minéralogie et le radar SHARAD sonde le sous-sol. Elle sert aussi de relais radio aux robots posés sur Mars.",
+    checked:'2026-11-23',
+    refs:{
+      kit:{ t:'Mars Reconnaissance Orbiter Arrival, Press Kit (mars 2006)', p:'NASA', u:'https://mars.nasa.gov/files/mro/mro-arrival.pdf' },
+      nssdc:{ t:'Mars Reconnaissance Orbiter (2005-029A)', p:'NASA NSSDCA', u:'https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=2005-029A' },
+      hz:{ t:'JPL Horizons, objet -74 (Mars Reconnaissance Orbiter), en-tête de l\'objet', p:'NASA JPL', u:'https://ssd.jpl.nasa.gov/horizons/app.html#/' },
+      stac:{ t:'STAC-PLANET, collections ode-mars-mro-* (sonde du 23 novembre 2026)', p:'PDSSP (CNES)', u:'https://stacplanet.pdssp.eu/' }
+    },
+    parts:[
+      { key:'hga', name:'Antenne grand gain', desc:'Parabole de communication avec la Terre, montée sur un mât orientable.',
+        facts:[['Diamètre : 3 m', 'kit']] },
+      { key:'solar', name:'Panneaux solaires', desc:'Deux panneaux orientables qui alimentent la sonde.',
+        facts:[['Chaque panneau : 5,35 × 2,53 m', 'kit'], ['Surface totale : 20 m²', 'kit']] },
+      { key:'sharad', name:'Antenne du radar SHARAD', desc:'Antenne dipôle du radar de sondage du sous-sol, fourni par l\'Agence spatiale italienne.',
+        facts:[['S\'étend de 5 m de chaque côté de la sonde', 'kit']] },
+      { key:'bus', name:'Module et instruments', desc:'Structure centrale, réservoirs, propulsion et, sur la face tournée vers Mars, les instruments (HiRISE, CTX, CRISM, MARCI, MCS). La maquette ne permet pas de les séparer de façon sûre : ils sont décrits dans « Mission et données ».',
+        facts:[] }
+    ],
+    sections:[
+      { title:'Véhicule', rows:[
+        ['Hauteur', '6,5 m (avec l\'antenne)', 'kit'], ['Envergure', '13,6 m (panneaux déployés)', 'kit'],
+        ['Masse au lancement', '2 180 kg, dont 1 149 kg d\'ergols et de pressurisant', 'kit'],
+        ['Charge scientifique', '139 kg', 'kit'], ['Construction', 'Lockheed Martin Space Systems', 'kit'] ]},
+      { title:'Mission', rows:[
+        ['Lancement', '12 août 2005, Atlas V', 'hz'], ['Arrivée à Mars', '10 mars 2006', 'hz'],
+        ['Aérofreinage', 'mars à octobre 2006', 'kit'], ['Début de la phase scientifique', 'novembre 2006', 'kit'] ]},
+      { title:'Orbite scientifique', rows:[
+        ['Type', 'quasi polaire', 'kit'], ['Altitude', '255 à 320 km', 'kit'], ['Période', '112 min', 'kit'] ]},
+      { title:'Instruments', rows:[
+        ['HiRISE', 'caméra, miroir de 50 cm ; pixels de 30 cm depuis 300 km', 'kit'],
+        ['CTX', 'caméra de contexte, bandes de 30 km de large à 6 m par pixel', 'kit'],
+        ['CRISM', 'spectromètre imageur, de 370 à 3 940 nm', 'kit'],
+        ['MARCI', 'caméra couleur grand champ (météo)', 'kit'],
+        ['MCS', 'sondeur climatique (profils de l\'atmosphère)', 'kit'],
+        ['SHARAD', 'radar de sondage du sous-sol (ASI)', 'kit'] ]},
+      { title:'Données dans STAC-PLANET', rows:[
+        ['Collections', '34', 'stac'], ['Produits HiRISE (RDR v1.1)', '193 181', 'stac'], ['Produits CTX (EDR)', '164 625', 'stac'] ]}
+    ]
+  }
 ];
 
 /* FLOTTE — « qui a fait quoi » par mission : FLEET[id] = { agencies:[…], who:[[agence, rôle, …, clé(s) de source]] }.
@@ -623,11 +726,81 @@ var INST_DATA = {};
 /* DÉROULÉ DES MISSIONS ET CHAÎNES DE TRAITEMENT — MISSION[id] (schéma d'Observatories v1.0, src/data-mission.js). */
 var MISSION = {};
 
-/* Textes anglais des missions : EN_MISSIONS[id] = { name, agency, desc, sections, refs } (mêmes champs que MISSIONS). */
-var EN_MISSIONS = {};
+/* Textes anglais des missions : EN_MISSIONS[id] = { name, agency, desc, sections, refs, parts, model } (mêmes champs que MISSIONS).
+   Les clés de source des lignes de la fiche sont reprises du français. */
+var EN_MISSIONS = {
+  mro:{
+    agency:'NASA (JPL); SHARAD radar provided by ASI',
+    desc:"Launched in 2005, MRO circles Mars in a low, nearly polar orbit. Its HiRISE camera resolves details the size of a table, CTX maps the whole planet, CRISM charts its mineralogy and the SHARAD radar probes the subsurface. It also relays radio traffic for the rovers on Mars.",
+    refs:{ kit:'Mars Reconnaissance Orbiter Arrival, Press Kit (March 2006)', hz:'JPL Horizons, object -74 (Mars Reconnaissance Orbiter), object header', stac:'STAC-PLANET, ode-mars-mro-* collections (probe of 23 November 2026)' },
+    model:{ license:'NASA, free use (NASA media usage guidelines)' },
+    parts:{
+      hga:{ name:'High-gain antenna', desc:'Dish for communication with Earth, on a steerable mast.', facts:['Diameter: 3 m'] },
+      solar:{ name:'Solar arrays', desc:'Two steerable arrays that power the spacecraft.', facts:['Each array: 5.35 × 2.53 m', 'Total area: 20 m²'] },
+      sharad:{ name:'SHARAD radar antenna', desc:'Dipole antenna of the subsurface sounding radar, provided by the Italian Space Agency.', facts:['Extends 5 m to each side of the spacecraft'] },
+      bus:{ name:'Bus and instruments', desc:'Central structure, tanks, propulsion and, on the Mars-facing side, the instruments (HiRISE, CTX, CRISM, MARCI, MCS). The model does not allow them to be separated reliably: they are described under “Mission and data”.' }
+    },
+    sections:[
+      { title:'Spacecraft', rows:[
+        ['Height', '6.5 m (with the antenna)'], ['Span', '13.6 m (arrays deployed)'],
+        ['Launch mass', '2,180 kg, including 1,149 kg of propellant and pressurant'],
+        ['Science payload', '139 kg'], ['Built by', 'Lockheed Martin Space Systems'] ]},
+      { title:'Mission', rows:[
+        ['Launch', '12 August 2005, Atlas V'], ['Mars arrival', '10 March 2006'],
+        ['Aerobraking', 'March to October 2006'], ['Start of science phase', 'November 2006'] ]},
+      { title:'Science orbit', rows:[
+        ['Type', 'near-polar'], ['Altitude', '255 to 320 km'], ['Period', '112 min'] ]},
+      { title:'Instruments', rows:[
+        ['HiRISE', 'camera, 50 cm mirror; 30 cm pixels from 300 km'],
+        ['CTX', 'context camera, 30 km wide swaths at 6 m per pixel'],
+        ['CRISM', 'imaging spectrometer, 370 to 3,940 nm'],
+        ['MARCI', 'wide-angle colour camera (weather)'],
+        ['MCS', 'climate sounder (atmospheric profiles)'],
+        ['SHARAD', 'subsurface sounding radar (ASI)'] ]},
+      { title:'Data in STAC-PLANET', rows:[
+        ['Collections', '34'], ['HiRISE products (RDR v1.1)', '193,181'], ['CTX products (EDR)', '164,625'] ]}
+    ]
+  }
+};
 
 /* Textes d'interface en anglais : clé = texte français tel qu'il est écrit dans le code ou dans body.html. */
 var EN_UI = {
+  "Mission et données":"Mission and data",
+  "Instruments, trajectoire réelle et données tirées des archives.":"Instruments, real trajectory and data from the archives.",
+  "Maquette":"Model",
+  "Licence":"Licence",
+  "Vue 3D de la sonde":"3D view of the spacecraft",
+  "Affichage":"Display",
+  "Éclater":"Explode",
+  "Écarter les pièces":"Spread the parts",
+  "Recadrer":"Reset view",
+  "Glisser pour tourner, molette pour zoomer, cliquer une pièce pour l'identifier":"Drag to rotate, scroll to zoom, click a part to identify it",
+  "Contenu du panneau":"Panel content",
+  "Fiche":"Fact sheet",
+  "Pièces":"Parts",
+  "La vue 3D demande WebGL, indisponible ici. La fiche reste lisible à droite.":"The 3D view needs WebGL, which is not available here. The fact sheet remains readable.",
+  "Chargement de la maquette…":"Loading the model…",
+  "La maquette n'a pas pu être chargée.":"The model could not be loaded.",
+  "Trajectoire pas encore téléchargée (workflow « Données réelles »).":"Trajectory not downloaded yet (“Real data” workflow).",
+  "Trajectoire de croisière vue du pôle nord de l'écliptique":"Cruise trajectory seen from the north ecliptic pole",
+  "Terre au départ":"Earth at departure",
+  "Mars":"Mars",
+  "à l'arrivée":"at arrival",
+  "Croisière du":"Cruise from",
+  "au":"to",
+  "positions quotidiennes":"daily positions",
+  "Source":"Source",
+  "objet":"object",
+  "téléchargé le":"downloaded on",
+  "Aucune donnée réelle téléchargée pour l'instant.":"No real data downloaded yet.",
+  "Extrait d'une image CTX de la surface de Mars":"Excerpt of a CTX image of the surface of Mars",
+  "Prise le":"Taken on",
+  "Archive":"Archive",
+  "collection":"collection",
+  "aperçu d'origine":"original preview",
+  "PDS Imaging Node (NASA), via le catalogue STAC-PLANET du PDSSP":"PDS Imaging Node (NASA), via the PDSSP STAC-PLANET catalogue",
+  "Trajectoire réelle":"Real trajectory",
+  "Une donnée réelle":"One real data product",
   'Explorateurs du Système solaire':'Solar System Explorers',
   "Vues d'ensemble":'Overviews',
   'Missions':'Missions', 'Système solaire':'Solar System', 'Comparer':'Compare', 'Flotte':'Fleet',
@@ -660,6 +833,8 @@ var OBS_T = function(s){ return s; }, OBS_I18N = { static:function(){} };
     ['name','agency','desc','sections'].forEach(function(k){ if (e[k]) m[k] = e[k]; });
     (m.sections || []).forEach(function(sec, i){ sec.rows.forEach(function(r, j){ var o = frSec && frSec[i] && frSec[i].rows[j]; if (o && o[2]) r[2] = o[2]; }); });
     if (e.refs) Object.keys(e.refs).forEach(function(k){ if (m.refs[k]) m.refs[k].t = e.refs[k]; });
+    if (e.model) m.model.license = e.model.license;
+    (m.parts || []).forEach(function(p){ var q = e.parts && e.parts[p.key]; if (!q) return; p.name = q.name; p.desc = q.desc; if (q.facts) p.facts = p.facts.map(function(f, j){ return [q.facts[j] || f[0], f[1]]; }); });
   });
   OBS_T = function(s){ if (EN_UI[s] != null) return EN_UI[s]; window.__i18nMiss[s] = 1; return s; };
   /* body.html : attributs et textes fixes */
@@ -667,6 +842,115 @@ var OBS_T = function(s){ return s; }, OBS_I18N = { static:function(){} };
     document.querySelectorAll('[aria-label],[title]').forEach(function(el){ ['aria-label','title'].forEach(function(a){ var v = el.getAttribute(a); if (v) el.setAttribute(a, OBS_T(v)); }); });
     var h = document.querySelector('.home-link'); if (h) h.textContent = OBS_T(h.textContent);
   };
+})();
+
+/* =================================================================
+   VUE 3D — maquette d'une sonde : rotation, zoom, pièces cliquables, vue éclatée.
+   Version allégée de la vue d'Observatories v1.0 (src/app.js là-bas) : même lecture des maquettes quantifiées
+   (positions converties en flottants pour le lancer de rayon), mêmes règles de surlignage.
+   Viewer.open(stageEl, mission, { onPick(key|null), onState(text) }) ; Viewer.select(key) ; Viewer.explode(0..1).
+================================================================= */
+var Viewer = (function(){
+'use strict';
+var REDUCED = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+var renderer = null, scene, camera, key, fill, hemi, loader, M = null, host = null, opts = {}, raf = 0, sel = null, hov = null, spin = !REDUCED, ex = 0;
+var C = { az:0.5, el:0.25, dist:20 };
+var models = {};
+
+function ok(){ return !!(window.THREE && THREE.GLTFLoader); }
+function init(){
+  if (renderer || !ok()) return !!renderer;
+  try { renderer = new THREE.WebGLRenderer({ antialias:true }); } catch(e){ renderer = null; return false; }
+  renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1)); renderer.outputEncoding = THREE.sRGBEncoding;
+  scene = new THREE.Scene(); camera = new THREE.PerspectiveCamera(35, 1, 0.05, 2000);
+  key = new THREE.DirectionalLight(0xffffff, 2.6); fill = new THREE.DirectionalLight(0x8fb0e8, 0.45); hemi = new THREE.HemisphereLight(0xffffff, 0x223344, 0.5);
+  scene.add(key, fill, hemi);
+  loader = new THREE.GLTFLoader();
+  var cv = renderer.domElement, drag = null;
+  cv.setAttribute('aria-hidden', 'true');
+  cv.addEventListener('pointerdown', function(e){ drag = { x:e.clientX, y:e.clientY, moved:false }; cv.setPointerCapture(e.pointerId); spin = false; });
+  cv.addEventListener('pointermove', function(e){
+    if (drag){ var dx = e.clientX - drag.x, dy = e.clientY - drag.y; if (Math.abs(dx) + Math.abs(dy) > 3) drag.moved = true;
+      C.az -= dx * 0.008; C.el = Math.max(-1.4, Math.min(1.4, C.el + dy * 0.006)); drag.x = e.clientX; drag.y = e.clientY; cv.classList.add('dragging'); return; }
+    var k = pick(e); if (k !== hov){ hov = k; highlight(); cv.classList.toggle('over-part', !!k); }
+  });
+  cv.addEventListener('pointerup', function(e){ cv.classList.remove('dragging'); if (drag && !drag.moved){ var k = pick(e); select(sel === k ? null : k); if (opts.onPick) opts.onPick(sel); } drag = null; });
+  cv.addEventListener('pointerleave', function(){ if (hov){ hov = null; highlight(); } });
+  cv.addEventListener('wheel', function(e){ e.preventDefault(); if (!M) return; C.dist = Math.max(M.radius * 1.1, Math.min(M.radius * 8, C.dist * (1 + Math.sign(e.deltaY) * 0.1))); }, { passive:false });
+  return true;
+}
+function pick(e){
+  if (!M) return null;
+  var r = renderer.domElement.getBoundingClientRect(), v = new THREE.Vector2(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
+  var rc = new THREE.Raycaster(); rc.setFromCamera(v, camera);
+  var hit = rc.intersectObjects(M.meshes, false)[0];
+  return hit ? hit.object.userData.part || null : null;
+}
+function prepare(t, gltf){
+  var inner = gltf.scene, root = new THREE.Group();
+  /* three r128 ne dénormalise pas les attributs entiers côté CPU (lancer de rayon, boîtes) : positions converties en flottants */
+  inner.traverse(function(o){
+    if (!o.isMesh) return; var g = o.geometry, pa = g.attributes.position;
+    if (!pa || !(pa.normalized || pa.isInterleavedBufferAttribute)) return;
+    var arr = pa.array || pa.data.array, nm = pa.normalized, den = arr instanceof Int16Array ? 32767 : arr instanceof Uint16Array ? 65535 : arr instanceof Int8Array ? 127 : arr instanceof Uint8Array ? 255 : 1;
+    var out = new Float32Array(pa.count * 3);
+    for (var i = 0; i < pa.count; i++){ var x = pa.getX(i), y = pa.getY(i), z = pa.getZ(i); if (nm){ x = Math.max(x/den, -1); y = Math.max(y/den, -1); z = Math.max(z/den, -1); } out[i*3] = x; out[i*3+1] = y; out[i*3+2] = z; }
+    g.setAttribute('position', new THREE.BufferAttribute(out, 3)); g.boundingBox = null; g.boundingSphere = null; g.computeBoundingSphere();
+  });
+  inner.updateMatrixWorld(true);
+  var box = new THREE.Box3().setFromObject(inner), size = box.getSize(new THREE.Vector3()), ctr = box.getCenter(new THREE.Vector3());
+  var s = t.axis ? t.size / size[t.axis] : 1;
+  inner.scale.setScalar(s); inner.position.copy(ctr).multiplyScalar(-s); root.add(inner); root.updateMatrixWorld(true);
+  var R = { root:root, radius:size.length() * s / 2, meshes:[], parts:{} };
+  t.parts.forEach(function(p){ R.parts[p.key] = { meshes:[], box:new THREE.Box3() }; });
+  inner.traverse(function(o){
+    if (!o.isMesh) return;
+    var k = null; for (var p = o; p && p !== root && !k; p = p.parent) if (R.parts[(p.name || '').replace(/_\d+$/, '')]) k = (p.name || '').replace(/_\d+$/, '');
+    o.material = o.material.clone(); o.material.side = THREE.DoubleSide; o.userData.part = k; R.meshes.push(o);
+    if (k){ R.parts[k].meshes.push(o); R.parts[k].box.expandByObject(o); }
+  });
+  /* vue éclatée : chaque pièce s'écarte du centre le long de la direction de son propre centre (schéma de principe) */
+  for (var k in R.parts){ var P = R.parts[k]; if (P.box.isEmpty()) continue;
+    var dir = P.box.getCenter(new THREE.Vector3()); if (dir.length() < R.radius * 0.15) dir.set(0, 0, 0); else dir.normalize().multiplyScalar(R.radius * 0.5);
+    P.meshes.forEach(function(o){ o.userData.base = o.position.clone(); o.userData.ex = dir.clone().divideScalar(s); }); }   /* nœuds de la maquette sans rotation propre (seg_lib.js) */
+  return R;
+}
+function highlight(){
+  if (!M) return;
+  M.meshes.forEach(function(o){ var m = o.material, k = o.userData.part; if (!m.emissive) return;
+    if (m.userData.c0 === undefined){ m.userData.c0 = m.color.clone(); m.userData.e0 = m.emissive.clone(); }
+    m.emissive.copy(m.userData.e0); m.color.copy(m.userData.c0);
+    if (k && k === sel){ m.emissive.setHex(0xFFC81A); m.emissiveIntensity = 0.18; }
+    else if (k && k === hov){ m.emissive.setHex(0xffffff); m.emissiveIntensity = 0.1; }
+    else if (sel) m.color.multiplyScalar(0.5); });
+}
+function resize(){ if (!host || !renderer) return; var w = host.clientWidth, h = host.clientHeight; renderer.setSize(w, h, false); camera.aspect = w / Math.max(1, h); camera.updateProjectionMatrix(); }
+function frame(){
+  raf = requestAnimationFrame(frame);
+  if (!M || !host || !host.isConnected) return;
+  if (spin) C.az += 0.0025;
+  var ce = Math.cos(C.el); camera.position.set(Math.sin(C.az) * ce * C.dist, Math.sin(C.el) * C.dist, Math.cos(C.az) * ce * C.dist); camera.lookAt(0, 0, 0);
+  M.meshes.forEach(function(o){ if (o.userData.base) o.position.copy(o.userData.base).addScaledVector(o.userData.ex, ex); });
+  renderer.render(scene, camera);
+}
+function open(el, t, o){
+  opts = o || {}; host = el;
+  if (!init()){ if (opts.onState) opts.onState('nogl'); return; }
+  el.insertBefore(renderer.domElement, el.firstChild); resize();
+  if (!raf) { window.addEventListener('resize', resize); frame(); }
+  sel = null; hov = null; ex = 0;
+  if (M) scene.remove(M.root);
+  var show = function(R){ M = R; scene.add(M.root); C.az = t.view.az; C.el = t.view.el; C.dist = M.radius * 2 * t.view.dist;
+    key.position.fromArray(t.sun).multiplyScalar(M.radius * 4); fill.position.set(-0.6, -0.2, -0.5); highlight(); if (opts.onState) opts.onState('ready'); };
+  if (models[t.id]) return show(models[t.id]);
+  if (opts.onState) opts.onState('loading');
+  var url = t.file;
+  fetch(url).then(function(r){ if (!r.ok) throw new Error(r.status); return /\.txt$/.test(url) ? r.text().then(function(b){ var s = atob(b.trim()), a = new Uint8Array(s.length); for (var i = 0; i < s.length; i++) a[i] = s.charCodeAt(i); return a.buffer; }) : r.arrayBuffer(); })
+    .then(function(buf){ loader.parse(buf, '', function(g){ show(models[t.id] = prepare(t, g)); }, function(e){ if (opts.onState) opts.onState('error'); }); })
+    .catch(function(){ if (opts.onState) opts.onState('error'); });
+}
+function select(k){ sel = k || null; highlight(); }
+return { open:open, select:select, explode:function(v){ ex = v; }, spin:function(v){ spin = v && !REDUCED; }, reset:function(t){ if (M){ C.az = t.view.az; C.el = t.view.el; C.dist = M.radius * 2 * t.view.dist; } }, available:ok };
 })();
 
 /* =================================================================
@@ -712,14 +996,88 @@ function missionsPage(){
   }).join('') + '</ul></div>';
   return h;
 }
-function missionPage(m){
-  var h = '<div class="sk"><h2>' + esc(m.name) + '</h2><p class="lead">' + esc(m.agency || '') + '</p>';
+function src(m, k){
+  var r = k && m.refs && m.refs[k];
+  return r ? ' <a class="src" href="' + esc(r.u) + '" rel="noopener" target="_blank" title="' + esc(r.t) + '">' + esc(r.p) + '</a>' : '';
+}
+function fiche(m){
+  var h = '<p class="desc">' + esc(m.desc || '') + '</p>';
   (m.sections || []).forEach(function(sec){
     h += '<h3>' + esc(sec.title) + '</h3><table class="sk-table"><tbody>' + sec.rows.map(function(r){
-      var ref = r[2] && m.refs && m.refs[r[2]];
-      return '<tr><th scope="row">' + esc(r[0]) + '</th><td>' + esc(OBS_NUM(r[1])) + (ref ? ' <a class="src" href="' + esc(ref.u) + '" rel="noopener" target="_blank">' + esc(ref.p) + '</a>' : '') + '</td></tr>';
+      return '<tr><th scope="row">' + esc(r[0]) + '</th><td>' + esc(OBS_NUM(r[1])) + src(m, r[2]) + '</td></tr>';
     }).join('') + '</tbody></table>';
   });
+  return h + '<button class="cta" data-go="' + m.id + '-donnees">' + T('Mission et données') + '<small>' + T('Instruments, trajectoire réelle et données tirées des archives.') + '</small></button>';
+}
+function partsHtml(m, sel){
+  return '<ul class="parts">' + m.parts.map(function(p){
+    var on = p.key === sel;
+    return '<li class="part' + (on ? ' on' : '') + '"><button data-part="' + p.key + '" aria-expanded="' + on + '">' + esc(p.name) + '</button>' +
+      (on ? '<div class="part-body"><p>' + esc(p.desc) + '</p>' + (p.facts.length ? '<ul>' + p.facts.map(function(f){ return '<li>' + esc(OBS_NUM(f[0])) + src(m, f[1]) + '</li>'; }).join('') + '</ul>' : '') + '</div>' : '') + '</li>';
+  }).join('') + '</ul><p class="note">' + T('Maquette') + ' : ' + esc(m.model.src) + ' · ' + T('Licence') + ' : ' + esc(m.model.license) + '</p>';
+}
+var MS = { tab:'fiche', part:null, explode:0 };
+function missionPage(m){
+  return '<div class="mission"><section id="stage" class="m-stage" aria-label="' + T('Vue 3D de la sonde') + '">' +
+    '<div class="m-hud"><div class="m-name">' + esc(m.name) + '</div><div class="m-sub">' + esc(m.agency) + ' · ' + esc(m.targets.join(', ')) + '</div></div>' +
+    '<p class="m-msg" id="m-msg" hidden></p>' +
+    '<div class="m-tools" role="toolbar" aria-label="' + T('Affichage') + '">' +
+      '<label class="m-ex"><span>' + T('Éclater') + '</span><input id="m-explode" type="range" min="0" max="100" value="' + Math.round(MS.explode*100) + '" aria-label="' + T('Écarter les pièces') + '"></label>' +
+      '<button class="m-b" id="m-reset">' + T('Recadrer') + '</button></div>' +
+    '<p class="m-hint">' + T('Glisser pour tourner, molette pour zoomer, cliquer une pièce pour l\'identifier') + '</p>' +
+    '</section><aside class="m-panel"><h2 class="sr-only">' + esc(m.name) + '</h2>' +
+    '<div class="ptl" role="tablist" aria-label="' + T('Contenu du panneau') + '">' +
+      ['fiche', 'parts'].map(function(k){ return '<button class="ptab" role="tab" data-ptab="' + k + '" aria-selected="' + (MS.tab === k) + '">' + T(k === 'fiche' ? 'Fiche' : 'Pièces') + '</button>'; }).join('') +
+    '</div><div id="m-body">' + (MS.tab === 'fiche' ? fiche(m) : partsHtml(m, MS.part)) + '</div></aside></div>';
+}
+function mountMission(m){
+  var msg = $('m-msg');
+  if (!m.file || !Viewer.available()){ msg.hidden = false; msg.textContent = T('La vue 3D demande WebGL, indisponible ici. La fiche reste lisible à droite.'); return; }
+  Viewer.open($('stage'), m, {
+    onPick:function(k){ MS.part = k; MS.tab = 'parts'; renderPanel(m); },
+    onState:function(st){ msg.hidden = st === 'ready'; msg.textContent = st === 'loading' ? T('Chargement de la maquette…') : st === 'nogl' ? T('La vue 3D demande WebGL, indisponible ici. La fiche reste lisible à droite.') : st === 'error' ? T('La maquette n\'a pas pu être chargée.') : ''; }
+  });
+  Viewer.select(MS.part); Viewer.explode(MS.explode);
+  $('m-explode').addEventListener('input', function(e){ MS.explode = e.target.value / 100; Viewer.explode(MS.explode); });
+  $('m-reset').addEventListener('click', function(){ Viewer.reset(m); });
+}
+function renderPanel(m){
+  document.querySelectorAll('.m-panel .ptab').forEach(function(b){ b.setAttribute('aria-selected', String(b.getAttribute('data-ptab') === MS.tab)); });
+  $('m-body').innerHTML = MS.tab === 'fiche' ? fiche(m) : partsHtml(m, MS.part);
+}
+
+/* ---------- page « Mission et données » ---------- */
+function trajSvg(m){
+  var d = (window.DATA_FILES || {})[m.id + '-traj']; if (!d) return '<p class="note">' + T('Trajectoire pas encore téléchargée (workflow « Données réelles »).') + '</p>';
+  var W = 520, c = W/2, S = W/2/1.75;   /* échelle : 1,75 UA au bord */
+  function path(a){ return a.map(function(p, i){ return (i ? 'L' : 'M') + (c + p[1]*S).toFixed(1) + ' ' + (c - p[2]*S).toFixed(1); }).join(''); }
+  var pr = d.probe, a = pr[0], b = pr[pr.length - 1];
+  var dot = function(p, r, cl){ return '<circle cx="' + (c + p[1]*S).toFixed(1) + '" cy="' + (c - p[2]*S).toFixed(1) + '" r="' + r + '" class="' + cl + '"/>'; };
+  var near = function(arr, date){ for (var i = 0; i < arr.length; i++) if (arr[i][0] >= date) return arr[i]; return arr[arr.length - 1]; };
+  var ea = near(d.earth, a[0]), mb = near(d.target.orbit, b[0]);
+  return '<figure class="traj"><svg viewBox="0 0 ' + W + ' ' + W + '" role="img" aria-label="' + T('Trajectoire de croisière vue du pôle nord de l\'écliptique') + '">' +
+    '<circle cx="' + c + '" cy="' + c + '" r="6" class="sun"/>' +
+    '<path d="' + path(d.earth) + '" class="orb-e"/><path d="' + path(d.target.orbit) + '" class="orb-t"/><path d="' + path(pr) + '" class="orb-p"/>' +
+    dot(ea, 4, 'pt-e') + dot(mb, 4, 'pt-t') +
+    '<text x="' + (c + ea[1]*S + 8).toFixed(0) + '" y="' + (c - ea[2]*S + 14).toFixed(0) + '">' + T('Terre au départ') + '</text>' +
+    '<text x="' + (c + mb[1]*S + 8).toFixed(0) + '" y="' + (c - mb[2]*S).toFixed(0) + '">' + T(d.target.name) + ' ' + T('à l\'arrivée') + '</text>' +
+    '</svg><figcaption>' + T('Croisière du') + ' ' + esc(a[0]) + ' ' + T('au') + ' ' + esc(b[0]) + ' (' + pr.length + ' ' + T('positions quotidiennes') + '). ' +
+    T('Source') + ' : ' + esc(d.source) + ', ' + T('objet') + ' ' + esc(d.horizons) + ', ' + T('téléchargé le') + ' ' + esc(d.fetched) + '.</figcaption></figure>';
+}
+function realData(m){
+  var d = (window.DATA_FILES || {})[m.id + '-ctx']; if (!d) return '<p class="note">' + T('Aucune donnée réelle téléchargée pour l\'instant.') + '</p>';
+  return '<figure class="real"><img src="data/' + m.id + '-ctx.jpg" width="900" height="900" alt="' + T('Extrait d\'une image CTX de la surface de Mars') + ' (' + esc(d.product) + ')">' +
+    '<figcaption><strong>' + esc(d.instrument) + ' · ' + esc(d.product) + '</strong><br>' + T('Prise le') + ' ' + esc(String(d.datetime).slice(0, 10)) + '. ' +
+    (OBS_LANG === 'en' ? 'Central square of the ' + d.full_size[0] + ' × ' + d.full_size[1] + ' pixel strip (' + d.crop_px + ' pixels wide), scaled to ' + d.out_px + ' × ' + d.out_px
+                       : 'Carré central de la bande de ' + d.full_size[0] + ' × ' + d.full_size[1] + ' pixels (' + d.crop_px + ' pixels de côté), ramené à ' + d.out_px + ' × ' + d.out_px) + '.<br>' +
+    T('Archive') + ' : ' + T(d.archive) + ' · ' + T('collection') + ' <code>' + esc(d.collection) + '</code> · <a href="' + esc(d.href) + '" rel="noopener" target="_blank">' + T('aperçu d\'origine') + '</a> · ' + T('téléchargé le') + ' ' + esc(d.fetched) + '</figcaption></figure>';
+}
+function dataPage(m){
+  var inst = (m.sections || [])[3];   /* section « Instruments » de la fiche */
+  var h = '<div class="sk wide"><p class="crumb"><a href="#' + m.id + '">' + esc(m.short) + '</a></p><h2>' + T('Mission et données') + '</h2>';
+  h += '<h3>' + T('Trajectoire réelle') + '</h3>' + trajSvg(m);
+  h += '<h3>' + T('Une donnée réelle') + '</h3>' + realData(m);
+  if (inst) h += '<h3>' + esc(inst.title) + '</h3><table class="sk-table"><tbody>' + inst.rows.map(function(r){ return '<tr><th scope="row">' + esc(r[0]) + '</th><td>' + esc(OBS_NUM(r[1])) + src(m, r[2]) + '</td></tr>'; }).join('') + '</tbody></table>';
   return h + '</div>';
 }
 var PAGES = {
@@ -731,18 +1089,23 @@ var PAGES = {
 
 function route(){
   var r = (location.hash || '').replace(/^#/, '').replace(/^(en|fr)-/, '') || 'accueil';
-  var m = mission(r);
+  var dm = /^(\w+)-donnees$/.exec(r), m = mission(dm ? dm[1] : r);
   if (!m && !PAGES[r]) r = 'accueil';
-  renderHeader(r);
-  $('page').innerHTML = m ? missionPage(m) : PAGES[r]();
+  renderHeader(m ? m.id : r);
+  $('page').innerHTML = m ? (dm ? dataPage(m) : missionPage(m)) : PAGES[r]();
+  $('page').classList.toggle('is-mission', !!(m && !dm));
+  if (m && !dm) mountMission(m);
   var h2 = $('page').querySelector('h2');
   document.title = (h2 ? h2.textContent + ' · ' : '') + T('Explorateurs du Système solaire');
   $('live').textContent = h2 ? h2.textContent : '';
 }
 
 document.addEventListener('click', function(e){
-  var el = e.target.closest ? e.target.closest('#b-lang,#b-theme,[data-go]') : null;
+  var el = e.target.closest ? e.target.closest('#b-lang,#b-theme,[data-go],[data-ptab],[data-part]') : null;
   if (!el) return;
+  var cm = mission((location.hash || '').replace(/^#/, '').replace(/^(en|fr)-/, ''));
+  if (el.hasAttribute('data-ptab') && cm){ MS.tab = el.getAttribute('data-ptab'); renderPanel(cm); return; }
+  if (el.hasAttribute('data-part') && cm){ var k = el.getAttribute('data-part'); MS.part = MS.part === k ? null : k; Viewer.select(MS.part); renderPanel(cm); var b = document.querySelector('[data-part="' + k + '"]'); if (b) b.focus(); return; }
   if (el.id === 'b-lang'){ var nl = OBS_LANG === 'en' ? 'fr' : 'en'; try { localStorage.setItem('sse-lang', nl); } catch(x){} location.hash = nl + '-' + (location.hash || '').replace(/^#/, '').replace(/^(en|fr)-/, ''); location.reload(); return; }
   if (el.id === 'b-theme'){ var nt = isDark() ? 'light' : 'dark'; document.documentElement.setAttribute('data-theme', nt); try { localStorage.setItem('sse-theme', nt); } catch(x){} route(); $('b-theme').focus(); return; }
   location.hash = el.getAttribute('data-go');
