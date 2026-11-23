@@ -24,7 +24,7 @@ var EN_UI = {
   "Aperçu d'une image MOC à petit champ de la surface de Mars":"Preview of a MOC narrow-angle image of the surface of Mars",
   "Aperçu d'une image CaSSIS de la surface de Mars":"Preview of a CaSSIS image of the surface of Mars",
   "Aperçu d'une mosaïque radar Magellan de la surface de Vénus":"Preview of a Magellan radar mosaic of the surface of Venus",
-  "Aperçu d'une mosaïque Clementine de la surface de la Lune":"Preview of a Clementine mosaic of the surface of the Moon",
+  "Aperçu d'une mosaïque Clementine UVVIS en rapports de couleurs (fausses couleurs : chaque teinte code un rapport entre filtres, lié à la composition)":"Preview of a Clementine UVVIS colour-ratio mosaic (false colour: each hue encodes a ratio between filters, linked to composition)",
   "Donnée de Venus Express":"Venus Express data",
   "Les aperçus CaSSIS de l'archive de l'ESA ne sont pas accessibles sans compte (réponse 401) : pas encore de donnée réelle.":"CaSSIS previews in the ESA archive cannot be accessed without an account (401 response): no real data yet.",
   "Les collections de Venus Express dans STAC-PLANET sont des spectres (VIRTIS) et des séries de mesures (MAG), sans aperçu image : pas de donnée réelle à montrer ici.":"Venus Express collections in STAC-PLANET are spectra (VIRTIS) and time series (MAG), with no image preview: no real data to show here.",
