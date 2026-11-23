@@ -21,7 +21,7 @@ MISSIONS = {
             "stac": ["ode-mars-mex-hrsc-rdrv4", "ode-mars-mex-hrsc-refdr3", "ode-mars-mex-vmc-rdr"]},
     "lro": {"nasa": r"lunar.?reconnaissance|\bLRO\b", "scifleet": None, "hz": "-85",
             "stac": ["ode-moon-lro-lroc-bdrroi", "ode-moon-lro-lroc-bdrwmv", "ode-moon-lro-lroc-anagly", "ode-moon-lro-lroc-cdrwac4"]},
-    "cassini": {"nasa": r"cassini", "scifleet": r"cassini|huygens", "hz": "-82",
+    "cassini": {"nasa": r"cassini", "scifleet": None, "hz": "-82",
                 "stac": ["vim-cassini-vims-ir"]},
     "messenger": {"nasa": r"messenger", "scifleet": None, "hz": "-236",
                   "stac": ["ode-mercury-messenger-mdis-wac-rtmwac", "ode-mercury-messenger-mdis-nac-rtmnac", "ode-mercury-messenger-mdis-wac-nac-maphie"]},
@@ -104,10 +104,11 @@ for mid, m in MISSIONS.items():
                     if re.search(r"image/(jpeg|png)", a.get("type") or ""): imgs.append(a)
                 for a in imgs[:4]:
                     try:
-                        h = S.head(a["href"], timeout=60, allow_redirects=True); n = int(h.headers.get("content-length") or 0)
-                        log(f"  taille {a['href'].rsplit('/', 1)[-1]} : {h.status_code} {n} o")
-                        if h.ok and 0 < n < 15_000_000:
-                            rr = S.get(a["href"], timeout=300)
+                        h = S.get(a["href"], timeout=120, stream=True); n = int(h.headers.get("content-length") or 0)
+                        log(f"  taille {a['href'].rsplit('/', 1)[-1]} : {h.status_code} {n} o {h.headers.get('content-type')}")
+                        if not h.ok: log("  réponse : " + h.text[:200].replace("\n", " "))
+                        if h.ok and n < 15_000_000:
+                            rr = h
                             open(os.path.join(OUT, f"{mid}_{c}_" + a["href"].rsplit("/", 1)[-1]), "wb").write(rr.content); log(f"  téléchargé ({len(rr.content)} o)")
                     except Exception as e:
                         log("  échec aperçu", repr(e)[:200])
