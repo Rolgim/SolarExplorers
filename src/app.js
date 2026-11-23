@@ -65,7 +65,8 @@ function partsHtml(m, sel){
     var on = p.key === sel;
     return '<li class="part' + (on ? ' on' : '') + '"><button data-part="' + p.key + '" aria-expanded="' + on + '">' + esc(p.name) + '</button>' +
       (on ? '<div class="part-body"><p>' + esc(p.desc) + '</p>' + (p.facts.length ? '<ul>' + p.facts.map(function(f){ return '<li>' + esc(OBS_NUM(f[0])) + src(m, f[1]) + '</li>'; }).join('') + '</ul>' : '') + '</div>' : '') + '</li>';
-  }).join('') + '</ul><p class="note">' + T('Maquette') + ' : ' + esc(m.model.src) + ' · ' + T('Licence') + ' : ' + esc(m.model.license) + '</p>' + bodyCredit(m);
+  }).join('') + '</ul>' + (m.file ? '<p class="note">' + T('Maquette') + ' : ' + esc(m.model.src) + ' · ' + T('Licence') + ' : ' + esc(m.model.license) + '</p>'
+    : '<p class="note">' + T('Pas de maquette 3D libre de droits pour cette sonde : elle est figurée par un point bleu sur son orbite.') + '</p>') + bodyCredit(m);
 }
 function bodyCredit(m){
   var d = m.body && (window.DATA_FILES || {})['tex-' + m.body.tex]; if (!d) return '';
@@ -73,16 +74,17 @@ function bodyCredit(m){
 }
 var MS = { tab:'fiche', part:null, explode:0, view:'probe', run:!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) };
 function missionPage(m){
+  if (!m.file) MS.view = 'orbit';   /* sans maquette, la vue d'orbite montre mieux la sonde (un point) */
   return '<div class="mission"><section id="stage" class="m-stage" aria-label="' + T('Vue 3D de la sonde') + '">' +
     '<div class="m-hud"><div class="m-name">' + esc(m.name) + '</div><div class="m-sub">' + esc(m.agency) + ' · ' + esc(m.targets.join(', ')) + '</div></div>' +
     '<p class="m-msg" id="m-msg" hidden></p>' +
-    (m.body ? '<p class="m-body-note" id="m-body-note" hidden>' + T(m.body.name) + ' : ' + T('orbite en schéma de principe (tailles, altitude, inclinaison et vitesse non respectées)') + '</p>' : '') +
+    (m.body ? '<p class="m-body-note" id="m-body-note" hidden>' + T(m.body.name) + ' : ' + T('orbite en schéma de principe (tailles, altitude, inclinaison et vitesse non respectées)') + (m.file ? '' : ' · ' + T('pas de maquette libre de droits : la sonde est un point bleu')) + '</p>' : '') +
     '<div class="m-tools" role="toolbar" aria-label="' + T('Affichage') + '">' +
-      '<label class="m-ex"><span>' + T('Éclater') + '</span><input id="m-explode" type="range" min="0" max="100" value="' + Math.round(MS.explode*100) + '" aria-label="' + T('Écarter les pièces') + '"></label>' +
+      (m.file ? '<label class="m-ex"><span>' + T('Éclater') + '</span><input id="m-explode" type="range" min="0" max="100" value="' + Math.round(MS.explode*100) + '" aria-label="' + T('Écarter les pièces') + '"></label>' : '') +
       '<button class="m-b" id="m-reset">' + T('Recadrer') + '</button>' +
       (m.body ? '<button class="m-b" id="m-view" aria-pressed="' + (MS.view === 'orbit') + '">' + T('Vue d\'orbite') + '</button>' : '') +
       '<button class="m-b" id="m-run" aria-pressed="' + !MS.run + '">' + T('Pause') + '</button></div>' +
-    '<p class="m-hint">' + T('Glisser pour tourner, molette pour zoomer, cliquer une pièce pour l\'identifier') + '</p>' +
+    '<p class="m-hint">' + T(m.file ? 'Glisser pour tourner, molette pour zoomer, cliquer une pièce pour l\'identifier' : 'Glisser pour tourner, molette pour zoomer') + '</p>' +
     '</section><aside class="m-panel"><h2 class="sr-only">' + esc(m.name) + '</h2>' +
     '<div class="ptl-row"><div class="ptl" role="tablist" aria-label="' + T('Contenu du panneau') + '">' +
       ['fiche', 'parts'].map(function(k){ return '<button class="ptab" role="tab" data-ptab="' + k + '" aria-selected="' + (MS.tab === k) + '">' + T(k === 'fiche' ? 'Fiche' : 'Pièces') + (k === 'parts' ? ' <small>' + m.parts.length + '</small>' : '') + '</button>'; }).join('') +
@@ -90,13 +92,13 @@ function missionPage(m){
 }
 function mountMission(m){
   var msg = $('m-msg');
-  if (!m.file || !Viewer.available()){ msg.hidden = false; msg.textContent = T('La vue 3D demande WebGL, indisponible ici. La fiche reste lisible à droite.'); return; }
+  if (!Viewer.available()){ msg.hidden = false; msg.textContent = T('La vue 3D demande WebGL, indisponible ici. La fiche reste lisible à droite.'); return; }
   Viewer.open($('stage'), m, {
     onPick:function(k){ MS.part = k; MS.tab = 'parts'; renderPanel(m); },
     onState:function(st, hasBody){ msg.hidden = st === 'ready'; if ($('m-body-note')) $('m-body-note').hidden = !(st === 'ready' && hasBody); msg.textContent = st === 'loading' ? T('Chargement de la maquette…') : st === 'nogl' ? T('La vue 3D demande WebGL, indisponible ici. La fiche reste lisible à droite.') : st === 'error' ? T('La maquette n\'a pas pu être chargée.') : ''; }
   });
   Viewer.select(MS.part); Viewer.explode(MS.explode);
-  $('m-explode').addEventListener('input', function(e){ MS.explode = e.target.value / 100; Viewer.explode(MS.explode); });
+  if ($('m-explode')) $('m-explode').addEventListener('input', function(e){ MS.explode = e.target.value / 100; Viewer.explode(MS.explode); });
   $('m-reset').addEventListener('click', function(){ Viewer.reset(m); });
   /* vue de la sonde (le sol défile dessous) ou vue d'orbite (le corps entier, sonde agrandie) ; pause : arrête l'orbite et la rotation (WCAG 2.2.2) */
   Viewer.view(MS.view); Viewer.run(MS.run);

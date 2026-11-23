@@ -26,7 +26,7 @@ function launch(m){ return ev(m, ['launch']); }
 function arrival(m){ return ev(m, ['arrival', 'orbit']); }
 function end(m){ return ev(m, ['end']); }
 /* agences nommées dans le texte de la fiche, telles qu'écrites (sigles) */
-function agencies(m){ var a = []; (String(m.agency).match(/\b(NASA|ESA|ASI|JAXA|CNES|DLR|ISRO|Roscosmos|CNSA)\b/g) || []).forEach(function(x){ if (a.indexOf(x) < 0) a.push(x); }); return a; }
+function agencies(m){ var a = []; (String(m.agency).match(/\b(NASA|ESA|ASI|JAXA|CNES|DLR|ISRO|KARI|Roscosmos|CNSA)\b/g) || []).forEach(function(x){ if (a.indexOf(x) < 0) a.push(x); }); return a; }
 function allAgencies(){ var n = {}; MISSIONS.forEach(function(m){ agencies(m).forEach(function(a){ n[a] = (n[a] || 0) + 1; }); });
   return Object.keys(n).sort(function(a, b){ return n[b] - n[a] || (a < b ? -1 : 1); }); }
 function bodies(){ var b = []; MISSIONS.forEach(function(m){ if (b.indexOf(m.targets[0]) < 0) b.push(m.targets[0]); }); return b; }
@@ -62,7 +62,7 @@ var SHAPE = {
 };
 SHAPE.arrival = SHAPE.orbit;
 function timeline(L){
-  var y0 = 1995, y1 = Math.max(2028, new Date().getUTCFullYear() + 2), W = 1000, lw = 120, rh = 30, top = 26, H = top + L.length * rh + 30, now = today();
+  var y0 = Math.floor(Math.min.apply(null, [2000].concat(L.map(function(m){ return +String(m.year).slice(0, 4); }))) / 5) * 5, y1 = Math.max(2028, new Date().getUTCFullYear() + 2), W = 1000, lw = 120, rh = 30, top = 26, H = top + L.length * rh + 30, now = today();
   var t0 = Date.UTC(y0, 0, 1) / DAY, t1 = Date.UTC(y1, 0, 1) / DAY;
   function X(t){ return +(lw + (t - t0) / (t1 - t0) * (W - lw - 40)).toFixed(1); }
   var s = '';

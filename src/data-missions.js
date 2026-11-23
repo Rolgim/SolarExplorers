@@ -603,5 +603,257 @@ var MISSIONS = [
       { title:'Données dans STAC-PLANET', rows:[
         ['Collections', '20', 'stac'], ['Images HIRES (brutes)', '574 546', 'stac'], ['Images UVVIS (brutes)', '570 533', 'stac'] ]}
     ]
+  },
+  {
+    id:'sln', name:'Kaguya (SELENE)', short:'Kaguya', year:'2007',
+    agency:'JAXA',
+    targets:['Lune'],
+    events:[
+      { type:'launch', body:'Terre', date:'2007-09-14', ref:'jaxa' },
+      { type:'arrival', body:'Lune', date:'2007-10-03', ref:'nasa' },
+      { type:'end', body:'Lune', date:'2009-06-10', ref:'nasa' }
+    ],
+    horizons:'-131', stac:'ode-moon-sln-',
+    file:null, bytes:0,
+    model:{ none:true },
+    body:{ name:'Lune', tex:'moon', nadir:[0, -1, 0] },
+    view:{ az:0.8, el:0.3, dist:1.5, r:3 }, sun:[0.4, 0.8, 0.4],
+    real:{ key:'sln-img', alt:'Aperçu d\'une image de Kaguya', none:'Pas encore d\'aperçu image de Kaguya téléchargé depuis STAC-PLANET.' },
+    desc:"Grande sonde lunaire japonaise, Kaguya a tourné autour de la Lune de 2007 à 2009 avec quinze instruments et deux petits satellites, Okina et Ouna. Ensemble, ils ont mesuré le relief, la composition, le sous-sol et la gravité de la Lune, y compris celle de la face cachée. La sonde a été précipitée sur la Lune à la fin de la mission.",
+    checked:'2026-11-23',
+    refs:{
+      jaxa:{ t:'KAGUYA (SELENE) : About the satellite', p:'JAXA', u:'https://www.selene.jaxa.jp/en/about/about_sat_e.htm' },
+      nasa:{ t:'Kaguya', p:'NASA Science', u:'https://science.nasa.gov/mission/kaguya/' },
+      hz:{ t:'JPL Horizons, objet -131 (SELENE)', p:'NASA JPL', u:'https://ssd.jpl.nasa.gov/horizons/app.html#/' },
+      stac:{ t:'STAC-PLANET, collections ode-moon-sln-* (sonde du 23 novembre 2026)', p:'PDSSP (CNES)', u:'https://stacplanet.pdssp.eu/' }
+    },
+    parts:[],
+    sections:[
+      { title:'Véhicule', rows:[
+        ['Orbiteur principal', '2,1 × 2,1 × 4,8 m, stabilisé sur trois axes', 'jaxa'], ['Masse', '≈ 3 t au lancement avec les deux petits satellites (2 900 kg selon la NASA)', 'jaxa'],
+        ['Puissance', '3,5 kW au plus', 'jaxa'], ['Petits satellites', 'Okina (relais) et Ouna (radio VRAD), 50 kg chacun, stabilisés par rotation', 'jaxa'] ]},
+      { title:'Mission', rows:[
+        ['Lancement', '14 septembre 2007, H-IIA, Tanegashima', 'jaxa'], ['Mise en orbite lunaire', '3 octobre 2007', 'nasa'],
+        ['Okina et Ouna', 'largués les 9 et 12 octobre 2007 ; Okina tombe sur la Lune le 12 février 2009', 'nasa'],
+        ['Orbite abaissée', 'à ≈ 50 km le 1er février 2009', 'nasa'],
+        ['Fin de mission', 'impact le 10 juin 2009, 65,5° S, 80,4° E, près du cratère Gill', 'nasa'] ]},
+      { title:'Orbite', rows:[
+        ['Type', 'circulaire, polaire (90°)', 'jaxa'], ['Altitude', '100 km, atteinte le 19 octobre 2007', 'jaxa'] ]},
+      { title:'Instruments', rows:[
+        ['TC', 'caméra stéréo du relief', 'jaxa'], ['MI', 'imageur multibande, neuf bandes visible et proche infrarouge', 'jaxa'], ['SP', 'spectromètre visible et proche infrarouge', 'jaxa'],
+        ['LALT', 'altimètre laser', 'jaxa'], ['LRS', 'radar sondeur de la croûte, sur quelques kilomètres', 'jaxa'],
+        ['XRS et GRS', 'spectromètres X et gamma : éléments de la surface', 'jaxa'], ['RSAT et VRAD', 'suivi radio des petits satellites : gravité, y compris face cachée', 'jaxa'],
+        ['Autres', 'LMAG, CPS, PACE, RS, UPI, et deux caméras HDTV (Terre et Lune)', 'jaxa'] ]},
+      { title:'Données dans STAC-PLANET', rows:[
+        ['Collections', '64', 'stac'], ['Images MI (niveau 3C)', '378 072', 'stac'], ['Images HDTV', '275 100', 'stac'] ]}
+    ]
+  },
+  {
+    id:'ch1', name:'Chandrayaan-1', short:'Chandrayaan-1', year:'2008',
+    agency:'ISRO (Inde), avec des instruments de l\'ESA, de la NASA et de la Bulgarie',
+    targets:['Lune'],
+    events:[
+      { type:'launch', body:'Terre', date:'2008-10-22', ref:'isro' },
+      { type:'arrival', body:'Lune', date:'2008-11-08', ref:'nasa' },
+      { type:'end', body:'Lune', date:'2009-08-28', ref:'nasa' }
+    ],
+    horizons:'-86', stac:'ode-moon-ch1-',
+    file:null, bytes:0,
+    model:{ none:true },
+    body:{ name:'Lune', tex:'moon', nadir:[0, -1, 0] },
+    view:{ az:0.8, el:0.3, dist:1.5, r:3 }, sun:[0.4, 0.8, 0.4],
+    real:{ key:'ch1-img', alt:'Aperçu d\'une image de Chandrayaan-1', none:'Pas encore d\'aperçu image de Chandrayaan-1 téléchargé depuis STAC-PLANET.' },
+    desc:"Première sonde lunaire de l'Inde, Chandrayaan-1 a tourné autour de la Lune de novembre 2008 à août 2009 avec onze instruments, dont six venus d'autres pays. Son spectromètre M3, fourni par la NASA, a détecté de l'eau et des molécules hydroxyle à la surface, et son radar Mini-SAR des signes de glace au fond des cratères polaires.",
+    checked:'2026-11-23',
+    refs:{
+      isro:{ t:'Chandrayaan-1', p:'ISRO', u:'https://www.isro.gov.in/Chandrayaan_1.html' },
+      sci:{ t:'Chandrayaan-1 : science', p:'ISRO', u:'https://www.isro.gov.in/Chandrayaan-1_science.html' },
+      nasa:{ t:'Chandrayaan-1', p:'NASA Science', u:'https://science.nasa.gov/mission/chandrayaan-1/' },
+      hz:{ t:'JPL Horizons, objet -86 (Chandrayaan-1)', p:'NASA JPL', u:'https://ssd.jpl.nasa.gov/horizons/app.html#/' },
+      stac:{ t:'STAC-PLANET, collections ode-moon-ch1-* (sonde du 23 novembre 2026)', p:'PDSSP (CNES)', u:'https://stacplanet.pdssp.eu/' }
+    },
+    parts:[],
+    sections:[
+      { title:'Véhicule', rows:[
+        ['Masse', '1 380 kg au lancement', 'isro'], ['Puissance', '700 W', 'isro'], ['Durée prévue', '2 ans', 'isro'] ]},
+      { title:'Mission', rows:[
+        ['Lancement', '22 octobre 2008, PSLV-C11, Sriharikota', 'isro'], ['Mise en orbite lunaire', '8 novembre 2008', 'nasa'],
+        ['Sonde d\'impact (MIP)', 'larguée en novembre 2008, tombée près du cratère Shackleton', 'nasa'],
+        ['Orbite relevée', 'à 200 km en mai 2009', 'isro'],
+        ['Fin de mission', 'dernier contact le 28 août 2009 (29 août selon l\'ISRO), panne d\'alimentation probable', 'nasa'] ]},
+      { title:'Orbite', rows:[
+        ['Type', 'polaire', 'sci'], ['Altitude', '100 km, puis 200 km', 'isro'] ]},
+      { title:'Instruments', rows:[
+        ['TMC', 'caméra stéréo du relief, 5 m au sol, fauchée de 20 km', 'sci'], ['HySI', 'imageur hyperspectral, 64 bandes de 0,4 à 0,95 µm, 80 m', 'sci'],
+        ['M3', 'spectromètre imageur de 0,7 à 3,0 µm (NASA : Brown, JPL)', 'sci'], ['Mini-SAR', 'radar à 2,38 GHz : glace des cratères polaires (NASA : APL)', 'sci'],
+        ['SIR-2 et C1XS', 'spectromètres infrarouge et X (ESA)', 'sci'], ['SARA', 'imageur d\'atomes neutres (ESA, Suède, ISRO)', 'sci'],
+        ['Autres', 'LLRI (altimètre laser), HEX (gamma), RADOM (radiations, Bulgarie), MIP', 'sci'] ]},
+      { title:'Résultats', rows:[
+        ['Eau en surface', 'M3 détecte des molécules hydroxyle et d\'eau (publications de septembre 2009)', 'nasa'],
+        ['Glace', 'plus de 40 petits cratères avec de la glace près du pôle Nord (Mini-SAR)', 'nasa'] ]},
+      { title:'Données dans STAC-PLANET', rows:[
+        ['Collections', '8', 'stac'], ['Images M3 brutes', '1 509', 'stac'], ['Cartes Mini-SAR', '6 848', 'stac'] ]}
+    ]
+  },
+  {
+    id:'kplo', name:'Danuri (KPLO)', short:'Danuri', year:'2022',
+    agency:'KARI (Corée du Sud), avec une caméra de la NASA',
+    targets:['Lune'],
+    events:[
+      { type:'launch', body:'Terre', date:'2022-08-04', ref:'nasa' },
+      { type:'arrival', body:'Lune', date:'2022-12-27', ref:'kr' }
+    ],
+    horizons:'-155', stac:'ode-moon-kplo-',
+    file:null, bytes:0,
+    model:{ none:true },
+    body:{ name:'Lune', tex:'moon', nadir:[0, -1, 0] },
+    view:{ az:0.8, el:0.3, dist:1.5, r:3 }, sun:[0.4, 0.8, 0.4],
+    real:{ key:'kplo-img', alt:'Aperçu d\'une image ShadowCam (cratère d\'ombre permanente)', none:'Pas encore d\'aperçu ShadowCam téléchargé depuis STAC-PLANET.' },
+    desc:"Première sonde lunaire de la Corée du Sud, Danuri a rejoint la Lune fin 2022 par une longue trajectoire de quatre mois et demi qui économise le carburant. En orbite polaire, elle photographie la surface, mesure son magnétisme et sa composition. Sa caméra ShadowCam, fournie par la NASA, voit le fond des cratères qui ne reçoivent jamais le Soleil.",
+    checked:'2026-11-23',
+    refs:{
+      tps:{ t:'Danuri, South Korea\'s first Moon mission', p:'The Planetary Society', u:'https://planetary.org/space-missions/kplo' },
+      nasa:{ t:'NASA\'s ShadowCam Launches Aboard Korea Pathfinder Lunar Orbiter (4 août 2022)', p:'NASA', u:'https://www.nasa.gov/blogs/missions/2022/08/04/nasas-shadowcam-launches-aboard-korea-pathfinder-lunar-orbiter' },
+      kr:{ t:'Danuri\'s lunar orbit makes Korea 7th nation to send craft to moon (29 décembre 2022)', p:'Korea.net', u:'https://www.korea.net/NewsFocus/Sci-Tech/view?articleId=226643' },
+      hz:{ t:'JPL Horizons, objet -155 (KPLO)', p:'NASA JPL', u:'https://ssd.jpl.nasa.gov/horizons/app.html#/' },
+      stac:{ t:'STAC-PLANET, collections ode-moon-kplo-* (sonde du 23 novembre 2026)', p:'PDSSP (CNES)', u:'https://stacplanet.pdssp.eu/' }
+    },
+    parts:[],
+    sections:[
+      { title:'Mission', rows:[
+        ['Lancement', '4 août 2022 à 19 h 08 (heure de Floride), Falcon 9, Cap Canaveral', 'nasa'],
+        ['Trajectoire', 'transfert balistique de ≈ 4,5 mois, économe en carburant', 'nasa'],
+        ['Orbite de mission', 'atteinte le 27 décembre 2022', 'kr'], ['Science', 'à partir de janvier 2023', 'tps'],
+        ['Carburant', '93 kg restants sur 260 kg à l\'arrivée', 'kr'] ]},
+      { title:'Orbite', rows:[
+        ['Type', 'polaire, ≈ circulaire', 'nasa'], ['Altitude', '≈ 100 km', 'tps'], ['Période', '≈ 2 h', 'kr'] ]},
+      { title:'Instruments', rows:[
+        ['Caméra haute résolution', '2,5 m par pixel', 'tps'], ['Caméra polarimétrique grand angle', 'nature des matériaux d\'après la lumière diffusée', 'tps'],
+        ['Spectromètre gamma', 'composition en éléments', 'tps'], ['Magnétomètre', 'anomalies magnétiques locales (« swirls »)', 'tps'],
+        ['ShadowCam', 'caméra de la NASA (ASU, MSSS), des centaines de fois plus sensible que celle de LRO, jusqu\'à 1,7 m par pixel', 'nasa'] ]},
+      { title:'Données dans STAC-PLANET', rows:[
+        ['Collections', '5 (ShadowCam seulement)', 'stac'], ['Images ShadowCam brutes', '38 461', 'stac'] ]}
+    ]
+  },
+  {
+    id:'lp', name:'Lunar Prospector', short:'Lunar Prospector', year:'1998',
+    agency:'NASA (programme Discovery, Ames)',
+    targets:['Lune'],
+    events:[
+      { type:'launch', body:'Terre', date:'1998-01-07', ref:'nssdc' },
+      { type:'arrival', body:'Lune', date:'1998-01-11', ref:'nssdc' },
+      { type:'end', body:'Lune', date:'1999-07-31', ref:'nssdc' }
+    ],
+    horizons:'-25', stac:'ode-moon-lp-',
+    file:null, bytes:0,
+    model:{ none:true },
+    body:{ name:'Lune', tex:'moon', nadir:[0, -1, 0] },
+    view:{ az:0.8, el:0.3, dist:1.5, r:3 }, sun:[0.4, 0.8, 0.4],
+    real:{ key:'lp-img', alt:'Donnée de Lunar Prospector', none:'Les instruments de Lunar Prospector comptent des particules et mesurent des champs : leurs collections dans STAC-PLANET n\'ont pas d\'aperçu image.' },
+    desc:"Petite sonde en forme de tambour, sans ordinateur de bord, Lunar Prospector a tourné un an et demi autour de la Lune en 1998 et 1999. Ses spectromètres ont cartographié les éléments de la surface et trouvé un excès d'hydrogène aux pôles, signe possible de glace. Elle a été précipitée dans un cratère du pôle Sud à la fin de la mission.",
+    checked:'2026-11-23',
+    refs:{
+      nssdc:{ t:'Lunar Prospector (1998-001A)', p:'NASA NSSDCA', u:'https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1998-001A' },
+      ns:{ t:'Fiche d\'expérience NSSDCA : Neutron Spectrometer (NS)', p:'NASA NSSDCA', u:'https://nssdc.gsfc.nasa.gov/nmc/experiment/display.action?id=1998-001A-02' },
+      grs:{ t:'Fiche d\'expérience NSSDCA : Gamma Ray Spectrometer (GRS)', p:'NASA NSSDCA', u:'https://nssdc.gsfc.nasa.gov/nmc/experiment/display.action?id=1998-001A-01' },
+      hz:{ t:'JPL Horizons, objet -25 (Lunar Prospector)', p:'NASA JPL', u:'https://ssd.jpl.nasa.gov/horizons/app.html#/' },
+      stac:{ t:'STAC-PLANET, collections ode-moon-lp-* (sonde du 23 novembre 2026)', p:'PDSSP (CNES)', u:'https://stacplanet.pdssp.eu/' }
+    },
+    parts:[],
+    sections:[
+      { title:'Véhicule', rows:[
+        ['Forme', 'tambour de 1,37 m de diamètre et 1,28 m de haut, trois perches de 2,5 m', 'nssdc'], ['Masse', '296,4 kg avec les ergols, 158,7 kg à sec', 'nssdc'],
+        ['Puissance', '186 W en moyenne (cellules sur la coque)', 'nssdc'], ['Stabilisation', 'par rotation, 12 tours par minute', 'nssdc'], ['Ordinateur de bord', 'aucun : tout est commandé depuis le sol', 'nssdc'] ]},
+      { title:'Mission', rows:[
+        ['Lancement', '7 janvier 1998, Athena 2, Cap Canaveral', 'nssdc'], ['Croisière', '105 heures', 'nssdc'],
+        ['Orbite de cartographie', 'atteinte le 16 janvier 1998', 'nssdc'], ['Mission prolongée', 'à partir du 28 janvier 1999, orbite abaissée', 'nssdc'],
+        ['Fin de mission', 'impact volontaire près du pôle Sud le 31 juillet 1999 (87,7° S, 42,0° E)', 'nssdc'] ]},
+      { title:'Orbite', rows:[
+        ['Type', 'polaire, quasi circulaire', 'nssdc'], ['Altitude', '100 km, puis 40 km et 15 × 45 km', 'nssdc'], ['Période', '118 min', 'nssdc'] ]},
+      { title:'Instruments', rows:[
+        ['GRS', 'spectromètre gamma : uranium, thorium, potassium et autres éléments', 'grs'], ['NS', 'spectromètre à neutrons : hydrogène, donc glace d\'eau possible', 'ns'],
+        ['APS', 'spectromètre alpha : dégazages de radon', 'nssdc'], ['MAG et ER', 'magnétomètre et réflectomètre à électrons : champs magnétiques de la croûte', 'nssdc'],
+        ['DGE', 'gravité par effet Doppler sur le signal radio', 'nssdc'] ]},
+      { title:'Données dans STAC-PLANET', rows:[
+        ['Collections', '15', 'stac'] ]}
+    ]
+  },
+  {
+    id:'grail', name:'GRAIL (Ebb et Flow)', short:'GRAIL', year:'2011',
+    agency:'NASA (JPL, programme Discovery), sondes construites par Lockheed Martin',
+    targets:['Lune'],
+    events:[
+      { type:'launch', body:'Terre', date:'2011-09-10', ref:'nssdc' },
+      { type:'arrival', body:'Lune', date:'2011-12-31', ref:'nssdc' },
+      { type:'end', body:'Lune', date:'2012-12-17', ref:'nssdc' }
+    ],
+    horizons:'-177', stac:'ode-moon-grail-',
+    file:null, bytes:0,
+    model:{ none:true },
+    body:{ name:'Lune', tex:'moon', nadir:[0, -1, 0] },
+    view:{ az:0.8, el:0.3, dist:1.5, r:3 }, sun:[0.4, 0.8, 0.4],
+    real:{ key:'grail-img', alt:'Donnée de GRAIL', none:'GRAIL mesure la distance entre ses deux sondes : ses collections dans STAC-PLANET sont des séries de mesures et des modèles de gravité, sans aperçu image.' },
+    desc:"Deux sondes jumelles, GRAIL-A et GRAIL-B, ont volé l'une derrière l'autre autour de la Lune en 2012. En mesurant en permanence la distance qui les séparait, elles ont dressé la carte la plus précise du champ de gravité lunaire, qui révèle la structure de la croûte et des grands bassins d'impact.",
+    checked:'2026-11-23',
+    refs:{
+      nssdc:{ t:'GRAIL-A (2011-046A)', p:'NASA NSSDCA', u:'https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=2011-046A' },
+      hz:{ t:'JPL Horizons, objet -177 (GRAIL-A)', p:'NASA JPL', u:'https://ssd.jpl.nasa.gov/horizons/app.html#/' },
+      stac:{ t:'STAC-PLANET, collections ode-moon-grail-* (sonde du 23 novembre 2026)', p:'PDSSP (CNES)', u:'https://stacplanet.pdssp.eu/' }
+    },
+    parts:[],
+    sections:[
+      { title:'Véhicule', rows:[
+        ['Deux sondes', 'GRAIL-A et GRAIL-B, sur la plateforme XSS-11 de Lockheed Martin', 'nssdc'], ['Masse de chaque sonde', '132,6 kg à sec, 202,4 kg avec les ergols', 'nssdc'],
+        ['Mesure', 'liaison radio en bande Ka entre les deux sondes (LGRS), héritée de la mission terrestre GRACE', 'nssdc'] ]},
+      { title:'Mission', rows:[
+        ['Lancement', '10 septembre 2011, Delta II, Cap Canaveral', 'nssdc'], ['Croisière', '≈ 3,5 mois, par le point de Lagrange L1 Soleil-Terre', 'nssdc'],
+        ['Mise en orbite lunaire', '31 décembre 2011 (A) et 1er janvier 2012 (B)', 'nssdc'], ['Phase scientifique', '90 jours, trois cycles de 27,3 jours', 'nssdc'],
+        ['Fin de mission', 'impacts le 17 décembre 2012, près de 75,6° N', 'nssdc'] ]},
+      { title:'Orbite', rows:[
+        ['Type', 'polaire, quasi circulaire, en tandem', 'nssdc'], ['Altitude', '50 km', 'nssdc'], ['Période', '113 min', 'nssdc'], ['Écart entre les sondes', '175 à 225 km', 'nssdc'] ]},
+      { title:'Instruments', rows:[
+        ['LGRS', 'mesure de la distance entre les deux sondes, d\'où le champ de gravité', 'nssdc'], ['MoonKAM', 'caméras pour les élèves (jusqu\'à 5 par sonde)', 'nssdc'] ]},
+      { title:'Données dans STAC-PLANET', rows:[
+        ['Collections', '7', 'stac'] ]}
+    ]
+  },
+  {
+    id:'vo', name:'Viking 1 (orbiteur)', short:'Viking 1', year:'1975',
+    agency:'NASA (Langley, JPL)',
+    targets:['Mars'],
+    events:[
+      { type:'launch', body:'Terre', date:'1975-08-20', ref:'nssdc' },
+      { type:'arrival', body:'Mars', date:'1976-06-19', ref:'nssdc' },
+      { type:'end', body:'Mars', date:'1980-08-17', ref:'nssdc' }
+    ],
+    horizons:null, stac:'ode-mars-vo-',
+    file:null, bytes:0,
+    model:{ none:true },
+    body:{ name:'Mars', tex:'mars', nadir:[0, -1, 0] },
+    view:{ az:0.8, el:0.3, dist:1.5, r:3 }, sun:[0.4, 0.8, 0.4],
+    real:{ key:'vo-img', alt:"Aperçu d'une mosaïque d'images des orbiteurs Viking" },
+    desc:"Les deux sondes Viking, lancées en 1975, associaient chacune un orbiteur et un atterrisseur. L'orbiteur de Viking 1 a photographié Mars pour choisir le site d'atterrissage, déposé l'atterrisseur à Chryse Planitia en juillet 1976, puis cartographié la planète jusqu'en 1980. Ses images ont longtemps été la référence pour la géographie martienne.",
+    checked:'2026-11-23',
+    refs:{
+      nssdc:{ t:'Viking 1 Orbiter (1975-075A)', p:'NASA NSSDCA', u:'https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1975-075A' },
+      vis:{ t:'Fiche d\'expérience NSSDCA : Visual Imaging Subsystem (VIS)', p:'NASA NSSDCA', u:'https://nssdc.gsfc.nasa.gov/nmc/experiment/display.action?id=1975-075A-01' },
+      stac:{ t:'STAC-PLANET, collections ode-mars-vo-* (sonde du 23 novembre 2026)', p:'PDSSP (CNES)', u:'https://stacplanet.pdssp.eu/' }
+    },
+    parts:[],
+    sections:[
+      { title:'Véhicule', rows:[
+        ['Forme', 'octogone d\'≈ 2,5 m, hérité de Mariner 9', 'nssdc'], ['Masse au lancement', '2 328 kg, dont 1 445 kg d\'ergols et de gaz', 'nssdc'],
+        ['Panneaux solaires', '4 ailes, 9,75 m de bout en bout, 620 W à Mars', 'nssdc'], ['Antenne grand gain', '≈ 1,5 m, orientable', 'nssdc'], ['Moteur', '1 323 N', 'nssdc'] ]},
+      { title:'Mission', rows:[
+        ['Lancement', '20 août 1975, Titan IIIE-Centaur, Cap Canaveral', 'nssdc'], ['Mise en orbite de Mars', '19 juin 1976', 'nssdc'],
+        ['Atterrisseur', 'posé à Chryse Planitia le 20 juillet 1976', 'nssdc'], ['Fin des opérations', '17 août 1980, après 1 485 orbites', 'nssdc'] ]},
+      { title:'Orbite', rows:[
+        ['Au début', '1 513 × 33 000 km, 24,66 h', 'nssdc'], ['Depuis 1980', '320 × 56 000 km, pour éviter toute chute sur Mars avant 2019', 'nssdc'] ]},
+      { title:'Instruments', rows:[
+        ['VIS', 'deux caméras de télévision, filtres de couleur, plateforme orientable', 'vis'], ['IRTM', 'radiomètre infrarouge : températures de la surface et de l\'atmosphère', 'nssdc'],
+        ['MAWD', 'spectromètre : vapeur d\'eau de l\'atmosphère (bande de 1,4 µm)', 'nssdc'], ['Radioscience', 'suivi radio de l\'orbiteur (gravité, atmosphère)', 'nssdc'] ]},
+      { title:'Données dans STAC-PLANET', rows:[
+        ['Collections (orbiteurs Viking 1 et 2 réunis)', '5', 'stac'], ['Images VIS brutes', '47 797', 'stac'] ]}
+    ]
   }
 ];

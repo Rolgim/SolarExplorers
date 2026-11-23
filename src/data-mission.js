@@ -207,5 +207,89 @@ clem:{
     [L('Appui de la NASA', 'NASA support'), L('Deep Space Network, Goddard et JPL', 'Deep Space Network, Goddard and JPL'), 'info']
   ],
   refs:{}, checked:'2026-11-23'
+},
+sln:{
+  intro:L('Kaguya devait étudier l\'origine et l\'évolution de la Lune. L\'orbiteur principal a largué deux petits satellites qui ont servi de relais et de balises radio, pour mesurer la gravité jusque sur la face cachée.',
+          'Kaguya was to study the origin and evolution of the Moon. The main orbiter released two small satellites used as a relay and radio beacons, to measure gravity even on the far side.'),
+  phases:[
+    [L('14 septembre 2007', '14 September 2007'), L('Lancement', 'Launch'), L('H-IIA depuis Tanegashima.', 'H-IIA from Tanegashima.'), 'jaxa'],
+    [L('3 octobre 2007', '3 October 2007'), L('Mise en orbite lunaire', 'Lunar orbit insertion'), L('Orbite polaire initiale de ≈ 101 × 11 741 km.', 'Initial polar orbit of ≈ 101 × 11,741 km.'), 'nasa'],
+    [L('9 et 12 octobre 2007', '9 and 12 October 2007'), L('Okina et Ouna', 'Okina and Ouna'), L('Largage des deux petits satellites.', 'Release of the two small satellites.'), 'nasa'],
+    [L('19 octobre 2007', '19 October 2007'), L('Orbite de mission', 'Mission orbit'), L('Circulaire, à ≈ 100 km.', 'Circular, at ≈ 100 km.'), 'nasa'],
+    [L('1er février 2009', '1 February 2009'), L('Orbite abaissée', 'Orbit lowered'), L('À ≈ 50 km, après une panne de roue de réaction.', 'To ≈ 50 km, after a reaction wheel failure.'), 'nasa'],
+    [L('10 juin 2009', '10 June 2009'), L('Fin de mission', 'End of mission'), L('Impact près du cratère Gill (65,5° S, 80,4° E).', 'Impact near Gill crater (65.5° S, 80.4° E).'), 'nasa']
+  ],
+  ops:[
+    [L('Orbite', 'Orbit'), L('circulaire, polaire, 100 km', 'circular, polar, 100 km'), 'jaxa'],
+    [L('Durée prévue', 'Planned duration'), L('1 an', '1 year'), 'jaxa']
+  ],
+  refs:{}, checked:'2026-11-23'
+},
+ch1:{
+  intro:L('Chandrayaan-1 a ouvert l\'exploration lunaire de l\'Inde. Prévue pour deux ans, la mission s\'est arrêtée au bout de dix mois, mais ses instruments ont livré la première détection d\'eau à la surface de la Lune.',
+          'Chandrayaan-1 opened India\'s lunar exploration. Planned for two years, the mission stopped after ten months, but its instruments gave the first detection of water on the Moon\'s surface.'),
+  phases:[
+    [L('22 octobre 2008', '22 October 2008'), L('Lancement', 'Launch'), L('PSLV-C11 depuis Sriharikota, puis cinq poussées en 13 jours.', 'PSLV-C11 from Sriharikota, then five burns over 13 days.'), 'nasa'],
+    [L('8 novembre 2008', '8 November 2008'), L('Mise en orbite lunaire', 'Lunar orbit insertion'), L('Orbite initiale de ≈ 7 502 × 504 km, puis 100 km.', 'Initial orbit of ≈ 7,502 × 504 km, then 100 km.'), 'nasa'],
+    [L('novembre 2008', 'November 2008'), L('Sonde d\'impact', 'Impact probe'), L('La MIP tombe près du cratère Shackleton, au pôle Sud.', 'The MIP crashes near Shackleton crater, at the south pole.'), 'nasa'],
+    [L('mai 2009', 'May 2009'), L('Orbite relevée', 'Orbit raised'), L('À 200 km.', 'To 200 km.'), 'isro'],
+    [L('28 août 2009', '28 August 2009'), L('Fin de mission', 'End of mission'), L('Dernier contact ; panne d\'alimentation par surchauffe probable.', 'Last contact; power failure from overheating likely.'), 'nasa']
+  ],
+  ops:[
+    [L('Orbite', 'Orbit'), L('polaire, 100 km puis 200 km', 'polar, 100 km then 200 km'), 'sci'],
+    [L('Durée prévue', 'Planned duration'), L('2 ans', '2 years'), 'isro']
+  ],
+  refs:{}, checked:'2026-11-23'
+},
+kplo:{
+  intro:L('Danuri est la première sonde lunaire de la Corée du Sud. Elle a pris une route longue mais économe, en s\'éloignant d\'abord vers le Soleil avant de revenir être capturée par la Lune.',
+          'Danuri is South Korea\'s first lunar spacecraft. It took a long but economical route, first heading out toward the Sun before coming back to be captured by the Moon.'),
+  phases:[
+    [L('4 août 2022 (5 août en Corée)', '4 August 2022 (5 August in Korea)'), L('Lancement', 'Launch'), L('Falcon 9 depuis Cap Canaveral.', 'Falcon 9 from Cape Canaveral.'), 'nasa'],
+    [L('août – décembre 2022', 'August – December 2022'), L('Transfert balistique', 'Ballistic transfer'), L('≈ 4,5 mois de croisière.', '≈ 4.5 months of cruise.'), 'nasa'],
+    [L('27 décembre 2022', '27 December 2022'), L('Orbite de mission', 'Mission orbit'), L('Dernière manœuvre d\'insertion confirmée ; une orbite en ≈ 2 h.', 'Final insertion manoeuvre confirmed; one orbit in ≈ 2 h.'), 'kr'],
+    [L('janvier 2023', 'January 2023'), L('Début de la science', 'Science begins'), L('Orbite polaire d\'≈ 100 km.', 'Polar orbit of ≈ 100 km.'), 'tps']
+  ],
+  ops:[
+    [L('Orbite', 'Orbit'), L('polaire, ≈ 100 km, ≈ 2 h', 'polar, ≈ 100 km, ≈ 2 h'), 'nasa'],
+    [L('Mission prévue', 'Planned mission'), L('11 mois après l\'arrivée', '11 months after arrival'), 'nasa']
+  ],
+  refs:{}, checked:'2026-11-23'
+},
+lp:{
+  intro:L('Lunar Prospector, petite mission du programme Discovery, n\'avait ni caméra ni ordinateur de bord. Elle a cartographié la composition de toute la Lune depuis une orbite polaire basse.',
+          'Lunar Prospector, a small Discovery mission, had neither a camera nor an onboard computer. It mapped the composition of the whole Moon from a low polar orbit.'),
+  phases:[
+    [L('7 janvier 1998', '7 January 1998'), L('Lancement', 'Launch'), L('Athena 2 depuis Cap Canaveral ; 105 heures de croisière.', 'Athena 2 from Cape Canaveral; 105-hour cruise.'), 'nssdc'],
+    [L('11 – 16 janvier 1998', '11 – 16 January 1998'), L('Mise en orbite', 'Orbit insertion'), L('Orbite de capture, puis orbite de cartographie de 100 km.', 'Capture orbit, then 100 km mapping orbit.'), 'nssdc'],
+    [L('28 janvier 1999', '28 January 1999'), L('Mission prolongée', 'Extended mission'), L('Orbite abaissée pour des mesures plus fines.', 'Orbit lowered for finer measurements.'), 'nssdc'],
+    [L('31 juillet 1999', '31 July 1999'), L('Fin de mission', 'End of mission'), L('Impact volontaire dans un cratère près du pôle Sud.', 'Deliberate impact in a crater near the south pole.'), 'nssdc']
+  ],
+  ops:[[L('Orbite', 'Orbit'), L('polaire, 100 km, 118 min', 'polar, 100 km, 118 min'), 'nssdc']],
+  refs:{}, checked:'2026-11-23'
+},
+grail:{
+  intro:L('GRAIL a fait voler deux sondes l\'une derrière l\'autre : les variations de la distance qui les séparait trahissent les irrégularités de la gravité lunaire.',
+          'GRAIL flew two spacecraft one behind the other: changes in the distance between them reveal irregularities in the Moon\'s gravity.'),
+  phases:[
+    [L('10 septembre 2011', '10 September 2011'), L('Lancement', 'Launch'), L('Delta II depuis Cap Canaveral, route par le point L1.', 'Delta II from Cape Canaveral, route via the L1 point.'), 'nssdc'],
+    [L('31 décembre 2011 – 1er janvier 2012', '31 December 2011 – 1 January 2012'), L('Mise en orbite lunaire', 'Lunar orbit insertion'), L('GRAIL-A puis GRAIL-B.', 'GRAIL-A then GRAIL-B.'), 'nssdc'],
+    [L('mars – mai 2012', 'March – May 2012'), L('Phase scientifique', 'Science phase'), L('Trois cycles de 27,3 jours à 50 km.', 'Three 27.3-day cycles at 50 km.'), 'nssdc'],
+    [L('17 décembre 2012', '17 December 2012'), L('Fin de mission', 'End of mission'), L('Impacts volontaires près du pôle Nord.', 'Deliberate impacts near the north pole.'), 'nssdc']
+  ],
+  ops:[[L('Orbite', 'Orbit'), L('polaire, 50 km, 113 min, en tandem', 'polar, 50 km, 113 min, in tandem'), 'nssdc']],
+  refs:{}, checked:'2026-11-23'
+},
+vo:{
+  intro:L('L\'orbiteur de Viking 1 a d\'abord servi à choisir un site sûr pour son atterrisseur, puis a cartographié Mars pendant quatre ans.',
+          'The Viking 1 orbiter first served to choose a safe site for its lander, then mapped Mars for four years.'),
+  phases:[
+    [L('20 août 1975', '20 August 1975'), L('Lancement', 'Launch'), L('Titan IIIE-Centaur depuis Cap Canaveral.', 'Titan IIIE-Centaur from Cape Canaveral.'), 'nssdc'],
+    [L('19 juin 1976', '19 June 1976'), L('Mise en orbite de Mars', 'Mars orbit insertion'), L('Orbite de 1 513 × 33 000 km.', 'Orbit of 1,513 × 33,000 km.'), 'nssdc'],
+    [L('20 juillet 1976', '20 July 1976'), L('Atterrissage', 'Landing'), L('L\'atterrisseur se pose à Chryse Planitia.', 'The lander touches down at Chryse Planitia.'), 'nssdc'],
+    [L('17 août 1980', '17 August 1980'), L('Fin des opérations', 'End of operations'), L('Après 1 485 orbites.', 'After 1,485 orbits.'), 'nssdc']
+  ],
+  ops:[[L('Orbite', 'Orbit'), L('1 513 × 33 000 km, 24,66 h', '1,513 × 33,000 km, 24.66 h'), 'nssdc']],
+  refs:{}, checked:'2026-11-23'
 }
 };

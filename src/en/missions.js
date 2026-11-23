@@ -323,5 +323,144 @@ var EN_MISSIONS = {
       { title:'Data in STAC-PLANET', rows:[
         ['Collections', '20'], ['HIRES images (raw)', '574,546'], ['UVVIS images (raw)', '570,533'] ]}
     ]
+  },
+  sln:{
+    agency:'JAXA', targets:['Moon'],
+    desc:"A large Japanese lunar spacecraft, Kaguya orbited the Moon from 2007 to 2009 with fifteen instruments and two small satellites, Okina and Ouna. Together they measured the Moon's relief, composition, subsurface and gravity, including on the far side. The spacecraft was crashed onto the Moon at the end of the mission.",
+    refs:{ hz:'JPL Horizons, object -131 (SELENE)', stac:'STAC-PLANET, ode-moon-sln-* collections (probe of 23 November 2026)' },
+    parts:{},
+    sections:[
+      { title:'Spacecraft', rows:[
+        ['Main orbiter', '2.1 × 2.1 × 4.8 m, three-axis stabilised'], ['Mass', '≈ 3 t at launch with the two small satellites (2,900 kg according to NASA)'],
+        ['Power', '3.5 kW at most'], ['Small satellites', 'Okina (relay) and Ouna (VRAD radio), 50 kg each, spin-stabilised'] ]},
+      { title:'Mission', rows:[
+        ['Launch', '14 September 2007, H-IIA, Tanegashima'], ['Lunar orbit insertion', '3 October 2007'],
+        ['Okina and Ouna', 'released on 9 and 12 October 2007; Okina crashed on the Moon on 12 February 2009'],
+        ['Orbit lowered', 'to ≈ 50 km on 1 February 2009'],
+        ['End of mission', 'impact on 10 June 2009, 65.5° S, 80.4° E, near Gill crater'] ]},
+      { title:'Orbit', rows:[
+        ['Type', 'circular, polar (90°)'], ['Altitude', '100 km, reached on 19 October 2007'] ]},
+      { title:'Instruments', rows:[
+        ['TC', 'stereo terrain camera'], ['MI', 'multiband imager, nine visible and near-infrared bands'], ['SP', 'visible and near-infrared spectrometer'],
+        ['LALT', 'laser altimeter'], ['LRS', 'radar sounder of the crust, down to a few kilometres'],
+        ['XRS and GRS', 'X-ray and gamma-ray spectrometers: surface elements'], ['RSAT and VRAD', 'radio tracking of the small satellites: gravity, far side included'],
+        ['Others', 'LMAG, CPS, PACE, RS, UPI, and two HDTV cameras (Earth and Moon)'] ]},
+      { title:'Data in STAC-PLANET', rows:[
+        ['Collections', '64'], ['MI images (level 3C)', '378,072'], ['HDTV images', '275,100'] ]}
+    ]
+  },
+  ch1:{
+    agency:'ISRO (India), with instruments from ESA, NASA and Bulgaria', targets:['Moon'],
+    desc:"India's first lunar spacecraft, Chandrayaan-1 orbited the Moon from November 2008 to August 2009 with eleven instruments, six of them from other countries. Its NASA-provided M3 spectrometer detected water and hydroxyl molecules on the surface, and its Mini-SAR radar found signs of ice at the bottom of polar craters.",
+    refs:{ sci:'Chandrayaan-1: science', hz:'JPL Horizons, object -86 (Chandrayaan-1)', stac:'STAC-PLANET, ode-moon-ch1-* collections (probe of 23 November 2026)' },
+    parts:{},
+    sections:[
+      { title:'Spacecraft', rows:[
+        ['Mass', '1,380 kg at launch'], ['Power', '700 W'], ['Planned duration', '2 years'] ]},
+      { title:'Mission', rows:[
+        ['Launch', '22 October 2008, PSLV-C11, Sriharikota'], ['Lunar orbit insertion', '8 November 2008'],
+        ['Impact probe (MIP)', 'released in November 2008, crashed near Shackleton crater'],
+        ['Orbit raised', 'to 200 km in May 2009'],
+        ['End of mission', 'last contact on 28 August 2009 (29 August according to ISRO), probable power failure'] ]},
+      { title:'Orbit', rows:[
+        ['Type', 'polar'], ['Altitude', '100 km, then 200 km'] ]},
+      { title:'Instruments', rows:[
+        ['TMC', 'stereo terrain camera, 5 m ground pixel, 20 km swath'], ['HySI', 'hyperspectral imager, 64 bands from 0.4 to 0.95 µm, 80 m'],
+        ['M3', 'imaging spectrometer from 0.7 to 3.0 µm (NASA: Brown, JPL)'], ['Mini-SAR', '2.38 GHz radar: ice in polar craters (NASA: APL)'],
+        ['SIR-2 and C1XS', 'infrared and X-ray spectrometers (ESA)'], ['SARA', 'neutral atom imager (ESA, Sweden, ISRO)'],
+        ['Others', 'LLRI (laser altimeter), HEX (gamma rays), RADOM (radiation, Bulgaria), MIP'] ]},
+      { title:'Results', rows:[
+        ['Surface water', 'M3 detects hydroxyl and water molecules (September 2009 publications)'],
+        ['Ice', 'more than 40 small craters with ice near the north pole (Mini-SAR)'] ]},
+      { title:'Data in STAC-PLANET', rows:[
+        ['Collections', '8'], ['Raw M3 images', '1,509'], ['Mini-SAR maps', '6,848'] ]}
+    ]
+  },
+  kplo:{
+    agency:'KARI (South Korea), with a NASA camera', targets:['Moon'],
+    desc:"South Korea's first lunar spacecraft, Danuri reached the Moon at the end of 2022 along a long, fuel-saving four-and-a-half-month trajectory. From polar orbit it images the surface and measures its magnetism and composition. Its NASA-provided ShadowCam camera sees the floors of craters that never receive sunlight.",
+    refs:{ nasa:'NASA\'s ShadowCam Launches Aboard Korea Pathfinder Lunar Orbiter (4 August 2022)', kr:'Danuri\'s lunar orbit makes Korea 7th nation to send craft to moon (29 December 2022)',
+      hz:'JPL Horizons, object -155 (KPLO)', stac:'STAC-PLANET, ode-moon-kplo-* collections (probe of 23 November 2026)' },
+    parts:{},
+    sections:[
+      { title:'Mission', rows:[
+        ['Launch', '4 August 2022 at 7:08 pm (Florida time), Falcon 9, Cape Canaveral'],
+        ['Trajectory', 'ballistic transfer of ≈ 4.5 months, fuel-saving'],
+        ['Mission orbit', 'reached on 27 December 2022'], ['Science', 'from January 2023'],
+        ['Fuel', '93 kg left out of 260 kg on arrival'] ]},
+      { title:'Orbit', rows:[
+        ['Type', 'polar, ≈ circular'], ['Altitude', '≈ 100 km'], ['Period', '≈ 2 h'] ]},
+      { title:'Instruments', rows:[
+        ['High-resolution camera', '2.5 m per pixel'], ['Wide-angle polarimetric camera', 'nature of materials from scattered light'],
+        ['Gamma-ray spectrometer', 'elemental composition'], ['Magnetometer', 'local magnetic anomalies (swirls)'],
+        ['ShadowCam', 'NASA camera (ASU, MSSS), hundreds of times more sensitive than LRO\'s, down to 1.7 m per pixel'] ]},
+      { title:'Data in STAC-PLANET', rows:[
+        ['Collections', '5 (ShadowCam only)'], ['Raw ShadowCam images', '38,461'] ]}
+    ]
+  },
+  lp:{
+    agency:'NASA (Discovery programme, Ames)', targets:['Moon'],
+    desc:"A small drum-shaped spacecraft with no onboard computer, Lunar Prospector orbited the Moon for a year and a half in 1998 and 1999. Its spectrometers mapped surface elements and found excess hydrogen at the poles, a possible sign of ice. It was crashed into a south-pole crater at the end of the mission.",
+    refs:{ ns:'NSSDCA experiment page: Neutron Spectrometer (NS)', grs:'NSSDCA experiment page: Gamma Ray Spectrometer (GRS)', hz:'JPL Horizons, object -25 (Lunar Prospector)', stac:'STAC-PLANET, ode-moon-lp-* collections (probe of 23 November 2026)' },
+    parts:{},
+    sections:[
+      { title:'Spacecraft', rows:[
+        ['Shape', 'drum 1.37 m wide and 1.28 m high, three 2.5 m booms'], ['Mass', '296.4 kg fuelled, 158.7 kg dry'],
+        ['Power', '186 W on average (cells on the body)'], ['Stabilisation', 'spinning, 12 rpm'], ['Onboard computer', 'none: everything commanded from the ground'] ]},
+      { title:'Mission', rows:[
+        ['Launch', '7 January 1998, Athena 2, Cape Canaveral'], ['Cruise', '105 hours'],
+        ['Mapping orbit', 'reached on 16 January 1998'], ['Extended mission', 'from 28 January 1999, orbit lowered'],
+        ['End of mission', 'deliberate impact near the south pole on 31 July 1999 (87.7° S, 42.0° E)'] ]},
+      { title:'Orbit', rows:[
+        ['Type', 'polar, near-circular'], ['Altitude', '100 km, then 40 km and 15 × 45 km'], ['Period', '118 min'] ]},
+      { title:'Instruments', rows:[
+        ['GRS', 'gamma-ray spectrometer: uranium, thorium, potassium and other elements'], ['NS', 'neutron spectrometer: hydrogen, hence possible water ice'],
+        ['APS', 'alpha spectrometer: radon outgassing'], ['MAG and ER', 'magnetometer and electron reflectometer: crustal magnetic fields'],
+        ['DGE', 'gravity from the Doppler shift of the radio signal'] ]},
+      { title:'Data in STAC-PLANET', rows:[
+        ['Collections', '15'] ]}
+    ]
+  },
+  grail:{
+    name:'GRAIL (Ebb and Flow)', agency:'NASA (JPL, Discovery programme), spacecraft built by Lockheed Martin', targets:['Moon'],
+    desc:"Twin spacecraft, GRAIL-A and GRAIL-B, flew one behind the other around the Moon in 2012. By constantly measuring the distance between them, they made the most precise map of the lunar gravity field, which reveals the structure of the crust and of the large impact basins.",
+    refs:{ hz:'JPL Horizons, object -177 (GRAIL-A)', stac:'STAC-PLANET, ode-moon-grail-* collections (probe of 23 November 2026)' },
+    parts:{},
+    sections:[
+      { title:'Spacecraft', rows:[
+        ['Two spacecraft', 'GRAIL-A and GRAIL-B, on Lockheed Martin\'s XSS-11 bus'], ['Mass of each', '132.6 kg dry, 202.4 kg fuelled'],
+        ['Measurement', 'Ka-band radio link between the two spacecraft (LGRS), inherited from the Earth mission GRACE'] ]},
+      { title:'Mission', rows:[
+        ['Launch', '10 September 2011, Delta II, Cape Canaveral'], ['Cruise', '≈ 3.5 months, via the Sun-Earth L1 point'],
+        ['Lunar orbit insertion', '31 December 2011 (A) and 1 January 2012 (B)'], ['Science phase', '90 days, three 27.3-day cycles'],
+        ['End of mission', 'impacts on 17 December 2012, near 75.6° N'] ]},
+      { title:'Orbit', rows:[
+        ['Type', 'polar, near-circular, in tandem'], ['Altitude', '50 km'], ['Period', '113 min'], ['Separation', '175 to 225 km'] ]},
+      { title:'Instruments', rows:[
+        ['LGRS', 'distance between the two spacecraft, hence the gravity field'], ['MoonKAM', 'cameras for school students (up to 5 per spacecraft)'] ]},
+      { title:'Data in STAC-PLANET', rows:[
+        ['Collections', '7'] ]}
+    ]
+  },
+  vo:{
+    name:'Viking 1 (orbiter)', agency:'NASA (Langley, JPL)', targets:['Mars'],
+    desc:"The two Viking spacecraft, launched in 1975, each combined an orbiter and a lander. The Viking 1 orbiter photographed Mars to choose the landing site, delivered the lander to Chryse Planitia in July 1976, then mapped the planet until 1980. Its images long served as the reference for Martian geography.",
+    refs:{ vis:'NSSDCA experiment page: Visual Imaging Subsystem (VIS)', stac:'STAC-PLANET, ode-mars-vo-* collections (probe of 23 November 2026)' },
+    parts:{},
+    sections:[
+      { title:'Spacecraft', rows:[
+        ['Shape', '≈ 2.5 m octagon, inherited from Mariner 9'], ['Launch mass', '2,328 kg, including 1,445 kg of propellant and gas'],
+        ['Solar arrays', '4 wings, 9.75 m tip to tip, 620 W at Mars'], ['High-gain antenna', '≈ 1.5 m, steerable'], ['Engine', '1,323 N'] ]},
+      { title:'Mission', rows:[
+        ['Launch', '20 August 1975, Titan IIIE-Centaur, Cape Canaveral'], ['Mars orbit insertion', '19 June 1976'],
+        ['Lander', 'touched down at Chryse Planitia on 20 July 1976'], ['End of operations', '17 August 1980, after 1,485 orbits'] ]},
+      { title:'Orbit', rows:[
+        ['At first', '1,513 × 33,000 km, 24.66 h'], ['Since 1980', '320 × 56,000 km, to avoid any fall onto Mars before 2019'] ]},
+      { title:'Instruments', rows:[
+        ['VIS', 'two television cameras, colour filters, steerable platform'], ['IRTM', 'infrared radiometer: surface and atmospheric temperatures'],
+        ['MAWD', 'spectrometer: atmospheric water vapour (1.4 µm band)'], ['Radio science', 'radio tracking of the orbiter (gravity, atmosphere)'] ]},
+      { title:'Data in STAC-PLANET', rows:[
+        ['Collections (Viking 1 and 2 orbiters combined)', '5'], ['Raw VIS images', '47,797'] ]}
+    ]
   }
 };

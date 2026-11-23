@@ -108,6 +108,13 @@ function prepare(t, gltf){
   var top = new THREE.Group(); top.quaternion.copy(R.q); top.add(root); R.root = top;
   return R;
 }
+/* sonde sans maquette libre de droits : un point lumineux à la couleur de surlignage (schéma de principe) */
+function placeholder(t){
+  var g = new THREE.Mesh(new THREE.SphereGeometry(0.6, 24, 16), new THREE.MeshBasicMaterial({ color:0x3D7BFF }));
+  var halo = new THREE.Mesh(new THREE.SphereGeometry(1.2, 24, 16), new THREE.MeshBasicMaterial({ color:0x8fb8ff, transparent:true, opacity:0.35, depthWrite:false }));
+  var top = new THREE.Group(); top.add(g, halo);
+  return { root:top, radius:(t.view && t.view.r) || 3, meshes:[], parts:{}, q:new THREE.Quaternion() };
+}
 function highlight(){
   if (!M) return;
   M.meshes.forEach(function(o){ var m = o.material, k = o.userData.part; if (!m.emissive) return;
@@ -158,6 +165,7 @@ function open(el, t, o){
     camera.near = M.radius * 0.02; camera.far = (hasBody ? O.rb * 20 : M.radius * 200); camera.updateProjectionMatrix();
     if (opts.onState) opts.onState('ready', hasBody); };
   if (models[t.id]) return show(models[t.id]);
+  if (!t.file) return show(models[t.id] = placeholder(t));
   if (opts.onState) opts.onState('loading');
   var url = t.file;
   fetch(url).then(function(r){ if (!r.ok) throw new Error(r.status); return /\.txt$/.test(url) ? r.text().then(function(b){ var s = atob(b.trim()), a = new Uint8Array(s.length); for (var i = 0; i < s.length; i++) a[i] = s.charCodeAt(i); return a.buffer; }) : r.arrayBuffer(); })

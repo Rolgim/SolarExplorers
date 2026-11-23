@@ -1345,6 +1345,258 @@ var MISSIONS = [
       { title:'Données dans STAC-PLANET', rows:[
         ['Collections', '20', 'stac'], ['Images HIRES (brutes)', '574 546', 'stac'], ['Images UVVIS (brutes)', '570 533', 'stac'] ]}
     ]
+  },
+  {
+    id:'sln', name:'Kaguya (SELENE)', short:'Kaguya', year:'2007',
+    agency:'JAXA',
+    targets:['Lune'],
+    events:[
+      { type:'launch', body:'Terre', date:'2007-09-14', ref:'jaxa' },
+      { type:'arrival', body:'Lune', date:'2007-10-03', ref:'nasa' },
+      { type:'end', body:'Lune', date:'2009-06-10', ref:'nasa' }
+    ],
+    horizons:'-131', stac:'ode-moon-sln-',
+    file:null, bytes:0,
+    model:{ none:true },
+    body:{ name:'Lune', tex:'moon', nadir:[0, -1, 0] },
+    view:{ az:0.8, el:0.3, dist:1.5, r:3 }, sun:[0.4, 0.8, 0.4],
+    real:{ key:'sln-img', alt:'Aperçu d\'une image de Kaguya', none:'Pas encore d\'aperçu image de Kaguya téléchargé depuis STAC-PLANET.' },
+    desc:"Grande sonde lunaire japonaise, Kaguya a tourné autour de la Lune de 2007 à 2009 avec quinze instruments et deux petits satellites, Okina et Ouna. Ensemble, ils ont mesuré le relief, la composition, le sous-sol et la gravité de la Lune, y compris celle de la face cachée. La sonde a été précipitée sur la Lune à la fin de la mission.",
+    checked:'2026-11-23',
+    refs:{
+      jaxa:{ t:'KAGUYA (SELENE) : About the satellite', p:'JAXA', u:'https://www.selene.jaxa.jp/en/about/about_sat_e.htm' },
+      nasa:{ t:'Kaguya', p:'NASA Science', u:'https://science.nasa.gov/mission/kaguya/' },
+      hz:{ t:'JPL Horizons, objet -131 (SELENE)', p:'NASA JPL', u:'https://ssd.jpl.nasa.gov/horizons/app.html#/' },
+      stac:{ t:'STAC-PLANET, collections ode-moon-sln-* (sonde du 23 novembre 2026)', p:'PDSSP (CNES)', u:'https://stacplanet.pdssp.eu/' }
+    },
+    parts:[],
+    sections:[
+      { title:'Véhicule', rows:[
+        ['Orbiteur principal', '2,1 × 2,1 × 4,8 m, stabilisé sur trois axes', 'jaxa'], ['Masse', '≈ 3 t au lancement avec les deux petits satellites (2 900 kg selon la NASA)', 'jaxa'],
+        ['Puissance', '3,5 kW au plus', 'jaxa'], ['Petits satellites', 'Okina (relais) et Ouna (radio VRAD), 50 kg chacun, stabilisés par rotation', 'jaxa'] ]},
+      { title:'Mission', rows:[
+        ['Lancement', '14 septembre 2007, H-IIA, Tanegashima', 'jaxa'], ['Mise en orbite lunaire', '3 octobre 2007', 'nasa'],
+        ['Okina et Ouna', 'largués les 9 et 12 octobre 2007 ; Okina tombe sur la Lune le 12 février 2009', 'nasa'],
+        ['Orbite abaissée', 'à ≈ 50 km le 1er février 2009', 'nasa'],
+        ['Fin de mission', 'impact le 10 juin 2009, 65,5° S, 80,4° E, près du cratère Gill', 'nasa'] ]},
+      { title:'Orbite', rows:[
+        ['Type', 'circulaire, polaire (90°)', 'jaxa'], ['Altitude', '100 km, atteinte le 19 octobre 2007', 'jaxa'] ]},
+      { title:'Instruments', rows:[
+        ['TC', 'caméra stéréo du relief', 'jaxa'], ['MI', 'imageur multibande, neuf bandes visible et proche infrarouge', 'jaxa'], ['SP', 'spectromètre visible et proche infrarouge', 'jaxa'],
+        ['LALT', 'altimètre laser', 'jaxa'], ['LRS', 'radar sondeur de la croûte, sur quelques kilomètres', 'jaxa'],
+        ['XRS et GRS', 'spectromètres X et gamma : éléments de la surface', 'jaxa'], ['RSAT et VRAD', 'suivi radio des petits satellites : gravité, y compris face cachée', 'jaxa'],
+        ['Autres', 'LMAG, CPS, PACE, RS, UPI, et deux caméras HDTV (Terre et Lune)', 'jaxa'] ]},
+      { title:'Données dans STAC-PLANET', rows:[
+        ['Collections', '64', 'stac'], ['Images MI (niveau 3C)', '378 072', 'stac'], ['Images HDTV', '275 100', 'stac'] ]}
+    ]
+  },
+  {
+    id:'ch1', name:'Chandrayaan-1', short:'Chandrayaan-1', year:'2008',
+    agency:'ISRO (Inde), avec des instruments de l\'ESA, de la NASA et de la Bulgarie',
+    targets:['Lune'],
+    events:[
+      { type:'launch', body:'Terre', date:'2008-10-22', ref:'isro' },
+      { type:'arrival', body:'Lune', date:'2008-11-08', ref:'nasa' },
+      { type:'end', body:'Lune', date:'2009-08-28', ref:'nasa' }
+    ],
+    horizons:'-86', stac:'ode-moon-ch1-',
+    file:null, bytes:0,
+    model:{ none:true },
+    body:{ name:'Lune', tex:'moon', nadir:[0, -1, 0] },
+    view:{ az:0.8, el:0.3, dist:1.5, r:3 }, sun:[0.4, 0.8, 0.4],
+    real:{ key:'ch1-img', alt:'Aperçu d\'une image de Chandrayaan-1', none:'Pas encore d\'aperçu image de Chandrayaan-1 téléchargé depuis STAC-PLANET.' },
+    desc:"Première sonde lunaire de l'Inde, Chandrayaan-1 a tourné autour de la Lune de novembre 2008 à août 2009 avec onze instruments, dont six venus d'autres pays. Son spectromètre M3, fourni par la NASA, a détecté de l'eau et des molécules hydroxyle à la surface, et son radar Mini-SAR des signes de glace au fond des cratères polaires.",
+    checked:'2026-11-23',
+    refs:{
+      isro:{ t:'Chandrayaan-1', p:'ISRO', u:'https://www.isro.gov.in/Chandrayaan_1.html' },
+      sci:{ t:'Chandrayaan-1 : science', p:'ISRO', u:'https://www.isro.gov.in/Chandrayaan-1_science.html' },
+      nasa:{ t:'Chandrayaan-1', p:'NASA Science', u:'https://science.nasa.gov/mission/chandrayaan-1/' },
+      hz:{ t:'JPL Horizons, objet -86 (Chandrayaan-1)', p:'NASA JPL', u:'https://ssd.jpl.nasa.gov/horizons/app.html#/' },
+      stac:{ t:'STAC-PLANET, collections ode-moon-ch1-* (sonde du 23 novembre 2026)', p:'PDSSP (CNES)', u:'https://stacplanet.pdssp.eu/' }
+    },
+    parts:[],
+    sections:[
+      { title:'Véhicule', rows:[
+        ['Masse', '1 380 kg au lancement', 'isro'], ['Puissance', '700 W', 'isro'], ['Durée prévue', '2 ans', 'isro'] ]},
+      { title:'Mission', rows:[
+        ['Lancement', '22 octobre 2008, PSLV-C11, Sriharikota', 'isro'], ['Mise en orbite lunaire', '8 novembre 2008', 'nasa'],
+        ['Sonde d\'impact (MIP)', 'larguée en novembre 2008, tombée près du cratère Shackleton', 'nasa'],
+        ['Orbite relevée', 'à 200 km en mai 2009', 'isro'],
+        ['Fin de mission', 'dernier contact le 28 août 2009 (29 août selon l\'ISRO), panne d\'alimentation probable', 'nasa'] ]},
+      { title:'Orbite', rows:[
+        ['Type', 'polaire', 'sci'], ['Altitude', '100 km, puis 200 km', 'isro'] ]},
+      { title:'Instruments', rows:[
+        ['TMC', 'caméra stéréo du relief, 5 m au sol, fauchée de 20 km', 'sci'], ['HySI', 'imageur hyperspectral, 64 bandes de 0,4 à 0,95 µm, 80 m', 'sci'],
+        ['M3', 'spectromètre imageur de 0,7 à 3,0 µm (NASA : Brown, JPL)', 'sci'], ['Mini-SAR', 'radar à 2,38 GHz : glace des cratères polaires (NASA : APL)', 'sci'],
+        ['SIR-2 et C1XS', 'spectromètres infrarouge et X (ESA)', 'sci'], ['SARA', 'imageur d\'atomes neutres (ESA, Suède, ISRO)', 'sci'],
+        ['Autres', 'LLRI (altimètre laser), HEX (gamma), RADOM (radiations, Bulgarie), MIP', 'sci'] ]},
+      { title:'Résultats', rows:[
+        ['Eau en surface', 'M3 détecte des molécules hydroxyle et d\'eau (publications de septembre 2009)', 'nasa'],
+        ['Glace', 'plus de 40 petits cratères avec de la glace près du pôle Nord (Mini-SAR)', 'nasa'] ]},
+      { title:'Données dans STAC-PLANET', rows:[
+        ['Collections', '8', 'stac'], ['Images M3 brutes', '1 509', 'stac'], ['Cartes Mini-SAR', '6 848', 'stac'] ]}
+    ]
+  },
+  {
+    id:'kplo', name:'Danuri (KPLO)', short:'Danuri', year:'2022',
+    agency:'KARI (Corée du Sud), avec une caméra de la NASA',
+    targets:['Lune'],
+    events:[
+      { type:'launch', body:'Terre', date:'2022-08-04', ref:'nasa' },
+      { type:'arrival', body:'Lune', date:'2022-12-27', ref:'kr' }
+    ],
+    horizons:'-155', stac:'ode-moon-kplo-',
+    file:null, bytes:0,
+    model:{ none:true },
+    body:{ name:'Lune', tex:'moon', nadir:[0, -1, 0] },
+    view:{ az:0.8, el:0.3, dist:1.5, r:3 }, sun:[0.4, 0.8, 0.4],
+    real:{ key:'kplo-img', alt:'Aperçu d\'une image ShadowCam (cratère d\'ombre permanente)', none:'Pas encore d\'aperçu ShadowCam téléchargé depuis STAC-PLANET.' },
+    desc:"Première sonde lunaire de la Corée du Sud, Danuri a rejoint la Lune fin 2022 par une longue trajectoire de quatre mois et demi qui économise le carburant. En orbite polaire, elle photographie la surface, mesure son magnétisme et sa composition. Sa caméra ShadowCam, fournie par la NASA, voit le fond des cratères qui ne reçoivent jamais le Soleil.",
+    checked:'2026-11-23',
+    refs:{
+      tps:{ t:'Danuri, South Korea\'s first Moon mission', p:'The Planetary Society', u:'https://planetary.org/space-missions/kplo' },
+      nasa:{ t:'NASA\'s ShadowCam Launches Aboard Korea Pathfinder Lunar Orbiter (4 août 2022)', p:'NASA', u:'https://www.nasa.gov/blogs/missions/2022/08/04/nasas-shadowcam-launches-aboard-korea-pathfinder-lunar-orbiter' },
+      kr:{ t:'Danuri\'s lunar orbit makes Korea 7th nation to send craft to moon (29 décembre 2022)', p:'Korea.net', u:'https://www.korea.net/NewsFocus/Sci-Tech/view?articleId=226643' },
+      hz:{ t:'JPL Horizons, objet -155 (KPLO)', p:'NASA JPL', u:'https://ssd.jpl.nasa.gov/horizons/app.html#/' },
+      stac:{ t:'STAC-PLANET, collections ode-moon-kplo-* (sonde du 23 novembre 2026)', p:'PDSSP (CNES)', u:'https://stacplanet.pdssp.eu/' }
+    },
+    parts:[],
+    sections:[
+      { title:'Mission', rows:[
+        ['Lancement', '4 août 2022 à 19 h 08 (heure de Floride), Falcon 9, Cap Canaveral', 'nasa'],
+        ['Trajectoire', 'transfert balistique de ≈ 4,5 mois, économe en carburant', 'nasa'],
+        ['Orbite de mission', 'atteinte le 27 décembre 2022', 'kr'], ['Science', 'à partir de janvier 2023', 'tps'],
+        ['Carburant', '93 kg restants sur 260 kg à l\'arrivée', 'kr'] ]},
+      { title:'Orbite', rows:[
+        ['Type', 'polaire, ≈ circulaire', 'nasa'], ['Altitude', '≈ 100 km', 'tps'], ['Période', '≈ 2 h', 'kr'] ]},
+      { title:'Instruments', rows:[
+        ['Caméra haute résolution', '2,5 m par pixel', 'tps'], ['Caméra polarimétrique grand angle', 'nature des matériaux d\'après la lumière diffusée', 'tps'],
+        ['Spectromètre gamma', 'composition en éléments', 'tps'], ['Magnétomètre', 'anomalies magnétiques locales (« swirls »)', 'tps'],
+        ['ShadowCam', 'caméra de la NASA (ASU, MSSS), des centaines de fois plus sensible que celle de LRO, jusqu\'à 1,7 m par pixel', 'nasa'] ]},
+      { title:'Données dans STAC-PLANET', rows:[
+        ['Collections', '5 (ShadowCam seulement)', 'stac'], ['Images ShadowCam brutes', '38 461', 'stac'] ]}
+    ]
+  },
+  {
+    id:'lp', name:'Lunar Prospector', short:'Lunar Prospector', year:'1998',
+    agency:'NASA (programme Discovery, Ames)',
+    targets:['Lune'],
+    events:[
+      { type:'launch', body:'Terre', date:'1998-01-07', ref:'nssdc' },
+      { type:'arrival', body:'Lune', date:'1998-01-11', ref:'nssdc' },
+      { type:'end', body:'Lune', date:'1999-07-31', ref:'nssdc' }
+    ],
+    horizons:'-25', stac:'ode-moon-lp-',
+    file:null, bytes:0,
+    model:{ none:true },
+    body:{ name:'Lune', tex:'moon', nadir:[0, -1, 0] },
+    view:{ az:0.8, el:0.3, dist:1.5, r:3 }, sun:[0.4, 0.8, 0.4],
+    real:{ key:'lp-img', alt:'Donnée de Lunar Prospector', none:'Les instruments de Lunar Prospector comptent des particules et mesurent des champs : leurs collections dans STAC-PLANET n\'ont pas d\'aperçu image.' },
+    desc:"Petite sonde en forme de tambour, sans ordinateur de bord, Lunar Prospector a tourné un an et demi autour de la Lune en 1998 et 1999. Ses spectromètres ont cartographié les éléments de la surface et trouvé un excès d'hydrogène aux pôles, signe possible de glace. Elle a été précipitée dans un cratère du pôle Sud à la fin de la mission.",
+    checked:'2026-11-23',
+    refs:{
+      nssdc:{ t:'Lunar Prospector (1998-001A)', p:'NASA NSSDCA', u:'https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1998-001A' },
+      ns:{ t:'Fiche d\'expérience NSSDCA : Neutron Spectrometer (NS)', p:'NASA NSSDCA', u:'https://nssdc.gsfc.nasa.gov/nmc/experiment/display.action?id=1998-001A-02' },
+      grs:{ t:'Fiche d\'expérience NSSDCA : Gamma Ray Spectrometer (GRS)', p:'NASA NSSDCA', u:'https://nssdc.gsfc.nasa.gov/nmc/experiment/display.action?id=1998-001A-01' },
+      hz:{ t:'JPL Horizons, objet -25 (Lunar Prospector)', p:'NASA JPL', u:'https://ssd.jpl.nasa.gov/horizons/app.html#/' },
+      stac:{ t:'STAC-PLANET, collections ode-moon-lp-* (sonde du 23 novembre 2026)', p:'PDSSP (CNES)', u:'https://stacplanet.pdssp.eu/' }
+    },
+    parts:[],
+    sections:[
+      { title:'Véhicule', rows:[
+        ['Forme', 'tambour de 1,37 m de diamètre et 1,28 m de haut, trois perches de 2,5 m', 'nssdc'], ['Masse', '296,4 kg avec les ergols, 158,7 kg à sec', 'nssdc'],
+        ['Puissance', '186 W en moyenne (cellules sur la coque)', 'nssdc'], ['Stabilisation', 'par rotation, 12 tours par minute', 'nssdc'], ['Ordinateur de bord', 'aucun : tout est commandé depuis le sol', 'nssdc'] ]},
+      { title:'Mission', rows:[
+        ['Lancement', '7 janvier 1998, Athena 2, Cap Canaveral', 'nssdc'], ['Croisière', '105 heures', 'nssdc'],
+        ['Orbite de cartographie', 'atteinte le 16 janvier 1998', 'nssdc'], ['Mission prolongée', 'à partir du 28 janvier 1999, orbite abaissée', 'nssdc'],
+        ['Fin de mission', 'impact volontaire près du pôle Sud le 31 juillet 1999 (87,7° S, 42,0° E)', 'nssdc'] ]},
+      { title:'Orbite', rows:[
+        ['Type', 'polaire, quasi circulaire', 'nssdc'], ['Altitude', '100 km, puis 40 km et 15 × 45 km', 'nssdc'], ['Période', '118 min', 'nssdc'] ]},
+      { title:'Instruments', rows:[
+        ['GRS', 'spectromètre gamma : uranium, thorium, potassium et autres éléments', 'grs'], ['NS', 'spectromètre à neutrons : hydrogène, donc glace d\'eau possible', 'ns'],
+        ['APS', 'spectromètre alpha : dégazages de radon', 'nssdc'], ['MAG et ER', 'magnétomètre et réflectomètre à électrons : champs magnétiques de la croûte', 'nssdc'],
+        ['DGE', 'gravité par effet Doppler sur le signal radio', 'nssdc'] ]},
+      { title:'Données dans STAC-PLANET', rows:[
+        ['Collections', '15', 'stac'] ]}
+    ]
+  },
+  {
+    id:'grail', name:'GRAIL (Ebb et Flow)', short:'GRAIL', year:'2011',
+    agency:'NASA (JPL, programme Discovery), sondes construites par Lockheed Martin',
+    targets:['Lune'],
+    events:[
+      { type:'launch', body:'Terre', date:'2011-09-10', ref:'nssdc' },
+      { type:'arrival', body:'Lune', date:'2011-12-31', ref:'nssdc' },
+      { type:'end', body:'Lune', date:'2012-12-17', ref:'nssdc' }
+    ],
+    horizons:'-177', stac:'ode-moon-grail-',
+    file:null, bytes:0,
+    model:{ none:true },
+    body:{ name:'Lune', tex:'moon', nadir:[0, -1, 0] },
+    view:{ az:0.8, el:0.3, dist:1.5, r:3 }, sun:[0.4, 0.8, 0.4],
+    real:{ key:'grail-img', alt:'Donnée de GRAIL', none:'GRAIL mesure la distance entre ses deux sondes : ses collections dans STAC-PLANET sont des séries de mesures et des modèles de gravité, sans aperçu image.' },
+    desc:"Deux sondes jumelles, GRAIL-A et GRAIL-B, ont volé l'une derrière l'autre autour de la Lune en 2012. En mesurant en permanence la distance qui les séparait, elles ont dressé la carte la plus précise du champ de gravité lunaire, qui révèle la structure de la croûte et des grands bassins d'impact.",
+    checked:'2026-11-23',
+    refs:{
+      nssdc:{ t:'GRAIL-A (2011-046A)', p:'NASA NSSDCA', u:'https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=2011-046A' },
+      hz:{ t:'JPL Horizons, objet -177 (GRAIL-A)', p:'NASA JPL', u:'https://ssd.jpl.nasa.gov/horizons/app.html#/' },
+      stac:{ t:'STAC-PLANET, collections ode-moon-grail-* (sonde du 23 novembre 2026)', p:'PDSSP (CNES)', u:'https://stacplanet.pdssp.eu/' }
+    },
+    parts:[],
+    sections:[
+      { title:'Véhicule', rows:[
+        ['Deux sondes', 'GRAIL-A et GRAIL-B, sur la plateforme XSS-11 de Lockheed Martin', 'nssdc'], ['Masse de chaque sonde', '132,6 kg à sec, 202,4 kg avec les ergols', 'nssdc'],
+        ['Mesure', 'liaison radio en bande Ka entre les deux sondes (LGRS), héritée de la mission terrestre GRACE', 'nssdc'] ]},
+      { title:'Mission', rows:[
+        ['Lancement', '10 septembre 2011, Delta II, Cap Canaveral', 'nssdc'], ['Croisière', '≈ 3,5 mois, par le point de Lagrange L1 Soleil-Terre', 'nssdc'],
+        ['Mise en orbite lunaire', '31 décembre 2011 (A) et 1er janvier 2012 (B)', 'nssdc'], ['Phase scientifique', '90 jours, trois cycles de 27,3 jours', 'nssdc'],
+        ['Fin de mission', 'impacts le 17 décembre 2012, près de 75,6° N', 'nssdc'] ]},
+      { title:'Orbite', rows:[
+        ['Type', 'polaire, quasi circulaire, en tandem', 'nssdc'], ['Altitude', '50 km', 'nssdc'], ['Période', '113 min', 'nssdc'], ['Écart entre les sondes', '175 à 225 km', 'nssdc'] ]},
+      { title:'Instruments', rows:[
+        ['LGRS', 'mesure de la distance entre les deux sondes, d\'où le champ de gravité', 'nssdc'], ['MoonKAM', 'caméras pour les élèves (jusqu\'à 5 par sonde)', 'nssdc'] ]},
+      { title:'Données dans STAC-PLANET', rows:[
+        ['Collections', '7', 'stac'] ]}
+    ]
+  },
+  {
+    id:'vo', name:'Viking 1 (orbiteur)', short:'Viking 1', year:'1975',
+    agency:'NASA (Langley, JPL)',
+    targets:['Mars'],
+    events:[
+      { type:'launch', body:'Terre', date:'1975-08-20', ref:'nssdc' },
+      { type:'arrival', body:'Mars', date:'1976-06-19', ref:'nssdc' },
+      { type:'end', body:'Mars', date:'1980-08-17', ref:'nssdc' }
+    ],
+    horizons:null, stac:'ode-mars-vo-',
+    file:null, bytes:0,
+    model:{ none:true },
+    body:{ name:'Mars', tex:'mars', nadir:[0, -1, 0] },
+    view:{ az:0.8, el:0.3, dist:1.5, r:3 }, sun:[0.4, 0.8, 0.4],
+    real:{ key:'vo-img', alt:"Aperçu d'une mosaïque d'images des orbiteurs Viking" },
+    desc:"Les deux sondes Viking, lancées en 1975, associaient chacune un orbiteur et un atterrisseur. L'orbiteur de Viking 1 a photographié Mars pour choisir le site d'atterrissage, déposé l'atterrisseur à Chryse Planitia en juillet 1976, puis cartographié la planète jusqu'en 1980. Ses images ont longtemps été la référence pour la géographie martienne.",
+    checked:'2026-11-23',
+    refs:{
+      nssdc:{ t:'Viking 1 Orbiter (1975-075A)', p:'NASA NSSDCA', u:'https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1975-075A' },
+      vis:{ t:'Fiche d\'expérience NSSDCA : Visual Imaging Subsystem (VIS)', p:'NASA NSSDCA', u:'https://nssdc.gsfc.nasa.gov/nmc/experiment/display.action?id=1975-075A-01' },
+      stac:{ t:'STAC-PLANET, collections ode-mars-vo-* (sonde du 23 novembre 2026)', p:'PDSSP (CNES)', u:'https://stacplanet.pdssp.eu/' }
+    },
+    parts:[],
+    sections:[
+      { title:'Véhicule', rows:[
+        ['Forme', 'octogone d\'≈ 2,5 m, hérité de Mariner 9', 'nssdc'], ['Masse au lancement', '2 328 kg, dont 1 445 kg d\'ergols et de gaz', 'nssdc'],
+        ['Panneaux solaires', '4 ailes, 9,75 m de bout en bout, 620 W à Mars', 'nssdc'], ['Antenne grand gain', '≈ 1,5 m, orientable', 'nssdc'], ['Moteur', '1 323 N', 'nssdc'] ]},
+      { title:'Mission', rows:[
+        ['Lancement', '20 août 1975, Titan IIIE-Centaur, Cap Canaveral', 'nssdc'], ['Mise en orbite de Mars', '19 juin 1976', 'nssdc'],
+        ['Atterrisseur', 'posé à Chryse Planitia le 20 juillet 1976', 'nssdc'], ['Fin des opérations', '17 août 1980, après 1 485 orbites', 'nssdc'] ]},
+      { title:'Orbite', rows:[
+        ['Au début', '1 513 × 33 000 km, 24,66 h', 'nssdc'], ['Depuis 1980', '320 × 56 000 km, pour éviter toute chute sur Mars avant 2019', 'nssdc'] ]},
+      { title:'Instruments', rows:[
+        ['VIS', 'deux caméras de télévision, filtres de couleur, plateforme orientable', 'vis'], ['IRTM', 'radiomètre infrarouge : températures de la surface et de l\'atmosphère', 'nssdc'],
+        ['MAWD', 'spectromètre : vapeur d\'eau de l\'atmosphère (bande de 1,4 µm)', 'nssdc'], ['Radioscience', 'suivi radio de l\'orbiteur (gravité, atmosphère)', 'nssdc'] ]},
+      { title:'Données dans STAC-PLANET', rows:[
+        ['Collections (orbiteurs Viking 1 et 2 réunis)', '5', 'stac'], ['Images VIS brutes', '47 797', 'stac'] ]}
+    ]
   }
 ];
 
@@ -1783,7 +2035,105 @@ var STAC_COLS = {"mro":[["ode-mars-mro-crism-ancill","Compact Reconnaissance Ima
   ["ode-moon-clem-rss-tab","Radio Science Subsystem (RSS)","Image",9,""],
   ["ode-moon-clem-uvvis-edr","Ultraviolet/Visible Camera (UVVIS)","Image",570533,"1994-02-03/1994-05-07"],
   ["ode-moon-clem-uvvis-mdim","Ultraviolet/Visible Camera (UVVIS)","Image",1987,""],
-  ["ode-moon-clem-uvvis-mdimg","Ultraviolet/Visible Camera (UVVIS)","Image",1069,""]]};
+  ["ode-moon-clem-uvvis-mdimg","Ultraviolet/Visible Camera (UVVIS)","Image",1069,""]],"sln":[["ode-moon-sln-ard-event","Alpha Ray Detector (ARD)","Time Series",6,"2008-01-08/2008-06-30"],
+  ["ode-moon-sln-grs-engspe","Gamma Ray Spectrometer (GRS)","Spectrum",0,""],
+  ["ode-moon-sln-grs-imap","Gamma Ray Spectrometer (GRS)","Spectrum",10,""],
+  ["ode-moon-sln-grs-nmap1","Gamma Ray Spectrometer (GRS)","Spectrum",4,""],
+  ["ode-moon-sln-grs-nmap2","Gamma Ray Spectrometer (GRS)","Spectrum",2,""],
+  ["ode-moon-sln-hdtv-hdtvedr","High Definition Television (HDTV)","Image",275100,"2007-09-29/2009-06-10"],
+  ["ode-moon-sln-lalt-laltrd","Laser Altimeter (LALT)","Volume",0,""],
+  ["ode-moon-sln-lalt-laltsh","Laser Altimeter (LALT)","Map",0,""],
+  ["ode-moon-sln-lalt-laltts","Laser Altimeter (LALT)","Map",168,"2007-12-30/2008-10-27"],
+  ["ode-moon-sln-lalt-topom","Laser Altimeter (LALT)","Map",3,""],
+  ["ode-moon-sln-lalt-topon","Laser Altimeter (LALT)","Map",0,""],
+  ["ode-moon-sln-lmag-lmagts","Lunar Magnetometer (LMAG)","Time Series",536,"2007-12-21/2009-06-08"],
+  ["ode-moon-sln-lmag-magd","Lunar Magnetometer (LMAG)","Map",0,""],
+  ["ode-moon-sln-lmag-mamap","Lunar Magnetometer (LMAG)","Map",2,""],
+  ["ode-moon-sln-lmag-sigma","Lunar Magnetometer (LMAG)","Time Series",0,""],
+  ["ode-moon-sln-lrs-gsimap","Lunar Radar Sounder (LRS)","Image",1,"2008-03-07/2008-03-07"],
+  ["ode-moon-sln-lrs-sar05c","Lunar Radar Sounder (LRS)","Image",59269,"2007-11-20/2008-09-10"],
+  ["ode-moon-sln-lrs-sar05p","Lunar Radar Sounder (LRS)","Image",2579,"2007-11-20/2008-09-10"],
+  ["ode-moon-sln-lrs-sar10c","Lunar Radar Sounder (LRS)","Image",59344,"2007-11-20/2008-09-10"],
+  ["ode-moon-sln-lrs-sar10p","Lunar Radar Sounder (LRS)","Image",2580,"2007-11-20/2008-09-10"],
+  ["ode-moon-sln-lrs-sar40p","Lunar Radar Sounder (LRS)","Image",2580,"2007-11-20/2008-09-10"],
+  ["ode-moon-sln-lrs-ssh","Lunar Radar Sounder (LRS)","Image",12286,"2007-11-20/2008-11-08"],
+  ["ode-moon-sln-lrs-ssl","Lunar Radar Sounder (LRS)","Image",16708,"2007-11-20/2008-11-08"],
+  ["ode-moon-sln-lrs-waveh","Lunar Radar Sounder (LRS)","Image",54929,"2007-11-20/2008-09-10"],
+  ["ode-moon-sln-lrs-wavel","Lunar Radar Sounder (LRS)","Image",23653,"2007-11-21/2008-03-27"],
+  ["ode-moon-sln-mi-mi3c","Multiband Imager (MI)","Image",378072,""],
+  ["ode-moon-sln-mi-mimap","Multiband Imager (MI)","Image",61085,""],
+  ["ode-moon-sln-mi-nir2b","Multiband Imager (MI)","Image",240382,"2008-01-18/2008-10-30"],
+  ["ode-moon-sln-mi-nir2c","Multiband Imager (MI)","Image",80714,"2008-03-14/2008-05-09"],
+  ["ode-moon-sln-mi-vis2b","Multiband Imager (MI)","Image",240848,"2008-01-18/2008-10-30"],
+  ["ode-moon-sln-mi-vis2c","Multiband Imager (MI)","Image",80535,"2008-03-14/2008-05-09"],
+  ["ode-moon-sln-pace-etsum","Plasma Energy Angle and Composition Experiment (PACE)","Time Series",299,"2007-12-14/2008-10-31"],
+  ["ode-moon-sln-pace-pbf","Plasma Energy Angle and Composition Experiment (PACE)","Spectrum",1890,"2007-11-07/2009-06-10"],
+  ["ode-moon-sln-rsat-vrad-grav","Relay Satellite / VLBI Radio Source (RSAT/VRAD)","Image",9,""],
+  ["ode-moon-sln-rsat-vrad-trajm","Relay Satellite / VLBI Radio Source (RSAT/VRAD)","Image",3,"2007-10-19/2008-12-26"],
+  ["ode-moon-sln-rsat-vrad-trajr","Relay Satellite / VLBI Radio Source (RSAT/VRAD)","Image",3,"2007-10-31/2009-02-11"],
+  ["ode-moon-sln-rsat-vrad-trajv","Relay Satellite / VLBI Radio Source (RSAT/VRAD)","Image",2,"2007-10-16/2009-06-29"],
+  ["ode-moon-sln-rsat-vrad-vradd","Relay Satellite / VLBI Radio Source (RSAT/VRAD)","Image",3,"2008-01-07/2009-02-10"],
+  ["ode-moon-sln-spice-kernel-ck","SELENE SPICE Kernels (SPICE_KERNEL)","Time Series",0,"2007-10-03/2009-06-10"],
+  ["ode-moon-sln-spice-kernel-fk","SELENE SPICE Kernels (SPICE_KERNEL)","Time Series",0,""],
+  ["ode-moon-sln-spice-kernel-ik","SELENE SPICE Kernels (SPICE_KERNEL)","Time Series",0,""],
+  ["ode-moon-sln-spice-kernel-lsk","SELENE SPICE Kernels (SPICE_KERNEL)","Time Series",0,""],
+  ["ode-moon-sln-spice-kernel-pck","SELENE SPICE Kernels (SPICE_KERNEL)","Time Series",0,"1899-12-31/2050-12-31"],
+  ["ode-moon-sln-spice-kernel-sclk","SELENE SPICE Kernels (SPICE_KERNEL)","Time Series",0,""],
+  ["ode-moon-sln-spice-kernel-spk","SELENE SPICE Kernels (SPICE_KERNEL)","Time Series",0,"1899-07-28/2053-10-08"],
+  ["ode-moon-sln-tc-tcdemo","Terrain Camera (TC)","Image",78000,"2007-11-02/2009-06-07"],
+  ["ode-moon-sln-tc-tcdtmm","Terrain Camera (TC)","Image",7200,""],
+  ["ode-moon-sln-tc-tcdtmms","Terrain Camera (TC)","Image",6728,""],
+  ["ode-moon-sln-tc-tcdtmo","Terrain Camera (TC)","Image",57300,"2007-11-02/2009-06-10"],
+  ["ode-moon-sln-tc-tcevem","Terrain Camera (TC)","Image",7200,""],
+  ["ode-moon-sln-tc-tcmorm","Terrain Camera (TC)","Image",7200,""],
+  ["ode-moon-sln-tc-tcort","Terrain Camera (TC)","Image",7200,""],
+  ["ode-moon-sln-tc-tcorts","Terrain Camera (TC)","Image",6728,""],
+  ["ode-moon-sln-tc-tcsl2b","Terrain Camera (TC)","Image",83481,"2007-11-02/2009-06-07"],
+  ["ode-moon-sln-tc-tcsldem","Terrain Camera (TC)","Image",64800,""],
+  ["ode-moon-sln-tc-tcsps","Terrain Camera (TC)","Image",214318,"2007-11-08/2009-06-10"],
+  ["ode-moon-sln-tc-tcwl2b","Terrain Camera (TC)","Image",221138,"2007-11-02/2009-06-10"],
+  ["ode-moon-sln-upi-plasma","Upper-Atmosphere and Plasma Imager (UPI)","Image",63,"2008-03-11/2008-05-03"],
+  ["ode-moon-sln-upi-tvisdk","Upper-Atmosphere and Plasma Imager (UPI)","Image",3634,"2008-02-07/4713-01-01"],
+  ["ode-moon-sln-upi-tvisn2","Upper-Atmosphere and Plasma Imager (UPI)","Image",1404,"2008-01-31/4713-01-01"],
+  ["ode-moon-sln-upi-tvisna","Upper-Atmosphere and Plasma Imager (UPI)","Image",8785,"2006-06-28/4713-01-01"],
+  ["ode-moon-sln-upi-tviso5","Upper-Atmosphere and Plasma Imager (UPI)","Image",4440,"2008-02-07/4713-01-01"],
+  ["ode-moon-sln-upi-tviso6","Upper-Atmosphere and Plasma Imager (UPI)","Image",1289,"2006-06-29/4713-01-01"],
+  ["ode-moon-sln-upi-tvisoh","Upper-Atmosphere and Plasma Imager (UPI)","Image",1449,"2008-02-07/4713-01-01"]],"ch1":[["ode-moon-ch1-orb-m3-calimg","Moon Mineralogy Mapper (M3)","Image",554,"2009-04-15/2009-08-16"],
+  ["ode-moon-ch1-orb-m3-caliv2","Moon Mineralogy Mapper (M3)","Image",333,"2008-11-18/2009-02-14"],
+  ["ode-moon-ch1-orb-m3-caliv3","Moon Mineralogy Mapper (M3)","Image",887,"2008-11-18/2009-08-16"],
+  ["ode-moon-ch1-orb-m3-rawimg","Moon Mineralogy Mapper (M3)","Image",1509,"2008-11-18/2009-08-16"],
+  ["ode-moon-ch1-orb-m3-refimg","Moon Mineralogy Mapper (M3)","Image",887,"2008-11-18/2009-08-16"],
+  ["ode-moon-ch1-orb-mrffr-cdr","Forerunner (aka \"Mini-RF\" or \"Mini-SAR\") (MRFFR)","Image",857,"2009-01-07/2009-08-28"],
+  ["ode-moon-ch1-orb-mrffr-mapcdr","Forerunner (aka \"Mini-RF\" or \"Mini-SAR\") (MRFFR)","Map",6848,"2009-01-07/2009-08-28"],
+  ["ode-moon-ch1-orb-mrffr-moscdr","Forerunner (aka \"Mini-RF\" or \"Mini-SAR\") (MRFFR)","Map",4,"2009-01-07/2009-04-15"]],"kplo":[["ode-moon-kplo-shadowcam-cal","Shadow Camera (ShadowCam)","Image",38383,"2022-08-09/2024-09-30"],
+  ["ode-moon-kplo-shadowcam-cmos","Shadow Camera (ShadowCam)","Image",12,"2023-02-23/2024-02-16"],
+  ["ode-moon-kplo-shadowcam-dtm","Shadow Camera (ShadowCam)","Image",11,"2023-09-14/2024-02-20"],
+  ["ode-moon-kplo-shadowcam-raw","Shadow Camera (ShadowCam)","Image",38461,"2022-08-09/2024-09-30"],
+  ["ode-moon-kplo-shadowcam-umos","Shadow Camera (ShadowCam)","Image",1092,"2023-01-03/2024-06-28"]],"lp":[["ode-moon-lp-er-datal2","Electron Reflectometer (ER)","Time Series",43,"1998-06-08/1999-06-27"],
+  ["ode-moon-lp-er-er-3d","Electron Reflectometer (ER)","Time Series",560,"1970-01-01/1999-07-29"],
+  ["ode-moon-lp-er-er-hi","Electron Reflectometer (ER)","Time Series",560,"1998-01-16/1999-07-29"],
+  ["ode-moon-lp-er-er-lo","Electron Reflectometer (ER)","Time Series",560,"1998-01-16/1999-07-29"],
+  ["ode-moon-lp-grs-derabu","Gamma Ray Spectrometer (GRS)","Spectrum",3,"1998-01-17/1998-10-07"],
+  ["ode-moon-lp-grs-mdr","Gamma Ray Spectrometer, Neutron Spectrometer, APS, Magnetometer,Electron Reflectometer Raw Data ({GRS, NS, APS, MAG, ER})","Spectrum",0,"1998-01-07/1999-07-31"],
+  ["ode-moon-lp-grs-rdr","Gamma Ray Spectrometer (GRS)","Spectrum",512,"1998-01-16/1999-07-28"],
+  ["ode-moon-lp-mag-data","Magnetometer (MAG)","Spatial Vector",560,"1998-01-16/1999-07-29"],
+  ["ode-moon-lp-mag-datal2","Magnetometer (MAG)","Time Series",845,"1998-02-09/1999-07-27"],
+  ["ode-moon-lp-mag-datal3","Magnetometer (MAG)","Map",300,"1998-02-01/1999-07-02"],
+  ["ode-moon-lp-mag-datal4","Magnetometer (MAG)","Map",32,""],
+  ["ode-moon-lp-ns-rdr","Neutron Spectrometer (NS)","Spectrum",15,"1998-01-16/1999-07-31"],
+  ["ode-moon-lp-rss-gragod","Radio Science Subsystem (RSS)","Image",3,"1966-08-10/1999-07-30"],
+  ["ode-moon-lp-rss-grajpl","Radio Science Subsystem (RSS)","Image",27,"1966-08-10/1999-07-30"],
+  ["ode-moon-lp-rss-losapdr","Radio Science Subsystem (RSS)","Image",6628,"1998-01-13/1999-07-30"]],"grail":[["ode-moon-grail-lgrs-cdrl1a","LGRS-A or LGRS-B (LGRS)","Image",10047,"2000-01-01/2012-12-15"],
+  ["ode-moon-grail-lgrs-cdrl1b","LGRS-A or LGRS-B (LGRS)","Image",5910,"2000-01-01/2012-12-15"],
+  ["ode-moon-grail-lgrs-edr","LGRS-A or LGRS-B (LGRS)","Image",4236,"2012-02-29/2012-12-15"],
+  ["ode-moon-grail-lgrs-rsdmap","LGRS-A or LGRS-B (LGRS)","Image",35,"2012-03-01/2012-12-14"],
+  ["ode-moon-grail-lgrs-rssedr","LGRS-A or LGRS-B (LGRS)","Image",12145,"2011-01-01/2013-03-25"],
+  ["ode-moon-grail-lgrs-shadr","LGRS-A or LGRS-B (LGRS)","Dynamic Spectrum",16,"2012-03-01/2012-12-14"],
+  ["ode-moon-grail-lgrs-shbdr","LGRS-A or LGRS-B (LGRS)","Time Series",18,"2012-03-01/2012-12-14"]],"vo":[["ode-mars-vo-visab-dtm","Visual Imaging Subsystem Camera A/B (VISAB)","Image",233,""],
+  ["ode-mars-vo-visab-edr","Visual Imaging Subsystem Camera A/B (VISAB)","Image",47797,"1976-06-22/1980-07-30"],
+  ["ode-mars-vo-visab-mdim","Visual Imaging Subsystem Camera A/B (VISAB)","Image",4187,""],
+  ["ode-mars-vo-visab-mdimc","Visual Imaging Subsystem Camera A/B (VISAB)","Image",1044,"1977-02-07/1980-07-27"],
+  ["ode-mars-vo-visab-mdimh","Visual Imaging Subsystem Camera A/B (VISAB)","Image",2116,""]]};
 
 /* =================================================================
    INSTRUMENTS ET MISSIONS — page « Mission et instruments » de chaque sonde (schéma d'Observatories v1.0, src/data-inst.js
@@ -2242,6 +2592,153 @@ clem:{
       summary:L('Laser Nd:YAG à 1 064 nm qui passe par le télescope de HIRES.', 'Nd:YAG laser at 1,064 nm going through the HIRES telescope.'),
       bands:null, specs:[[L('Longueur d\'onde', 'Wavelength'), '1 064 nm', 'info'], [L('Résolution en distance', 'Range resolution'), '40 m', 'info']],
       stac:'ode-moon-clem-lidar-', docs:[] }
+  ]},
+sln:{
+  summary:L('Quinze instruments sur l\'orbiteur et ses deux petits satellites : caméras, spectromètres, altimètre laser, radar sondeur, mesures de champs et de gravité.', 'Fifteen instruments on the orbiter and its two small satellites: cameras, spectrometers, laser altimeter, radar sounder, field and gravity measurements.'),
+  refs:{},
+  archives:[STACP, PDS_GEO, { label:'JAXA, SELENE Data Archive', desc:L('Archive des données de Kaguya publiée par la JAXA', 'Kaguya data archive published by JAXA'), url:'https://darts.isas.jaxa.jp/planet/pdap/selene/' }],
+  instruments:[
+    { id:'tc', name:'TC', full:'Terrain Camera', type:'cam',
+      use:L('Cartographier le relief de toute la Lune en stéréo.', 'Map the relief of the whole Moon in stereo.'),
+      summary:L('Deux caméras visées vers l\'avant et vers l\'arrière, d\'où des modèles de terrain.', 'Two cameras looking forward and backward, giving terrain models.'),
+      bands:null, specs:[[L('Type', 'Type'), L('caméra stéréo', 'stereo camera'), 'jaxa']], stac:'ode-moon-sln-tc-', docs:[] },
+    { id:'mi', name:'MI', full:'Multiband Imager', type:'cam',
+      use:L('Distinguer les minéraux de la surface par leurs couleurs.', 'Tell surface minerals apart by their colours.'),
+      summary:L('Images en neuf bandes, du visible au proche infrarouge.', 'Images in nine bands, from visible to near infrared.'),
+      bands:null, specs:[[L('Bandes', 'Bands'), '9', 'jaxa']], stac:'ode-moon-sln-mi-', docs:[] },
+    { id:'lalt', name:'LALT', full:'Laser Altimeter', type:'alt',
+      use:L('Mesurer l\'altitude de la surface, pôles compris.', 'Measure surface height, poles included.'),
+      summary:L('Impulsions laser de forte puissance renvoyées par le sol.', 'High-power laser pulses returned by the ground.'),
+      bands:null, specs:[[L('Produit', 'Product'), L('modèle topographique de la Lune', 'topographic model of the Moon'), 'jaxa']], stac:'ode-moon-sln-lalt-', docs:[] },
+    { id:'lrs', name:'LRS', full:'Lunar Radar Sounder', type:'radar',
+      use:L('Voir les couches du sous-sol jusqu\'à quelques kilomètres.', 'See subsurface layers down to a few kilometres.'),
+      summary:L('Impulsions radio de forte puissance réfléchies par les couches de la croûte.', 'High-power radio pulses reflected by crustal layers.'),
+      bands:null, specs:[[L('Profondeur', 'Depth'), L('quelques km', 'a few km'), 'jaxa']], stac:'ode-moon-sln-lrs-', docs:[] },
+    { id:'grs', name:'GRS', full:'Gamma Ray Spectrometer', type:'spec',
+      use:L('Mesurer l\'uranium, le thorium, le potassium et l\'hydrogène de la surface.', 'Measure surface uranium, thorium, potassium and hydrogen.'),
+      summary:L('Spectres d\'énergie des rayons gamma émis par le sol.', 'Energy spectra of gamma rays emitted by the ground.'),
+      bands:null, specs:[[L('Éléments', 'Elements'), 'U, Th, K, H', 'jaxa']], stac:'ode-moon-sln-grs-', docs:[] },
+    { id:'lmag', name:'LMAG', full:'Lunar Magnetometer', type:'part',
+      use:L('Mesurer le champ magnétique de la Lune et de son voisinage.', 'Measure the magnetic field of the Moon and its surroundings.'),
+      summary:L('Magnétomètre.', 'Magnetometer.'), bands:null, specs:[], stac:'ode-moon-sln-lmag-', docs:[] },
+    { id:'pace', name:'PACE', full:'Plasma Energy Angle and Composition Experiment', type:'part',
+      use:L('Mesurer les électrons et les ions autour de la Lune.', 'Measure electrons and ions around the Moon.'),
+      summary:L('Distribution en trois dimensions des électrons de basse énergie et des ions, triés par masse.', '3-D distribution of low-energy electrons and of ions sorted by mass.'),
+      bands:null, specs:[], stac:'ode-moon-sln-pace-', docs:[] },
+    { id:'upi', name:'UPI', full:'Upper-Atmosphere and Plasma Imager', type:'cam',
+      use:L('Photographier la magnétosphère et l\'ionosphère de la Terre depuis la Lune.', 'Image Earth\'s magnetosphere and ionosphere from the Moon.'),
+      summary:L('Imageur tourné vers la Terre.', 'Imager pointed at Earth.'), bands:null, specs:[], stac:'ode-moon-sln-upi-', docs:[] },
+    { id:'rsat', name:'RSAT/VRAD', full:'Relay Satellite / VLBI Radio Source', type:'radio',
+      use:L('Mesurer la gravité, y compris sur la face cachée.', 'Measure gravity, including on the far side.'),
+      summary:L('Suivi Doppler à quatre voies par le satellite relais Okina, et interférométrie (VLBI) des signaux d\'Okina et d\'Ouna.', 'Four-way Doppler tracking through the Okina relay satellite, and interferometry (VLBI) of the Okina and Ouna signals.'),
+      bands:null, specs:[], stac:'ode-moon-sln-rsat-', docs:[] },
+    { id:'hdtv', name:'HDTV', full:'High Definition Television', type:'cam',
+      use:L('Filmer la Terre et la Lune pour le public.', 'Film Earth and the Moon for the public.'),
+      summary:L('Deux caméras de télévision haute définition.', 'Two high-definition television cameras.'),
+      bands:null, specs:[[L('Capteurs', 'Sensors'), L('2 CCD de 2,2 mégapixels', '2 CCDs of 2.2 megapixels'), 'nasa']], stac:'ode-moon-sln-hdtv-', docs:[] },
+    { id:'ard', name:'ARD', full:'Alpha Ray Detector', type:'part',
+      use:L('Détecter les rayons alpha émis par la surface (radon, polonium).', 'Detect alpha rays emitted by the surface (radon, polonium).'),
+      summary:L('Partie de l\'ensemble CPS (particules chargées).', 'Part of the CPS charged-particle package.'), bands:null, specs:[], stac:'ode-moon-sln-ard-', docs:[] }
+  ]},
+ch1:{
+  summary:L('Onze instruments : cinq indiens et six venus de l\'ESA, de la NASA et de Bulgarie. STAC-PLANET ne contient que les deux instruments de la NASA, M3 et Mini-SAR.', 'Eleven instruments: five Indian and six from ESA, NASA and Bulgaria. STAC-PLANET only holds the two NASA instruments, M3 and Mini-SAR.'),
+  refs:{},
+  archives:[STACP, PDS_GEO, { label:'ISSDC (ISRO)', desc:L('Archive indienne des données de Chandrayaan-1', 'Indian archive of Chandrayaan-1 data'), url:'https://www.issdc.gov.in/' }],
+  instruments:[
+    { id:'m3', name:'M3', full:'Moon Mineralogy Mapper', type:'spec',
+      use:L('Cartographier les minéraux, et l\'eau et l\'hydroxyle de la surface.', 'Map minerals, and surface water and hydroxyl.'),
+      summary:L('Spectromètre imageur fourni par la NASA (Brown University, JPL).', 'Imaging spectrometer provided by NASA (Brown University, JPL).'),
+      bands:[{ l:'VNIR-SWIR', lo:0.7, hi:3.0 }],
+      specs:[[L('Domaine', 'Range'), '0,7 – 3,0 µm', 'sci'], [L('Résultat', 'Result'), L('molécules d\'eau et hydroxyle à la surface', 'water and hydroxyl molecules on the surface'), 'nasa']], stac:'ode-moon-ch1-orb-m3-', docs:[] },
+    { id:'minisar', name:'Mini-SAR', full:'Miniature Synthetic Aperture Radar (Forerunner)', type:'radar',
+      use:L('Chercher la glace d\'eau au fond des cratères d\'ombre permanente.', 'Look for water ice at the bottom of permanently shadowed craters.'),
+      summary:L('Radar fourni par la NASA (APL de Johns Hopkins, Naval Air Warfare Center).', 'Radar provided by NASA (Johns Hopkins APL, Naval Air Warfare Center).'),
+      bands:null, specs:[[L('Fréquence', 'Frequency'), '2,38 GHz', 'sci'], [L('Résultat', 'Result'), L('glace dans plus de 40 petits cratères près du pôle Nord', 'ice in more than 40 small craters near the north pole'), 'nasa']], stac:'ode-moon-ch1-orb-mrffr-', docs:[] },
+    { id:'tmc', name:'TMC', full:'Terrain Mapping Camera', type:'cam',
+      use:L('Cartographier le relief des deux faces.', 'Map the relief of both sides.'),
+      summary:L('Caméra stéréo de l\'ISRO (SAC Ahmedabad).', 'ISRO stereo camera (SAC Ahmedabad).'),
+      bands:null, specs:[[L('Pixel au sol', 'Ground pixel'), '5 m', 'sci'], [L('Fauchée', 'Swath'), '20 km', 'sci']], stac:null, docs:[] },
+    { id:'hysi', name:'HySI', full:'Hyper Spectral Imager', type:'spec',
+      use:L('Cartographier les minéraux.', 'Map minerals.'),
+      summary:L('Imageur hyperspectral de l\'ISRO.', 'ISRO hyperspectral imager.'),
+      bands:[{ l:'VNIR', lo:0.4, hi:0.95 }],
+      specs:[[L('Bandes', 'Bands'), L('64, de 0,4 à 0,95 µm', '64, from 0.4 to 0.95 µm'), 'sci'], [L('Pixel au sol', 'Ground pixel'), '80 m', 'sci']], stac:null, docs:[] },
+    { id:'sir2', name:'SIR-2', full:'Near Infrared Spectrometer', type:'spec',
+      use:L('Mesurer la composition minérale en infrarouge.', 'Measure mineral composition in the infrared.'),
+      summary:L('Spectromètre ponctuel à réseau (Max Planck, ESA).', 'Grating point spectrometer (Max Planck, ESA).'),
+      bands:[{ l:'NIR', lo:0.93, hi:2.4 }], specs:[[L('Domaine', 'Range'), '0,93 – 2,4 µm', 'sci']], stac:null, docs:[] }
+  ]},
+kplo:{
+  summary:L('Cinq instruments scientifiques : quatre coréens et ShadowCam, fournie par la NASA. STAC-PLANET ne contient que ShadowCam.', 'Five science instruments: four Korean and ShadowCam, provided by NASA. STAC-PLANET only holds ShadowCam.'),
+  refs:{},
+  archives:[STACP, PDS_GEO, { label:'ShadowCam (Arizona State University)', desc:L('Site de l\'équipe de la caméra', 'Camera team site'), url:'https://www.shadowcam.asu.edu/' }],
+  instruments:[
+    { id:'shadowcam', name:'ShadowCam', full:'Shadow Camera', type:'cam',
+      use:L('Photographier le fond des cratères qui ne voient jamais le Soleil, éclairé seulement par la lumière renvoyée par les reliefs voisins.', 'Image the floors of craters that never see the Sun, lit only by light bounced from nearby terrain.'),
+      summary:L('Caméra très sensible de la NASA, construite par Arizona State University et Malin Space Science Systems.', 'Highly sensitive NASA camera, built by Arizona State University and Malin Space Science Systems.'),
+      bands:null, specs:[[L('Pixel au sol', 'Ground pixel'), L('jusqu\'à 1,7 m', 'down to 1.7 m'), 'nasa'], [L('Sensibilité', 'Sensitivity'), L('des centaines de fois celle de la caméra de LRO', 'hundreds of times that of the LRO camera'), 'nasa']],
+      stac:'ode-moon-kplo-shadowcam-', docs:[] },
+    { id:'lhc', name:L('Caméra haute résolution', 'High-resolution camera'), full:L('caméra coréenne', 'Korean camera'), type:'cam',
+      use:L('Photographier la surface en détail, notamment pour de futurs sites d\'atterrissage.', 'Image the surface in detail, including for future landing sites.'),
+      summary:L('Caméra construite en Corée.', 'Camera built in Korea.'), bands:null, specs:[[L('Pixel au sol', 'Ground pixel'), '2,5 m', 'tps']], stac:null, docs:[] },
+    { id:'pol', name:L('Caméra polarimétrique', 'Polarimetric camera'), full:L('caméra grand angle coréenne', 'Korean wide-angle camera'), type:'cam',
+      use:L('Reconnaître la nature des matériaux de surface.', 'Recognise the nature of surface materials.'),
+      summary:L('Mesure comment la lumière est réfléchie et diffusée.', 'Measures how light is reflected and scattered.'), bands:null, specs:[], stac:null, docs:[] },
+    { id:'gs', name:L('Spectromètre gamma', 'Gamma-ray spectrometer'), full:L('instrument coréen', 'Korean instrument'), type:'spec',
+      use:L('Mesurer la composition en éléments.', 'Measure elemental composition.'),
+      summary:L('Énergie des rayons gamma émis par la surface.', 'Energy of gamma rays emitted by the surface.'), bands:null, specs:[], stac:null, docs:[] },
+    { id:'mag', name:L('Magnétomètre', 'Magnetometer'), full:L('instrument coréen', 'Korean instrument'), type:'part',
+      use:L('Mesurer les anomalies magnétiques locales, comme les « swirls ».', 'Measure local magnetic anomalies such as swirls.'),
+      summary:L('Magnétomètre.', 'Magnetometer.'), bands:null, specs:[], stac:null, docs:[] }
+  ]},
+lp:{
+  summary:L('Cinq instruments sur des perches, pour la composition de la surface, les champs magnétiques et la gravité. Pas de caméra.', 'Five instruments on booms, for surface composition, magnetic fields and gravity. No camera.'),
+  refs:{},
+  archives:[STACP, PDS_GEO],
+  instruments:[
+    { id:'grs', name:'GRS', full:'Gamma Ray Spectrometer', type:'spec',
+      use:L('Cartographier l\'uranium, le thorium, le potassium et d\'autres éléments.', 'Map uranium, thorium, potassium and other elements.'),
+      summary:L('Spectromètre gamma au bout d\'une perche.', 'Gamma-ray spectrometer at the end of a boom.'), bands:null, specs:[], stac:'ode-moon-lp-grs-', docs:[] },
+    { id:'ns', name:'NS', full:'Neutron Spectrometer', type:'spec',
+      use:L('Repérer l\'hydrogène, donc la glace possible aux pôles.', 'Locate hydrogen, hence possible ice at the poles.'),
+      summary:L('Compte les neutrons renvoyés par la surface.', 'Counts neutrons coming back from the surface.'), bands:null, specs:[], stac:'ode-moon-lp-ns-', docs:[] },
+    { id:'mag', name:'MAG', full:'Magnetometer', type:'part',
+      use:L('Mesurer les champs magnétiques de la croûte.', 'Measure crustal magnetic fields.'),
+      summary:L('Au bout d\'une rallonge de 1,1 m.', 'At the end of a 1.1 m extension.'), bands:null, specs:[[L('Montage', 'Mounting'), L('rallonge de 1,1 m sur une perche de 2,5 m', '1.1 m extension on a 2.5 m boom'), 'nssdc']], stac:'ode-moon-lp-mag-', docs:[] },
+    { id:'er', name:'ER', full:'Electron Reflectometer', type:'part',
+      use:L('Cartographier les champs magnétiques par les électrons qu\'ils renvoient.', 'Map magnetic fields by the electrons they reflect.'),
+      summary:L('Réflectomètre à électrons.', 'Electron reflectometer.'), bands:null, specs:[], stac:'ode-moon-lp-er-', docs:[] },
+    { id:'rss', name:'DGE', full:'Doppler Gravity Experiment', type:'radio',
+      use:L('Mesurer la gravité de la Lune.', 'Measure the Moon\'s gravity.'),
+      summary:L('Effet Doppler sur le signal radio de la sonde.', 'Doppler shift of the spacecraft\'s radio signal.'), bands:null, specs:[], stac:'ode-moon-lp-rss-', docs:[] }
+  ]},
+grail:{
+  summary:L('Un seul instrument réparti sur deux sondes : la mesure de la distance qui les sépare donne le champ de gravité.', 'A single instrument split across two spacecraft: measuring the distance between them gives the gravity field.'),
+  refs:{},
+  archives:[STACP, PDS_GEO],
+  instruments:[
+    { id:'lgrs', name:'LGRS', full:'Lunar Gravity Ranging System', type:'radio',
+      use:L('Cartographier le champ de gravité de toute la Lune.', 'Map the gravity field of the whole Moon.'),
+      summary:L('Liaison radio en bande Ka entre GRAIL-A et GRAIL-B, héritée de la mission terrestre GRACE.', 'Ka-band radio link between GRAIL-A and GRAIL-B, inherited from the Earth mission GRACE.'),
+      bands:null, specs:[[L('Écart entre les sondes', 'Separation'), '175 – 225 km', 'nssdc']], stac:'ode-moon-grail-lgrs-', docs:[] },
+    { id:'moonkam', name:'MoonKAM', full:'Moon Knowledge Acquired by Middle school students', type:'cam',
+      use:L('Photographier la Lune à la demande d\'élèves.', 'Photograph the Moon at students\' request.'),
+      summary:L('Caméras éducatives, jusqu\'à cinq par sonde.', 'Educational cameras, up to five per spacecraft.'), bands:null, specs:[], stac:null, docs:[] }
+  ]},
+vo:{
+  summary:L('Une plateforme orientable porte les caméras, le radiomètre et le spectromètre à vapeur d\'eau.', 'A steerable platform carries the cameras, the radiometer and the water-vapour spectrometer.'),
+  refs:{},
+  archives:[STACP, PDS_GEO],
+  instruments:[
+    { id:'vis', name:'VIS', full:'Visual Imaging Subsystem (caméras A et B)', type:'cam',
+      use:L('Photographier Mars, choisir les sites d\'atterrissage, cartographier la planète.', 'Photograph Mars, choose landing sites, map the planet.'),
+      summary:L('Deux caméras de télévision à filtres de couleur.', 'Two television cameras with colour filters.'), bands:null, specs:[], stac:'ode-mars-vo-visab-', docs:[] },
+    { id:'irtm', name:'IRTM', full:'Infrared Thermal Mapper', type:'rad',
+      use:L('Mesurer les températures de la surface et de l\'atmosphère.', 'Measure surface and atmospheric temperatures.'),
+      summary:L('Radiomètre infrarouge.', 'Infrared radiometer.'), bands:null, specs:[], stac:null, docs:[] },
+    { id:'mawd', name:'MAWD', full:'Mars Atmospheric Water Detector', type:'spec',
+      use:L('Mesurer la vapeur d\'eau de l\'atmosphère.', 'Measure atmospheric water vapour.'),
+      summary:L('Spectromètre réglé sur la bande de l\'eau à 1,4 µm.', 'Spectrometer tuned to the 1.4 µm water band.'), bands:null, specs:[[L('Bande', 'Band'), '1,4 µm', 'nssdc']], stac:null, docs:[] }
   ]}
 };
 
@@ -2453,6 +2950,90 @@ clem:{
     [L('Images', 'Images'), L('près d\'un million en onze couleurs, 620 000 en haute résolution, 320 000 en infrarouge thermique', 'nearly one million in eleven colours, 620,000 high-resolution, 320,000 thermal infrared'), 'info'],
     [L('Appui de la NASA', 'NASA support'), L('Deep Space Network, Goddard et JPL', 'Deep Space Network, Goddard and JPL'), 'info']
   ],
+  refs:{}, checked:'2026-11-23'
+},
+sln:{
+  intro:L('Kaguya devait étudier l\'origine et l\'évolution de la Lune. L\'orbiteur principal a largué deux petits satellites qui ont servi de relais et de balises radio, pour mesurer la gravité jusque sur la face cachée.',
+          'Kaguya was to study the origin and evolution of the Moon. The main orbiter released two small satellites used as a relay and radio beacons, to measure gravity even on the far side.'),
+  phases:[
+    [L('14 septembre 2007', '14 September 2007'), L('Lancement', 'Launch'), L('H-IIA depuis Tanegashima.', 'H-IIA from Tanegashima.'), 'jaxa'],
+    [L('3 octobre 2007', '3 October 2007'), L('Mise en orbite lunaire', 'Lunar orbit insertion'), L('Orbite polaire initiale de ≈ 101 × 11 741 km.', 'Initial polar orbit of ≈ 101 × 11,741 km.'), 'nasa'],
+    [L('9 et 12 octobre 2007', '9 and 12 October 2007'), L('Okina et Ouna', 'Okina and Ouna'), L('Largage des deux petits satellites.', 'Release of the two small satellites.'), 'nasa'],
+    [L('19 octobre 2007', '19 October 2007'), L('Orbite de mission', 'Mission orbit'), L('Circulaire, à ≈ 100 km.', 'Circular, at ≈ 100 km.'), 'nasa'],
+    [L('1er février 2009', '1 February 2009'), L('Orbite abaissée', 'Orbit lowered'), L('À ≈ 50 km, après une panne de roue de réaction.', 'To ≈ 50 km, after a reaction wheel failure.'), 'nasa'],
+    [L('10 juin 2009', '10 June 2009'), L('Fin de mission', 'End of mission'), L('Impact près du cratère Gill (65,5° S, 80,4° E).', 'Impact near Gill crater (65.5° S, 80.4° E).'), 'nasa']
+  ],
+  ops:[
+    [L('Orbite', 'Orbit'), L('circulaire, polaire, 100 km', 'circular, polar, 100 km'), 'jaxa'],
+    [L('Durée prévue', 'Planned duration'), L('1 an', '1 year'), 'jaxa']
+  ],
+  refs:{}, checked:'2026-11-23'
+},
+ch1:{
+  intro:L('Chandrayaan-1 a ouvert l\'exploration lunaire de l\'Inde. Prévue pour deux ans, la mission s\'est arrêtée au bout de dix mois, mais ses instruments ont livré la première détection d\'eau à la surface de la Lune.',
+          'Chandrayaan-1 opened India\'s lunar exploration. Planned for two years, the mission stopped after ten months, but its instruments gave the first detection of water on the Moon\'s surface.'),
+  phases:[
+    [L('22 octobre 2008', '22 October 2008'), L('Lancement', 'Launch'), L('PSLV-C11 depuis Sriharikota, puis cinq poussées en 13 jours.', 'PSLV-C11 from Sriharikota, then five burns over 13 days.'), 'nasa'],
+    [L('8 novembre 2008', '8 November 2008'), L('Mise en orbite lunaire', 'Lunar orbit insertion'), L('Orbite initiale de ≈ 7 502 × 504 km, puis 100 km.', 'Initial orbit of ≈ 7,502 × 504 km, then 100 km.'), 'nasa'],
+    [L('novembre 2008', 'November 2008'), L('Sonde d\'impact', 'Impact probe'), L('La MIP tombe près du cratère Shackleton, au pôle Sud.', 'The MIP crashes near Shackleton crater, at the south pole.'), 'nasa'],
+    [L('mai 2009', 'May 2009'), L('Orbite relevée', 'Orbit raised'), L('À 200 km.', 'To 200 km.'), 'isro'],
+    [L('28 août 2009', '28 August 2009'), L('Fin de mission', 'End of mission'), L('Dernier contact ; panne d\'alimentation par surchauffe probable.', 'Last contact; power failure from overheating likely.'), 'nasa']
+  ],
+  ops:[
+    [L('Orbite', 'Orbit'), L('polaire, 100 km puis 200 km', 'polar, 100 km then 200 km'), 'sci'],
+    [L('Durée prévue', 'Planned duration'), L('2 ans', '2 years'), 'isro']
+  ],
+  refs:{}, checked:'2026-11-23'
+},
+kplo:{
+  intro:L('Danuri est la première sonde lunaire de la Corée du Sud. Elle a pris une route longue mais économe, en s\'éloignant d\'abord vers le Soleil avant de revenir être capturée par la Lune.',
+          'Danuri is South Korea\'s first lunar spacecraft. It took a long but economical route, first heading out toward the Sun before coming back to be captured by the Moon.'),
+  phases:[
+    [L('4 août 2022 (5 août en Corée)', '4 August 2022 (5 August in Korea)'), L('Lancement', 'Launch'), L('Falcon 9 depuis Cap Canaveral.', 'Falcon 9 from Cape Canaveral.'), 'nasa'],
+    [L('août – décembre 2022', 'August – December 2022'), L('Transfert balistique', 'Ballistic transfer'), L('≈ 4,5 mois de croisière.', '≈ 4.5 months of cruise.'), 'nasa'],
+    [L('27 décembre 2022', '27 December 2022'), L('Orbite de mission', 'Mission orbit'), L('Dernière manœuvre d\'insertion confirmée ; une orbite en ≈ 2 h.', 'Final insertion manoeuvre confirmed; one orbit in ≈ 2 h.'), 'kr'],
+    [L('janvier 2023', 'January 2023'), L('Début de la science', 'Science begins'), L('Orbite polaire d\'≈ 100 km.', 'Polar orbit of ≈ 100 km.'), 'tps']
+  ],
+  ops:[
+    [L('Orbite', 'Orbit'), L('polaire, ≈ 100 km, ≈ 2 h', 'polar, ≈ 100 km, ≈ 2 h'), 'nasa'],
+    [L('Mission prévue', 'Planned mission'), L('11 mois après l\'arrivée', '11 months after arrival'), 'nasa']
+  ],
+  refs:{}, checked:'2026-11-23'
+},
+lp:{
+  intro:L('Lunar Prospector, petite mission du programme Discovery, n\'avait ni caméra ni ordinateur de bord. Elle a cartographié la composition de toute la Lune depuis une orbite polaire basse.',
+          'Lunar Prospector, a small Discovery mission, had neither a camera nor an onboard computer. It mapped the composition of the whole Moon from a low polar orbit.'),
+  phases:[
+    [L('7 janvier 1998', '7 January 1998'), L('Lancement', 'Launch'), L('Athena 2 depuis Cap Canaveral ; 105 heures de croisière.', 'Athena 2 from Cape Canaveral; 105-hour cruise.'), 'nssdc'],
+    [L('11 – 16 janvier 1998', '11 – 16 January 1998'), L('Mise en orbite', 'Orbit insertion'), L('Orbite de capture, puis orbite de cartographie de 100 km.', 'Capture orbit, then 100 km mapping orbit.'), 'nssdc'],
+    [L('28 janvier 1999', '28 January 1999'), L('Mission prolongée', 'Extended mission'), L('Orbite abaissée pour des mesures plus fines.', 'Orbit lowered for finer measurements.'), 'nssdc'],
+    [L('31 juillet 1999', '31 July 1999'), L('Fin de mission', 'End of mission'), L('Impact volontaire dans un cratère près du pôle Sud.', 'Deliberate impact in a crater near the south pole.'), 'nssdc']
+  ],
+  ops:[[L('Orbite', 'Orbit'), L('polaire, 100 km, 118 min', 'polar, 100 km, 118 min'), 'nssdc']],
+  refs:{}, checked:'2026-11-23'
+},
+grail:{
+  intro:L('GRAIL a fait voler deux sondes l\'une derrière l\'autre : les variations de la distance qui les séparait trahissent les irrégularités de la gravité lunaire.',
+          'GRAIL flew two spacecraft one behind the other: changes in the distance between them reveal irregularities in the Moon\'s gravity.'),
+  phases:[
+    [L('10 septembre 2011', '10 September 2011'), L('Lancement', 'Launch'), L('Delta II depuis Cap Canaveral, route par le point L1.', 'Delta II from Cape Canaveral, route via the L1 point.'), 'nssdc'],
+    [L('31 décembre 2011 – 1er janvier 2012', '31 December 2011 – 1 January 2012'), L('Mise en orbite lunaire', 'Lunar orbit insertion'), L('GRAIL-A puis GRAIL-B.', 'GRAIL-A then GRAIL-B.'), 'nssdc'],
+    [L('mars – mai 2012', 'March – May 2012'), L('Phase scientifique', 'Science phase'), L('Trois cycles de 27,3 jours à 50 km.', 'Three 27.3-day cycles at 50 km.'), 'nssdc'],
+    [L('17 décembre 2012', '17 December 2012'), L('Fin de mission', 'End of mission'), L('Impacts volontaires près du pôle Nord.', 'Deliberate impacts near the north pole.'), 'nssdc']
+  ],
+  ops:[[L('Orbite', 'Orbit'), L('polaire, 50 km, 113 min, en tandem', 'polar, 50 km, 113 min, in tandem'), 'nssdc']],
+  refs:{}, checked:'2026-11-23'
+},
+vo:{
+  intro:L('L\'orbiteur de Viking 1 a d\'abord servi à choisir un site sûr pour son atterrisseur, puis a cartographié Mars pendant quatre ans.',
+          'The Viking 1 orbiter first served to choose a safe site for its lander, then mapped Mars for four years.'),
+  phases:[
+    [L('20 août 1975', '20 August 1975'), L('Lancement', 'Launch'), L('Titan IIIE-Centaur depuis Cap Canaveral.', 'Titan IIIE-Centaur from Cape Canaveral.'), 'nssdc'],
+    [L('19 juin 1976', '19 June 1976'), L('Mise en orbite de Mars', 'Mars orbit insertion'), L('Orbite de 1 513 × 33 000 km.', 'Orbit of 1,513 × 33,000 km.'), 'nssdc'],
+    [L('20 juillet 1976', '20 July 1976'), L('Atterrissage', 'Landing'), L('L\'atterrisseur se pose à Chryse Planitia.', 'The lander touches down at Chryse Planitia.'), 'nssdc'],
+    [L('17 août 1980', '17 August 1980'), L('Fin des opérations', 'End of operations'), L('Après 1 485 orbites.', 'After 1,485 orbits.'), 'nssdc']
+  ],
+  ops:[[L('Orbite', 'Orbit'), L('1 513 × 33 000 km, 24,66 h', '1,513 × 33,000 km, 24.66 h'), 'nssdc']],
   refs:{}, checked:'2026-11-23'
 }
 };
@@ -2782,6 +3363,145 @@ var EN_MISSIONS = {
       { title:'Data in STAC-PLANET', rows:[
         ['Collections', '20'], ['HIRES images (raw)', '574,546'], ['UVVIS images (raw)', '570,533'] ]}
     ]
+  },
+  sln:{
+    agency:'JAXA', targets:['Moon'],
+    desc:"A large Japanese lunar spacecraft, Kaguya orbited the Moon from 2007 to 2009 with fifteen instruments and two small satellites, Okina and Ouna. Together they measured the Moon's relief, composition, subsurface and gravity, including on the far side. The spacecraft was crashed onto the Moon at the end of the mission.",
+    refs:{ hz:'JPL Horizons, object -131 (SELENE)', stac:'STAC-PLANET, ode-moon-sln-* collections (probe of 23 November 2026)' },
+    parts:{},
+    sections:[
+      { title:'Spacecraft', rows:[
+        ['Main orbiter', '2.1 × 2.1 × 4.8 m, three-axis stabilised'], ['Mass', '≈ 3 t at launch with the two small satellites (2,900 kg according to NASA)'],
+        ['Power', '3.5 kW at most'], ['Small satellites', 'Okina (relay) and Ouna (VRAD radio), 50 kg each, spin-stabilised'] ]},
+      { title:'Mission', rows:[
+        ['Launch', '14 September 2007, H-IIA, Tanegashima'], ['Lunar orbit insertion', '3 October 2007'],
+        ['Okina and Ouna', 'released on 9 and 12 October 2007; Okina crashed on the Moon on 12 February 2009'],
+        ['Orbit lowered', 'to ≈ 50 km on 1 February 2009'],
+        ['End of mission', 'impact on 10 June 2009, 65.5° S, 80.4° E, near Gill crater'] ]},
+      { title:'Orbit', rows:[
+        ['Type', 'circular, polar (90°)'], ['Altitude', '100 km, reached on 19 October 2007'] ]},
+      { title:'Instruments', rows:[
+        ['TC', 'stereo terrain camera'], ['MI', 'multiband imager, nine visible and near-infrared bands'], ['SP', 'visible and near-infrared spectrometer'],
+        ['LALT', 'laser altimeter'], ['LRS', 'radar sounder of the crust, down to a few kilometres'],
+        ['XRS and GRS', 'X-ray and gamma-ray spectrometers: surface elements'], ['RSAT and VRAD', 'radio tracking of the small satellites: gravity, far side included'],
+        ['Others', 'LMAG, CPS, PACE, RS, UPI, and two HDTV cameras (Earth and Moon)'] ]},
+      { title:'Data in STAC-PLANET', rows:[
+        ['Collections', '64'], ['MI images (level 3C)', '378,072'], ['HDTV images', '275,100'] ]}
+    ]
+  },
+  ch1:{
+    agency:'ISRO (India), with instruments from ESA, NASA and Bulgaria', targets:['Moon'],
+    desc:"India's first lunar spacecraft, Chandrayaan-1 orbited the Moon from November 2008 to August 2009 with eleven instruments, six of them from other countries. Its NASA-provided M3 spectrometer detected water and hydroxyl molecules on the surface, and its Mini-SAR radar found signs of ice at the bottom of polar craters.",
+    refs:{ sci:'Chandrayaan-1: science', hz:'JPL Horizons, object -86 (Chandrayaan-1)', stac:'STAC-PLANET, ode-moon-ch1-* collections (probe of 23 November 2026)' },
+    parts:{},
+    sections:[
+      { title:'Spacecraft', rows:[
+        ['Mass', '1,380 kg at launch'], ['Power', '700 W'], ['Planned duration', '2 years'] ]},
+      { title:'Mission', rows:[
+        ['Launch', '22 October 2008, PSLV-C11, Sriharikota'], ['Lunar orbit insertion', '8 November 2008'],
+        ['Impact probe (MIP)', 'released in November 2008, crashed near Shackleton crater'],
+        ['Orbit raised', 'to 200 km in May 2009'],
+        ['End of mission', 'last contact on 28 August 2009 (29 August according to ISRO), probable power failure'] ]},
+      { title:'Orbit', rows:[
+        ['Type', 'polar'], ['Altitude', '100 km, then 200 km'] ]},
+      { title:'Instruments', rows:[
+        ['TMC', 'stereo terrain camera, 5 m ground pixel, 20 km swath'], ['HySI', 'hyperspectral imager, 64 bands from 0.4 to 0.95 µm, 80 m'],
+        ['M3', 'imaging spectrometer from 0.7 to 3.0 µm (NASA: Brown, JPL)'], ['Mini-SAR', '2.38 GHz radar: ice in polar craters (NASA: APL)'],
+        ['SIR-2 and C1XS', 'infrared and X-ray spectrometers (ESA)'], ['SARA', 'neutral atom imager (ESA, Sweden, ISRO)'],
+        ['Others', 'LLRI (laser altimeter), HEX (gamma rays), RADOM (radiation, Bulgaria), MIP'] ]},
+      { title:'Results', rows:[
+        ['Surface water', 'M3 detects hydroxyl and water molecules (September 2009 publications)'],
+        ['Ice', 'more than 40 small craters with ice near the north pole (Mini-SAR)'] ]},
+      { title:'Data in STAC-PLANET', rows:[
+        ['Collections', '8'], ['Raw M3 images', '1,509'], ['Mini-SAR maps', '6,848'] ]}
+    ]
+  },
+  kplo:{
+    agency:'KARI (South Korea), with a NASA camera', targets:['Moon'],
+    desc:"South Korea's first lunar spacecraft, Danuri reached the Moon at the end of 2022 along a long, fuel-saving four-and-a-half-month trajectory. From polar orbit it images the surface and measures its magnetism and composition. Its NASA-provided ShadowCam camera sees the floors of craters that never receive sunlight.",
+    refs:{ nasa:'NASA\'s ShadowCam Launches Aboard Korea Pathfinder Lunar Orbiter (4 August 2022)', kr:'Danuri\'s lunar orbit makes Korea 7th nation to send craft to moon (29 December 2022)',
+      hz:'JPL Horizons, object -155 (KPLO)', stac:'STAC-PLANET, ode-moon-kplo-* collections (probe of 23 November 2026)' },
+    parts:{},
+    sections:[
+      { title:'Mission', rows:[
+        ['Launch', '4 August 2022 at 7:08 pm (Florida time), Falcon 9, Cape Canaveral'],
+        ['Trajectory', 'ballistic transfer of ≈ 4.5 months, fuel-saving'],
+        ['Mission orbit', 'reached on 27 December 2022'], ['Science', 'from January 2023'],
+        ['Fuel', '93 kg left out of 260 kg on arrival'] ]},
+      { title:'Orbit', rows:[
+        ['Type', 'polar, ≈ circular'], ['Altitude', '≈ 100 km'], ['Period', '≈ 2 h'] ]},
+      { title:'Instruments', rows:[
+        ['High-resolution camera', '2.5 m per pixel'], ['Wide-angle polarimetric camera', 'nature of materials from scattered light'],
+        ['Gamma-ray spectrometer', 'elemental composition'], ['Magnetometer', 'local magnetic anomalies (swirls)'],
+        ['ShadowCam', 'NASA camera (ASU, MSSS), hundreds of times more sensitive than LRO\'s, down to 1.7 m per pixel'] ]},
+      { title:'Data in STAC-PLANET', rows:[
+        ['Collections', '5 (ShadowCam only)'], ['Raw ShadowCam images', '38,461'] ]}
+    ]
+  },
+  lp:{
+    agency:'NASA (Discovery programme, Ames)', targets:['Moon'],
+    desc:"A small drum-shaped spacecraft with no onboard computer, Lunar Prospector orbited the Moon for a year and a half in 1998 and 1999. Its spectrometers mapped surface elements and found excess hydrogen at the poles, a possible sign of ice. It was crashed into a south-pole crater at the end of the mission.",
+    refs:{ ns:'NSSDCA experiment page: Neutron Spectrometer (NS)', grs:'NSSDCA experiment page: Gamma Ray Spectrometer (GRS)', hz:'JPL Horizons, object -25 (Lunar Prospector)', stac:'STAC-PLANET, ode-moon-lp-* collections (probe of 23 November 2026)' },
+    parts:{},
+    sections:[
+      { title:'Spacecraft', rows:[
+        ['Shape', 'drum 1.37 m wide and 1.28 m high, three 2.5 m booms'], ['Mass', '296.4 kg fuelled, 158.7 kg dry'],
+        ['Power', '186 W on average (cells on the body)'], ['Stabilisation', 'spinning, 12 rpm'], ['Onboard computer', 'none: everything commanded from the ground'] ]},
+      { title:'Mission', rows:[
+        ['Launch', '7 January 1998, Athena 2, Cape Canaveral'], ['Cruise', '105 hours'],
+        ['Mapping orbit', 'reached on 16 January 1998'], ['Extended mission', 'from 28 January 1999, orbit lowered'],
+        ['End of mission', 'deliberate impact near the south pole on 31 July 1999 (87.7° S, 42.0° E)'] ]},
+      { title:'Orbit', rows:[
+        ['Type', 'polar, near-circular'], ['Altitude', '100 km, then 40 km and 15 × 45 km'], ['Period', '118 min'] ]},
+      { title:'Instruments', rows:[
+        ['GRS', 'gamma-ray spectrometer: uranium, thorium, potassium and other elements'], ['NS', 'neutron spectrometer: hydrogen, hence possible water ice'],
+        ['APS', 'alpha spectrometer: radon outgassing'], ['MAG and ER', 'magnetometer and electron reflectometer: crustal magnetic fields'],
+        ['DGE', 'gravity from the Doppler shift of the radio signal'] ]},
+      { title:'Data in STAC-PLANET', rows:[
+        ['Collections', '15'] ]}
+    ]
+  },
+  grail:{
+    name:'GRAIL (Ebb and Flow)', agency:'NASA (JPL, Discovery programme), spacecraft built by Lockheed Martin', targets:['Moon'],
+    desc:"Twin spacecraft, GRAIL-A and GRAIL-B, flew one behind the other around the Moon in 2012. By constantly measuring the distance between them, they made the most precise map of the lunar gravity field, which reveals the structure of the crust and of the large impact basins.",
+    refs:{ hz:'JPL Horizons, object -177 (GRAIL-A)', stac:'STAC-PLANET, ode-moon-grail-* collections (probe of 23 November 2026)' },
+    parts:{},
+    sections:[
+      { title:'Spacecraft', rows:[
+        ['Two spacecraft', 'GRAIL-A and GRAIL-B, on Lockheed Martin\'s XSS-11 bus'], ['Mass of each', '132.6 kg dry, 202.4 kg fuelled'],
+        ['Measurement', 'Ka-band radio link between the two spacecraft (LGRS), inherited from the Earth mission GRACE'] ]},
+      { title:'Mission', rows:[
+        ['Launch', '10 September 2011, Delta II, Cape Canaveral'], ['Cruise', '≈ 3.5 months, via the Sun-Earth L1 point'],
+        ['Lunar orbit insertion', '31 December 2011 (A) and 1 January 2012 (B)'], ['Science phase', '90 days, three 27.3-day cycles'],
+        ['End of mission', 'impacts on 17 December 2012, near 75.6° N'] ]},
+      { title:'Orbit', rows:[
+        ['Type', 'polar, near-circular, in tandem'], ['Altitude', '50 km'], ['Period', '113 min'], ['Separation', '175 to 225 km'] ]},
+      { title:'Instruments', rows:[
+        ['LGRS', 'distance between the two spacecraft, hence the gravity field'], ['MoonKAM', 'cameras for school students (up to 5 per spacecraft)'] ]},
+      { title:'Data in STAC-PLANET', rows:[
+        ['Collections', '7'] ]}
+    ]
+  },
+  vo:{
+    name:'Viking 1 (orbiter)', agency:'NASA (Langley, JPL)', targets:['Mars'],
+    desc:"The two Viking spacecraft, launched in 1975, each combined an orbiter and a lander. The Viking 1 orbiter photographed Mars to choose the landing site, delivered the lander to Chryse Planitia in July 1976, then mapped the planet until 1980. Its images long served as the reference for Martian geography.",
+    refs:{ vis:'NSSDCA experiment page: Visual Imaging Subsystem (VIS)', stac:'STAC-PLANET, ode-mars-vo-* collections (probe of 23 November 2026)' },
+    parts:{},
+    sections:[
+      { title:'Spacecraft', rows:[
+        ['Shape', '≈ 2.5 m octagon, inherited from Mariner 9'], ['Launch mass', '2,328 kg, including 1,445 kg of propellant and gas'],
+        ['Solar arrays', '4 wings, 9.75 m tip to tip, 620 W at Mars'], ['High-gain antenna', '≈ 1.5 m, steerable'], ['Engine', '1,323 N'] ]},
+      { title:'Mission', rows:[
+        ['Launch', '20 August 1975, Titan IIIE-Centaur, Cape Canaveral'], ['Mars orbit insertion', '19 June 1976'],
+        ['Lander', 'touched down at Chryse Planitia on 20 July 1976'], ['End of operations', '17 August 1980, after 1,485 orbits'] ]},
+      { title:'Orbit', rows:[
+        ['At first', '1,513 × 33,000 km, 24.66 h'], ['Since 1980', '320 × 56,000 km, to avoid any fall onto Mars before 2019'] ]},
+      { title:'Instruments', rows:[
+        ['VIS', 'two television cameras, colour filters, steerable platform'], ['IRTM', 'infrared radiometer: surface and atmospheric temperatures'],
+        ['MAWD', 'spectrometer: atmospheric water vapour (1.4 µm band)'], ['Radio science', 'radio tracking of the orbiter (gravity, atmosphere)'] ]},
+      { title:'Data in STAC-PLANET', rows:[
+        ['Collections (Viking 1 and 2 orbiters combined)', '5'], ['Raw VIS images', '47,797'] ]}
+    ]
   }
 };
 
@@ -3007,6 +3727,20 @@ var EN_UI = {
   "Valeurs de la section « Véhicule » de chaque fiche.":"Values from the “Spacecraft” section of each fact sheet.",
   "Valeurs des fiches de chaque sonde, où leur source est citée ; « Durée du voyage » : du lancement à l'arrivée (ou à la mise en orbite) autour du corps visé. Cliquer un nom ouvre la sonde en 3D.":"Values from each spacecraft's fact sheet, where their source is cited; “Travel time”: from launch to arrival (or orbit insertion) at the target body. Clicking a name opens the spacecraft in 3D.",
   "au-delà, prévision Horizons jusqu'au":"beyond that, Horizons forecast until",
+  "GRAIL mesure la distance entre ses deux sondes : ses collections dans STAC-PLANET sont des séries de mesures et des modèles de gravité, sans aperçu image.":"GRAIL measures the distance between its two spacecraft: its STAC-PLANET collections are measurement series and gravity models, with no image preview.",
+  "Glisser pour tourner, molette pour zoomer":"Drag to rotate, scroll to zoom",
+  "Les instruments de Lunar Prospector comptent des particules et mesurent des champs : leurs collections dans STAC-PLANET n'ont pas d'aperçu image.":"Lunar Prospector's instruments count particles and measure fields: their STAC-PLANET collections have no image preview.",
+  "Pas encore d'aperçu ShadowCam téléchargé depuis STAC-PLANET.":"No ShadowCam preview downloaded from STAC-PLANET yet.",
+  "Pas encore d'aperçu image de Chandrayaan-1 téléchargé depuis STAC-PLANET.":"No Chandrayaan-1 image preview downloaded from STAC-PLANET yet.",
+  "Pas encore d'aperçu image de Kaguya téléchargé depuis STAC-PLANET.":"No Kaguya image preview downloaded from STAC-PLANET yet.",
+  "pas de maquette libre de droits : la sonde est un point bleu":"no free-to-use model: the spacecraft is a blue dot",
+  "Pas de maquette 3D libre de droits pour cette sonde : elle est figurée par un point bleu sur son orbite.":"No free-to-use 3D model for this spacecraft: it is shown as a blue dot on its orbit.",
+  "Aperçu d'une image ShadowCam (cratère d'ombre permanente)":"Preview of a ShadowCam image (permanently shadowed crater)",
+  "Aperçu d'une image de Chandrayaan-1":"Preview of a Chandrayaan-1 image",
+  "Aperçu d'une image de Kaguya":"Preview of a Kaguya image",
+  "Aperçu d'une mosaïque d'images des orbiteurs Viking":"Preview of a Viking orbiter image mosaic",
+  "Donnée de Lunar Prospector":"Lunar Prospector data",
+  "Donnée de GRAIL":"GRAIL data",
 };
 
 /* =================================================================
@@ -3146,6 +3880,13 @@ function prepare(t, gltf){
   var top = new THREE.Group(); top.quaternion.copy(R.q); top.add(root); R.root = top;
   return R;
 }
+/* sonde sans maquette libre de droits : un point lumineux à la couleur de surlignage (schéma de principe) */
+function placeholder(t){
+  var g = new THREE.Mesh(new THREE.SphereGeometry(0.6, 24, 16), new THREE.MeshBasicMaterial({ color:0x3D7BFF }));
+  var halo = new THREE.Mesh(new THREE.SphereGeometry(1.2, 24, 16), new THREE.MeshBasicMaterial({ color:0x8fb8ff, transparent:true, opacity:0.35, depthWrite:false }));
+  var top = new THREE.Group(); top.add(g, halo);
+  return { root:top, radius:(t.view && t.view.r) || 3, meshes:[], parts:{}, q:new THREE.Quaternion() };
+}
 function highlight(){
   if (!M) return;
   M.meshes.forEach(function(o){ var m = o.material, k = o.userData.part; if (!m.emissive) return;
@@ -3196,6 +3937,7 @@ function open(el, t, o){
     camera.near = M.radius * 0.02; camera.far = (hasBody ? O.rb * 20 : M.radius * 200); camera.updateProjectionMatrix();
     if (opts.onState) opts.onState('ready', hasBody); };
   if (models[t.id]) return show(models[t.id]);
+  if (!t.file) return show(models[t.id] = placeholder(t));
   if (opts.onState) opts.onState('loading');
   var url = t.file;
   fetch(url).then(function(r){ if (!r.ok) throw new Error(r.status); return /\.txt$/.test(url) ? r.text().then(function(b){ var s = atob(b.trim()), a = new Uint8Array(s.length); for (var i = 0; i < s.length; i++) a[i] = s.charCodeAt(i); return a.buffer; }) : r.arrayBuffer(); })
@@ -3617,7 +4359,7 @@ function launch(m){ return ev(m, ['launch']); }
 function arrival(m){ return ev(m, ['arrival', 'orbit']); }
 function end(m){ return ev(m, ['end']); }
 /* agences nommées dans le texte de la fiche, telles qu'écrites (sigles) */
-function agencies(m){ var a = []; (String(m.agency).match(/\b(NASA|ESA|ASI|JAXA|CNES|DLR|ISRO|Roscosmos|CNSA)\b/g) || []).forEach(function(x){ if (a.indexOf(x) < 0) a.push(x); }); return a; }
+function agencies(m){ var a = []; (String(m.agency).match(/\b(NASA|ESA|ASI|JAXA|CNES|DLR|ISRO|KARI|Roscosmos|CNSA)\b/g) || []).forEach(function(x){ if (a.indexOf(x) < 0) a.push(x); }); return a; }
 function allAgencies(){ var n = {}; MISSIONS.forEach(function(m){ agencies(m).forEach(function(a){ n[a] = (n[a] || 0) + 1; }); });
   return Object.keys(n).sort(function(a, b){ return n[b] - n[a] || (a < b ? -1 : 1); }); }
 function bodies(){ var b = []; MISSIONS.forEach(function(m){ if (b.indexOf(m.targets[0]) < 0) b.push(m.targets[0]); }); return b; }
@@ -3653,7 +4395,7 @@ var SHAPE = {
 };
 SHAPE.arrival = SHAPE.orbit;
 function timeline(L){
-  var y0 = 1995, y1 = Math.max(2028, new Date().getUTCFullYear() + 2), W = 1000, lw = 120, rh = 30, top = 26, H = top + L.length * rh + 30, now = today();
+  var y0 = Math.floor(Math.min.apply(null, [2000].concat(L.map(function(m){ return +String(m.year).slice(0, 4); }))) / 5) * 5, y1 = Math.max(2028, new Date().getUTCFullYear() + 2), W = 1000, lw = 120, rh = 30, top = 26, H = top + L.length * rh + 30, now = today();
   var t0 = Date.UTC(y0, 0, 1) / DAY, t1 = Date.UTC(y1, 0, 1) / DAY;
   function X(t){ return +(lw + (t - t0) / (t1 - t0) * (W - lw - 40)).toFixed(1); }
   var s = '';
@@ -4082,7 +4824,8 @@ function partsHtml(m, sel){
     var on = p.key === sel;
     return '<li class="part' + (on ? ' on' : '') + '"><button data-part="' + p.key + '" aria-expanded="' + on + '">' + esc(p.name) + '</button>' +
       (on ? '<div class="part-body"><p>' + esc(p.desc) + '</p>' + (p.facts.length ? '<ul>' + p.facts.map(function(f){ return '<li>' + esc(OBS_NUM(f[0])) + src(m, f[1]) + '</li>'; }).join('') + '</ul>' : '') + '</div>' : '') + '</li>';
-  }).join('') + '</ul><p class="note">' + T('Maquette') + ' : ' + esc(m.model.src) + ' · ' + T('Licence') + ' : ' + esc(m.model.license) + '</p>' + bodyCredit(m);
+  }).join('') + '</ul>' + (m.file ? '<p class="note">' + T('Maquette') + ' : ' + esc(m.model.src) + ' · ' + T('Licence') + ' : ' + esc(m.model.license) + '</p>'
+    : '<p class="note">' + T('Pas de maquette 3D libre de droits pour cette sonde : elle est figurée par un point bleu sur son orbite.') + '</p>') + bodyCredit(m);
 }
 function bodyCredit(m){
   var d = m.body && (window.DATA_FILES || {})['tex-' + m.body.tex]; if (!d) return '';
@@ -4090,16 +4833,17 @@ function bodyCredit(m){
 }
 var MS = { tab:'fiche', part:null, explode:0, view:'probe', run:!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) };
 function missionPage(m){
+  if (!m.file) MS.view = 'orbit';   /* sans maquette, la vue d'orbite montre mieux la sonde (un point) */
   return '<div class="mission"><section id="stage" class="m-stage" aria-label="' + T('Vue 3D de la sonde') + '">' +
     '<div class="m-hud"><div class="m-name">' + esc(m.name) + '</div><div class="m-sub">' + esc(m.agency) + ' · ' + esc(m.targets.join(', ')) + '</div></div>' +
     '<p class="m-msg" id="m-msg" hidden></p>' +
-    (m.body ? '<p class="m-body-note" id="m-body-note" hidden>' + T(m.body.name) + ' : ' + T('orbite en schéma de principe (tailles, altitude, inclinaison et vitesse non respectées)') + '</p>' : '') +
+    (m.body ? '<p class="m-body-note" id="m-body-note" hidden>' + T(m.body.name) + ' : ' + T('orbite en schéma de principe (tailles, altitude, inclinaison et vitesse non respectées)') + (m.file ? '' : ' · ' + T('pas de maquette libre de droits : la sonde est un point bleu')) + '</p>' : '') +
     '<div class="m-tools" role="toolbar" aria-label="' + T('Affichage') + '">' +
-      '<label class="m-ex"><span>' + T('Éclater') + '</span><input id="m-explode" type="range" min="0" max="100" value="' + Math.round(MS.explode*100) + '" aria-label="' + T('Écarter les pièces') + '"></label>' +
+      (m.file ? '<label class="m-ex"><span>' + T('Éclater') + '</span><input id="m-explode" type="range" min="0" max="100" value="' + Math.round(MS.explode*100) + '" aria-label="' + T('Écarter les pièces') + '"></label>' : '') +
       '<button class="m-b" id="m-reset">' + T('Recadrer') + '</button>' +
       (m.body ? '<button class="m-b" id="m-view" aria-pressed="' + (MS.view === 'orbit') + '">' + T('Vue d\'orbite') + '</button>' : '') +
       '<button class="m-b" id="m-run" aria-pressed="' + !MS.run + '">' + T('Pause') + '</button></div>' +
-    '<p class="m-hint">' + T('Glisser pour tourner, molette pour zoomer, cliquer une pièce pour l\'identifier') + '</p>' +
+    '<p class="m-hint">' + T(m.file ? 'Glisser pour tourner, molette pour zoomer, cliquer une pièce pour l\'identifier' : 'Glisser pour tourner, molette pour zoomer') + '</p>' +
     '</section><aside class="m-panel"><h2 class="sr-only">' + esc(m.name) + '</h2>' +
     '<div class="ptl-row"><div class="ptl" role="tablist" aria-label="' + T('Contenu du panneau') + '">' +
       ['fiche', 'parts'].map(function(k){ return '<button class="ptab" role="tab" data-ptab="' + k + '" aria-selected="' + (MS.tab === k) + '">' + T(k === 'fiche' ? 'Fiche' : 'Pièces') + (k === 'parts' ? ' <small>' + m.parts.length + '</small>' : '') + '</button>'; }).join('') +
@@ -4107,13 +4851,13 @@ function missionPage(m){
 }
 function mountMission(m){
   var msg = $('m-msg');
-  if (!m.file || !Viewer.available()){ msg.hidden = false; msg.textContent = T('La vue 3D demande WebGL, indisponible ici. La fiche reste lisible à droite.'); return; }
+  if (!Viewer.available()){ msg.hidden = false; msg.textContent = T('La vue 3D demande WebGL, indisponible ici. La fiche reste lisible à droite.'); return; }
   Viewer.open($('stage'), m, {
     onPick:function(k){ MS.part = k; MS.tab = 'parts'; renderPanel(m); },
     onState:function(st, hasBody){ msg.hidden = st === 'ready'; if ($('m-body-note')) $('m-body-note').hidden = !(st === 'ready' && hasBody); msg.textContent = st === 'loading' ? T('Chargement de la maquette…') : st === 'nogl' ? T('La vue 3D demande WebGL, indisponible ici. La fiche reste lisible à droite.') : st === 'error' ? T('La maquette n\'a pas pu être chargée.') : ''; }
   });
   Viewer.select(MS.part); Viewer.explode(MS.explode);
-  $('m-explode').addEventListener('input', function(e){ MS.explode = e.target.value / 100; Viewer.explode(MS.explode); });
+  if ($('m-explode')) $('m-explode').addEventListener('input', function(e){ MS.explode = e.target.value / 100; Viewer.explode(MS.explode); });
   $('m-reset').addEventListener('click', function(){ Viewer.reset(m); });
   /* vue de la sonde (le sol défile dessous) ou vue d'orbite (le corps entier, sonde agrandie) ; pause : arrête l'orbite et la rotation (WCAG 2.2.2) */
   Viewer.view(MS.view); Viewer.run(MS.run);
