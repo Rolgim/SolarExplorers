@@ -1,0 +1,46 @@
+{
+ "archive": "PDS Geosciences Node (NASA), via le catalogue STAC-PLANET du PDSSP",
+ "collection": "ode-mars-vo-visab-mdim",
+ "product": "se90s000.img",
+ "datetime": "2024-10-30T16:03:00.607000Z",
+ "href": "https://planetarydata.jpl.nasa.gov/img/data/viking_orbiter/vo_2007/extras/browse/polar/se90s000.jpeg",
+ "stac": "https://stac.stacplanet.pdssp.eu/collections/ode-mars-vo-visab-mdim/items/se90s000.img",
+ "instrument": "VIS",
+ "full_size": [
+  324,
+  323
+ ],
+ "out_size": [
+  324,
+  323
+ ],
+ "stretch": null,
+ "footprint": {
+  "type": "Polygon",
+  "coordinates": [
+   [
+    [
+     -180.0,
+     -90.0
+    ],
+    [
+     180.0,
+     -90.0
+    ],
+    [
+     180.0,
+     -79.8837
+    ],
+    [
+     -180.0,
+     -79.8837
+    ],
+    [
+     -180.0,
+     -90.0
+    ]
+   ]
+  ]
+ },
+ "fetched": "2026-11-23"
+}
