@@ -73,8 +73,9 @@ SOLAR_T0 = "1997-10-01"
 # échantillonner un tour complet pour tracer l'orbite)
 PLANETS = [("Mercure", "199", 3, 88), ("Vénus", "299", 6, 225), ("Terre", "399", 6, 365), ("Mars", "499", 8, 687), ("Jupiter", "599", 30, 4333),
            ("Saturne", "699", 30, 10759), ("Uranus", "799", 60, 30687), ("Neptune", "899", 60, 60190), ("Pluton", "999", 60, 90560)]
-# satellites : (nom, id Horizons, corps central) ; éléments orbitaux osculateurs autour du corps central tous les 180 jours, propagés
-# par la page (mouvement képlérien) depuis l'époque la plus proche
+# satellites : (nom, id Horizons, corps central) ; éléments orbitaux osculateurs autour du corps central tous les 180 jours (30 jours pour
+# les plus rapides, FAST), interpolés par la page entre deux époques (longitude moyenne au mouvement moyen effectif entre les deux)
+FAST = {"401", "601", "602"}
 MOONS = [("Lune", "301", "399"), ("Phobos", "401", "499"), ("Deimos", "402", "499"),
          ("Io", "501", "599"), ("Europe", "502", "599"), ("Ganymède", "503", "599"), ("Callisto", "504", "599"),
          ("Mimas", "601", "699"), ("Encelade", "602", "699"), ("Téthys", "603", "699"), ("Dioné", "604", "699"), ("Rhéa", "605", "699"),
@@ -117,7 +118,7 @@ def solar():
     out["moons"] = []
     for name, hid, center in MOONS:
         try:
-            out["moons"].append({"name": name, "horizons": hid, "center": center, "el": elements(hid, center, SOLAR_T0, today, "180 d")}); print("satellite", name, len(out["moons"][-1]["el"]))
+            out["moons"].append({"name": name, "horizons": hid, "center": center, "el": elements(hid, center, SOLAR_T0, today, "30 d" if hid in FAST else "180 d")}); print("satellite", name, len(out["moons"][-1]["el"]))
         except Exception as e: print("  ÉCHEC satellite", name, repr(e)[:200])
     for mid, hid, start, stop in PROBES:
         stop = stop or today
