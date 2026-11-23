@@ -1,18 +1,18 @@
 {
- "archive": "PDS Imaging Node (NASA), via le catalogue STAC-PLANET du PDSSP",
+ "archive": "PDS Geosciences Node (NASA), via le catalogue STAC-PLANET du PDSSP",
  "collection": "ode-moon-clem-uvvis-mdim",
  "product": "UI87S330",
  "datetime": "2000-03-05T18:15:19Z",
- "href": "https://pds-geosciences.wustl.edu/geocopy/imaging/clem1-l-u-5-dim-uvvis-v1.0/cl_4078/browse/ratio/small/ui87s330.jpg",
+ "href": "https://pds-geosciences.wustl.edu/geocopy/imaging/clem1-l-u-5-dim-uvvis-v1.0/cl_4078/browse/ratio/large/ui87s330.jpg",
  "stac": "https://stac.stacplanet.pdssp.eu/collections/ode-moon-clem-uvvis-mdim/items/UI87S330",
  "instrument": "UVVIS",
  "full_size": [
-  48,
-  46
+  953,
+  910
  ],
  "out_size": [
-  48,
-  46
+  900,
+  859
  ],
  "stretch": null,
  "footprint": {

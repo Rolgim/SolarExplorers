@@ -1,43 +1,46 @@
 {
  "archive": "Arizona State University (THEMIS), via le catalogue STAC-PLANET du PDSSP",
  "collection": "ode-mars-ody-themis-vgeo2",
- "product": "V86296003POL",
- "datetime": "2021-05-28T22:34:34.832000Z",
- "href": "https://static.mars.asu.edu/pds/ODTGEO_v2/browse/odtbws2_0078/v862xxbws2/V86296003POL.png",
- "stac": "https://stac.stacplanet.pdssp.eu/collections/ode-mars-ody-themis-vgeo2/items/V86296003POL",
+ "product": "V86293003EQR",
+ "datetime": "2021-05-28T16:06:12.051000Z",
+ "href": "https://static.mars.asu.edu/pds/ODTGEO_v2/browse/odtbws2_0078/v862xxbws2/V86293003EQR.png",
+ "stac": "https://stac.stacplanet.pdssp.eu/collections/ode-mars-ody-themis-vgeo2/items/V86293003EQR",
  "instrument": "THEMIS VIS",
  "full_size": [
-  1159,
-  2570
+  602,
+  2703
  ],
  "out_size": [
-  406,
+  200,
   900
  ],
- "stretch": null,
+ "stretch": [
+  0.5,
+  99.5
+ ],
  "footprint": {
   "type": "Polygon",
   "coordinates": [
    [
     [
-     65.755,
-     87.173
+     -120.149,
+     -7.39
     ],
     [
-     64.593,
-     86.826
+     -120.445,
+     -7.407
     ],
     [
-     77.754,
-     86.606
+     -120.018,
+     -10.619
     ],
     [
-     80.269,
-     86.929
+     -119.723,
+     -10.618
     ],
     [
-     65.755,
-     87.173
+     -120.149,
+     -7.39
     ]
    ]
   ]
