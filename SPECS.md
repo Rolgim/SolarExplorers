@@ -88,7 +88,8 @@ Pages, sur le modèle du premier site :
    - reste à faire : éclairage « Soleil réel », pages d'instruments détaillées (trajet de la lumière, chaîne de traitement), instruments séparés sur la maquette (non distinguables de façon sûre aujourd'hui), orbite autour de Mars, comparaison des sources sur la puissance électrique (2 000 W au plus loin du Soleil selon le dossier de presse, 1 000 W à Mars selon la NSSDCA : non affichée tant que ce n'est pas tranché).
    - ajouté le 23 novembre 2026 : Mars Express, LRO, Cassini et MESSENGER (maquettes NASA 3D Resources et ESA SCIFLEET, fiches sourcées, croisières Horizons, une image réelle par mission sauf Cassini : le serveur VIMS refuse GitHub Actions) ; publication sur GitHub Pages (https://rolgim.github.io/SolarExplorers/).
 5. **Sondes en orbite et sélection** — 23 novembre 2026 : onglets de sonde dans l'en-tête ; la sonde tourne autour de son corps (vue sonde, vue d'orbite, pause). La carte d'un corps avec les empreintes STAC a été abandonnée à la demande de l'utilisateur.
-6. Accueil Système solaire, puis Comparer et Flotte.
+6. **Accueil Système solaire** — 23 novembre 2026 : vue de dessus du plan de l'écliptique, positions réelles des planètes (Mercure à Saturne) et des sondes de 1997 à aujourd'hui (JPL Horizons, `data/solar.json`, recette `solar` de `tools/data/fetch_orbits.py`) ; curseur des dates, lecture/pause, cadrage « jusqu'à Mars » ou « jusqu'à Saturne » ; seule la croisière est tracée, une sonde en orbite est un anneau de sa couleur autour de sa planète ; liste de l'état de chaque sonde à la date choisie (d'après les `events` du registre).
+7. Comparer et Flotte.
 
 ## Sources
 

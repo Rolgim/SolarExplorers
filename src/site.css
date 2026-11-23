@@ -71,3 +71,23 @@ figure{ margin:0 0 10px; } figcaption{ font-size:12.5px; line-height:1.45; color
 }
 .m-body-note{ position:absolute; right:var(--gr); bottom:12px; margin:0; max-width:46%; text-align:right; font-size:12px; color:#E3E6E8; background:rgba(0,0,0,.72); padding:2px 8px; }
 @media (max-width: 720px){ .m-body-note{ top:74px; bottom:auto; left:var(--gl); max-width:none; text-align:left; } }
+
+/* ---------- accueil « Système solaire » ---------- */
+.so-tools{ display:flex; flex-wrap:wrap; gap:10px 14px; align-items:center; margin:6px 0 10px; }
+.so-tools .m-b{ background:var(--paper); color:var(--ink); border-color:var(--ink); }
+.so-tools .m-b[aria-pressed="true"]{ background:var(--mark); color:var(--on-mark); border-color:var(--mark); }
+.so-date{ display:flex; flex-direction:column; gap:2px; flex:1 1 260px; font-size:13.5px; font-weight:700; }
+.so-date input{ width:100%; accent-color:var(--mark); }
+.so-zoom{ display:flex; gap:6px; }
+.so-wrap{ background:#05070A; max-width:min(720px, calc(100vh - 250px)); min-width:min(100%, 320px); }
+.so-wrap svg{ display:block; width:100%; aspect-ratio:1; }
+.so-o{ fill:none; stroke-width:1px; stroke-opacity:.55; vector-effect:non-scaling-stroke; }
+.so-tr{ fill:none; stroke-width:1.6px; vector-effect:non-scaling-stroke; }
+.so-tr.done{ stroke-opacity:.35; stroke-dasharray:4 3; }
+.so-sun{ fill:#FFD54F; }
+.so-ring{ fill:none; stroke-width:2px; vector-effect:non-scaling-stroke; }
+.so-wrap text{ fill:#E3E6E8; font-family:var(--f); }
+.so-wrap a:focus-visible .so-p{ stroke:#fff; stroke-width:2px; vector-effect:non-scaling-stroke; }
+.so-list{ list-style:none; padding:0; margin:0; columns:2 260px; font-size:13.5px; }
+.so-list li{ padding:3px 0; display:flex; gap:7px; align-items:center; }
+.so-list .sw{ width:12px; height:12px; flex:none; border-radius:50%; }

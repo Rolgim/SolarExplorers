@@ -164,7 +164,7 @@ function dataPage(m){
 }
 var PAGES = {
   missions: missionsPage,
-  accueil: function(){ return soon('Système solaire', 'Les orbites des planètes et la trajectoire réelle de chaque sonde, avec un curseur des années.', 'étape 6'); },
+  accueil: function(){ return SolarPage.html(); },
   comparer: function(){ return soon('Comparer', 'Domaine spectral, résolution au sol, trajectoires et tableau des instruments.', 'étape 6'); },
   flotte: function(){ return soon('Flotte', 'Frise des missions par agence et par cible, et « qui a fait quoi », chaque ligne sourcée.', 'étape 6'); }
 };
@@ -177,6 +177,7 @@ function route(){
   $('page').innerHTML = m ? (dm ? dataPage(m) : missionPage(m)) : PAGES[r]();
   $('page').classList.toggle('is-mission', !!(m && !dm));
   if (m && !dm) mountMission(m);
+  if (!m && r === 'accueil') SolarPage.mount(); else SolarPage.stop();
   var h2 = $('page').querySelector('h2');
   document.title = (h2 ? h2.textContent + ' · ' : '') + T('Explorateurs du Système solaire');
   $('live').textContent = h2 ? h2.textContent : '';
