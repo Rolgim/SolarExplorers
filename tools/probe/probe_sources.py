@@ -22,7 +22,12 @@ SRC = {
   "messenger-moi": "https://www.nasa.gov/pdf/525164main_MercuryMOI_PK.pdf",
   "messenger-launch": "https://webarchive.library.unt.edu/eot2008/20081102145358/http://www.nasa.gov/pdf/168019main_MESSENGER_71504_PressKit.pdf",
   "messenger-nssdc": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=2004-030A",
+  "mex-instruments": "https://www.esa.int/Science_Exploration/Space_Science/Mars_Express/Mars_Express_orbiter_instruments",
+  "lro-presskit-raw": "https://webarchive.library.unt.edu/web/20090922191046id_/http://lro.gsfc.nasa.gov/images/LRO_LCROSS_presskit.pdf",
+  "messenger-launch-raw": "https://webarchive.library.unt.edu/eot2008/20081102145358id_/http://www.nasa.gov/pdf/168019main_MESSENGER_71504_PressKit.pdf",
 }
+ONLY = set(os.environ.get("ONLY", "").split()) or set(__import__("sys").argv[1:])
+if ONLY: SRC = {k: v for k, v in SRC.items() if k in ONLY}
 idx = ["| clé | statut | octets | URL finale |", "|---|---|---|---|"]
 for k, u in SRC.items():
     try:
@@ -30,7 +35,11 @@ for k, u in SRC.items():
         ct = r.headers.get("content-type", "")
         if r.content[:5] == b"%PDF-" or "pdf" in ct:
             open(os.path.join(OUT, k + ".pdf"), "wb").write(r.content)
-            subprocess.run(["pdftotext", "-layout", os.path.join(OUT, k + ".pdf"), os.path.join(OUT, k + ".txt")], check=False)
+            try:
+                from pypdf import PdfReader
+                open(os.path.join(OUT, k + ".txt"), "w").write("\n".join((pg.extract_text() or "") for pg in PdfReader(os.path.join(OUT, k + ".pdf")).pages))
+            except Exception as e:
+                print("  texte du PDF non extrait (le PDF reste disponible) :", repr(e)[:120])
         else:
             t = re.sub(r"(?is)<(script|style|noscript)[^>]*>.*?</\1>", " ", r.text)
             t = re.sub(r"(?i)<br\s*/?>|</(p|div|li|tr|h\d|td|th)>", "\n", t)
