@@ -81,7 +81,10 @@ Pages, sur le modèle du premier site :
 1. **Squelette** — fait (23 novembre 2026) : chaîne d'Observatories (build, tests, workflows, `tools/models`, `tools/probe`), contenu vidé.
 2. **Sonde STAC-PLANET** — faite le 23 novembre 2026 (résultats en section 4) : racine de l'API, collections (corps, mission, instrument, nombre d'items), un item par collection (propriétés, géométrie, assets).
 3. **Choix des missions** — fait le 23 novembre 2026 (section 5).
-4. Première mission complète : maquette, fiche, instruments, trajectoire Horizons, une donnée réelle (et retour de la vue 3D d'Observatories).
+4. Première mission complète : maquette, fiche, instruments, trajectoire Horizons, une donnée réelle (et retour de la vue 3D d'Observatories). **En cours (MRO)** :
+   - maquette : NASA 3D Resources, « Mars Reconnaissance Orbiter (MRO) (A) » (GLB Draco, textures WebP, matériaux nommés : lens, solar_L, solar_R, tower, rocket, pole, foil, parts) ; sonde `tools/probe/probe_mro.py` ;
+   - trajectoire : JPL Horizons, identifiant -74, de la séparation du Centaur (12 août 2005) à aujourd'hui, prévision au-delà ;
+   - donnée réelle : le serveur HiRISE (hirise.lpl.arizona.edu, hirise-pds, uahirise.org) refuse les connexions de GitHub Actions et le PDS Imaging Node n'en a pas de miroir ; la première donnée sera donc un aperçu CTX, servi par planetarydata.jpl.nasa.gov (vérifié : W07_091846_2020_XN_22N306W, 1er mars 2026).
 5. Carte d'un corps (Mars) avec les empreintes STAC.
 6. Accueil Système solaire, puis Comparer et Flotte.
 
