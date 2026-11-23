@@ -381,7 +381,15 @@ var EN_MISSIONS = {
     desc:"South Korea's first lunar spacecraft, Danuri reached the Moon at the end of 2022 along a long, fuel-saving four-and-a-half-month trajectory. From polar orbit it images the surface and measures its magnetism and composition. Its NASA-provided ShadowCam camera sees the floors of craters that never receive sunlight.",
     refs:{ nasa:'NASA\'s ShadowCam Launches Aboard Korea Pathfinder Lunar Orbiter (4 August 2022)', kr:'Danuri\'s lunar orbit makes Korea 7th nation to send craft to moon (29 December 2022)',
       hz:'JPL Horizons, object -155 (KPLO)', stac:'STAC-PLANET, ode-moon-kplo-* collections (probe of 23 November 2026)' },
-    parts:{},
+    model:{ src:'NASA Eyes on the Solar System, “Danuri” (textures removed: simplified colours)', license:'NASA/JPL-Caltech, free use (NASA media usage guidelines, which cover 3D models)' },
+    parts:{
+      shadowcam:{ name:'ShadowCam', desc:'NASA camera for the floors of permanently shadowed craters, lit only by light bounced from nearby terrain (brown cylinder).', facts:['Down to 1.7 m per pixel'] },
+      polcam:{ name:'Polarimetric camera', desc:'Korean wide-angle camera that recognises surface materials from scattered light (named “PolCam” in the model).' },
+      hga:{ name:'High-gain antenna', desc:'Steerable dish for links with Earth, at the top of the spacecraft.' },
+      mag:{ name:'Magnetometer boom', desc:'Boom that keeps the magnetometer away from the spacecraft fields.' },
+      solar:{ name:'Solar arrays', desc:'Two arrays on either side of the bus.' },
+      bus:{ name:'Bus', desc:'Bus, tanks and equipment; it also carries the high-resolution camera and the gamma-ray spectrometer, not told apart in the model.' }
+    },
     sections:[
       { title:'Mission', rows:[
         ['Launch', '4 August 2022 at 7:08 pm (Florida time), Falcon 9, Cape Canaveral'],
@@ -401,8 +409,16 @@ var EN_MISSIONS = {
   lp:{
     agency:'NASA (Discovery programme, Ames)', targets:['Moon'],
     desc:"A small drum-shaped spacecraft with no onboard computer, Lunar Prospector orbited the Moon for a year and a half in 1998 and 1999. Its spectrometers mapped surface elements and found excess hydrogen at the poles, a possible sign of ice. It was crashed into a south-pole crater at the end of the mission.",
-    refs:{ ns:'NSSDCA experiment page: Neutron Spectrometer (NS)', grs:'NSSDCA experiment page: Gamma Ray Spectrometer (GRS)', hz:'JPL Horizons, object -25 (Lunar Prospector)', stac:'STAC-PLANET, ode-moon-lp-* collections (probe of 23 November 2026)' },
-    parts:{},
+    refs:{ aps:'NSSDCA experiment page: Alpha Particle Spectrometer (APS)', ns:'NSSDCA experiment page: Neutron Spectrometer (NS)', grs:'NSSDCA experiment page: Gamma Ray Spectrometer (GRS)', hz:'JPL Horizons, object -25 (Lunar Prospector)', stac:'STAC-PLANET, ode-moon-lp-* collections (probe of 23 November 2026)' },
+    model:{ src:'NASA Eyes on the Solar System, “Lunar Prospector”', license:'NASA/JPL-Caltech, free use (NASA media usage guidelines, which cover 3D models)' },
+    parts:{
+      bus:{ name:'Drum', desc:'Graphite-epoxy drum covered with solar cells, spinning on itself; three hydrazine tanks inside.', facts:['1.37 m wide, 1.28 m high', 'Power: 186 W on average', 'Spin: 12 rpm'] },
+      booms:{ name:'Booms', desc:'Three radial booms, deployed during cruise, that keep the instruments away from the drum.', facts:['Length: 2.5 m'] },
+      grs:{ name:'Gamma-ray spectrometer (GRS)', desc:'Cylinder at the end of a boom: a bismuth germanate crystal surrounded by an anticoincidence shield.', facts:['55.4 cm long housing'] },
+      ns:{ name:'Neutron and alpha spectrometers (NS, APS)', desc:'Two helium-3 counters perpendicular to the boom, and the cube of the alpha spectrometer, at the end of the same boom.', facts:['29 cm long counters', 'APS cube: ≈ 18 cm wide'] },
+      mag:{ name:'Reflectometer and magnetometer (ER, MAG)', desc:'The electron reflectometer at the end of the third boom, and the magnetometer at the end of an extension, away from the spacecraft fields.', facts:['Extension: 1.1 m'] },
+      antenna:{ name:'Antenna', desc:'Slotted medium-gain antenna on the spin axis (identified from the model).' }
+    },
     sections:[
       { title:'Spacecraft', rows:[
         ['Shape', 'drum 1.37 m wide and 1.28 m high, three 2.5 m booms'], ['Mass', '296.4 kg fuelled, 158.7 kg dry'],
@@ -425,7 +441,12 @@ var EN_MISSIONS = {
     name:'GRAIL (Ebb and Flow)', agency:'NASA (JPL, Discovery programme), spacecraft built by Lockheed Martin', targets:['Moon'],
     desc:"Twin spacecraft, GRAIL-A and GRAIL-B, flew one behind the other around the Moon in 2012. By constantly measuring the distance between them, they made the most precise map of the lunar gravity field, which reveals the structure of the crust and of the large impact basins.",
     refs:{ hz:'JPL Horizons, object -177 (GRAIL-A)', stac:'STAC-PLANET, ode-moon-grail-* collections (probe of 23 November 2026)' },
-    parts:{},
+    model:{ src:'NASA Eyes on the Solar System, “GRAIL” (GRAIL-B “Flow”; GRAIL-A is identical)', license:'NASA/JPL-Caltech, free use (NASA media usage guidelines, which cover 3D models)' },
+    parts:{
+      solar:{ name:'Solar arrays', desc:'Two arrays deployed from the upper platform; a lithium-ion battery stores the energy.' },
+      engine:{ name:'Thruster', desc:'Main thruster, on the upper platform; a warm-gas system and three reaction wheels provide fine control.', facts:['Thrust: 22 N'] },
+      bus:{ name:'Bus', desc:'Rectangular prism of Lockheed Martin\'s XSS-11 platform. It carries the LGRS instrument (Ka-band antenna aligned with the centre of mass of both spacecraft) and the MoonKAM cameras, not told apart here.', facts:['Dry mass: 132.6 kg'] }
+    },
     sections:[
       { title:'Spacecraft', rows:[
         ['Two spacecraft', 'GRAIL-A and GRAIL-B, on Lockheed Martin\'s XSS-11 bus'], ['Mass of each', '132.6 kg dry, 202.4 kg fuelled'],

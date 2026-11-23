@@ -15,6 +15,11 @@ Reprise telle quelle d'Observatories v1.0 (`tools/models/`). Les fichiers `model
 | `clem.glb` | NASA 3D Resources « Clementine » | `copy` → `seg_lib` + `clem_cls.js` → idem |
 | `tgo.glb` | ESA SCIFLEET « trace_gas_orbiter » (OBJ + textures) | `obj2glb.py` → `seg_lib` + `tgo_cls.js` → idem |
 | `vex.glb` | ESA SCIFLEET « venus_express » (OBJ + textures, 271 000 sommets) | `obj2glb.py` → `seg_lib` + `vex_cls.js` → resize 1024 → `slimtex.mjs` (simplification à 12 % en gardant les textures, quantize) |
+| `lp.glb` | NASA Eyes on the Solar System « Lunar Prospector » (`tools/probe/probe_eyes2.py`, NASA/JPL-Caltech) | `copy` → `seg_lib` + `lp_cls.js` → resize 1024, weld, quantize → `webp` |
+| `grail.glb` | NASA Eyes on the Solar System « GRAIL » (GRAIL-B) | `copy` → `seg_lib` + `grail_cls.js` → idem → `webp` |
+| `kplo.glb` | NASA Eyes on the Solar System « Danuri » (Draco + textures KTX2) | `copy` (décode Draco) → `notex.mjs` (textures KTX2 retirées, couleurs) → `seg_lib` + `kplo_cls.js` → `notex.mjs` (couleur des panneaux par nœud) → resize, weld, quantize |
+
+Maquettes « schéma de principe » (formes simples d'après les dimensions publiées) : `schema.mjs` (Viking 1 orbiteur, Lunar Prospector), pour les sondes sans maquette réutilisable ; non utilisé sur le site pour l'instant.
 
 Les classifieurs propres à chaque maquette (`<id>_cls.js`) s'ajoutent ici, mission par mission. Ceux d'Observatories restent consultables au tag `v1.0` de ce dépôt-là.
 

@@ -74,6 +74,7 @@ function bodyCredit(m){
 }
 var MS = { tab:'fiche', part:null, explode:0, view:'probe', run:!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) };
 function missionPage(m){
+  if (MS.mid !== m.id){ MS.part = null; MS.mid = m.id; }   /* la pièce choisie ne passe pas d'une sonde à l'autre */
   if (!m.file) MS.view = 'orbit';   /* sans maquette, la vue d'orbite montre mieux la sonde (un point) */
   return '<div class="mission"><section id="stage" class="m-stage" aria-label="' + T('Vue 3D de la sonde') + '">' +
     '<div class="m-hud"><div class="m-name">' + esc(m.name) + '</div><div class="m-sub">' + esc(m.agency) + ' · ' + esc(m.targets.join(', ')) + '</div></div>' +

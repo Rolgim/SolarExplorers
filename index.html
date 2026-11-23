@@ -1444,10 +1444,10 @@ var MISSIONS = [
       { type:'arrival', body:'Lune', date:'2022-12-27', ref:'kr' }
     ],
     horizons:'-155', stac:'ode-moon-kplo-',
-    file:null, bytes:0,
-    model:{ none:true },
-    body:{ name:'Lune', tex:'moon', nadir:[0, -1, 0] },
-    view:{ az:0.8, el:0.3, dist:1.5, r:3 }, sun:[0.4, 0.8, 0.4],
+    file:'models/kplo.glb', bytes:1465028, unit:1,
+    model:{ src:'NASA Eyes on the Solar System, « Danuri » (textures retirées : couleurs simplifiées)', license:'NASA/JPL-Caltech, usage libre (règles d\'usage des médias de la NASA, qui couvrent les maquettes 3D)', u:'https://eyes.nasa.gov/apps/solar-system/' },
+    body:{ name:'Lune', tex:'moon', nadir:[0, -1, 0] },   /* ShadowCam et PolCam tournées vers -Y, antenne grand gain vers +Y, d\'après la maquette (≈) */
+    view:{ az:0.8, el:0.3, dist:1.5 }, sun:[0.4, 0.8, 0.4],
     real:{ key:'kplo-img', alt:'Aperçu d\'une image ShadowCam (cratère d\'ombre permanente)', none:'Pas encore d\'aperçu ShadowCam téléchargé depuis STAC-PLANET.' },
     desc:"Première sonde lunaire de la Corée du Sud, Danuri a rejoint la Lune fin 2022 par une longue trajectoire de quatre mois et demi qui économise le carburant. En orbite polaire, elle photographie la surface, mesure son magnétisme et sa composition. Sa caméra ShadowCam, fournie par la NASA, voit le fond des cratères qui ne reçoivent jamais le Soleil.",
     checked:'2026-11-23',
@@ -1458,7 +1458,15 @@ var MISSIONS = [
       hz:{ t:'JPL Horizons, objet -155 (KPLO)', p:'NASA JPL', u:'https://ssd.jpl.nasa.gov/horizons/app.html#/' },
       stac:{ t:'STAC-PLANET, collections ode-moon-kplo-* (sonde du 23 novembre 2026)', p:'PDSSP (CNES)', u:'https://stacplanet.pdssp.eu/' }
     },
-    parts:[],
+    parts:[
+      { key:'shadowcam', name:'ShadowCam', desc:'Caméra de la NASA pour le fond des cratères d\'ombre permanente, éclairé seulement par la lumière renvoyée par les reliefs voisins (cylindre brun).',
+        facts:[['Jusqu\'à 1,7 m par pixel', 'nasa']] },
+      { key:'polcam', name:'Caméra polarimétrique', desc:'Caméra grand angle coréenne qui reconnaît la nature des matériaux d\'après la lumière diffusée (nom « PolCam » dans la maquette).', facts:[] },
+      { key:'hga', name:'Antenne grand gain', desc:'Antenne parabolique orientable des liaisons avec la Terre, au sommet de la sonde.', facts:[] },
+      { key:'mag', name:'Perche du magnétomètre', desc:'Perche qui éloigne le magnétomètre des champs de la sonde.', facts:[] },
+      { key:'solar', name:'Panneaux solaires', desc:'Deux panneaux de part et d\'autre du module.', facts:[] },
+      { key:'bus', name:'Module', desc:'Module, réservoirs et équipements ; il porte aussi la caméra haute résolution et le spectromètre gamma, non distingués sur la maquette.', facts:[] }
+    ],
     sections:[
       { title:'Mission', rows:[
         ['Lancement', '4 août 2022 à 19 h 08 (heure de Floride), Falcon 9, Cap Canaveral', 'nasa'],
@@ -1485,10 +1493,10 @@ var MISSIONS = [
       { type:'end', body:'Lune', date:'1999-07-31', ref:'nssdc' }
     ],
     horizons:'-25', stac:'ode-moon-lp-',
-    file:null, bytes:0,
-    model:{ none:true },
-    body:{ name:'Lune', tex:'moon', nadir:[0, -1, 0] },
-    view:{ az:0.8, el:0.3, dist:1.5, r:3 }, sun:[0.4, 0.8, 0.4],
+    file:'models/lp.glb', bytes:646204, unit:1,
+    model:{ src:'NASA Eyes on the Solar System, « Lunar Prospector »', license:'NASA/JPL-Caltech, usage libre (règles d\'usage des médias de la NASA, qui couvrent les maquettes 3D)', u:'https://eyes.nasa.gov/apps/solar-system/' },
+    body:{ name:'Lune', tex:'moon', nadir:[0, 0, 1] },   /* sonde en rotation (axe +Y) : le corps est placé du côté de la perche du spectromètre gamma (+Z), schéma de principe */
+    view:{ az:0.8, el:0.3, dist:1.5 }, sun:[0.4, 0.8, 0.4],
     real:{ key:'lp-img', alt:'Donnée de Lunar Prospector', none:'Les instruments de Lunar Prospector comptent des particules et mesurent des champs : leurs collections dans STAC-PLANET n\'ont pas d\'aperçu image.' },
     desc:"Petite sonde en forme de tambour, sans ordinateur de bord, Lunar Prospector a tourné un an et demi autour de la Lune en 1998 et 1999. Ses spectromètres ont cartographié les éléments de la surface et trouvé un excès d'hydrogène aux pôles, signe possible de glace. Elle a été précipitée dans un cratère du pôle Sud à la fin de la mission.",
     checked:'2026-11-23',
@@ -1497,9 +1505,22 @@ var MISSIONS = [
       ns:{ t:'Fiche d\'expérience NSSDCA : Neutron Spectrometer (NS)', p:'NASA NSSDCA', u:'https://nssdc.gsfc.nasa.gov/nmc/experiment/display.action?id=1998-001A-02' },
       grs:{ t:'Fiche d\'expérience NSSDCA : Gamma Ray Spectrometer (GRS)', p:'NASA NSSDCA', u:'https://nssdc.gsfc.nasa.gov/nmc/experiment/display.action?id=1998-001A-01' },
       hz:{ t:'JPL Horizons, objet -25 (Lunar Prospector)', p:'NASA JPL', u:'https://ssd.jpl.nasa.gov/horizons/app.html#/' },
+      aps:{ t:'Fiche d\'expérience NSSDCA : Alpha Particle Spectrometer (APS)', p:'NASA NSSDCA', u:'https://nssdc.gsfc.nasa.gov/nmc/experiment/display.action?id=1998-001A-03' },
       stac:{ t:'STAC-PLANET, collections ode-moon-lp-* (sonde du 23 novembre 2026)', p:'PDSSP (CNES)', u:'https://stacplanet.pdssp.eu/' }
     },
-    parts:[],
+    parts:[
+      { key:'bus', name:'Tambour', desc:'Tambour en graphite-époxy couvert de cellules solaires, qui tourne sur lui-même ; trois réservoirs d\'hydrazine à l\'intérieur.',
+        facts:[['1,37 m de diamètre, 1,28 m de haut', 'nssdc'], ['Puissance : 186 W en moyenne', 'nssdc'], ['Rotation : 12 tours par minute', 'nssdc']] },
+      { key:'booms', name:'Perches', desc:'Trois perches radiales, déployées pendant la croisière, qui éloignent les instruments du tambour.',
+        facts:[['Longueur : 2,5 m', 'nssdc']] },
+      { key:'grs', name:'Spectromètre gamma (GRS)', desc:'Cylindre au bout d\'une perche : un cristal de germanate de bismuth entouré d\'un bouclier anticoïncidence.',
+        facts:[['Boîtier de 55,4 cm de long', 'grs']] },
+      { key:'ns', name:'Spectromètres à neutrons et alpha (NS, APS)', desc:'Deux compteurs à hélium 3 perpendiculaires à la perche, et le cube du spectromètre alpha, au bout de la même perche.',
+        facts:[['Compteurs de 29 cm de long', 'ns'], ['Cube APS : ≈ 18 cm de côté', 'aps']] },
+      { key:'mag', name:'Réflectomètre et magnétomètre (ER, MAG)', desc:'Le réflectomètre à électrons au bout de la troisième perche, et le magnétomètre au bout d\'une rallonge, loin des champs de la sonde.',
+        facts:[['Rallonge : 1,1 m', 'nssdc']] },
+      { key:'antenna', name:'Antenne', desc:'Antenne moyen gain à fentes, sur l\'axe de rotation (identifiée d\'après la maquette).', facts:[] }
+    ],
     sections:[
       { title:'Véhicule', rows:[
         ['Forme', 'tambour de 1,37 m de diamètre et 1,28 m de haut, trois perches de 2,5 m', 'nssdc'], ['Masse', '296,4 kg avec les ergols, 158,7 kg à sec', 'nssdc'],
@@ -1528,10 +1549,10 @@ var MISSIONS = [
       { type:'end', body:'Lune', date:'2012-12-17', ref:'nssdc' }
     ],
     horizons:'-177', stac:'ode-moon-grail-',
-    file:null, bytes:0,
-    model:{ none:true },
-    body:{ name:'Lune', tex:'moon', nadir:[0, -1, 0] },
-    view:{ az:0.8, el:0.3, dist:1.5, r:3 }, sun:[0.4, 0.8, 0.4],
+    file:'models/grail.glb', bytes:441304, unit:1,
+    model:{ src:'NASA Eyes on the Solar System, « GRAIL » (GRAIL-B « Flow » ; GRAIL-A est identique)', license:'NASA/JPL-Caltech, usage libre (règles d\'usage des médias de la NASA, qui couvrent les maquettes 3D)', u:'https://eyes.nasa.gov/apps/solar-system/' },
+    body:{ name:'Lune', tex:'moon', nadir:[0, -1, 0] },   /* orientation vers la Lune non publiée dans les sources relevées : face opposée aux panneaux, ≈ */
+    view:{ az:0.8, el:0.3, dist:1.5 }, sun:[0.4, 0.8, 0.4],
     real:{ key:'grail-img', alt:'Donnée de GRAIL', none:'GRAIL mesure la distance entre ses deux sondes : ses collections dans STAC-PLANET sont des séries de mesures et des modèles de gravité, sans aperçu image.' },
     desc:"Deux sondes jumelles, GRAIL-A et GRAIL-B, ont volé l'une derrière l'autre autour de la Lune en 2012. En mesurant en permanence la distance qui les séparait, elles ont dressé la carte la plus précise du champ de gravité lunaire, qui révèle la structure de la croûte et des grands bassins d'impact.",
     checked:'2026-11-23',
@@ -1540,7 +1561,13 @@ var MISSIONS = [
       hz:{ t:'JPL Horizons, objet -177 (GRAIL-A)', p:'NASA JPL', u:'https://ssd.jpl.nasa.gov/horizons/app.html#/' },
       stac:{ t:'STAC-PLANET, collections ode-moon-grail-* (sonde du 23 novembre 2026)', p:'PDSSP (CNES)', u:'https://stacplanet.pdssp.eu/' }
     },
-    parts:[],
+    parts:[
+      { key:'solar', name:'Panneaux solaires', desc:'Deux panneaux déployés depuis la plateforme supérieure ; une batterie lithium-ion stocke l\'énergie.', facts:[] },
+      { key:'engine', name:'Propulseur', desc:'Propulseur principal, sur la plateforme supérieure ; un système à gaz chaud et trois roues de réaction assurent le contrôle fin.',
+        facts:[['Poussée : 22 N', 'nssdc']] },
+      { key:'bus', name:'Module', desc:'Prisme rectangulaire de la plateforme XSS-11 de Lockheed Martin. Il porte l\'instrument LGRS (antenne en bande Ka alignée avec le centre de masse des deux sondes) et les caméras MoonKAM, non distingués ici.',
+        facts:[['Masse à sec : 132,6 kg', 'nssdc']] }
+    ],
     sections:[
       { title:'Véhicule', rows:[
         ['Deux sondes', 'GRAIL-A et GRAIL-B, sur la plateforme XSS-11 de Lockheed Martin', 'nssdc'], ['Masse de chaque sonde', '132,6 kg à sec, 202,4 kg avec les ergols', 'nssdc'],
@@ -3419,7 +3446,15 @@ var EN_MISSIONS = {
     desc:"South Korea's first lunar spacecraft, Danuri reached the Moon at the end of 2022 along a long, fuel-saving four-and-a-half-month trajectory. From polar orbit it images the surface and measures its magnetism and composition. Its NASA-provided ShadowCam camera sees the floors of craters that never receive sunlight.",
     refs:{ nasa:'NASA\'s ShadowCam Launches Aboard Korea Pathfinder Lunar Orbiter (4 August 2022)', kr:'Danuri\'s lunar orbit makes Korea 7th nation to send craft to moon (29 December 2022)',
       hz:'JPL Horizons, object -155 (KPLO)', stac:'STAC-PLANET, ode-moon-kplo-* collections (probe of 23 November 2026)' },
-    parts:{},
+    model:{ src:'NASA Eyes on the Solar System, “Danuri” (textures removed: simplified colours)', license:'NASA/JPL-Caltech, free use (NASA media usage guidelines, which cover 3D models)' },
+    parts:{
+      shadowcam:{ name:'ShadowCam', desc:'NASA camera for the floors of permanently shadowed craters, lit only by light bounced from nearby terrain (brown cylinder).', facts:['Down to 1.7 m per pixel'] },
+      polcam:{ name:'Polarimetric camera', desc:'Korean wide-angle camera that recognises surface materials from scattered light (named “PolCam” in the model).' },
+      hga:{ name:'High-gain antenna', desc:'Steerable dish for links with Earth, at the top of the spacecraft.' },
+      mag:{ name:'Magnetometer boom', desc:'Boom that keeps the magnetometer away from the spacecraft fields.' },
+      solar:{ name:'Solar arrays', desc:'Two arrays on either side of the bus.' },
+      bus:{ name:'Bus', desc:'Bus, tanks and equipment; it also carries the high-resolution camera and the gamma-ray spectrometer, not told apart in the model.' }
+    },
     sections:[
       { title:'Mission', rows:[
         ['Launch', '4 August 2022 at 7:08 pm (Florida time), Falcon 9, Cape Canaveral'],
@@ -3439,8 +3474,16 @@ var EN_MISSIONS = {
   lp:{
     agency:'NASA (Discovery programme, Ames)', targets:['Moon'],
     desc:"A small drum-shaped spacecraft with no onboard computer, Lunar Prospector orbited the Moon for a year and a half in 1998 and 1999. Its spectrometers mapped surface elements and found excess hydrogen at the poles, a possible sign of ice. It was crashed into a south-pole crater at the end of the mission.",
-    refs:{ ns:'NSSDCA experiment page: Neutron Spectrometer (NS)', grs:'NSSDCA experiment page: Gamma Ray Spectrometer (GRS)', hz:'JPL Horizons, object -25 (Lunar Prospector)', stac:'STAC-PLANET, ode-moon-lp-* collections (probe of 23 November 2026)' },
-    parts:{},
+    refs:{ aps:'NSSDCA experiment page: Alpha Particle Spectrometer (APS)', ns:'NSSDCA experiment page: Neutron Spectrometer (NS)', grs:'NSSDCA experiment page: Gamma Ray Spectrometer (GRS)', hz:'JPL Horizons, object -25 (Lunar Prospector)', stac:'STAC-PLANET, ode-moon-lp-* collections (probe of 23 November 2026)' },
+    model:{ src:'NASA Eyes on the Solar System, “Lunar Prospector”', license:'NASA/JPL-Caltech, free use (NASA media usage guidelines, which cover 3D models)' },
+    parts:{
+      bus:{ name:'Drum', desc:'Graphite-epoxy drum covered with solar cells, spinning on itself; three hydrazine tanks inside.', facts:['1.37 m wide, 1.28 m high', 'Power: 186 W on average', 'Spin: 12 rpm'] },
+      booms:{ name:'Booms', desc:'Three radial booms, deployed during cruise, that keep the instruments away from the drum.', facts:['Length: 2.5 m'] },
+      grs:{ name:'Gamma-ray spectrometer (GRS)', desc:'Cylinder at the end of a boom: a bismuth germanate crystal surrounded by an anticoincidence shield.', facts:['55.4 cm long housing'] },
+      ns:{ name:'Neutron and alpha spectrometers (NS, APS)', desc:'Two helium-3 counters perpendicular to the boom, and the cube of the alpha spectrometer, at the end of the same boom.', facts:['29 cm long counters', 'APS cube: ≈ 18 cm wide'] },
+      mag:{ name:'Reflectometer and magnetometer (ER, MAG)', desc:'The electron reflectometer at the end of the third boom, and the magnetometer at the end of an extension, away from the spacecraft fields.', facts:['Extension: 1.1 m'] },
+      antenna:{ name:'Antenna', desc:'Slotted medium-gain antenna on the spin axis (identified from the model).' }
+    },
     sections:[
       { title:'Spacecraft', rows:[
         ['Shape', 'drum 1.37 m wide and 1.28 m high, three 2.5 m booms'], ['Mass', '296.4 kg fuelled, 158.7 kg dry'],
@@ -3463,7 +3506,12 @@ var EN_MISSIONS = {
     name:'GRAIL (Ebb and Flow)', agency:'NASA (JPL, Discovery programme), spacecraft built by Lockheed Martin', targets:['Moon'],
     desc:"Twin spacecraft, GRAIL-A and GRAIL-B, flew one behind the other around the Moon in 2012. By constantly measuring the distance between them, they made the most precise map of the lunar gravity field, which reveals the structure of the crust and of the large impact basins.",
     refs:{ hz:'JPL Horizons, object -177 (GRAIL-A)', stac:'STAC-PLANET, ode-moon-grail-* collections (probe of 23 November 2026)' },
-    parts:{},
+    model:{ src:'NASA Eyes on the Solar System, “GRAIL” (GRAIL-B “Flow”; GRAIL-A is identical)', license:'NASA/JPL-Caltech, free use (NASA media usage guidelines, which cover 3D models)' },
+    parts:{
+      solar:{ name:'Solar arrays', desc:'Two arrays deployed from the upper platform; a lithium-ion battery stores the energy.' },
+      engine:{ name:'Thruster', desc:'Main thruster, on the upper platform; a warm-gas system and three reaction wheels provide fine control.', facts:['Thrust: 22 N'] },
+      bus:{ name:'Bus', desc:'Rectangular prism of Lockheed Martin\'s XSS-11 platform. It carries the LGRS instrument (Ka-band antenna aligned with the centre of mass of both spacecraft) and the MoonKAM cameras, not told apart here.', facts:['Dry mass: 132.6 kg'] }
+    },
     sections:[
       { title:'Spacecraft', rows:[
         ['Two spacecraft', 'GRAIL-A and GRAIL-B, on Lockheed Martin\'s XSS-11 bus'], ['Mass of each', '132.6 kg dry, 202.4 kg fuelled'],
@@ -3759,7 +3807,7 @@ var OBS_T = function(s){ return s; }, OBS_I18N = { static:function(){} };
     ['name','agency','desc','sections','targets'].forEach(function(k){ if (e[k]) m[k] = e[k]; });
     (m.sections || []).forEach(function(sec, i){ sec.rows.forEach(function(r, j){ var o = frSec && frSec[i] && frSec[i].rows[j]; if (o && o[2]) r[2] = o[2]; }); });
     if (e.refs) Object.keys(e.refs).forEach(function(k){ if (m.refs[k]) m.refs[k].t = e.refs[k]; });
-    if (e.model) m.model.license = e.model.license;
+    if (e.model){ m.model.license = e.model.license; if (e.model.src) m.model.src = e.model.src; }
     (m.parts || []).forEach(function(p){ var q = e.parts && e.parts[p.key]; if (!q) return; p.name = q.name; p.desc = q.desc; if (q.facts) p.facts = p.facts.map(function(f, j){ return [q.facts[j] || f[0], f[1]]; }); });
   });
   OBS_T = function(s){ if (EN_UI[s] != null) return EN_UI[s]; window.__i18nMiss[s] = 1; return s; };
@@ -4834,6 +4882,7 @@ function bodyCredit(m){
 }
 var MS = { tab:'fiche', part:null, explode:0, view:'probe', run:!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) };
 function missionPage(m){
+  if (MS.mid !== m.id){ MS.part = null; MS.mid = m.id; }   /* la pièce choisie ne passe pas d'une sonde à l'autre */
   if (!m.file) MS.view = 'orbit';   /* sans maquette, la vue d'orbite montre mieux la sonde (un point) */
   return '<div class="mission"><section id="stage" class="m-stage" aria-label="' + T('Vue 3D de la sonde') + '">' +
     '<div class="m-hud"><div class="m-name">' + esc(m.name) + '</div><div class="m-sub">' + esc(m.agency) + ' · ' + esc(m.targets.join(', ')) + '</div></div>' +
