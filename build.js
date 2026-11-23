@@ -27,7 +27,7 @@ const dataFiles = 'var DATA_FILES = ' + JSON.stringify(files) + ';';
 const scripts = '<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>\n' +
   '<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>\n' +
   '<script>\n' + r('lang.js') + '\n' + dataFiles + '\n' + data + '\n' + r('data-fleet.js') + '\n' + r('data-inst.js') + '\n' + r('data-mission.js') + '\n' +
-  r('en/missions.js') + '\n' + r('en/ui.js') + '\n' + r('i18n.js') + '\n' + r('viewer.js') + '\n' + r('solar.js') + '\n' + r('app.js') + '\n</script>\n';
+  r('en/missions.js') + '\n' + r('en/ui.js') + '\n' + r('i18n.js') + '\n' + r('viewer.js') + '\n' + r('solar.js') + '\n' + r('views.js') + '\n' + r('app.js') + '\n</script>\n';
 
 if (artifact) {
   const out = path.join(__dirname, 'dist');

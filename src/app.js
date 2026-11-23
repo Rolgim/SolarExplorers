@@ -165,8 +165,8 @@ function dataPage(m){
 var PAGES = {
   missions: missionsPage,
   accueil: function(){ return SolarPage.html(); },
-  comparer: function(){ return soon('Comparer', 'Domaine spectral, résolution au sol, trajectoires et tableau des instruments.', 'étape 6'); },
-  flotte: function(){ return soon('Flotte', 'Frise des missions par agence et par cible, et « qui a fait quoi », chaque ligne sourcée.', 'étape 6'); }
+  comparer: function(){ return Views.compare(); },
+  flotte: function(){ return Views.fleet(); }
 };
 
 function route(){

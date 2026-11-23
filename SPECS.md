@@ -89,7 +89,10 @@ Pages, sur le modèle du premier site :
    - ajouté le 23 novembre 2026 : Mars Express, LRO, Cassini et MESSENGER (maquettes NASA 3D Resources et ESA SCIFLEET, fiches sourcées, croisières Horizons, une image réelle par mission sauf Cassini : le serveur VIMS refuse GitHub Actions) ; publication sur GitHub Pages (https://rolgim.github.io/SolarExplorers/).
 5. **Sondes en orbite et sélection** — 23 novembre 2026 : onglets de sonde dans l'en-tête ; la sonde tourne autour de son corps (vue sonde, vue d'orbite, pause). La carte d'un corps avec les empreintes STAC a été abandonnée à la demande de l'utilisateur.
 6. **Accueil Système solaire** — 23 novembre 2026 : vue de dessus du plan de l'écliptique, positions réelles des planètes (Mercure à Saturne) et des sondes de 1997 à aujourd'hui (JPL Horizons, `data/solar.json`, recette `solar` de `tools/data/fetch_orbits.py`) ; curseur des dates, lecture/pause, cadrage « jusqu'à Mars » ou « jusqu'à Saturne » ; seule la croisière est tracée, une sonde en orbite est un anneau de sa couleur autour de sa planète ; liste de l'état de chaque sonde à la date choisie (d'après les `events` du registre).
-7. Comparer et Flotte.
+7. **Flotte et Comparer** — 23 novembre 2026 (`src/views.js`, tirés du registre seulement) :
+   - Flotte : frise de 1997 à aujourd'hui, une ligne par mission rangée par corps visé (lancement, survols, arrivée ou mise en orbite, atterrissage, fin ou « en cours ») ; « qui a fait quoi » : agences et dates de chaque mission, chaque date sourcée ;
+   - Comparer : durée du voyage (lancement → arrivée), masse au lancement, véhicules et instruments côte à côte, avec les sources des fiches ;
+   - pas encore faits faute de valeurs structurées et sourcées : domaine spectral et résolution au sol des instruments.
 
 ## Sources
 
