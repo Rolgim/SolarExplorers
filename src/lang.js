@@ -9,4 +9,4 @@ var OBS_LANG = (function(){
   return v;
 })();
 /* nombres : virgule décimale et espace des milliers en français, point et virgule en anglais */
-function OBS_NUM(s){ return OBS_LANG === 'en' ? String(s).replace(/(\d),(\d)/g, '$1.$2').replace(/(\d)[   ](?=\d{3}(\D|$))/g, '$1,') : s; }
+function OBS_NUM(s){ return OBS_LANG === 'en' ? String(s).replace(/(\d),(?!\d{3}(?:\D|$))(\d)/g, '$1.$2').replace(/(\d)[   ](?=\d{3}(\D|$))/g, '$1,') : s; }

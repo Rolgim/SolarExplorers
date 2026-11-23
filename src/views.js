@@ -16,7 +16,7 @@ function today(){ var d = new Date(); return Date.UTC(d.getUTCFullYear(), d.getU
 function src(m, k){ var r = k && m.refs && m.refs[k]; return r ? ' <a class="src" href="' + esc(r.u) + '" rel="noopener" target="_blank" title="' + esc(r.t) + '">' + esc(r.p) + '</a>' : ''; }
 function col(m){ return COL[MISSIONS.indexOf(m) % COL.length]; }
 var EV = { launch:'Lancement', flyby:'Survol', arrival:'Arrivée', orbit:'Mise en orbite', landing:'Atterrissage de Huygens', end:'Fin de mission' };
-function evName(e){ var b = e.type === 'launch' || e.type === 'landing' ? '' : ' : ' + T(e.body); return T(EV[e.type]) + b; }
+function evName(e){ var b = e.type === 'launch' || e.type === 'landing' ? '' : (OBS_LANG === 'en' ? ': ' : ' : ') + T(e.body); return T(EV[e.type]) + b; }
 function arrival(m){ return (m.events || []).filter(function(e){ return e.type === 'arrival' || e.type === 'orbit'; })[0]; }
 function launch(m){ return (m.events || []).filter(function(e){ return e.type === 'launch'; })[0]; }
 function end(m){ return (m.events || []).filter(function(e){ return e.type === 'end'; })[0]; }
