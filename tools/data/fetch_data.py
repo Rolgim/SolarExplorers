@@ -38,12 +38,12 @@ def mro_ctx():
         print("mro_ctx :", f["id"], p.get("datetime"), w, "×", h); return
     raise RuntimeError("aucun aperçu CTX récupéré")
 
-def browse(mid, collection, instrument, archive, max_px=900, stretch=None):
+def browse(mid, collection, instrument, archive, max_px=900, stretch=None, roles=("thumbnail",)):
     """Aperçu publié par l'archive (asset « thumbnail » JPEG ou PNG) de l'item le plus récent qui a une emprise,
     entier, ramené à max_px de côté au plus ; contraste étiré seulement si stretch est donné (signalé dans la légende)."""
     for f in stac_items(collection):
         if not f.get("geometry"): continue
-        th = [a for a in f["assets"].values() if "thumbnail" in (a.get("roles") or []) and re.search(r"image/(jpeg|png)", a.get("type") or "")]
+        th = [a for a in f["assets"].values() if set(roles) & set(a.get("roles") or []) and re.search(r"image/(jpeg|png)", a.get("type") or "")]
         if not th: continue
         r = S.get(th[0]["href"], timeout=300)
         if not r.ok: print("  aperçu indisponible", r.status_code, th[0]["href"]); continue
@@ -63,6 +63,11 @@ def browse(mid, collection, instrument, archive, max_px=900, stretch=None):
 def mex_hrsc(): browse("mex", "ode-mars-mex-hrsc-rdrv4", "HRSC", "PDS Geosciences Node (NASA), via le catalogue STAC-PLANET du PDSSP")
 def lro_lroc(): browse("lro", "ode-moon-lro-lroc-bdrroi", "LROC NAC", "PDS de LROC (Arizona State University), via le catalogue STAC-PLANET du PDSSP")
 def messenger_mdis(): browse("messenger", "ode-mercury-messenger-mdis-nac-rtmnac", "MDIS NAC", "PDS Imaging Node (NASA), via le catalogue STAC-PLANET du PDSSP")
+def ody_themis(): browse("ody", "ode-mars-ody-themis-vgeo2", "THEMIS VIS", "Arizona State University (THEMIS), via le catalogue STAC-PLANET du PDSSP")
+def mgs_moc(): browse("mgs", "ode-mars-mgs-moc-na-wa-nasdp", "MOC NA", "PDS Imaging Node (NASA), via le catalogue STAC-PLANET du PDSSP")
+def tgo_cassis(): browse("tgo", "ode-mars-em16tgo-cassis-calsc", "CaSSIS", "Planetary Science Archive (ESA), via le catalogue STAC-PLANET du PDSSP", roles=("thumbnail", "overview"))
+def clem_uvvis(): browse("clem", "ode-moon-clem-uvvis-mdim", "UVVIS", "PDS Imaging Node (NASA), via le catalogue STAC-PLANET du PDSSP", roles=("thumbnail", "overview", "browse"))
+def mgn_sar(): browse("mgn", "ode-venus-mgn-rdrs-fmidr", "SAR", "PDS Imaging Node (NASA), via le catalogue STAC-PLANET du PDSSP", roles=("thumbnail", "overview", "browse"))
 def cassini_vims(): browse("cassini", "vim-cassini-vims-ir", "VIMS", "Université de Nantes (aperçus VIMS), via le catalogue STAC-PLANET du PDSSP")
 
 # fonds des corps (vue 3D : le corps observé sous la sonde) : textures globales sous licence ouverte, créditées à côté de l'image (règle 8)
@@ -70,6 +75,8 @@ BODIES = {
     "mars": ("https://www.solarsystemscope.com/textures/download/2k_mars.jpg", "Solar System Scope, texture « Mars » 2k, d'après des données de la NASA", "CC BY 4.0", "https://www.solarsystemscope.com/textures/"),
     "moon": ("https://www.solarsystemscope.com/textures/download/2k_moon.jpg", "Solar System Scope, texture « Lune » 2k, d'après des données de la NASA", "CC BY 4.0", "https://www.solarsystemscope.com/textures/"),
     "mercury": ("https://www.solarsystemscope.com/textures/download/2k_mercury.jpg", "Solar System Scope, texture « Mercure » 2k, d'après des données de la NASA", "CC BY 4.0", "https://www.solarsystemscope.com/textures/"),
+    "venus": ("https://www.solarsystemscope.com/textures/download/2k_venus_atmosphere.jpg", "Solar System Scope, texture « Vénus (atmosphère) » 2k, d'après des données de la NASA", "CC BY 4.0", "https://www.solarsystemscope.com/textures/"),
+    "venus-surface": ("https://www.solarsystemscope.com/textures/download/2k_venus_surface.jpg", "Solar System Scope, texture « Vénus (surface) » 2k, d'après des données radar de Magellan (NASA)", "CC BY 4.0", "https://www.solarsystemscope.com/textures/"),
     "saturn": ("https://www.solarsystemscope.com/textures/download/2k_saturn.jpg", "Solar System Scope, texture « Saturne » 2k, d'après des données de la NASA", "CC BY 4.0", "https://www.solarsystemscope.com/textures/"),
 }
 def body_textures():
@@ -85,7 +92,8 @@ def body_textures():
         print("texture", k, im.size)
     if bad: raise RuntimeError("textures non récupérées : " + ", ".join(bad))
 
-RECIPES = {"mro_ctx": mro_ctx, "mex_hrsc": mex_hrsc, "lro_lroc": lro_lroc, "messenger_mdis": messenger_mdis, "cassini_vims": cassini_vims, "textures": body_textures}
+RECIPES = {"mro_ctx": mro_ctx, "mex_hrsc": mex_hrsc, "lro_lroc": lro_lroc, "messenger_mdis": messenger_mdis, "cassini_vims": cassini_vims,
+           "ody_themis": ody_themis, "mgs_moc": mgs_moc, "tgo_cassis": tgo_cassis, "clem_uvvis": clem_uvvis, "mgn_sar": mgn_sar, "textures": body_textures}
 if __name__ == "__main__":
     want = sys.argv[1:] or list(RECIPES)
     bad = 0

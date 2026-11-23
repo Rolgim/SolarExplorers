@@ -28,6 +28,18 @@ MISSIONS = {
         ("Terre", "399", 366, "4 d", [("2004-08-04", "depart"), ("2005-08-02", "survol")]),
         ("Vénus", "299", 225, "3 d", [("2006-10-24", "survol"), ("2007-06-05", "survol")]),
         ("Mercure", "199", 88, "1 d", [("2008-01-14", "survol"), ("2008-10-06", "survol"), ("2009-09-29", "survol"), ("2011-03-18", "arrivee")])]},
+    "ody": {"sc": "-53", "center": SUN, "start": "2001-04-08", "stop": "2001-10-24", "step": "1 d", "bodies": [
+        ("Terre", "399", 366, "4 d", [("2001-04-08", "depart")]),
+        ("Mars", "499", 700, "4 d", [("2001-10-24", "arrivee")])]},
+    "tgo": {"sc": "-143", "center": SUN, "start": "2016-03-15", "stop": "2016-10-19", "step": "1 d", "bodies": [
+        ("Terre", "399", 366, "4 d", [("2016-03-15", "depart")]),
+        ("Mars", "499", 700, "4 d", [("2016-10-19", "arrivee")])]},
+    "vex": {"sc": "-248", "center": SUN, "start": "2005-11-10", "stop": "2006-04-11", "step": "1 d", "bodies": [
+        ("Terre", "399", 366, "4 d", [("2005-11-10", "depart")]),
+        ("Vénus", "299", 225, "3 d", [("2006-04-11", "arrivee")])]},
+    # Clementine : Horizons ne couvre que l'orbite lunaire (19 février – 3 mai 1994), pas le transfert depuis la Terre
+    "clem": {"sc": "-40", "center": EARTH, "start": "1994-02-19 13:00", "stop": "1994-05-03 12:00", "step": "6 h", "bodies": [
+        ("Lune", "301", 28, "6 h", [("1994-02-20", "arrivee")])]},
 }
 def query(cmd, center, start, stop, step, units="AU-D"):
     q = {"format": "json", "COMMAND": f"'{cmd}'", "OBJ_DATA": "NO", "MAKE_EPHEM": "YES", "EPHEM_TYPE": "VECTORS", "CENTER": f"'{center}'",
@@ -101,12 +113,15 @@ def elements(cmd, center, start, stop, step):
     return out
 # sondes : du lancement à la fin de mission (ou à aujourd'hui) ; repli sur la croisière si Horizons ne couvre pas toute la durée
 PROBES = [("mro", "-74", "2005-08-13", None), ("mex", "-41", "2003-06-03", None), ("lro", "-85", "2009-06-19", None),
-          ("cassini", "-82", "1997-10-16", "2017-09-15"), ("messenger", "-236", "2004-08-04", "2015-04-30")]
+          ("cassini", "-82", "1997-10-16", "2017-09-15"), ("messenger", "-236", "2004-08-04", "2015-04-30"),
+          ("ody", "-53", "2001-04-08", None), ("tgo", "-143", "2016-03-15", None), ("vex", "-248", "2005-11-10", "2014-11-27")]
 # orbites des sondes autour de leur corps : une fenêtre par an (du début de la phase en orbite à la fin, ou au téléchargement),
 # vecteurs centrés sur le corps, en km, écliptique J2000 : (id, sonde, corps Horizons, nom du corps, début, fin, durée en minutes, pas en minutes)
 ORBITERS = [("mro", "-74", "499", "Mars", "2006-11-15", None, 120, 1), ("mex", "-41", "499", "Mars", "2004-02-01", None, 440, 2),
             ("lro", "-85", "301", "Lune", "2009-09-20", None, 120, 1), ("cassini", "-82", "699", "Saturne", "2004-08-01", "2017-09-10", 43200, 180),
-            ("messenger", "-236", "199", "Mercure", "2011-04-04", "2015-04-28", 750, 3)]
+            ("messenger", "-236", "199", "Mercure", "2011-04-04", "2015-04-28", 750, 3),
+            ("ody", "-53", "499", "Mars", "2002-02-20", None, 120, 1), ("tgo", "-143", "499", "Mars", "2018-04-21", None, 120, 1),
+            ("vex", "-248", "299", "Vénus", "2006-06-01", "2014-11-20", 1440, 5), ("clem", "-40", "301", "Lune", "1994-02-22", "1994-05-01", 330, 1)]
 def probe_orbits(today):
     out = []
     for mid, sc, cen, body, first, last, dur, st in ORBITERS:
