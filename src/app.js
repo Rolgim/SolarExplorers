@@ -112,7 +112,7 @@ function trajSvg(m){
     '<text x="' + (c + ea[1]*S + 8).toFixed(0) + '" y="' + (c - ea[2]*S + 14).toFixed(0) + '">' + T('Terre au départ') + '</text>' +
     '<text x="' + (c + mb[1]*S + 8).toFixed(0) + '" y="' + (c - mb[2]*S).toFixed(0) + '">' + T(d.target.name) + ' ' + T('à l\'arrivée') + '</text>' +
     '</svg><figcaption>' + T('Croisière du') + ' ' + esc(hzDate(a[0])) + ' ' + T('au') + ' ' + esc(hzDate(b[0])) + ' (' + pr.length + ' ' + T('positions quotidiennes') + '). ' +
-    T('Source') + ' : ' + esc(d.source) + ', ' + T('objet') + ' ' + esc(d.horizons) + ', ' + T('téléchargé le') + ' ' + esc(d.fetched) + '.</figcaption></figure>';
+    T('Source') + (OBS_LANG === 'en' ? ': ' : ' : ') + esc(T(d.source)) + ', ' + T('objet') + ' ' + esc(d.horizons) + ', ' + T('téléchargé le') + ' ' + esc(d.fetched) + '.</figcaption></figure>';
 }
 function realData(m){
   var d = (window.DATA_FILES || {})[m.id + '-ctx']; if (!d) return '<p class="note">' + T('Aucune donnée réelle téléchargée pour l\'instant.') + '</p>';

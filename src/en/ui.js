@@ -1,5 +1,6 @@
 /* Textes d'interface en anglais : clé = texte français tel qu'il est écrit dans le code ou dans body.html. */
 var EN_UI = {
+  'JPL Horizons (ssd.jpl.nasa.gov), vecteurs héliocentriques, écliptique J2000, UA':'JPL Horizons (ssd.jpl.nasa.gov), heliocentric vectors, ecliptic J2000, astronomical units',
   "Mission et données":"Mission and data",
   "Instruments, trajectoire réelle et données tirées des archives.":"Instruments, real trajectory and data from the archives.",
   "Maquette":"Model",
