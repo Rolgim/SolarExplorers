@@ -1,0 +1,49 @@
+{
+ "archive": "PDS Imaging Node (NASA), via le catalogue STAC-PLANET du PDSSP",
+ "collection": "ode-mars-mro-ctx-edr",
+ "product": "W07_091846_2020_XN_22N306W",
+ "datetime": "2026-03-01T00:33:23.740000Z",
+ "href": "https://planetarydata.jpl.nasa.gov/img/data/mro/ctx/mrox_5532/extras/browse/W07_091846_2020_XN_22N306W.IMG.jpeg",
+ "stac": "https://stac.stacplanet.pdssp.eu/collections/ode-mars-mro-ctx-edr/items/W07_091846_2020_XN_22N306W",
+ "instrument": "CTX",
+ "full_size": [
+  5056,
+  26624
+ ],
+ "crop_px": 5056,
+ "out_px": 900,
+ "footprint": {
+  "type": "Polygon",
+  "coordinates": [
+   [
+    [
+     53.96,
+     23.1048
+    ],
+    [
+     53.45,
+     23.0453
+    ],
+    [
+     53.8,
+     20.398
+    ],
+    [
+     54.3,
+     20.4575
+    ],
+    [
+     53.96,
+     23.1048
+    ]
+   ]
+  ]
+ },
+ "center": [
+  {
+   "lat": 21.7514,
+   "lon": 53.8792
+  }
+ ],
+ "fetched": "2026-11-23"
+}
