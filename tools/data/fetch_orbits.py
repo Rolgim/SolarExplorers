@@ -66,10 +66,34 @@ def build(mid, c):
     path = os.path.join(ROOT, "data", mid + "-traj.json")
     json.dump(data, open(path, "w"), separators=(",", ":"), ensure_ascii=False)
     print(mid, len(data["probe"]), "points ->", path)
+# vue d'ensemble (accueil « Système solaire ») : positions héliocentriques des planètes et des sondes, à pas régulier,
+# du lancement de Cassini à aujourd'hui ; chaque série = { t0, step (jours), xy:[x0, y0, x1, y1, …] } en UA (3 décimales ≈ 150 000 km)
+SOLAR_T0 = "1997-10-01"
+PLANETS = [("Mercure", "199", 3), ("Vénus", "299", 6), ("Terre", "399", 6), ("Mars", "499", 8), ("Jupiter", "599", 30), ("Saturne", "699", 30)]
+# sondes : du lancement à la fin de mission (ou à aujourd'hui) ; repli sur la croisière si Horizons ne couvre pas toute la durée
+PROBES = [("mro", "-74", "2005-08-13", None), ("mex", "-41", "2003-06-03", None), ("lro", "-85", "2009-06-19", None),
+          ("cassini", "-82", "1997-10-16", "2017-09-15"), ("messenger", "-236", "2004-08-04", "2015-04-30")]
+def series(cmd, start, stop, step_d):
+    v = vectors(cmd, SUN, start, stop, f"{step_d} d", 3)
+    return {"t0": v[0][0], "step": step_d, "n": len(v), "xy": [c for p in v for c in p[1:]]}
+def solar():
+    today = datetime.date.today().isoformat()
+    out = {"source": "JPL Horizons (ssd.jpl.nasa.gov), vecteurs héliocentriques, écliptique J2000, UA", "fetched": today,
+           "planets": [], "probes": []}
+    for name, hid, st in PLANETS:
+        out["planets"].append(dict(name=name, horizons=hid, **series(hid, SOLAR_T0, today, st)))
+        print("planète", name, out["planets"][-1]["n"])
+    for mid, hid, start, stop in PROBES:
+        stop = stop or today
+        for a, b in ((start, stop), (start, MISSIONS[mid]["stop"][:10])):
+            try:
+                out["probes"].append(dict(id=mid, horizons=hid, full=(b == stop), **series(hid, start, b, 4))); print("sonde", mid, a, b, out["probes"][-1]["n"]); break
+            except Exception as e: print("  repli", mid, repr(e)[:200])
+    json.dump(out, open(os.path.join(ROOT, "data", "solar.json"), "w"), separators=(",", ":"), ensure_ascii=False)
 if __name__ == "__main__":
-    want = sys.argv[1:] or list(MISSIONS)
+    want = sys.argv[1:] or list(MISSIONS) + ["solar"]
     bad = 0
     for k in want:
-        try: build(k, MISSIONS[k])
+        try: solar() if k == "solar" else build(k, MISSIONS[k])
         except Exception as e: bad += 1; print("ÉCHEC", k, repr(e)[:300])
     sys.exit(1 if bad == len(want) else 0)
