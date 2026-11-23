@@ -155,6 +155,8 @@ a.icard:focus-visible{ outline:2px solid var(--focus, #2F6FE4); outline-offset:-
 ol.refs li.hl{ background:var(--mark, #FFE9A8); }
 sup.ref a{ text-decoration:none; }
 /* Système solaire : fond de ciel réel (Gaia, voir la note sous la carte), assombri pour garder le contraste des tracés */
-.so-sky{ background:linear-gradient(rgba(5,7,10,.45), rgba(5,7,10,.45)), #05070A url(data/solar-bg.jpg) center/cover no-repeat; }
+.so-sky{ background:linear-gradient(rgba(5,7,10,.45), rgba(5,7,10,.45)), url(data/solar-bg.jpg) center/cover no-repeat #05070A; }
 .so-orb{ fill:none; stroke-width:1.6px; }
 .so-orb.hid{ stroke-dasharray:3 4; stroke-opacity:.5; }
+/* barre de séparation entre l'en-tête et le contenu, comme la rangée du haut des pages Flotte et Comparer d'Observatories */
+#top{ border-bottom:2px solid var(--ink); }

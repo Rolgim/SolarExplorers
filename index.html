@@ -701,9 +701,11 @@ a.icard:focus-visible{ outline:2px solid var(--focus, #2F6FE4); outline-offset:-
 ol.refs li.hl{ background:var(--mark, #FFE9A8); }
 sup.ref a{ text-decoration:none; }
 /* Système solaire : fond de ciel réel (Gaia, voir la note sous la carte), assombri pour garder le contraste des tracés */
-.so-sky{ background:linear-gradient(rgba(5,7,10,.45), rgba(5,7,10,.45)), #05070A url(data/solar-bg.jpg) center/cover no-repeat; }
+.so-sky{ background:linear-gradient(rgba(5,7,10,.45), rgba(5,7,10,.45)), url(data/solar-bg.jpg) center/cover no-repeat #05070A; }
 .so-orb{ fill:none; stroke-width:1.6px; }
 .so-orb.hid{ stroke-dasharray:3 4; stroke-opacity:.5; }
+/* barre de séparation entre l'en-tête et le contenu, comme la rangée du haut des pages Flotte et Comparer d'Observatories */
+#top{ border-bottom:2px solid var(--ink); }
 
 </style>
 </head>
@@ -885,7 +887,7 @@ var MISSIONS = [
     horizons:'-85', stac:'ode-moon-lro-',
     file:'models/lro.glb', bytes:368104, unit:1,   /* unités ≈ mètres : panneau de 4,2 × 2,8 unités pour ≈ 4,3 × 3,2 m annoncés */
     model:{ src:'NASA 3D Resources, « Lunar Reconnaissance Orbiter (B) »', license:'NASA, usage libre (conditions d\'utilisation des médias de la NASA)', u:'https://github.com/nasa/NASA-3D-Resources' },
-    body:{ name:'Lune', tex:'moon', nadir:[0, 1, 0] },   /* pont des instruments (caméras LROC NAC), à l'opposé du moteur */
+    body:{ name:'Lune', tex:'moon', nadir:[0, 0, 1] },   /* +Z de la maquette = +Z de la sonde : visée des LROC NAC, LOLA et LAMP vers le sol, antenne grand gain du côté -Z (NAIF, lro_frames_2014049_v01.tf) ; corrigé le 23/11/2026 (+Y visait le côté) */
     view:{ az:0.9, el:0.25, dist:1.5 }, sun:[0.6, 0.6, 0.5],
     real:{ key:'lro-img', alt:"Aperçu d'une mosaïque LROC de la surface de la Lune" },
     desc:"Lancée en 2009, LRO cartographie la Lune depuis une orbite polaire basse. Ses caméras LROC distinguent des détails d'un mètre, LOLA mesure le relief au laser, Diviner les températures et LEND cherche l'hydrogène des glaces polaires. Elle a photographié les sites d'atterrissage des missions Apollo.",
@@ -944,7 +946,7 @@ var MISSIONS = [
     horizons:'-82', stac:'vim-cassini-',
     file:'models/cassini.glb', bytes:692744, unit:1,   /* unités = mètres : antenne grand gain de 4,0 unités pour 4 m */
     model:{ src:'NASA 3D Resources, « Cassini-Huygens (A) »', license:'NASA, usage libre (conditions d\'utilisation des médias de la NASA)', u:'https://github.com/nasa/NASA-3D-Resources' },
-    body:{ name:'Saturne', tex:'saturn', nadir:[0, 0, 1], inc:20 },   /* face +Z de la maquette, côté palette de télédétection (repérée à l'œil : schéma de principe) */
+    body:{ name:'Saturne', tex:'saturn', nadir:[0, 0, 1], inc:20 },   /* +Z de la maquette = -Y de la sonde, axe de visée de la palette de télédétection (ISS) ; vérifié avec le repère NAIF (cas_v43.tf, cas_iss_v10.ti) : antenne grand gain en -Z sonde (+Y maquette), Huygens en -X sonde (+X maquette), perche du magnétomètre en +Y sonde (-Z maquette) */
     view:{ az:0.6, el:0.2, dist:1.7, r:8 }, sun:[0.5, 0.7, 0.5],
     real:{ key:'cassini-img', alt:"Aperçu d'un cube VIMS de Titan", none:"Pas d'aperçu VIMS pour l'instant : le serveur qui publie les aperçus (Université de Nantes) refuse les connexions venant de GitHub Actions, d'où le site télécharge ses données." },
     desc:"Lancée en 1997, Cassini a tourné autour de Saturne de 2004 à 2017. Elle a largué la sonde européenne Huygens, qui s'est posée sur Titan en 2005, survolé Titan 127 fois et révélé des océans cachés sous la surface de Titan et d'Encelade. Sa mission s'est achevée par une plongée dans Saturne.",
@@ -2105,7 +2107,7 @@ var EN_UI = {
   "Satellites placés à partir des éléments orbitaux Horizons (tous les 180 jours, 30 pour les plus rapides), interpolés entre deux dates : position approchée (≈, quelques degrés sur l'orbite au plus).":"Moons placed from Horizons orbital elements (every 180 days, 30 for the fastest), interpolated between two dates: approximate position (≈, a few degrees along the orbit at most).",
   "Une barre par mission, du lancement à la fin de mission ; pleine et fléchée si elle est en cours. Les étapes datées sont marquées sur la barre ; leurs sources sont dans « Qui a fait quoi ». Cliquer une barre ouvre la sonde en 3D.":"One bar per mission, from launch to end of mission; solid with an arrow if it is ongoing. Dated milestones are marked on the bar; their sources are in “Who did what”. Clicking a bar opens the spacecraft in 3D.",
   "Une sonde en orbite est marquée de loin par un anneau de sa couleur. En zoomant sur son corps, son orbite réelle apparaît (Horizons, centrée sur le corps, une fenêtre par an à partir du 15 janvier ; en tirets, la partie cachée derrière le corps) : entre deux fenêtres, la sonde y est placée en répétant ce tour (≈, la phase dérive). En lecture rapide, seule l'orbite est tracée.":"From afar, a spacecraft in orbit is marked by a ring in its colour. Zoom in on its body and its real orbit appears (Horizons, centred on the body, one window per year from 15 January; dashed, the part hidden behind the body): between two windows the spacecraft is placed on it by repeating that loop (≈, the phase drifts). During fast playback only the orbit is drawn.",
-  "Fond : le ciel vers le pôle sud de l'écliptique, d'après la carte du ciel de Gaia (reprojetée) ; décor, sans rapport d'échelle avec les orbites.":"Background: the sky towards the south ecliptic pole, from the Gaia sky map (reprojected); scenery, unrelated to the scale of the orbits.",
+  "Fond : le ciel vers le pôle sud de l'écliptique, d'après la carte du ciel de Gaia (reprojetée), accroché au Soleil : il suit la carte quand on la déplace ou qu'on zoome ; décor, sans rapport d'échelle avec les orbites.":"Background: the sky towards the south ecliptic pole, from the Gaia sky map (reprojected), pinned to the Sun: it follows the map when you pan or zoom; scenery, unrelated to the scale of the orbits.",
   'Mission et instruments':'Mission and instruments',
   'Mars Reconnaissance Orbiter Launch, Press Kit (août 2005)':'Mars Reconnaissance Orbiter Launch, Press Kit (August 2005)',
   'MESSENGER Mercury Orbit Insertion, Press Kit (mars 2011)':'MESSENGER Mercury Orbit Insertion, Press Kit (March 2011)',
@@ -2337,7 +2339,7 @@ var RSUN = 695700, AU = 149597870.7;
 var HZ = { '399':'Terre', '499':'Mars', '599':'Jupiter', '699':'Saturne', '799':'Uranus', '899':'Neptune', '999':'Pluton' };
 var SPEED = [[1/24, 'une heure par seconde'], [1, 'un jour par seconde'], [7, 'une semaine par seconde'], [30, 'un mois par seconde'], [365, 'un an par seconde']];
 var SCOL = ['#FF6B9A', '#4DD0E1', '#B39DDB', '#FFB74D', '#81C784'];   /* une couleur par sonde, dans l'ordre du registre (aucune agence mise en avant) */
-var DAY = 864e5, RMIN = 1e-5, RMAX = 60;
+var DAY = 864e5, RMIN = 1e-5, RMAX = 60, BGAU = 6, BGMAX = 2e5;
 var S = { t:null, speed:7, run:false, raf:0, last:0, focus:'', off:[0, 0], c:[0, 0], R:1.75, goal:null, dirty:true, auto:false, hits:[], ptr:{} };
 var D = null, T0 = 0, T1 = 0, TF = 0;
 function T(s){ return OBS_T(s); }
@@ -2570,6 +2572,11 @@ function render(){
   var plab = '';
   D.planets.forEach(function(p){ var q = pos[p.name]; if (!q) return; var x = X(q[0]), y = Y(q[1]), pr = Math.max(RAD[p.name] / AU / k, 4.5);
     if (Math.hypot(x - sx, y - sy) < 16 + sr || !vis(x, y, 40)) return; plab += label(x + pr * 0.7 + 5, y - pr * 0.7 - 4, T(p.name)); });
+  /* fond de ciel accroché au Système solaire : centré sur le Soleil, BGAU unités astronomiques de large, il se déplace et grandit avec la carte ;
+     il ne rétrécit pas sous la taille de la vue (au-delà de Mars, il reste à cette taille) ; au-delà de BGMAX pixels il n'en reste qu'une teinte */
+  var bw = Math.min(Math.max(BGAU / k, w, h / 0.625), BGMAX), bh = bw * 0.625, wrap = $('so-wrap');
+  wrap.style.backgroundSize = 'auto, ' + bw.toFixed(0) + 'px ' + bh.toFixed(0) + 'px';
+  wrap.style.backgroundPosition = '0 0, ' + (sx - bw / 2).toFixed(0) + 'px ' + (sy - bh / 2).toFixed(0) + 'px';
   svg.innerHTML = '<g>' + orb + '</g><g>' + body + '</g><g>' + top + '</g><g>' + probes + '</g><g class="so-labs">' + plab + '</g>' + scale(h, k);
   S.hits = hits;
   ui();
@@ -2601,7 +2608,7 @@ function note(){
     T('Distances à l\'échelle. Soleil, planètes et Lune à l\'échelle dès qu\'ils dépassent quelques pixels ; en deçà, et pour les autres satellites et les sondes, des points de taille fixe.') + ' ' +
     T('Satellites placés à partir des éléments orbitaux Horizons (tous les 180 jours, 30 pour les plus rapides), interpolés entre deux dates : position approchée (≈, quelques degrés sur l\'orbite au plus).') + ' ' +
     T('Une sonde en orbite est marquée de loin par un anneau de sa couleur. En zoomant sur son corps, son orbite réelle apparaît (Horizons, centrée sur le corps, une fenêtre par an à partir du 15 janvier ; en tirets, la partie cachée derrière le corps) : entre deux fenêtres, la sonde y est placée en répétant ce tour (≈, la phase dérive). En lecture rapide, seule l\'orbite est tracée.') + ' ' +
-    T('Fond : le ciel vers le pôle sud de l\'écliptique, d\'après la carte du ciel de Gaia (reprojetée) ; décor, sans rapport d\'échelle avec les orbites.')) +
+    T('Fond : le ciel vers le pôle sud de l\'écliptique, d\'après la carte du ciel de Gaia (reprojetée), accroché au Soleil : il suit la carte quand on la déplace ou qu\'on zoome ; décor, sans rapport d\'échelle avec les orbites.')) +
     (bg.url ? ' <a class="src" href="' + esc(bg.url) + '" rel="noopener" target="_blank">ESA/Gaia/DPAC, A. Moitinho</a> <a class="src" href="' + esc(bg.licence_url) + '" rel="noopener" target="_blank">CC BY-SA 3.0 IGO</a>' : '') +
     ' <a class="src" href="https://ssd.jpl.nasa.gov/horizons/" rel="noopener" target="_blank">JPL Horizons</a> <a class="src" href="https://nssdc.gsfc.nasa.gov/planetary/factsheet/" rel="noopener" target="_blank">NASA NSSDCA</a>';
 }

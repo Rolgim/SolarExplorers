@@ -145,7 +145,7 @@ var MISSIONS = [
     horizons:'-85', stac:'ode-moon-lro-',
     file:'models/lro.glb', bytes:0, unit:1,   /* unités ≈ mètres : panneau de 4,2 × 2,8 unités pour ≈ 4,3 × 3,2 m annoncés */
     model:{ src:'NASA 3D Resources, « Lunar Reconnaissance Orbiter (B) »', license:'NASA, usage libre (conditions d\'utilisation des médias de la NASA)', u:'https://github.com/nasa/NASA-3D-Resources' },
-    body:{ name:'Lune', tex:'moon', nadir:[0, 1, 0] },   /* pont des instruments (caméras LROC NAC), à l'opposé du moteur */
+    body:{ name:'Lune', tex:'moon', nadir:[0, 0, 1] },   /* +Z de la maquette = +Z de la sonde : visée des LROC NAC, LOLA et LAMP vers le sol, antenne grand gain du côté -Z (NAIF, lro_frames_2014049_v01.tf) ; corrigé le 23/11/2026 (+Y visait le côté) */
     view:{ az:0.9, el:0.25, dist:1.5 }, sun:[0.6, 0.6, 0.5],
     real:{ key:'lro-img', alt:"Aperçu d'une mosaïque LROC de la surface de la Lune" },
     desc:"Lancée en 2009, LRO cartographie la Lune depuis une orbite polaire basse. Ses caméras LROC distinguent des détails d'un mètre, LOLA mesure le relief au laser, Diviner les températures et LEND cherche l'hydrogène des glaces polaires. Elle a photographié les sites d'atterrissage des missions Apollo.",
@@ -204,7 +204,7 @@ var MISSIONS = [
     horizons:'-82', stac:'vim-cassini-',
     file:'models/cassini.glb', bytes:0, unit:1,   /* unités = mètres : antenne grand gain de 4,0 unités pour 4 m */
     model:{ src:'NASA 3D Resources, « Cassini-Huygens (A) »', license:'NASA, usage libre (conditions d\'utilisation des médias de la NASA)', u:'https://github.com/nasa/NASA-3D-Resources' },
-    body:{ name:'Saturne', tex:'saturn', nadir:[0, 0, 1], inc:20 },   /* face +Z de la maquette, côté palette de télédétection (repérée à l'œil : schéma de principe) */
+    body:{ name:'Saturne', tex:'saturn', nadir:[0, 0, 1], inc:20 },   /* +Z de la maquette = -Y de la sonde, axe de visée de la palette de télédétection (ISS) ; vérifié avec le repère NAIF (cas_v43.tf, cas_iss_v10.ti) : antenne grand gain en -Z sonde (+Y maquette), Huygens en -X sonde (+X maquette), perche du magnétomètre en +Y sonde (-Z maquette) */
     view:{ az:0.6, el:0.2, dist:1.7, r:8 }, sun:[0.5, 0.7, 0.5],
     real:{ key:'cassini-img', alt:"Aperçu d'un cube VIMS de Titan", none:"Pas d'aperçu VIMS pour l'instant : le serveur qui publie les aperçus (Université de Nantes) refuse les connexions venant de GitHub Actions, d'où le site télécharge ses données." },
     desc:"Lancée en 1997, Cassini a tourné autour de Saturne de 2004 à 2017. Elle a largué la sonde européenne Huygens, qui s'est posée sur Titan en 2005, survolé Titan 127 fois et révélé des océans cachés sous la surface de Titan et d'Encelade. Sa mission s'est achevée par une plongée dans Saturne.",
