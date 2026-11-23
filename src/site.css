@@ -126,3 +126,4 @@ figure{ margin:0 0 10px; } figcaption{ font-size:12.5px; line-height:1.45; color
 .cp-n{ font-weight:700; color:var(--ink); grid-row:span 2; }
 .cp-t{ height:12px; background:var(--sheet); } .cp-t i{ display:block; height:100%; }
 .cp-v{ color:var(--ink-2); font-size:12.5px; }
+#tabs .tab[aria-selected="true"] small{ opacity:1; }
