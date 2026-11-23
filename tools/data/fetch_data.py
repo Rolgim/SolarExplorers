@@ -73,14 +73,17 @@ BODIES = {
     "saturn": ("https://www.solarsystemscope.com/textures/download/2k_saturn.jpg", "Solar System Scope, texture « Saturne » 2k, d'après des données de la NASA", "CC BY 4.0", "https://www.solarsystemscope.com/textures/"),
 }
 def body_textures():
+    bad = []
     for k, (u, credit, lic, page) in BODIES.items():
-        r = S.get(u, timeout=300); r.raise_for_status()
-        im = Image.open(io.BytesIO(r.content)).convert("RGB")
+        r = S.get(u, timeout=300)
+        try: im = Image.open(io.BytesIO(r.content)).convert("RGB")
+        except Exception: print("  texture", k, "illisible :", r.status_code, r.headers.get("content-type"), r.url, r.content[:120]); bad.append(k); continue
         if im.width > 2048: im = im.resize((2048, 1024), Image.LANCZOS)
         im.save(os.path.join(DATA, "tex-" + k + ".jpg"), quality=82, optimize=True)
         json.dump({"body": k, "href": u, "credit": credit, "license": lic, "page": page, "size": list(im.size), "fetched": datetime.date.today().isoformat()},
                   open(os.path.join(DATA, "tex-" + k + ".json"), "w"), indent=1, ensure_ascii=False)
         print("texture", k, im.size)
+    if bad: raise RuntimeError("textures non récupérées : " + ", ".join(bad))
 
 RECIPES = {"mro_ctx": mro_ctx, "mex_hrsc": mex_hrsc, "lro_lroc": lro_lroc, "messenger_mdis": messenger_mdis, "cassini_vims": cassini_vims, "textures": body_textures}
 if __name__ == "__main__":
