@@ -17,9 +17,9 @@ function setBody(t, R){
   if (!meta) return false;
   var rb = R * 30, n = new THREE.Vector3().fromArray(t.body.nadir).normalize();
   var tex = new THREE.TextureLoader().load('data/tex-' + t.body.tex + '.jpg'); tex.encoding = THREE.sRGBEncoding; tex.anisotropy = 4;
-  globe = new THREE.Mesh(new THREE.SphereGeometry(rb, 96, 48), new THREE.MeshStandardMaterial({ map:tex, roughness:1, metalness:0 }));
+  globe = new THREE.Mesh(new THREE.SphereGeometry(rb, 96, 48), new THREE.MeshStandardMaterial({ map:tex, color:0x9a9a9a, roughness:1, metalness:0 }));
   globe.position.copy(n).multiplyScalar(rb + R * 2.4);
-  globe.lookAt(0, 0, 0); globe.rotateX(Math.PI / 2);   /* le pôle de la texture vers l'horizon : on survole une région, pas un pôle */
+  globe.rotation.set(Math.PI / 2, 0, 0);   /* axe des pôles couché vers l'horizon : la sonde survole l'équateur, pas un pôle */
   scene.add(globe); globeFor = t.id;
   return true;
 }

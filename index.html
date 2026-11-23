@@ -569,19 +569,19 @@ svg.optic g.hl{ filter:drop-shadow(0 0 2px var(--mark)) drop-shadow(0 0 4px var(
 /* ---------- page d'une mission : vue 3D + panneau ---------- */
 #page.is-mission{ padding:0; overflow:hidden; display:flex; }
 .mission{ flex:1; display:flex; min-height:0; min-width:0; }
-.m-stage{ flex:1; position:relative; min-width:0; min-height:420px; background:var(--black); color:#fff; overflow:hidden; }
+#stage.m-stage{ flex:1; position:relative; min-width:0; min-height:420px; background:var(--black); color:#fff; overflow:hidden; }
 .m-stage canvas{ position:absolute; inset:0; width:100%; height:100%; display:block; touch-action:none; cursor:grab; }
 .m-stage canvas.dragging{ cursor:grabbing; } .m-stage canvas.over-part{ cursor:pointer; }
 .m-hud{ position:absolute; left:var(--gl); top:16px; right:var(--gr); pointer-events:none; }
 .m-name{ font-weight:800; font-stretch:75%; font-size:clamp(24px, 3.4vw, 40px); line-height:1; text-shadow:0 2px 14px #000; }
 .m-sub{ color:#C9CED2; font-size:13px; margin-top:7px; text-shadow:0 1px 8px #000; }
 .m-msg{ position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); margin:0; background:#14171A; color:#fff; padding:8px 12px; font-size:13px; max-width:80%; }
-.m-tools{ position:absolute; left:var(--gl); bottom:44px; display:flex; gap:10px; align-items:center; }
+.m-tools{ position:absolute; left:var(--gl); bottom:44px; display:flex; gap:10px; align-items:center; background:rgba(0,0,0,.72); padding:5px 8px; }
 .m-ex{ display:flex; gap:8px; align-items:center; font-size:13px; font-weight:600; }
 .m-ex input{ accent-color:#fff; }
 .m-b{ border:1px solid #98A1A7; background:#14171A; color:#fff; font:600 13px var(--f); padding:5px 10px; cursor:pointer; }
 .m-b:focus-visible, .m-ex input:focus-visible{ outline:2px solid #fff; outline-offset:3px; }
-.m-hint{ position:absolute; left:var(--gl); bottom:12px; margin:0; font-size:12px; color:#C9CED2; }
+.m-hint{ position:absolute; left:var(--gl); bottom:12px; margin:0; font-size:12px; color:#E3E6E8; background:rgba(0,0,0,.72); padding:2px 8px; }
 .m-panel{ width:min(400px, 42vw); flex:none; overflow-y:auto; background:var(--sheet); padding:14px 18px 32px; border-left:1px solid var(--rule); }
 .m-panel .ptl{ display:flex; gap:4px; border-bottom:1px solid var(--rule); margin-bottom:12px; }
 .m-panel .ptab{ border:0; border-bottom:3px solid transparent; background:transparent; font:600 14px var(--f); color:var(--ink-2); padding:6px 10px; cursor:pointer; }
@@ -606,10 +606,10 @@ figure{ margin:0 0 10px; } figcaption{ font-size:12.5px; line-height:1.45; color
 @media (max-width: 720px){
   #page.is-mission{ overflow-y:auto; display:block; }
   .mission{ flex-direction:column; }
-  .m-stage{ min-height:56vh; }
+  #stage.m-stage{ flex:none; height:56vh; min-height:320px; }
   .m-panel{ width:auto; border-left:0; }
 }
-.m-body-note{ position:absolute; right:var(--gr); bottom:12px; margin:0; max-width:46%; text-align:right; font-size:12px; color:#C9CED2; text-shadow:0 1px 6px #000; }
+.m-body-note{ position:absolute; right:var(--gr); bottom:12px; margin:0; max-width:46%; text-align:right; font-size:12px; color:#E3E6E8; background:rgba(0,0,0,.72); padding:2px 8px; }
 @media (max-width: 720px){ .m-body-note{ top:74px; bottom:auto; left:var(--gl); max-width:none; text-align:left; } }
 
 </style>
@@ -871,9 +871,9 @@ function setBody(t, R){
   if (!meta) return false;
   var rb = R * 30, n = new THREE.Vector3().fromArray(t.body.nadir).normalize();
   var tex = new THREE.TextureLoader().load('data/tex-' + t.body.tex + '.jpg'); tex.encoding = THREE.sRGBEncoding; tex.anisotropy = 4;
-  globe = new THREE.Mesh(new THREE.SphereGeometry(rb, 96, 48), new THREE.MeshStandardMaterial({ map:tex, roughness:1, metalness:0 }));
+  globe = new THREE.Mesh(new THREE.SphereGeometry(rb, 96, 48), new THREE.MeshStandardMaterial({ map:tex, color:0x9a9a9a, roughness:1, metalness:0 }));
   globe.position.copy(n).multiplyScalar(rb + R * 2.4);
-  globe.lookAt(0, 0, 0); globe.rotateX(Math.PI / 2);   /* le pôle de la texture vers l'horizon : on survole une région, pas un pôle */
+  globe.rotation.set(Math.PI / 2, 0, 0);   /* axe des pôles couché vers l'horizon : la sonde survole l'équateur, pas un pôle */
   scene.add(globe); globeFor = t.id;
   return true;
 }
