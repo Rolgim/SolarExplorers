@@ -234,4 +234,6 @@ var EN_UI = {
   "Aperçu d'une mosaïque d'images des orbiteurs Viking":"Preview of a Viking orbiter image mosaic",
   "Donnée de Lunar Prospector":"Lunar Prospector data",
   "Donnée de GRAIL":"GRAIL data",
+  "Date du produit dans le catalogue":"Product date in the catalogue",
+  "après la fin de la mission : ce n'est pas la date de prise de vue":"after the end of the mission: this is not the acquisition date",
 };

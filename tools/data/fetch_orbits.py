@@ -40,11 +40,8 @@ MISSIONS = {
     # Clementine : Horizons ne couvre que l'orbite lunaire (19 février – 3 mai 1994), pas le transfert depuis la Terre
     "clem": {"sc": "-40", "center": EARTH, "start": "1994-02-19 13:00", "stop": "1994-05-03 12:00", "step": "6 h", "bodies": [
         ("Lune", "301", 28, "6 h", [("1994-02-20", "arrivee")])]},
-    # sondes lunaires : transfert vu depuis la Terre (Horizons peut ne couvrir qu'une partie du trajet ; l'échec est toléré)
-    "sln": {"sc": "-131", "center": EARTH, "start": "2007-09-14 03:00", "stop": "2007-10-03 23:00", "step": "2 h", "bodies": [
-        ("Lune", "301", 28, "6 h", [("2007-10-03", "arrivee")])]},
-    "ch1": {"sc": "-86", "center": EARTH, "start": "2008-10-22 02:00", "stop": "2008-11-08 23:00", "step": "2 h", "bodies": [
-        ("Lune", "301", 28, "6 h", [("2008-11-08", "arrivee")])]},
+    # sondes lunaires : transfert vu depuis la Terre (Kaguya -131 et Chandrayaan-1 -86 absents de Horizons pour leur mission)
+    # (Horizons peut ne couvrir qu'une partie du trajet ; l'échec est toléré)
     "kplo": {"sc": "-155", "center": EARTH, "start": "2022-08-05 01:00", "stop": "2022-12-27 12:00", "step": "12 h", "bodies": [
         ("Lune", "301", 28, "6 h", [("2022-12-27", "arrivee")])]},
     "lp": {"sc": "-25", "center": EARTH, "start": "1998-01-07 04:00", "stop": "1998-01-11 12:00", "step": "1 h", "bodies": [
@@ -133,8 +130,7 @@ ORBITERS = [("mro", "-74", "499", "Mars", "2006-11-15", None, 120, 1), ("mex", "
             ("messenger", "-236", "199", "Mercure", "2011-04-04", "2015-04-28", 750, 3),
             ("ody", "-53", "499", "Mars", "2002-02-20", None, 120, 1), ("tgo", "-143", "499", "Mars", "2018-04-21", None, 120, 1),
             ("vex", "-248", "299", "Vénus", "2006-06-01", "2014-11-20", 1440, 5), ("clem", "-40", "301", "Lune", "1994-02-22", "1994-05-01", 330, 1),
-            ("sln", "-131", "301", "Lune", "2007-10-20", "2009-06-09", 120, 1), ("ch1", "-86", "301", "Lune", "2008-11-15", "2009-08-27", 120, 1),
-            ("kplo", "-155", "301", "Lune", "2023-01-15", None, 120, 1), ("lp", "-25", "301", "Lune", "1998-01-17", "1999-07-30", 120, 1),
+            ("kplo", "-155", "301", "Lune", "2023-01-15", None, 120, 1), ("lp", "-25", "301", "Lune", "1998-01-17", "1998-12-31", 120, 1),
             ("grail", "-177", "301", "Lune", "2012-03-02", "2012-12-16", 120, 1)]
 def probe_orbits(today):
     out = []

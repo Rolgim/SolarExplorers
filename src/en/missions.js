@@ -327,7 +327,7 @@ var EN_MISSIONS = {
   sln:{
     agency:'JAXA', targets:['Moon'],
     desc:"A large Japanese lunar spacecraft, Kaguya orbited the Moon from 2007 to 2009 with fifteen instruments and two small satellites, Okina and Ouna. Together they measured the Moon's relief, composition, subsurface and gravity, including on the far side. The spacecraft was crashed onto the Moon at the end of the mission.",
-    refs:{ hz:'JPL Horizons, object -131 (SELENE)', stac:'STAC-PLANET, ode-moon-sln-* collections (probe of 23 November 2026)' },
+    refs:{ stac:'STAC-PLANET, ode-moon-sln-* collections (probe of 23 November 2026)' },
     parts:{},
     sections:[
       { title:'Spacecraft', rows:[
@@ -352,7 +352,7 @@ var EN_MISSIONS = {
   ch1:{
     agency:'ISRO (India), with instruments from ESA, NASA and Bulgaria', targets:['Moon'],
     desc:"India's first lunar spacecraft, Chandrayaan-1 orbited the Moon from November 2008 to August 2009 with eleven instruments, six of them from other countries. Its NASA-provided M3 spectrometer detected water and hydroxyl molecules on the surface, and its Mini-SAR radar found signs of ice at the bottom of polar craters.",
-    refs:{ sci:'Chandrayaan-1: science', hz:'JPL Horizons, object -86 (Chandrayaan-1)', stac:'STAC-PLANET, ode-moon-ch1-* collections (probe of 23 November 2026)' },
+    refs:{ sci:'Chandrayaan-1: science', stac:'STAC-PLANET, ode-moon-ch1-* collections (probe of 23 November 2026)' },
     parts:{},
     sections:[
       { title:'Spacecraft', rows:[

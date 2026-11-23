@@ -613,7 +613,7 @@ var MISSIONS = [
       { type:'arrival', body:'Lune', date:'2007-10-03', ref:'nasa' },
       { type:'end', body:'Lune', date:'2009-06-10', ref:'nasa' }
     ],
-    horizons:'-131', stac:'ode-moon-sln-',
+    horizons:null, stac:'ode-moon-sln-',   /* Horizons : « No such record » pour -131 (essai du 23 novembre 2026) */
     file:null, bytes:0,
     model:{ none:true },
     body:{ name:'Lune', tex:'moon', nadir:[0, -1, 0] },
@@ -624,7 +624,6 @@ var MISSIONS = [
     refs:{
       jaxa:{ t:'KAGUYA (SELENE) : About the satellite', p:'JAXA', u:'https://www.selene.jaxa.jp/en/about/about_sat_e.htm' },
       nasa:{ t:'Kaguya', p:'NASA Science', u:'https://science.nasa.gov/mission/kaguya/' },
-      hz:{ t:'JPL Horizons, objet -131 (SELENE)', p:'NASA JPL', u:'https://ssd.jpl.nasa.gov/horizons/app.html#/' },
       stac:{ t:'STAC-PLANET, collections ode-moon-sln-* (sonde du 23 novembre 2026)', p:'PDSSP (CNES)', u:'https://stacplanet.pdssp.eu/' }
     },
     parts:[],
@@ -657,7 +656,7 @@ var MISSIONS = [
       { type:'arrival', body:'Lune', date:'2008-11-08', ref:'nasa' },
       { type:'end', body:'Lune', date:'2009-08-28', ref:'nasa' }
     ],
-    horizons:'-86', stac:'ode-moon-ch1-',
+    horizons:null, stac:'ode-moon-ch1-',   /* Horizons -86 : pas d'éphémérides avant juillet 2016 (essai du 23 novembre 2026) */
     file:null, bytes:0,
     model:{ none:true },
     body:{ name:'Lune', tex:'moon', nadir:[0, -1, 0] },
@@ -669,7 +668,6 @@ var MISSIONS = [
       isro:{ t:'Chandrayaan-1', p:'ISRO', u:'https://www.isro.gov.in/Chandrayaan_1.html' },
       sci:{ t:'Chandrayaan-1 : science', p:'ISRO', u:'https://www.isro.gov.in/Chandrayaan-1_science.html' },
       nasa:{ t:'Chandrayaan-1', p:'NASA Science', u:'https://science.nasa.gov/mission/chandrayaan-1/' },
-      hz:{ t:'JPL Horizons, objet -86 (Chandrayaan-1)', p:'NASA JPL', u:'https://ssd.jpl.nasa.gov/horizons/app.html#/' },
       stac:{ t:'STAC-PLANET, collections ode-moon-ch1-* (sonde du 23 novembre 2026)', p:'PDSSP (CNES)', u:'https://stacplanet.pdssp.eu/' }
     },
     parts:[],

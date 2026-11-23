@@ -38,7 +38,7 @@ def mro_ctx():
         print("mro_ctx :", f["id"], p.get("datetime"), w, "×", h); return
     raise RuntimeError("aucun aperçu CTX récupéré")
 
-def browse(mid, collection, instrument, archive, max_px=900, stretch=None, roles=("thumbnail",), skip=None, min_px=0, alt=None):
+def browse(mid, collection, instrument, archive, max_px=900, stretch=None, roles=("thumbnail",), skip=None, min_px=0, alt=None, crop=None, min_side=0):
     """Aperçu publié par l'archive (asset « thumbnail » JPEG ou PNG) de l'item le plus récent qui a une emprise,
     entier, ramené à max_px de côté au plus ; contraste étiré seulement si stretch est donné (signalé dans la légende)."""
     for f in stac_items(collection):
@@ -53,7 +53,10 @@ def browse(mid, collection, instrument, archive, max_px=900, stretch=None, roles
         else: r = S.get(href, timeout=300)
         if not r.ok: print("  aperçu indisponible", r.status_code, href); continue
         im = Image.open(io.BytesIO(r.content))
-        if max(im.size) < min_px: print("  aperçu trop petit", im.size, href); continue
+        if max(im.size) < min_px or min(im.size) < min_side: print("  aperçu trop petit", im.size, href); continue
+        full = im.size
+        if crop and im.height > crop * im.width:   # longue bande (spectromètre imageur à balayage) : on garde le milieu, signalé dans la légende
+            c = crop * im.width; im = im.crop((0, (im.height - c) // 2, im.width, (im.height - c) // 2 + c))
         im = im.convert("L") if im.mode in ("L", "LA", "I", "I;16", "P") and not im.getpalette() else im.convert("RGB")
         w, h = im.size; k = min(1.0, max_px / max(w, h)); out = im.resize((max(1, round(w * k)), max(1, round(h * k))), Image.LANCZOS) if k < 1 else im
         if stretch: out = ImageOps.autocontrast(out, cutoff=stretch)
@@ -61,7 +64,7 @@ def browse(mid, collection, instrument, archive, max_px=900, stretch=None, roles
         p = f["properties"]
         meta = {"archive": archive, "collection": f.get("collection"), "product": f["id"], "datetime": p.get("datetime"), "href": href,
                 "stac": STAC + "/collections/" + f.get("collection", "") + "/items/" + f["id"], "instrument": instrument,
-                "full_size": [w, h], "out_size": list(out.size), "stretch": [stretch, 100 - stretch] if stretch else None,
+                "full_size": list(full), "crop": list(im.size) if im.size != full else None, "out_size": list(out.size), "stretch": [stretch, 100 - stretch] if stretch else None,
                 "footprint": f.get("geometry"), "fetched": datetime.date.today().isoformat()}
         json.dump(meta, open(os.path.join(DATA, mid + "-img.json"), "w"), indent=1, ensure_ascii=False)
         print(mid, ":", f["id"], p.get("datetime"), w, "×", h); return
@@ -86,9 +89,9 @@ def _try(mid, cols, inst, arch, **kw):
         except RuntimeError as e: print(" ", e)
     raise RuntimeError("aucun aperçu pour " + mid)
 def vo_vis(): _try("vo", ("ode-mars-vo-visab-mdim", "ode-mars-vo-visab-mdimc", "ode-mars-vo-visab-edr"), "VIS", "PDS Geosciences Node (NASA), via le catalogue STAC-PLANET du PDSSP")
-def sln_tc(): _try("sln", ("ode-moon-sln-tc-tcort", "ode-moon-sln-mi-mimap", "ode-moon-sln-tc-tcsl2b"), "TC", "JAXA (SELENE Data Archive) / PDS Geosciences Node, via le catalogue STAC-PLANET du PDSSP")
-def ch1_m3(): _try("ch1", ("ode-moon-ch1-orb-m3-refimg", "ode-moon-ch1-orb-m3-caliv3"), "M3", "PDS Imaging Node (NASA), via le catalogue STAC-PLANET du PDSSP")
-def kplo_shadowcam(): _try("kplo", ("ode-moon-kplo-shadowcam-umos", "ode-moon-kplo-shadowcam-cal"), "ShadowCam", "PDS de ShadowCam (Arizona State University), via le catalogue STAC-PLANET du PDSSP", stretch=0.5)
+def sln_tc(): _try("sln", ("ode-moon-sln-tc-tcwl2b", "ode-moon-sln-tc-tcsl2b", "ode-moon-sln-tc-tcort"), "TC", "JAXA (SELENE Data Archive) / PDS Geosciences Node, via le catalogue STAC-PLANET du PDSSP", crop=3)
+def ch1_m3(): _try("ch1", ("ode-moon-ch1-orb-m3-refimg", "ode-moon-ch1-orb-m3-caliv3"), "M3", "PDS Imaging Node (NASA), via le catalogue STAC-PLANET du PDSSP", crop=3)
+def kplo_shadowcam(): _try("kplo", ("ode-moon-kplo-shadowcam-cmos", "ode-moon-kplo-shadowcam-umos", "ode-moon-kplo-shadowcam-dtm", "ode-moon-kplo-shadowcam-cal"), "ShadowCam", "PDS de ShadowCam (Arizona State University), via le catalogue STAC-PLANET du PDSSP", stretch=0.5, min_side=200, crop=3)
 def cassini_vims(): browse("cassini", "vim-cassini-vims-ir", "VIMS", "Université de Nantes (aperçus VIMS), via le catalogue STAC-PLANET du PDSSP")
 
 # fonds des corps (vue 3D : le corps observé sous la sonde) : textures globales sous licence ouverte, créditées à côté de l'image (règle 8)
