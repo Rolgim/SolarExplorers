@@ -117,10 +117,10 @@ def probe_orbits(today):
             a = datetime.datetime.combine(d, datetime.time()); b = a + datetime.timedelta(minutes=dur)
             try:
                 rows = query(sc, f"500@{cen}", a.strftime("%Y-%m-%d %H:%M"), b.strftime("%Y-%m-%d %H:%M"), f"{st} m", "KM-S")
-                xy = []
+                xy, z = [], []   # z : hauteur au-dessus de l'écliptique, pour cacher la partie de l'orbite passée derrière le corps (vue de dessus)
                 for line in rows:
-                    p = [x.strip() for x in line.split(",")]; xy += [round(float(p[2])), round(float(p[3]))]
-                samples.append({"t0": d.isoformat(), "step_min": st, "xy": xy}); print("orbite", mid, d, len(xy) // 2)
+                    p = [x.strip() for x in line.split(",")]; xy += [round(float(p[2])), round(float(p[3]))]; z.append(round(float(p[4])))
+                samples.append({"t0": d.isoformat(), "step_min": st, "xy": xy, "z": z}); print("orbite", mid, d, len(xy) // 2)
             except Exception as e: print("  ÉCHEC orbite", mid, d, repr(e)[:200])
         out.append({"id": mid, "body": body, "center": cen, "samples": samples})
     return out
