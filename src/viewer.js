@@ -15,7 +15,7 @@ function setBody(t, R){
   if (globe){ scene.remove(globe); globe = null; }
   var meta = t.body && (window.DATA_FILES || {})['tex-' + t.body.tex];
   if (!meta) return false;
-  var rb = R * 30, n = new THREE.Vector3().fromArray(t.body.nadir).normalize();
+  var rb = R * 30, n = new THREE.Vector3(0, -1, 0);   /* nadir ramené vers le bas par prepare() */
   var tex = new THREE.TextureLoader().load('data/tex-' + t.body.tex + '.jpg'); tex.encoding = THREE.sRGBEncoding; tex.anisotropy = 4;
   globe = new THREE.Mesh(new THREE.SphereGeometry(rb, 96, 48), new THREE.MeshStandardMaterial({ map:tex, color:0x9a9a9a, roughness:1, metalness:0 }));
   globe.position.copy(n).multiplyScalar(rb + R * 2.4);
@@ -66,9 +66,13 @@ function prepare(t, gltf){
   });
   inner.updateMatrixWorld(true);
   var box = new THREE.Box3().setFromObject(inner), size = box.getSize(new THREE.Vector3()), ctr = box.getCenter(new THREE.Vector3());
-  var s = t.axis ? t.size / size[t.axis] : 1;
+  if (t.view && t.view.r){   /* longues antennes : on centre sur le module (pièce « bus ») plutôt que sur la boîte entière */
+    var bb = new THREE.Box3(); inner.traverse(function(o){ if (!o.isMesh) return; for (var p = o; p && p !== inner; p = p.parent) if (/^bus(_\d+)?$/.test(p.name || '')){ bb.expandByObject(o); return; } });
+    if (!bb.isEmpty()) bb.getCenter(ctr);
+  }
+  var s = t.unit || (t.axis ? t.size / size[t.axis] : 1);   /* unit : mètres par unité de la maquette ; sinon size le long de axis */
   inner.scale.setScalar(s); inner.position.copy(ctr).multiplyScalar(-s); root.add(inner); root.updateMatrixWorld(true);
-  var R = { root:root, radius:size.length() * s / 2, meshes:[], parts:{} };
+  var R = { root:root, radius:(t.view && t.view.r) || size.length() * s / 2, meshes:[], parts:{} };   /* view.r : rayon de cadrage (antennes très longues exclues) */
   t.parts.forEach(function(p){ R.parts[p.key] = { meshes:[], box:new THREE.Box3() }; });
   inner.traverse(function(o){
     if (!o.isMesh) return;
@@ -80,6 +84,9 @@ function prepare(t, gltf){
   for (var k in R.parts){ var P = R.parts[k]; if (P.box.isEmpty()) continue;
     var dir = P.box.getCenter(new THREE.Vector3()); if (dir.length() < R.radius * 0.15) dir.set(0, 0, 0); else dir.normalize().multiplyScalar(R.radius * 0.5);
     P.meshes.forEach(function(o){ o.userData.base = o.position.clone(); o.userData.ex = dir.clone().divideScalar(s); }); }   /* nœuds de la maquette sans rotation propre (seg_lib.js) */
+  /* la maquette est tournée pour que le côté des instruments (nadir) regarde vers le bas : le corps survolé est toujours sous la sonde */
+  R.q = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3().fromArray(t.body ? t.body.nadir : [0, -1, 0]).normalize(), new THREE.Vector3(0, -1, 0));
+  var top = new THREE.Group(); top.quaternion.copy(R.q); top.add(root); R.root = top;
   return R;
 }
 function highlight(){
@@ -108,7 +115,7 @@ function open(el, t, o){
   sel = null; hov = null; ex = 0;
   if (M) scene.remove(M.root);
   var show = function(R){ M = R; scene.add(M.root); C.az = t.view.az; C.el = t.view.el; C.dist = M.radius * 2 * t.view.dist;
-    key.position.fromArray(t.sun).multiplyScalar(M.radius * 4); fill.position.set(-0.6, -0.2, -0.5); highlight();
+    key.position.fromArray(t.sun).applyQuaternion(M.q).multiplyScalar(M.radius * 4); fill.position.set(-0.6, -0.2, -0.5); highlight();
     var hasBody = setBody(t, M.radius); camera.far = M.radius * 200; camera.updateProjectionMatrix();
     if (opts.onState) opts.onState('ready', hasBody); };
   if (models[t.id]) return show(models[t.id]);

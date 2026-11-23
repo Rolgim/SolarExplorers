@@ -102,30 +102,44 @@ function hzDate(s){   /* « 2005-Aug-13 » (Horizons) → date lisible dans la l
   var m = /^(\d{4})-(\w{3})-(\d{2})/.exec(s); if (!m) return s;
   return new Date(Date.UTC(+m[1], MON[m[2]] - 1, +m[3])).toLocaleDateString(OBS_LANG === 'en' ? 'en-GB' : 'fr-FR', { day:'numeric', month:'long', year:'numeric', timeZone:'UTC' });
 }
+var BODY_COL = { 'Terre':'#6FA8FF', 'Mars':'#E07A4F', 'Vénus':'#E8C26A', 'Mercure':'#B9B2A8', 'Jupiter':'#D9A66B', 'Saturne':'#E6D08A', 'Lune':'#C8C8C8' };
+var STEP = { '1 d':['position par jour', 'position per day'], '2 d':['position tous les 2 jours', 'position every 2 days'], '1 h':['position par heure', 'position per hour'] };
 function trajSvg(m){
   var d = (window.DATA_FILES || {})[m.id + '-traj']; if (!d) return '<p class="note">' + T('Trajectoire pas encore téléchargée (workflow « Données réelles »).') + '</p>';
-  var W = 520, c = W/2, S = W/2/1.75;   /* échelle : 1,75 UA au bord */
-  function path(a){ return a.map(function(p, i){ return (i ? 'L' : 'M') + (c + p[1]*S).toFixed(1) + ' ' + (c - p[2]*S).toFixed(1); }).join(''); }
-  var pr = d.probe, a = pr[0], b = pr[pr.length - 1];
-  var dot = function(p, r, cl){ return '<circle cx="' + (c + p[1]*S).toFixed(1) + '" cy="' + (c - p[2]*S).toFixed(1) + '" r="' + r + '" class="' + cl + '"/>'; };
-  var near = function(arr, date){ for (var i = 0; i < arr.length; i++) if (arr[i][0] >= date) return arr[i]; return arr[arr.length - 1]; };
-  var ea = near(d.earth, a[0]), mb = near(d.target.orbit, b[0]);
-  return '<figure class="traj"><svg viewBox="0 0 ' + W + ' ' + W + '" role="img" aria-label="' + T('Trajectoire de croisière vue du pôle nord de l\'écliptique') + '">' +
-    '<circle cx="' + c + '" cy="' + c + '" r="6" class="sun"/>' +
-    '<path d="' + path(d.earth) + '" class="orb-e"/><path d="' + path(d.target.orbit) + '" class="orb-t"/><path d="' + path(pr) + '" class="orb-p"/>' +
-    dot(ea, 4, 'pt-e') + dot(mb, 4, 'pt-t') +
-    '<text x="' + (c + ea[1]*S + 8).toFixed(0) + '" y="' + (c - ea[2]*S + 14).toFixed(0) + '">' + T('Terre au départ') + '</text>' +
-    '<text x="' + (c + mb[1]*S + 8).toFixed(0) + '" y="' + (c - mb[2]*S).toFixed(0) + '">' + T(d.target.name) + ' ' + T('à l\'arrivée') + '</text>' +
-    '</svg><figcaption>' + T('Croisière du') + ' ' + esc(hzDate(a[0])) + ' ' + T('au') + ' ' + esc(hzDate(b[0])) + ' (' + pr.length + ' ' + T('positions quotidiennes') + '). ' +
+  var bodies = d.bodies || [{ name:'Terre', orbit:d.earth, marks:[] }, { name:d.target.name, orbit:d.target.orbit, marks:[] }];
+  var pr = d.probe, a = pr[0], b = pr[pr.length - 1], R = 0;
+  pr.concat.apply(pr, bodies.map(function(o){ return o.orbit; })).forEach(function(p){ R = Math.max(R, Math.hypot(p[1], p[2])); });
+  var W = 520, c = W/2, S = (W/2 - 26) / R;   /* échelle : l'orbite la plus grande touche presque le bord */
+  var X = function(p){ return (c + p[1]*S).toFixed(1); }, Y = function(p){ return (c - p[2]*S).toFixed(1); };
+  function path(arr){ return arr.map(function(p, i){ return (i ? 'L' : 'M') + X(p) + ' ' + Y(p); }).join(''); }
+  var role = { depart:'au départ', survol:'survol', arrivee:'à l\'arrivée' }, svg = '', lab = '';
+  bodies.forEach(function(o, i){
+    var col = BODY_COL[o.name] || '#9FB3C8';
+    svg += '<path d="' + path(o.orbit) + '" class="orb-b" style="stroke:' + col + '"/>';
+    (o.marks || []).forEach(function(k, j){
+      svg += '<circle cx="' + X([0, k[2], k[3]]) + '" cy="' + Y([0, k[2], k[3]]) + '" r="' + (k[1] === 'survol' ? 3 : 4.5) + '" style="fill:' + col + '"/>';
+      if (j === 0 || k[1] !== 'survol') lab += '<text x="' + (+X([0, k[2], k[3]]) + 7).toFixed(0) + '" y="' + (+Y([0, k[2], k[3]]) + 4 + 12 * j).toFixed(0) + '">' + T(o.name) + (k[1] === 'survol' ? ' (' + T('survol') + ')' : ' ' + T(role[k[1]])) + '</text>';
+    });
+  });
+  var center = d.center === 'Terre' ? '<circle cx="' + c + '" cy="' + c + '" r="5" class="pt-e"/>' : '<circle cx="' + c + '" cy="' + c + '" r="6" class="sun"/>';
+  var step = STEP[d.step || '1 d'] || [d.step, d.step];
+  return '<figure class="traj"><svg viewBox="0 0 ' + W + ' ' + W + '" role="img" aria-label="' + T(d.center === 'Terre' ? 'Trajectoire vers la Lune autour de la Terre, vue du pôle nord de l\'écliptique' : 'Trajectoire de croisière vue du pôle nord de l\'écliptique') + '">' +
+    center + svg + '<path d="' + path(pr) + '" class="orb-p"/>' + lab + '</svg><figcaption>' +
+    T('Croisière du') + ' ' + esc(hzDate(a[0])) + ' ' + T('au') + ' ' + esc(hzDate(b[0])) + ' (' + pr.length + ' ' + T('positions') + ', ' + T('une') + ' ' + (OBS_LANG === 'en' ? step[1] : step[0]).replace(/^position /, '') + '), ' +
+    T(d.center === 'Terre' ? 'centrée sur la Terre' : 'centrée sur le Soleil') + '. ' +
     T('Source') + (OBS_LANG === 'en' ? ': ' : ' : ') + esc(T(d.source)) + ', ' + T('objet') + ' ' + esc(d.horizons) + ', ' + T('téléchargé le') + ' ' + esc(d.fetched) + '.</figcaption></figure>';
 }
 function realData(m){
-  var d = (window.DATA_FILES || {})[m.id + '-ctx']; if (!d) return '<p class="note">' + T('Aucune donnée réelle téléchargée pour l\'instant.') + '</p>';
-  return '<figure class="real"><img src="data/' + m.id + '-ctx.jpg" width="900" height="900" alt="' + T('Extrait d\'une image CTX de la surface de Mars') + ' (' + esc(d.product) + ')">' +
-    '<figcaption><strong>' + esc(d.instrument) + ' · ' + esc(d.product) + '</strong><br>' + T('Prise le') + ' ' + esc(String(d.datetime).slice(0, 10)) + '. ' +
-    (OBS_LANG === 'en' ? 'Central square of the ' + d.full_size[0] + ' × ' + d.full_size[1] + ' pixel strip (' + d.crop_px + ' pixels wide), scaled to ' + d.out_px + ' × ' + d.out_px
-                       : 'Carré central de la bande de ' + d.full_size[0] + ' × ' + d.full_size[1] + ' pixels (' + d.crop_px + ' pixels de côté), ramené à ' + d.out_px + ' × ' + d.out_px) +
-    (d.stretch ? (OBS_LANG === 'en' ? ', contrast stretched between the ' + d.stretch[0] + ' and ' + d.stretch[1] + ' percentiles' : ', contraste étiré entre les centiles ' + OBS_NUM(String(d.stretch[0]).replace('.', ',')) + ' et ' + OBS_NUM(String(d.stretch[1]).replace('.', ','))) : '') + '.<br>' +
+  var key = m.real && m.real.key, d = key && (window.DATA_FILES || {})[key];
+  if (!d) return '<p class="note">' + T(m.real && m.real.none || 'Aucune donnée réelle téléchargée pour l\'instant.') + '</p>';
+  var out = d.out_size || [d.out_px, d.out_px], en = OBS_LANG === 'en';
+  var how = d.crop_px ? (en ? 'Central square of the ' + d.full_size[0] + ' × ' + d.full_size[1] + ' pixel strip (' + d.crop_px + ' pixels wide), scaled to ' + out[0] + ' × ' + out[1]
+                            : 'Carré central de la bande de ' + d.full_size[0] + ' × ' + d.full_size[1] + ' pixels (' + d.crop_px + ' pixels de côté), ramené à ' + out[0] + ' × ' + out[1])
+                      : (en ? 'Whole preview published by the archive (' + d.full_size[0] + ' × ' + d.full_size[1] + ' pixels)' + (out[0] !== d.full_size[0] ? ', scaled to ' + out[0] + ' × ' + out[1] : '')
+                            : 'Aperçu entier publié par l\'archive (' + d.full_size[0] + ' × ' + d.full_size[1] + ' pixels)' + (out[0] !== d.full_size[0] ? ', ramené à ' + out[0] + ' × ' + out[1] : ''));
+  return '<figure class="real"><img src="data/' + key + '.jpg" width="' + out[0] + '" height="' + out[1] + '" alt="' + T(m.real.alt) + ' (' + esc(d.product) + ')">' +
+    '<figcaption><strong>' + esc(d.instrument) + ' · ' + esc(d.product) + '</strong><br>' + T('Prise le') + ' ' + esc(String(d.datetime).slice(0, 10)) + '. ' + how +
+    (d.stretch ? (en ? ', contrast stretched between the ' + d.stretch[0] + ' and ' + d.stretch[1] + ' percentiles' : ', contraste étiré entre les centiles ' + OBS_NUM(String(d.stretch[0]).replace('.', ',')) + ' et ' + OBS_NUM(String(d.stretch[1]).replace('.', ','))) : '') + '.<br>' +
     T('Archive') + ' : ' + T(d.archive) + ' · ' + T('collection') + ' <code>' + esc(d.collection) + '</code> · <a href="' + esc(d.href) + '" rel="noopener" target="_blank">' + T('aperçu d\'origine') + '</a> · ' + T('téléchargé le') + ' ' + esc(d.fetched) + '</figcaption></figure>';
 }
 function dataPage(m){

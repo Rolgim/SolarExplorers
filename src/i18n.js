@@ -11,7 +11,7 @@ var OBS_T = function(s){ return s; }, OBS_I18N = { static:function(){} };
   MISSIONS.forEach(function(m){
     var e = EN_MISSIONS[m.id]; if (!e) return;
     var frSec = m.sections;
-    ['name','agency','desc','sections'].forEach(function(k){ if (e[k]) m[k] = e[k]; });
+    ['name','agency','desc','sections','targets'].forEach(function(k){ if (e[k]) m[k] = e[k]; });
     (m.sections || []).forEach(function(sec, i){ sec.rows.forEach(function(r, j){ var o = frSec && frSec[i] && frSec[i].rows[j]; if (o && o[2]) r[2] = o[2]; }); });
     if (e.refs) Object.keys(e.refs).forEach(function(k){ if (m.refs[k]) m.refs[k].t = e.refs[k]; });
     if (e.model) m.model.license = e.model.license;

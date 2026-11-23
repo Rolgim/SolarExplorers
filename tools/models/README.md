@@ -4,7 +4,11 @@ Reprise telle quelle d'Observatories v1.0 (`tools/models/`). Les fichiers `model
 
 | Maquette | Source à télécharger | Traitement |
 |---|---|---|
-| *(aucune pour l'instant : première mission à l'étape 4)* | | |
+| `mro.glb` | NASA 3D Resources « Mars Reconnaissance Orbiter (MRO) (A) » | `gltf-transform copy` (Draco) → `seg_lib` + `mro_cls.js` → resize 1024, weld, quantize |
+| `mex.glb` | ESA SCIFLEET « mars_express » (OBJ + texture 4K, sonde `probe_wave1.py`) | `obj2glb.py` (texture BaseColor) → `seg_lib` + `mex_cls.js` → idem |
+| `lro.glb` | NASA 3D Resources « Lunar Reconnaissance Orbiter (B) » (la version A a son antenne repliée au centre) | `copy` → `seg_lib` + `lro_cls.js` → idem |
+| `cassini.glb` | NASA 3D Resources « Cassini-Huygens (A) » | `copy` → `seg_lib` + `cassini_cls.js` → idem |
+| `messenger.glb` | NASA 3D Resources « MESSENGER » | `copy` → `seg_lib` + `messenger_cls.js` → idem |
 
 Les classifieurs propres à chaque maquette (`<id>_cls.js`) s'ajoutent ici, mission par mission. Ceux d'Observatories restent consultables au tag `v1.0` de ce dépôt-là.
 

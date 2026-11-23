@@ -599,7 +599,7 @@ svg.optic g.hl{ filter:drop-shadow(0 0 2px var(--mark)) drop-shadow(0 0 4px var(
 .crumb{ margin:0; font-size:13px; } .crumb a{ color:var(--ink-2); }
 .traj svg{ width:100%; max-width:520px; height:auto; background:var(--black); display:block; }
 .traj .sun{ fill:#FFD21F; } .traj .orb-e{ fill:none; stroke:#6FA8FF; stroke-width:1.2; } .traj .orb-t{ fill:none; stroke:#E07A4F; stroke-width:1.2; }
-.traj .orb-p{ fill:none; stroke:#fff; stroke-width:2; } .traj .pt-e{ fill:#6FA8FF; } .traj .pt-t{ fill:#E07A4F; }
+.traj .orb-b{ fill:none; stroke-width:1.2; } .traj .orb-p{ fill:none; stroke:#fff; stroke-width:2; } .traj .pt-e{ fill:#6FA8FF; } .traj .pt-t{ fill:#E07A4F; }
 .traj text{ fill:#fff; font:12px var(--f); }
 figure{ margin:0 0 10px; } figcaption{ font-size:12.5px; line-height:1.45; color:var(--ink-2); margin-top:6px; }
 .real img{ width:100%; max-width:600px; height:auto; display:block; background:#000; }
@@ -655,10 +655,13 @@ var DATA_FILES = {"mro-ctx":{"archive":"PDS Imaging Node (NASA), via le catalogu
      horizons                   identifiant JPL Horizons de la sonde (trajectoire, tools/data/fetch_orbits.py)
      stac                       préfixe des collections STAC-PLANET de la mission (sonde tools/probe/probe_stacplanet.py)
      file, bytes, axis, size    maquette (models/<id>.glb) ; size = dimension réelle en mètres le long de axis
+     unit                       à la place de axis/size : mètres par unité de la maquette (mesurés sur une pièce de taille connue)
      model                      { src, license } : provenance et licence de la maquette, écrites à côté d'elle (règle 8)
      body                       { name, tex, nadir } : corps survolé, dessiné sous la sonde (texture data/tex-<tex>.jpg) du côté
                                 nadir (direction des instruments dans le repère de la maquette) ; taille et distance non respectées
-     view, sun                  cadrage initial { az, el, dist } ; direction de la lumière dans le repère de la maquette
+     view, sun                  cadrage initial { az, el, dist, r } (r : rayon de cadrage en mètres si de longues antennes faussent la boîte) ;
+                                direction de la lumière dans le repère de la maquette
+     real                       { key, alt } : donnée réelle (data/<key>.jpg et .json, tools/data/fetch_data.py) et son texte alternatif
      parts                      pièces cliquables : { key (nom du nœud), name, desc, facts:[[texte, clé de source]] }
      refs                       sources : { clé:{ t:titre, p:éditeur, u:URL } } ; chaque valeur chiffrée cite une clé (règle 1)
      sections                   fiche : [{ title, rows:[[libellé, valeur, clé de source]] }] ; « ≈ » pour l'approximatif (règle 2)
@@ -680,6 +683,7 @@ var MISSIONS = [
     model:{ src:'NASA 3D Resources, « Mars Reconnaissance Orbiter (MRO) (A) »', license:'NASA, usage libre (conditions d\'utilisation des médias de la NASA)', u:'https://github.com/nasa/NASA-3D-Resources' },
     body:{ name:'Mars', tex:'mars', nadir:[0, -1, 0] },
     view:{ az:0.55, el:0.22, dist:1.7 }, sun:[0.6, 0.7, 0.4],
+    real:{ key:'mro-ctx', alt:"Extrait d'une image CTX de la surface de Mars" },
     desc:"Lancée en 2005, MRO tourne autour de Mars sur une orbite basse presque polaire. Sa caméra HiRISE voit des détails de la taille d'une table, CTX cartographie la planète entière, CRISM en dresse la minéralogie et le radar SHARAD sonde le sous-sol. Elle sert aussi de relais radio aux robots posés sur Mars.",
     checked:'2026-11-23',
     refs:{
@@ -717,6 +721,234 @@ var MISSIONS = [
         ['SHARAD', 'radar de sondage du sous-sol (ASI)', 'kit'] ]},
       { title:'Données dans STAC-PLANET', rows:[
         ['Collections', '34', 'stac'], ['Produits HiRISE (RDR v1.1)', '193 181', 'stac'], ['Produits CTX (EDR)', '164 625', 'stac'] ]}
+    ]
+  },
+  {
+    id:'mex', name:'Mars Express', short:'Mars Express', year:'2003',
+    agency:'ESA',
+    targets:['Mars'],
+    events:[
+      { type:'launch', body:'Terre', date:'2003-06-02', ref:'fs' },
+      { type:'arrival', body:'Mars', date:'2003-12-25', ref:'fs' }
+    ],
+    horizons:'-41', stac:'ode-mars-mex-',
+    file:'models/mex.glb', bytes:1534800, unit:0.008466,   /* antenne grand gain : 189 unités pour 1,6 m */
+    model:{ src:'ESA SCIFLEET, « Mars Express »', license:'ESA, téléchargement et usage libres selon les conditions générales de l\'ESA', u:'https://scifleet.esa.int/' },
+    body:{ name:'Mars', tex:'mars', nadir:[0, 1, 0] },   /* pont supérieur : HRSC, OMEGA et l'ancien emplacement de Beagle 2 */
+    view:{ az:0.7, el:0.3, dist:1.5, r:5.5 }, sun:[0.5, 0.8, 0.4],
+    real:{ key:'mex-img', alt:"Aperçu d'une image HRSC de la surface de Mars" },
+    desc:"Lancée en 2003, Mars Express est la première sonde européenne vers Mars. Sur une orbite allongée et presque polaire, sa caméra HRSC cartographie la planète en couleur et en relief, OMEGA en dresse la minéralogie et le radar MARSIS sonde le sous-sol. Son atterrisseur Beagle 2 n'a jamais donné signe de vie.",
+    checked:'2026-11-23',
+    refs:{
+      sc:{ t:'Mars Express : The spacecraft', p:'ESA', u:'https://www.esa.int/Science_Exploration/Space_Science/Mars_Express/The_spacecraft' },
+      eng:{ t:'Mars Express : Engineering, Table of Facts', p:'ESA', u:'https://sci.esa.int/web/mars-express/31034-engineering' },
+      fs:{ t:'Mars Express factsheet', p:'ESA', u:'https://www.esa.int/Science_Exploration/Space_Science/Mars_Express_factsheet' },
+      inst:{ t:'Mars Express orbiter instruments', p:'ESA', u:'https://www.esa.int/Science_Exploration/Space_Science/Mars_Express/Mars_Express_orbiter_instruments' },
+      hz:{ t:'JPL Horizons, objet -41 (Mars Express), en-tête de l\'objet', p:'NASA JPL', u:'https://ssd.jpl.nasa.gov/horizons/app.html#/' },
+      stac:{ t:'STAC-PLANET, collections ode-mars-mex-* (sonde du 23 novembre 2026)', p:'PDSSP (CNES)', u:'https://stacplanet.pdssp.eu/' }
+    },
+    parts:[
+      { key:'hga', name:'Antenne grand gain', desc:'Parabole fixe sur une face du module, pour les liaisons avec la Terre.',
+        facts:[['Diamètre : 1,6 m', 'sc']] },
+      { key:'solar', name:'Panneaux solaires', desc:'Deux panneaux orientables, repliés au lancement et déployés peu après.',
+        facts:[['Surface : 11,42 m²', 'sc'], ['Plus de 500 W quand Mars est au plus loin du Soleil', 'sc']] },
+      { key:'marsis', name:'Antennes du radar MARSIS', desc:'Longues antennes filaires du radar qui sonde le sous-sol et l\'ionosphère, déployées en orbite.',
+        facts:[['Antenne de 40 m', 'inst']] },
+      { key:'bus', name:'Module et instruments', desc:'Module central, réservoirs, moteur principal (dessous) et, sur le pont supérieur tourné vers Mars, les instruments (HRSC, OMEGA, SPICAM, PFS, ASPERA-3). La maquette ne permet pas de les séparer de façon sûre : ils sont décrits dans « Mission et données ».',
+        facts:[['Module : 1,5 × 1,8 × 1,4 m', 'sc'], ['Moteur principal : 400 N', 'sc']] }
+    ],
+    sections:[
+      { title:'Véhicule', rows:[
+        ['Module', '1,5 × 1,8 × 1,4 m', 'sc'], ['Masse au lancement', '1 223 kg, dont 427 kg d\'ergols', 'eng'],
+        ['Charge scientifique', '116 kg (plus 71 kg pour l\'atterrisseur Beagle 2)', 'eng'], ['Panneaux solaires', '11,42 m²', 'sc'],
+        ['Antenne grand gain', '1,6 m de diamètre', 'sc'] ]},
+      { title:'Mission', rows:[
+        ['Lancement', '2 juin 2003, Soyouz-Fregat, Baïkonour', 'fs'], ['Arrivée à Mars', '25 décembre 2003', 'fs'],
+        ['Beagle 2', 'déclaré perdu le 6 février 2004', 'fs'] ]},
+      { title:'Orbite', rows:[
+        ['Inclinaison', '86,3°', 'hz'], ['Altitude', '258 km au plus près, 11 560 km au plus loin', 'hz'], ['Période', '6 h 43 min', 'hz'] ]},
+      { title:'Instruments', rows:[
+        ['HRSC', 'caméra stéréo couleur : ≈ 10 m par pixel sur toute la planète, 2 m sur des zones choisies', 'inst'],
+        ['OMEGA', 'spectromètre imageur de 0,5 à 5,2 µm (minéralogie)', 'inst'],
+        ['MARSIS', 'radar de sondage du sous-sol, antenne de 40 m', 'inst'],
+        ['SPICAM', 'spectromètre ultraviolet et infrarouge (ozone, vapeur d\'eau)', 'inst'],
+        ['PFS', 'spectromètre de Fourier, de 1,2 à 45 µm (atmosphère)', 'inst'],
+        ['ASPERA-3', 'ions, électrons et atomes neutres énergétiques', 'inst'],
+        ['MaRS', 'radioscience avec le signal de la sonde', 'inst'] ]},
+      { title:'Données dans STAC-PLANET', rows:[
+        ['Collections', '18', 'stac'], ['Produits HRSC (RDR v4)', '62 003', 'stac'], ['Produits OMEGA (EDR)', '35 626', 'stac'] ]}
+    ]
+  },
+  {
+    id:'lro', name:'Lunar Reconnaissance Orbiter', short:'LRO', year:'2009',
+    agency:'NASA (Goddard)',
+    targets:['Lune'],
+    events:[
+      { type:'launch', body:'Terre', date:'2009-06-18', ref:'nssdc' },
+      { type:'arrival', body:'Lune', date:'2009-06-23', ref:'nssdc' }
+    ],
+    horizons:'-85', stac:'ode-moon-lro-',
+    file:'models/lro.glb', bytes:368104, unit:1,   /* unités ≈ mètres : panneau de 4,2 × 2,8 unités pour ≈ 4,3 × 3,2 m annoncés */
+    model:{ src:'NASA 3D Resources, « Lunar Reconnaissance Orbiter (B) »', license:'NASA, usage libre (conditions d\'utilisation des médias de la NASA)', u:'https://github.com/nasa/NASA-3D-Resources' },
+    body:{ name:'Lune', tex:'moon', nadir:[0, 1, 0] },   /* pont des instruments (caméras LROC NAC), à l'opposé du moteur */
+    view:{ az:0.9, el:0.25, dist:1.5 }, sun:[0.6, 0.6, 0.5],
+    real:{ key:'lro-img', alt:"Aperçu d'une mosaïque LROC de la surface de la Lune" },
+    desc:"Lancée en 2009, LRO cartographie la Lune depuis une orbite polaire basse. Ses caméras LROC distinguent des détails d'un mètre, LOLA mesure le relief au laser, Diviner les températures et LEND cherche l'hydrogène des glaces polaires. Elle a photographié les sites d'atterrissage des missions Apollo.",
+    checked:'2026-11-23',
+    refs:{
+      kit:{ t:'LRO/LCROSS Press Kit (juin 2009), copie de l\'archive web de l\'université de North Texas', p:'NASA', u:'https://webarchive.library.unt.edu/web/20090922191046/http://lro.gsfc.nasa.gov/images/LRO_LCROSS_presskit.pdf' },
+      nssdc:{ t:'Lunar Reconnaissance Orbiter (2009-031A)', p:'NASA NSSDCA', u:'https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=2009-031A' },
+      fs:{ t:'Lunar Reconnaissance Orbiter, NASA Facts FS-2013-04-025-GSFC', p:'NASA', u:'https://science.nasa.gov/wp-content/uploads/2024/01/lro-fact-sheet-bdf26a.pdf' },
+      hz:{ t:'JPL Horizons, objet -85 (LRO), en-tête de l\'objet', p:'NASA JPL', u:'https://ssd.jpl.nasa.gov/horizons/app.html#/' },
+      stac:{ t:'STAC-PLANET, collections ode-moon-lro-* (sonde du 23 novembre 2026)', p:'PDSSP (CNES)', u:'https://stacplanet.pdssp.eu/' }
+    },
+    parts:[
+      { key:'hga', name:'Antenne grand gain', desc:'Parabole en bandes S et Ka au bout d\'un mât articulé, pour envoyer les données vers la Terre.',
+        facts:[['Déployée, elle s\'écarte de ≈ 2,6 m du module (102 pouces)', 'kit'], ['Débit vers la Terre : 100 Mbit/s', 'kit']] },
+      { key:'solar', name:'Panneau solaire', desc:'Trois panneaux articulés d\'un seul côté de la sonde.',
+        facts:[['Déployé : ≈ 4,3 × 3,2 m (168 × 126 pouces)', 'kit'], ['Puissance de la sonde : 685 W', 'kit']] },
+      { key:'bus', name:'Module et instruments', desc:'Module, réservoirs, moteurs et, sur le pont tourné vers la Lune, les sept instruments (LROC, LOLA, Diviner, LAMP, LEND, CRaTER, Mini-RF). La maquette ne permet pas de les séparer de façon sûre : ils sont décrits dans « Mission et données ».',
+        facts:[['Masse sèche : 1 018 kg', 'kit']] }
+    ],
+    sections:[
+      { title:'Véhicule', rows:[
+        ['Masse au lancement', '1 916 kg, dont 898 kg d\'ergols', 'kit'], ['Puissance', '685 W', 'kit'],
+        ['Panneau solaire déployé', '≈ 4,3 × 3,2 m', 'kit'], ['Construction', 'NASA Goddard Space Flight Center', 'kit'] ]},
+      { title:'Mission', rows:[
+        ['Lancement', '18 juin 2009, Atlas V, avec LCROSS', 'nssdc'], ['Arrivée à la Lune', '23 juin 2009', 'nssdc'],
+        ['Phase scientifique', 'depuis septembre 2010', 'nssdc'] ]},
+      { title:'Orbite', rows:[
+        ['Type', 'polaire', 'kit'], ['Altitude (première année)', '50 km, circulaire', 'kit'], ['Période', '113 min', 'kit'],
+        ['Depuis septembre 2010', '≈ 30 × 180 km', 'nssdc'] ]},
+      { title:'Instruments', rows:[
+        ['LROC', 'deux caméras à petit champ (détails d\'un mètre sur 10 km de large) et une caméra grand champ couleur', 'kit'],
+        ['LOLA', 'altimètre laser (relief, pentes des sites d\'atterrissage)', 'nssdc'],
+        ['Diviner', 'radiomètre (températures de surface, pièges froids)', 'nssdc'],
+        ['LAMP', 'cartographe en ultraviolet lointain (Lyman alpha)', 'nssdc'],
+        ['LEND', 'détecteur de neutrons (hydrogène, glace), fourni par l\'IKI de Moscou', 'fs'],
+        ['CRaTER', 'télescope à rayons cosmiques (doses de rayonnement)', 'nssdc'],
+        ['Mini-RF', 'radar à synthèse d\'ouverture miniature', 'nssdc'] ]},
+      { title:'Données dans STAC-PLANET', rows:[
+        ['Collections', '77', 'stac'], ['Produits LROC NAC (CDR v4)', '852 485', 'stac'], ['Produits LROC WAC (CDR v4)', '907 272', 'stac'] ]}
+    ]
+  },
+  {
+    id:'cassini', name:'Cassini-Huygens', short:'Cassini', year:'1997',
+    agency:'NASA (JPL), ESA (sonde Huygens) et ASI (antenne grand gain)',
+    targets:['Saturne', 'Titan'],
+    events:[
+      { type:'launch', body:'Terre', date:'1997-10-15', ref:'end' },
+      { type:'flyby', body:'Vénus', date:'1998-04-26', ref:'end' },
+      { type:'flyby', body:'Vénus', date:'1999-06-24', ref:'end' },
+      { type:'flyby', body:'Terre', date:'1999-08-18', ref:'end' },
+      { type:'flyby', body:'Jupiter', date:'2000-12-30', ref:'end' },
+      { type:'orbit', body:'Saturne', date:'2004-07-01', ref:'end' },
+      { type:'landing', body:'Titan', date:'2005-01-14', ref:'end' },
+      { type:'end', body:'Saturne', date:'2017-09-15', ref:'end' }
+    ],
+    horizons:'-82', stac:'vim-cassini-',
+    file:'models/cassini.glb', bytes:692744, unit:1,   /* unités = mètres : antenne grand gain de 4,0 unités pour 4 m */
+    model:{ src:'NASA 3D Resources, « Cassini-Huygens (A) »', license:'NASA, usage libre (conditions d\'utilisation des médias de la NASA)', u:'https://github.com/nasa/NASA-3D-Resources' },
+    body:{ name:'Saturne', tex:'saturn', nadir:[0, 0, 1] },   /* face +Z de la maquette, côté palette de télédétection (repérée à l'œil : schéma de principe) */
+    view:{ az:0.6, el:0.2, dist:1.7, r:8 }, sun:[0.5, 0.7, 0.5],
+    real:{ key:'cassini-img', alt:"Aperçu d'un cube VIMS de Titan", none:"Pas d'aperçu VIMS pour l'instant : le serveur qui publie les aperçus (Université de Nantes) refuse les connexions venant de GitHub Actions, d'où le site télécharge ses données." },
+    desc:"Lancée en 1997, Cassini a tourné autour de Saturne de 2004 à 2017. Elle a largué la sonde européenne Huygens, qui s'est posée sur Titan en 2005, survolé Titan 127 fois et révélé des océans cachés sous la surface de Titan et d'Encelade. Sa mission s'est achevée par une plongée dans Saturne.",
+    checked:'2026-11-23',
+    refs:{
+      end:{ t:'Cassini : End of Mission, Press Kit (septembre 2017)', p:'NASA JPL', u:'https://www.jpl.nasa.gov/news/press_kits/cassiniEndofMission.pdf' },
+      arr:{ t:'Cassini-Huygens Saturn Arrival, Press Kit (juin 2004)', p:'NASA JPL', u:'https://www.jpl.nasa.gov/news/press_kits/cassini-arrival.pdf' },
+      launch:{ t:'Cassini Launch, Press Kit (octobre 1997)', p:'NASA JPL', u:'https://www.jpl.nasa.gov/news/press_kits/cassini.pdf' },
+      hz:{ t:'JPL Horizons, objet -82 (Cassini), en-tête de l\'objet', p:'NASA JPL', u:'https://ssd.jpl.nasa.gov/horizons/app.html#/' },
+      stac:{ t:'STAC-PLANET, collection vim-cassini-vims-ir (sonde du 23 novembre 2026)', p:'PDSSP (CNES)', u:'https://stacplanet.pdssp.eu/' }
+    },
+    parts:[
+      { key:'hga', name:'Antenne grand gain', desc:'Parabole fixe au sommet de la sonde, fournie par l\'Agence spatiale italienne.',
+        facts:[['Diamètre : 4 m', 'arr']] },
+      { key:'mag', name:'Perche du magnétomètre', desc:'Perche déployée en vol, qui éloigne les capteurs du champ magnétique de la sonde.',
+        facts:[['Longueur : 11 m', 'arr']] },
+      { key:'rpws', name:'Antennes du RPWS', desc:'Trois antennes fouets de l\'instrument d\'ondes radio et plasma, déroulées en vol.',
+        facts:[['Longueur de chaque antenne : ≈ 10 m', 'arr']] },
+      { key:'bus', name:'Module, instruments et Huygens', desc:'Pile de modules (équipements, propulsion), deux palettes d\'instruments, trois générateurs à radio-isotopes et, sur le côté, la sonde Huygens. La maquette ne permet pas de les séparer de façon sûre.',
+        facts:[['Hauteur de la sonde : 6,7 m', 'end'], ['Sonde Huygens : 2,7 m de diamètre, 320 kg', 'launch']] }
+    ],
+    sections:[
+      { title:'Véhicule', rows:[
+        ['Dimensions', '6,7 m de haut, 4 m de large', 'end'], ['Masse au lancement', '5 712 kg, avec les ergols et la sonde Huygens', 'end'],
+        ['Masse en fin de mission', '2 125 kg', 'end'], ['Énergie', '885 W (633 W en fin de mission), générateurs à radio-isotopes', 'end'] ]},
+      { title:'Mission', rows:[
+        ['Lancement', '15 octobre 1997, Titan IVB/Centaur', 'end'],
+        ['Survols', 'Vénus (26 avril 1998 et 24 juin 1999), Terre (18 août 1999), Jupiter (30 décembre 2000)', 'end'],
+        ['Arrivée à Saturne', '1er juillet 2004 (TU)', 'end'], ['Huygens', 'larguée le 24 décembre 2004, descente sur Titan le 14 janvier 2005', 'end'],
+        ['Fin de mission', '15 septembre 2017, plongée dans Saturne', 'end'] ]},
+      { title:'Autour de Saturne', rows:[
+        ['Orbites', '293', 'end'], ['Survols ciblés de Titan', '127', 'end'], ['Survols ciblés d\'Encelade', '23', 'end'], ['Images', '453 048', 'end'] ]},
+      { title:'Instruments', rows:[
+        ['ISS', 'caméras grand champ et petit champ', 'end'],
+        ['VIMS', 'spectromètre imageur visible et infrarouge (composition des surfaces et des atmosphères)', 'arr'],
+        ['CIRS', 'spectromètre infrarouge', 'end'], ['UVIS', 'spectrographe imageur ultraviolet', 'end'],
+        ['RADAR', 'radar imageur (surface de Titan)', 'end'], ['RSS', 'radioscience', 'end'],
+        ['CAPS, INMS, CDA, MIMI', 'plasma, ions et neutres, poussières, magnétosphère', 'end'],
+        ['MAG, RPWS', 'champ magnétique, ondes radio et plasma', 'end'] ]},
+      { title:'Données dans STAC-PLANET', rows:[
+        ['Collections', '1 (VIMS, Titan)', 'stac'], ['Cubes VIMS de Titan', '20 672', 'stac'] ]}
+    ]
+  },
+  {
+    id:'messenger', name:'MESSENGER', short:'MESSENGER', year:'2004',
+    agency:'NASA',
+    targets:['Mercure', 'Vénus'],
+    events:[
+      { type:'launch', body:'Terre', date:'2004-08-03', ref:'nssdc' },
+      { type:'flyby', body:'Terre', date:'2005-08-02', ref:'nssdc' },
+      { type:'flyby', body:'Vénus', date:'2006-10-24', ref:'nssdc' },
+      { type:'flyby', body:'Vénus', date:'2007-06-05', ref:'nssdc' },
+      { type:'flyby', body:'Mercure', date:'2008-01-14', ref:'nssdc' },
+      { type:'flyby', body:'Mercure', date:'2008-10-06', ref:'nssdc' },
+      { type:'flyby', body:'Mercure', date:'2009-09-29', ref:'nssdc' },
+      { type:'orbit', body:'Mercure', date:'2011-03-18', ref:'nssdc' },
+      { type:'end', body:'Mercure', date:'2015-04-30', ref:'nssdc' }
+    ],
+    horizons:'-236', stac:'ode-mercury-messenger-',
+    file:'models/messenger.glb', bytes:470964, unit:1,   /* unités ≈ mètres : perche du magnétomètre ≈ 3,6 unités pour 3,6 m */
+    model:{ src:'NASA 3D Resources, « MErcury Surface, Space ENvironment, GEochemistry, and Ranging (MESSENGER) »', license:'NASA, usage libre (conditions d\'utilisation des médias de la NASA)', u:'https://github.com/nasa/NASA-3D-Resources' },
+    body:{ name:'Mercure', tex:'mercury', nadir:[0, -1, 0] },   /* pont inférieur : instruments dans l'anneau d'adaptation (NSSDCA : « bottom deck ») */
+    view:{ az:0.5, el:0.2, dist:1.6 }, sun:[1, 0.3, 0.2],
+    real:{ key:'messenger-img', alt:"Aperçu d'une mosaïque MDIS de la surface de Mercure" },
+    desc:"Lancée en 2004, MESSENGER s'est placée en orbite autour de Mercure en 2011, après six survols de la Terre, de Vénus et de Mercure. Abritée derrière un pare-soleil en tissu céramique, elle a cartographié toute la planète et étudié les composés volatils des cratères polaires toujours à l'ombre, puis s'y est écrasée en 2015.",
+    checked:'2026-11-23',
+    refs:{
+      nssdc:{ t:'MESSENGER (2004-030A)', p:'NASA NSSDCA', u:'https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=2004-030A' },
+      kit:{ t:'MESSENGER Launch Press Kit (août 2004), copie de l\'archive web de l\'université de North Texas', p:'NASA', u:'https://webarchive.library.unt.edu/eot2008/20081102145358/http://www.nasa.gov/pdf/168019main_MESSENGER_71504_PressKit.pdf' },
+      hz:{ t:'JPL Horizons, objet -236 (MESSENGER), en-tête de l\'objet', p:'NASA JPL', u:'https://ssd.jpl.nasa.gov/horizons/app.html#/' },
+      stac:{ t:'STAC-PLANET, collections ode-mercury-messenger-* et ode-venus-messenger-* (sonde du 23 novembre 2026)', p:'PDSSP (CNES)', u:'https://stacplanet.pdssp.eu/' }
+    },
+    parts:[
+      { key:'shade', name:'Pare-soleil', desc:'Écran fixe en tissu céramique, toujours tourné vers le Soleil, derrière lequel s\'abrite le reste de la sonde.',
+        facts:[['≈ 2,5 m de haut, 2 m de large', 'nssdc']] },
+      { key:'solar', name:'Panneaux solaires', desc:'Deux ailes orientables qui dépassent du pare-soleil ; on les incline pour limiter leur échauffement.',
+        facts:[['≈ 6 m de bout en bout', 'nssdc'], ['70 % de réflecteurs, 30 % de cellules', 'nssdc'], ['Puissance nominale en orbite de Mercure : 450 W', 'nssdc']] },
+      { key:'mag', name:'Perche du magnétomètre', desc:'Perche qui porte le magnétomètre loin du module.',
+        facts:[['Longueur : 3,6 m', 'nssdc']] },
+      { key:'bus', name:'Module et instruments', desc:'Module, réservoirs, moteur principal et, sur le pont inférieur, les instruments (MDIS, GRNS, XRS, MLA, MASCS). La maquette ne permet pas de les séparer de façon sûre : ils sont décrits dans « Mission et données ».',
+        facts:[['Module : 1,27 × 1,42 × 1,85 m', 'nssdc'], ['Moteur principal : 645 N', 'nssdc']] }
+    ],
+    sections:[
+      { title:'Véhicule', rows:[
+        ['Module', '1,27 × 1,42 × 1,85 m', 'nssdc'], ['Pare-soleil', '≈ 2,5 m de haut, 2 m de large', 'nssdc'],
+        ['Masse au lancement', '1 093 kg, dont 607,8 kg d\'ergols et d\'hélium', 'nssdc'], ['Puissance en orbite de Mercure', '450 W (nominale)', 'nssdc'] ]},
+      { title:'Mission', rows:[
+        ['Lancement', '3 août 2004, Delta II', 'nssdc'], ['Survols', 'Terre (2 août 2005), Vénus (24 octobre 2006, 5 juin 2007), Mercure (14 janvier 2008, 6 octobre 2008, 29 septembre 2009)', 'nssdc'],
+        ['Mise en orbite de Mercure', '18 mars 2011', 'nssdc'], ['Fin de mission', 'impact sur Mercure le 30 avril 2015', 'nssdc'] ]},
+      { title:'Orbite', rows:[
+        ['Inclinaison', '80°', 'nssdc'], ['Altitude', '200 km au plus près, 15 193 km au plus loin', 'nssdc'], ['Période', '12 h', 'nssdc'] ]},
+      { title:'Instruments', rows:[
+        ['MDIS', 'deux caméras, grand champ et petit champ ; carte stéréo de toute la planète à 250 m par pixel', 'nssdc'],
+        ['GRNS', 'spectromètre gamma et neutrons', 'nssdc'], ['XRS', 'spectromètre X', 'nssdc'],
+        ['MLA', 'altimètre laser', 'nssdc'], ['MASCS', 'spectromètre de l\'atmosphère et de la surface', 'nssdc'],
+        ['EPPS', 'particules énergétiques et plasma', 'nssdc'], ['MAG', 'magnétomètre, au bout de la perche de 3,6 m', 'nssdc'],
+        ['RS', 'radioscience avec le système de télécommunications', 'nssdc'] ]},
+      { title:'Données dans STAC-PLANET', rows:[
+        ['Collections', '100 pour Mercure, 61 pour Vénus', 'stac'], ['Produits MDIS NAC (CDR)', '306 454', 'stac'], ['Produits MDIS WAC (CDR)', '376 105', 'stac'] ]}
     ]
   }
 ];
@@ -765,6 +997,129 @@ var EN_MISSIONS = {
       { title:'Data in STAC-PLANET', rows:[
         ['Collections', '34'], ['HiRISE products (RDR v1.1)', '193,181'], ['CTX products (EDR)', '164,625'] ]}
     ]
+  },
+  mex:{
+    agency:'ESA',
+    desc:"Launched in 2003, Mars Express is Europe's first spacecraft to Mars. From an elongated, nearly polar orbit, its HRSC camera maps the planet in colour and in 3D, OMEGA charts its mineralogy and the MARSIS radar probes the subsurface. Its Beagle 2 lander never made contact.",
+    refs:{ sc:'Mars Express: The spacecraft', eng:'Mars Express: Engineering, Table of Facts', hz:'JPL Horizons, object -41 (Mars Express), object header', stac:'STAC-PLANET, ode-mars-mex-* collections (probe of 23 November 2026)' },
+    model:{ license:'ESA, free to download and use under the ESA terms and conditions' },
+    parts:{
+      hga:{ name:'High-gain antenna', desc:'Fixed dish on one face of the bus, for links with Earth.', facts:['Diameter: 1.6 m'] },
+      solar:{ name:'Solar arrays', desc:'Two steerable arrays, folded at launch and deployed shortly after.', facts:['Area: 11.42 m²', 'More than 500 W when Mars is farthest from the Sun'] },
+      marsis:{ name:'MARSIS radar antennas', desc:'Long wire antennas of the radar that sounds the subsurface and the ionosphere, deployed in orbit.', facts:['40 m antenna'] },
+      bus:{ name:'Bus and instruments', desc:'Central bus, tanks, main engine (underneath) and, on the top deck facing Mars, the instruments (HRSC, OMEGA, SPICAM, PFS, ASPERA-3). The model does not allow them to be separated reliably: they are described under “Mission and data”.', facts:['Bus: 1.5 × 1.8 × 1.4 m', 'Main engine: 400 N'] }
+    },
+    sections:[
+      { title:'Spacecraft', rows:[
+        ['Bus', '1.5 × 1.8 × 1.4 m'], ['Launch mass', '1,223 kg, including 427 kg of propellant'],
+        ['Science payload', '116 kg (and 71 kg for the Beagle 2 lander)'], ['Solar arrays', '11.42 m²'], ['High-gain antenna', '1.6 m in diameter'] ]},
+      { title:'Mission', rows:[
+        ['Launch', '2 June 2003, Soyuz-Fregat, Baikonur'], ['Mars arrival', '25 December 2003'], ['Beagle 2', 'declared lost on 6 February 2004'] ]},
+      { title:'Orbit', rows:[
+        ['Inclination', '86.3°'], ['Altitude', '258 km at closest, 11,560 km at farthest'], ['Period', '6 h 43 min'] ]},
+      { title:'Instruments', rows:[
+        ['HRSC', 'colour stereo camera: ≈ 10 m per pixel over the whole planet, 2 m over selected areas'],
+        ['OMEGA', 'imaging spectrometer, 0.5 to 5.2 µm (mineralogy)'],
+        ['MARSIS', 'subsurface sounding radar, 40 m antenna'],
+        ['SPICAM', 'ultraviolet and infrared spectrometer (ozone, water vapour)'],
+        ['PFS', 'Fourier spectrometer, 1.2 to 45 µm (atmosphere)'],
+        ['ASPERA-3', 'ions, electrons and energetic neutral atoms'],
+        ['MaRS', 'radio science with the spacecraft signal'] ]},
+      { title:'Data in STAC-PLANET', rows:[
+        ['Collections', '18'], ['HRSC products (RDR v4)', '62,003'], ['OMEGA products (EDR)', '35,626'] ]}
+    ]
+  },
+  lro:{
+    agency:'NASA (Goddard)', targets:['Moon'],
+    desc:"Launched in 2009, LRO maps the Moon from a low polar orbit. Its LROC cameras resolve one-metre details, LOLA measures the relief by laser, Diviner the temperatures and LEND looks for hydrogen from polar ice. It has photographed the Apollo landing sites.",
+    refs:{ kit:'LRO/LCROSS Press Kit (June 2009), copy from the University of North Texas web archive', hz:'JPL Horizons, object -85 (LRO), object header', stac:'STAC-PLANET, ode-moon-lro-* collections (probe of 23 November 2026)' },
+    model:{ license:'NASA, free use (NASA media usage guidelines)' },
+    parts:{
+      hga:{ name:'High-gain antenna', desc:'S- and Ka-band dish at the end of an articulated mast, sending the data to Earth.', facts:['Deployed, it reaches ≈ 2.6 m out from the bus (102 inches)', 'Downlink rate: 100 Mbit/s'] },
+      solar:{ name:'Solar array', desc:'Three hinged panels on one side of the spacecraft.', facts:['Deployed: ≈ 4.3 × 3.2 m (168 × 126 inches)', 'Spacecraft power: 685 W'] },
+      bus:{ name:'Bus and instruments', desc:'Bus, tanks, thrusters and, on the Moon-facing deck, the seven instruments (LROC, LOLA, Diviner, LAMP, LEND, CRaTER, Mini-RF). The model does not allow them to be separated reliably: they are described under “Mission and data”.', facts:['Dry mass: 1,018 kg'] }
+    },
+    sections:[
+      { title:'Spacecraft', rows:[
+        ['Launch mass', '1,916 kg, including 898 kg of propellant'], ['Power', '685 W'], ['Deployed solar array', '≈ 4.3 × 3.2 m'], ['Built by', 'NASA Goddard Space Flight Center'] ]},
+      { title:'Mission', rows:[
+        ['Launch', '18 June 2009, Atlas V, with LCROSS'], ['Moon arrival', '23 June 2009'], ['Science phase', 'since September 2010'] ]},
+      { title:'Orbit', rows:[
+        ['Type', 'polar'], ['Altitude (first year)', '50 km, circular'], ['Period', '113 min'], ['Since September 2010', '≈ 30 × 180 km'] ]},
+      { title:'Instruments', rows:[
+        ['LROC', 'two narrow-angle cameras (one-metre details over 10 km wide swaths) and a wide-angle colour camera'],
+        ['LOLA', 'laser altimeter (relief, slopes of landing sites)'],
+        ['Diviner', 'radiometer (surface temperatures, cold traps)'],
+        ['LAMP', 'far-ultraviolet mapper (Lyman alpha)'],
+        ['LEND', 'neutron detector (hydrogen, ice), provided by IKI Moscow'],
+        ['CRaTER', 'cosmic ray telescope (radiation doses)'],
+        ['Mini-RF', 'miniature synthetic aperture radar'] ]},
+      { title:'Data in STAC-PLANET', rows:[
+        ['Collections', '77'], ['LROC NAC products (CDR v4)', '852,485'], ['LROC WAC products (CDR v4)', '907,272'] ]}
+    ]
+  },
+  cassini:{
+    agency:'NASA (JPL), ESA (Huygens probe) and ASI (high-gain antenna)', targets:['Saturn', 'Titan'],
+    desc:"Launched in 1997, Cassini orbited Saturn from 2004 to 2017. It released the European Huygens probe, which descended to Titan in 2005, flew past Titan 127 times and revealed oceans hidden beneath the surfaces of Titan and Enceladus. Its mission ended with a plunge into Saturn.",
+    refs:{ end:'Cassini: End of Mission, Press Kit (September 2017)', arr:'Cassini-Huygens Saturn Arrival, Press Kit (June 2004)', launch:'Cassini Launch, Press Kit (October 1997)', hz:'JPL Horizons, object -82 (Cassini), object header', stac:'STAC-PLANET, vim-cassini-vims-ir collection (probe of 23 November 2026)' },
+    model:{ license:'NASA, free use (NASA media usage guidelines)' },
+    parts:{
+      hga:{ name:'High-gain antenna', desc:'Fixed dish on top of the spacecraft, provided by the Italian Space Agency.', facts:['Diameter: 4 m'] },
+      mag:{ name:'Magnetometer boom', desc:'Boom deployed in flight, holding the sensors away from the spacecraft\'s own magnetic field.', facts:['Length: 11 m'] },
+      rpws:{ name:'RPWS antennas', desc:'Three whip antennas of the radio and plasma wave instrument, unrolled in flight.', facts:['Each antenna: ≈ 10 m long'] },
+      bus:{ name:'Bus, instruments and Huygens', desc:'Stack of modules (equipment, propulsion), two instrument pallets, three radioisotope generators and, on the side, the Huygens probe. The model does not allow them to be separated reliably.', facts:['Spacecraft height: 6.7 m', 'Huygens probe: 2.7 m in diameter, 320 kg'] }
+    },
+    sections:[
+      { title:'Spacecraft', rows:[
+        ['Dimensions', '6.7 m high, 4 m wide'], ['Launch mass', '5,712 kg, with propellant and the Huygens probe'],
+        ['Mass at end of mission', '2,125 kg'], ['Power', '885 W (633 W at end of mission), radioisotope generators'] ]},
+      { title:'Mission', rows:[
+        ['Launch', '15 October 1997, Titan IVB/Centaur'],
+        ['Flybys', 'Venus (26 April 1998 and 24 June 1999), Earth (18 August 1999), Jupiter (30 December 2000)'],
+        ['Saturn arrival', '1 July 2004 (UTC)'], ['Huygens', 'released on 24 December 2004, descent to Titan on 14 January 2005'],
+        ['End of mission', '15 September 2017, plunge into Saturn'] ]},
+      { title:'Around Saturn', rows:[
+        ['Orbits', '293'], ['Targeted Titan flybys', '127'], ['Targeted Enceladus flybys', '23'], ['Images', '453,048'] ]},
+      { title:'Instruments', rows:[
+        ['ISS', 'wide- and narrow-angle cameras'],
+        ['VIMS', 'visible and infrared mapping spectrometer (composition of surfaces and atmospheres)'],
+        ['CIRS', 'infrared spectrometer'], ['UVIS', 'ultraviolet imaging spectrograph'],
+        ['RADAR', 'imaging radar (Titan\'s surface)'], ['RSS', 'radio science'],
+        ['CAPS, INMS, CDA, MIMI', 'plasma, ions and neutrals, dust, magnetosphere'],
+        ['MAG, RPWS', 'magnetic field, radio and plasma waves'] ]},
+      { title:'Data in STAC-PLANET', rows:[
+        ['Collections', '1 (VIMS, Titan)'], ['VIMS cubes of Titan', '20,672'] ]}
+    ]
+  },
+  messenger:{
+    agency:'NASA', targets:['Mercury', 'Venus'],
+    desc:"Launched in 2004, MESSENGER entered orbit around Mercury in 2011, after six flybys of Earth, Venus and Mercury. Sheltered behind a ceramic-fabric sunshade, it mapped the whole planet and studied the volatiles in the permanently shadowed polar craters, then crashed into it in 2015.",
+    refs:{ kit:'MESSENGER Launch Press Kit (August 2004), copy from the University of North Texas web archive', hz:'JPL Horizons, object -236 (MESSENGER), object header', stac:'STAC-PLANET, ode-mercury-messenger-* and ode-venus-messenger-* collections (probe of 23 November 2026)' },
+    model:{ license:'NASA, free use (NASA media usage guidelines)' },
+    parts:{
+      shade:{ name:'Sunshade', desc:'Fixed ceramic-fabric screen, always facing the Sun, sheltering the rest of the spacecraft.', facts:['≈ 2.5 m tall, 2 m wide'] },
+      solar:{ name:'Solar arrays', desc:'Two steerable wings reaching beyond the sunshade; they are tilted to limit their heating.', facts:['≈ 6 m from tip to tip', '70% reflectors, 30% cells', 'Nominal power in Mercury orbit: 450 W'] },
+      mag:{ name:'Magnetometer boom', desc:'Boom holding the magnetometer away from the bus.', facts:['Length: 3.6 m'] },
+      bus:{ name:'Bus and instruments', desc:'Bus, tanks, main engine and, on the bottom deck, the instruments (MDIS, GRNS, XRS, MLA, MASCS). The model does not allow them to be separated reliably: they are described under “Mission and data”.', facts:['Bus: 1.27 × 1.42 × 1.85 m', 'Main engine: 645 N'] }
+    },
+    sections:[
+      { title:'Spacecraft', rows:[
+        ['Bus', '1.27 × 1.42 × 1.85 m'], ['Sunshade', '≈ 2.5 m tall, 2 m wide'],
+        ['Launch mass', '1,093 kg, including 607.8 kg of propellant and helium'], ['Power in Mercury orbit', '450 W (nominal)'] ]},
+      { title:'Mission', rows:[
+        ['Launch', '3 August 2004, Delta II'], ['Flybys', 'Earth (2 August 2005), Venus (24 October 2006, 5 June 2007), Mercury (14 January 2008, 6 October 2008, 29 September 2009)'],
+        ['Mercury orbit insertion', '18 March 2011'], ['End of mission', 'impact on Mercury on 30 April 2015'] ]},
+      { title:'Orbit', rows:[
+        ['Inclination', '80°'], ['Altitude', '200 km at closest, 15,193 km at farthest'], ['Period', '12 h'] ]},
+      { title:'Instruments', rows:[
+        ['MDIS', 'two cameras, wide and narrow angle; stereo map of the whole planet at 250 m per pixel'],
+        ['GRNS', 'gamma-ray and neutron spectrometer'], ['XRS', 'X-ray spectrometer'],
+        ['MLA', 'laser altimeter'], ['MASCS', 'atmospheric and surface composition spectrometer'],
+        ['EPPS', 'energetic particles and plasma'], ['MAG', 'magnetometer, at the end of the 3.6 m boom'],
+        ['RS', 'radio science with the telecommunications system'] ]},
+      { title:'Data in STAC-PLANET', rows:[
+        ['Collections', '100 for Mercury, 61 for Venus'], ['MDIS NAC products (CDR)', '306,454'], ['MDIS WAC products (CDR)', '376,105'] ]}
+    ]
   }
 };
 
@@ -791,6 +1146,23 @@ var EN_UI = {
   "La maquette n'a pas pu être chargée.":"The model could not be loaded.",
   "Trajectoire pas encore téléchargée (workflow « Données réelles »).":"Trajectory not downloaded yet (“Real data” workflow).",
   "Trajectoire de croisière vue du pôle nord de l'écliptique":"Cruise trajectory seen from the north ecliptic pole",
+  "Solar System Scope, texture « Lune » 2k, d'après des données de la NASA":'Solar System Scope, 2k “Moon” texture, based on NASA data',
+  "Solar System Scope, texture « Mercure » 2k, d'après des données de la NASA":'Solar System Scope, 2k “Mercury” texture, based on NASA data',
+  "Solar System Scope, texture « Saturne » 2k, d'après des données de la NASA":'Solar System Scope, 2k “Saturn” texture, based on NASA data',
+  'JPL Horizons (ssd.jpl.nasa.gov), vecteurs géocentriques, écliptique J2000, UA':'JPL Horizons (ssd.jpl.nasa.gov), geocentric vectors, ecliptic J2000, astronomical units',
+  "Terre":"Earth", "Lune":"Moon", "Mercure":"Mercury", "Vénus":"Venus", "Saturne":"Saturn", "Jupiter":"Jupiter", "Titan":"Titan",
+  "survol":"flyby", "au départ":"at departure",
+  "positions":"positions", "une":"one",
+  "centrée sur le Soleil":"centred on the Sun", "centrée sur la Terre":"centred on Earth",
+  "Trajectoire vers la Lune autour de la Terre, vue du pôle nord de l'écliptique":"Trajectory to the Moon around Earth, seen from the north ecliptic pole",
+  "Aperçu d'une image HRSC de la surface de Mars":"Preview of an HRSC image of the surface of Mars",
+  "Aperçu d'une mosaïque LROC de la surface de la Lune":"Preview of an LROC mosaic of the surface of the Moon",
+  "Aperçu d'une mosaïque MDIS de la surface de Mercure":"Preview of an MDIS mosaic of the surface of Mercury",
+  "Aperçu d'un cube VIMS de Titan":"Preview of a VIMS cube of Titan",
+  "PDS Geosciences Node (NASA), via le catalogue STAC-PLANET du PDSSP":"PDS Geosciences Node (NASA), via the PDSSP STAC-PLANET catalogue",
+  "PDS de LROC (Arizona State University), via le catalogue STAC-PLANET du PDSSP":"LROC PDS (Arizona State University), via the PDSSP STAC-PLANET catalogue",
+  "Université de Nantes (aperçus VIMS), via le catalogue STAC-PLANET du PDSSP":"University of Nantes (VIMS previews), via the PDSSP STAC-PLANET catalogue",
+  "Pas d'aperçu VIMS pour l'instant : le serveur qui publie les aperçus (Université de Nantes) refuse les connexions venant de GitHub Actions, d'où le site télécharge ses données.":"No VIMS preview yet: the server that publishes the previews (University of Nantes) refuses connections from GitHub Actions, where the site downloads its data.",
   "Terre au départ":"Earth at departure",
   "Mars":"Mars",
   "à l'arrivée":"at arrival",
@@ -838,7 +1210,7 @@ var OBS_T = function(s){ return s; }, OBS_I18N = { static:function(){} };
   MISSIONS.forEach(function(m){
     var e = EN_MISSIONS[m.id]; if (!e) return;
     var frSec = m.sections;
-    ['name','agency','desc','sections'].forEach(function(k){ if (e[k]) m[k] = e[k]; });
+    ['name','agency','desc','sections','targets'].forEach(function(k){ if (e[k]) m[k] = e[k]; });
     (m.sections || []).forEach(function(sec, i){ sec.rows.forEach(function(r, j){ var o = frSec && frSec[i] && frSec[i].rows[j]; if (o && o[2]) r[2] = o[2]; }); });
     if (e.refs) Object.keys(e.refs).forEach(function(k){ if (m.refs[k]) m.refs[k].t = e.refs[k]; });
     if (e.model) m.model.license = e.model.license;
@@ -869,7 +1241,7 @@ function setBody(t, R){
   if (globe){ scene.remove(globe); globe = null; }
   var meta = t.body && (window.DATA_FILES || {})['tex-' + t.body.tex];
   if (!meta) return false;
-  var rb = R * 30, n = new THREE.Vector3().fromArray(t.body.nadir).normalize();
+  var rb = R * 30, n = new THREE.Vector3(0, -1, 0);   /* nadir ramené vers le bas par prepare() */
   var tex = new THREE.TextureLoader().load('data/tex-' + t.body.tex + '.jpg'); tex.encoding = THREE.sRGBEncoding; tex.anisotropy = 4;
   globe = new THREE.Mesh(new THREE.SphereGeometry(rb, 96, 48), new THREE.MeshStandardMaterial({ map:tex, color:0x9a9a9a, roughness:1, metalness:0 }));
   globe.position.copy(n).multiplyScalar(rb + R * 2.4);
@@ -920,9 +1292,13 @@ function prepare(t, gltf){
   });
   inner.updateMatrixWorld(true);
   var box = new THREE.Box3().setFromObject(inner), size = box.getSize(new THREE.Vector3()), ctr = box.getCenter(new THREE.Vector3());
-  var s = t.axis ? t.size / size[t.axis] : 1;
+  if (t.view && t.view.r){   /* longues antennes : on centre sur le module (pièce « bus ») plutôt que sur la boîte entière */
+    var bb = new THREE.Box3(); inner.traverse(function(o){ if (!o.isMesh) return; for (var p = o; p && p !== inner; p = p.parent) if (/^bus(_\d+)?$/.test(p.name || '')){ bb.expandByObject(o); return; } });
+    if (!bb.isEmpty()) bb.getCenter(ctr);
+  }
+  var s = t.unit || (t.axis ? t.size / size[t.axis] : 1);   /* unit : mètres par unité de la maquette ; sinon size le long de axis */
   inner.scale.setScalar(s); inner.position.copy(ctr).multiplyScalar(-s); root.add(inner); root.updateMatrixWorld(true);
-  var R = { root:root, radius:size.length() * s / 2, meshes:[], parts:{} };
+  var R = { root:root, radius:(t.view && t.view.r) || size.length() * s / 2, meshes:[], parts:{} };   /* view.r : rayon de cadrage (antennes très longues exclues) */
   t.parts.forEach(function(p){ R.parts[p.key] = { meshes:[], box:new THREE.Box3() }; });
   inner.traverse(function(o){
     if (!o.isMesh) return;
@@ -934,6 +1310,9 @@ function prepare(t, gltf){
   for (var k in R.parts){ var P = R.parts[k]; if (P.box.isEmpty()) continue;
     var dir = P.box.getCenter(new THREE.Vector3()); if (dir.length() < R.radius * 0.15) dir.set(0, 0, 0); else dir.normalize().multiplyScalar(R.radius * 0.5);
     P.meshes.forEach(function(o){ o.userData.base = o.position.clone(); o.userData.ex = dir.clone().divideScalar(s); }); }   /* nœuds de la maquette sans rotation propre (seg_lib.js) */
+  /* la maquette est tournée pour que le côté des instruments (nadir) regarde vers le bas : le corps survolé est toujours sous la sonde */
+  R.q = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3().fromArray(t.body ? t.body.nadir : [0, -1, 0]).normalize(), new THREE.Vector3(0, -1, 0));
+  var top = new THREE.Group(); top.quaternion.copy(R.q); top.add(root); R.root = top;
   return R;
 }
 function highlight(){
@@ -962,7 +1341,7 @@ function open(el, t, o){
   sel = null; hov = null; ex = 0;
   if (M) scene.remove(M.root);
   var show = function(R){ M = R; scene.add(M.root); C.az = t.view.az; C.el = t.view.el; C.dist = M.radius * 2 * t.view.dist;
-    key.position.fromArray(t.sun).multiplyScalar(M.radius * 4); fill.position.set(-0.6, -0.2, -0.5); highlight();
+    key.position.fromArray(t.sun).applyQuaternion(M.q).multiplyScalar(M.radius * 4); fill.position.set(-0.6, -0.2, -0.5); highlight();
     var hasBody = setBody(t, M.radius); camera.far = M.radius * 200; camera.updateProjectionMatrix();
     if (opts.onState) opts.onState('ready', hasBody); };
   if (models[t.id]) return show(models[t.id]);
@@ -1080,30 +1459,44 @@ function hzDate(s){   /* « 2005-Aug-13 » (Horizons) → date lisible dans la l
   var m = /^(\d{4})-(\w{3})-(\d{2})/.exec(s); if (!m) return s;
   return new Date(Date.UTC(+m[1], MON[m[2]] - 1, +m[3])).toLocaleDateString(OBS_LANG === 'en' ? 'en-GB' : 'fr-FR', { day:'numeric', month:'long', year:'numeric', timeZone:'UTC' });
 }
+var BODY_COL = { 'Terre':'#6FA8FF', 'Mars':'#E07A4F', 'Vénus':'#E8C26A', 'Mercure':'#B9B2A8', 'Jupiter':'#D9A66B', 'Saturne':'#E6D08A', 'Lune':'#C8C8C8' };
+var STEP = { '1 d':['position par jour', 'position per day'], '2 d':['position tous les 2 jours', 'position every 2 days'], '1 h':['position par heure', 'position per hour'] };
 function trajSvg(m){
   var d = (window.DATA_FILES || {})[m.id + '-traj']; if (!d) return '<p class="note">' + T('Trajectoire pas encore téléchargée (workflow « Données réelles »).') + '</p>';
-  var W = 520, c = W/2, S = W/2/1.75;   /* échelle : 1,75 UA au bord */
-  function path(a){ return a.map(function(p, i){ return (i ? 'L' : 'M') + (c + p[1]*S).toFixed(1) + ' ' + (c - p[2]*S).toFixed(1); }).join(''); }
-  var pr = d.probe, a = pr[0], b = pr[pr.length - 1];
-  var dot = function(p, r, cl){ return '<circle cx="' + (c + p[1]*S).toFixed(1) + '" cy="' + (c - p[2]*S).toFixed(1) + '" r="' + r + '" class="' + cl + '"/>'; };
-  var near = function(arr, date){ for (var i = 0; i < arr.length; i++) if (arr[i][0] >= date) return arr[i]; return arr[arr.length - 1]; };
-  var ea = near(d.earth, a[0]), mb = near(d.target.orbit, b[0]);
-  return '<figure class="traj"><svg viewBox="0 0 ' + W + ' ' + W + '" role="img" aria-label="' + T('Trajectoire de croisière vue du pôle nord de l\'écliptique') + '">' +
-    '<circle cx="' + c + '" cy="' + c + '" r="6" class="sun"/>' +
-    '<path d="' + path(d.earth) + '" class="orb-e"/><path d="' + path(d.target.orbit) + '" class="orb-t"/><path d="' + path(pr) + '" class="orb-p"/>' +
-    dot(ea, 4, 'pt-e') + dot(mb, 4, 'pt-t') +
-    '<text x="' + (c + ea[1]*S + 8).toFixed(0) + '" y="' + (c - ea[2]*S + 14).toFixed(0) + '">' + T('Terre au départ') + '</text>' +
-    '<text x="' + (c + mb[1]*S + 8).toFixed(0) + '" y="' + (c - mb[2]*S).toFixed(0) + '">' + T(d.target.name) + ' ' + T('à l\'arrivée') + '</text>' +
-    '</svg><figcaption>' + T('Croisière du') + ' ' + esc(hzDate(a[0])) + ' ' + T('au') + ' ' + esc(hzDate(b[0])) + ' (' + pr.length + ' ' + T('positions quotidiennes') + '). ' +
+  var bodies = d.bodies || [{ name:'Terre', orbit:d.earth, marks:[] }, { name:d.target.name, orbit:d.target.orbit, marks:[] }];
+  var pr = d.probe, a = pr[0], b = pr[pr.length - 1], R = 0;
+  pr.concat.apply(pr, bodies.map(function(o){ return o.orbit; })).forEach(function(p){ R = Math.max(R, Math.hypot(p[1], p[2])); });
+  var W = 520, c = W/2, S = (W/2 - 26) / R;   /* échelle : l'orbite la plus grande touche presque le bord */
+  var X = function(p){ return (c + p[1]*S).toFixed(1); }, Y = function(p){ return (c - p[2]*S).toFixed(1); };
+  function path(arr){ return arr.map(function(p, i){ return (i ? 'L' : 'M') + X(p) + ' ' + Y(p); }).join(''); }
+  var role = { depart:'au départ', survol:'survol', arrivee:'à l\'arrivée' }, svg = '', lab = '';
+  bodies.forEach(function(o, i){
+    var col = BODY_COL[o.name] || '#9FB3C8';
+    svg += '<path d="' + path(o.orbit) + '" class="orb-b" style="stroke:' + col + '"/>';
+    (o.marks || []).forEach(function(k, j){
+      svg += '<circle cx="' + X([0, k[2], k[3]]) + '" cy="' + Y([0, k[2], k[3]]) + '" r="' + (k[1] === 'survol' ? 3 : 4.5) + '" style="fill:' + col + '"/>';
+      if (j === 0 || k[1] !== 'survol') lab += '<text x="' + (+X([0, k[2], k[3]]) + 7).toFixed(0) + '" y="' + (+Y([0, k[2], k[3]]) + 4 + 12 * j).toFixed(0) + '">' + T(o.name) + (k[1] === 'survol' ? ' (' + T('survol') + ')' : ' ' + T(role[k[1]])) + '</text>';
+    });
+  });
+  var center = d.center === 'Terre' ? '<circle cx="' + c + '" cy="' + c + '" r="5" class="pt-e"/>' : '<circle cx="' + c + '" cy="' + c + '" r="6" class="sun"/>';
+  var step = STEP[d.step || '1 d'] || [d.step, d.step];
+  return '<figure class="traj"><svg viewBox="0 0 ' + W + ' ' + W + '" role="img" aria-label="' + T(d.center === 'Terre' ? 'Trajectoire vers la Lune autour de la Terre, vue du pôle nord de l\'écliptique' : 'Trajectoire de croisière vue du pôle nord de l\'écliptique') + '">' +
+    center + svg + '<path d="' + path(pr) + '" class="orb-p"/>' + lab + '</svg><figcaption>' +
+    T('Croisière du') + ' ' + esc(hzDate(a[0])) + ' ' + T('au') + ' ' + esc(hzDate(b[0])) + ' (' + pr.length + ' ' + T('positions') + ', ' + T('une') + ' ' + (OBS_LANG === 'en' ? step[1] : step[0]).replace(/^position /, '') + '), ' +
+    T(d.center === 'Terre' ? 'centrée sur la Terre' : 'centrée sur le Soleil') + '. ' +
     T('Source') + (OBS_LANG === 'en' ? ': ' : ' : ') + esc(T(d.source)) + ', ' + T('objet') + ' ' + esc(d.horizons) + ', ' + T('téléchargé le') + ' ' + esc(d.fetched) + '.</figcaption></figure>';
 }
 function realData(m){
-  var d = (window.DATA_FILES || {})[m.id + '-ctx']; if (!d) return '<p class="note">' + T('Aucune donnée réelle téléchargée pour l\'instant.') + '</p>';
-  return '<figure class="real"><img src="data/' + m.id + '-ctx.jpg" width="900" height="900" alt="' + T('Extrait d\'une image CTX de la surface de Mars') + ' (' + esc(d.product) + ')">' +
-    '<figcaption><strong>' + esc(d.instrument) + ' · ' + esc(d.product) + '</strong><br>' + T('Prise le') + ' ' + esc(String(d.datetime).slice(0, 10)) + '. ' +
-    (OBS_LANG === 'en' ? 'Central square of the ' + d.full_size[0] + ' × ' + d.full_size[1] + ' pixel strip (' + d.crop_px + ' pixels wide), scaled to ' + d.out_px + ' × ' + d.out_px
-                       : 'Carré central de la bande de ' + d.full_size[0] + ' × ' + d.full_size[1] + ' pixels (' + d.crop_px + ' pixels de côté), ramené à ' + d.out_px + ' × ' + d.out_px) +
-    (d.stretch ? (OBS_LANG === 'en' ? ', contrast stretched between the ' + d.stretch[0] + ' and ' + d.stretch[1] + ' percentiles' : ', contraste étiré entre les centiles ' + OBS_NUM(String(d.stretch[0]).replace('.', ',')) + ' et ' + OBS_NUM(String(d.stretch[1]).replace('.', ','))) : '') + '.<br>' +
+  var key = m.real && m.real.key, d = key && (window.DATA_FILES || {})[key];
+  if (!d) return '<p class="note">' + T(m.real && m.real.none || 'Aucune donnée réelle téléchargée pour l\'instant.') + '</p>';
+  var out = d.out_size || [d.out_px, d.out_px], en = OBS_LANG === 'en';
+  var how = d.crop_px ? (en ? 'Central square of the ' + d.full_size[0] + ' × ' + d.full_size[1] + ' pixel strip (' + d.crop_px + ' pixels wide), scaled to ' + out[0] + ' × ' + out[1]
+                            : 'Carré central de la bande de ' + d.full_size[0] + ' × ' + d.full_size[1] + ' pixels (' + d.crop_px + ' pixels de côté), ramené à ' + out[0] + ' × ' + out[1])
+                      : (en ? 'Whole preview published by the archive (' + d.full_size[0] + ' × ' + d.full_size[1] + ' pixels)' + (out[0] !== d.full_size[0] ? ', scaled to ' + out[0] + ' × ' + out[1] : '')
+                            : 'Aperçu entier publié par l\'archive (' + d.full_size[0] + ' × ' + d.full_size[1] + ' pixels)' + (out[0] !== d.full_size[0] ? ', ramené à ' + out[0] + ' × ' + out[1] : ''));
+  return '<figure class="real"><img src="data/' + key + '.jpg" width="' + out[0] + '" height="' + out[1] + '" alt="' + T(m.real.alt) + ' (' + esc(d.product) + ')">' +
+    '<figcaption><strong>' + esc(d.instrument) + ' · ' + esc(d.product) + '</strong><br>' + T('Prise le') + ' ' + esc(String(d.datetime).slice(0, 10)) + '. ' + how +
+    (d.stretch ? (en ? ', contrast stretched between the ' + d.stretch[0] + ' and ' + d.stretch[1] + ' percentiles' : ', contraste étiré entre les centiles ' + OBS_NUM(String(d.stretch[0]).replace('.', ',')) + ' et ' + OBS_NUM(String(d.stretch[1]).replace('.', ','))) : '') + '.<br>' +
     T('Archive') + ' : ' + T(d.archive) + ' · ' + T('collection') + ' <code>' + esc(d.collection) + '</code> · <a href="' + esc(d.href) + '" rel="noopener" target="_blank">' + T('aperçu d\'origine') + '</a> · ' + T('téléchargé le') + ' ' + esc(d.fetched) + '</figcaption></figure>';
 }
 function dataPage(m){
