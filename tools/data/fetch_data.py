@@ -38,21 +38,28 @@ def mro_ctx():
         print("mro_ctx :", f["id"], p.get("datetime"), w, "×", h); return
     raise RuntimeError("aucun aperçu CTX récupéré")
 
-def browse(mid, collection, instrument, archive, max_px=900, stretch=None, roles=("thumbnail",)):
+def browse(mid, collection, instrument, archive, max_px=900, stretch=None, roles=("thumbnail",), skip=None, min_px=0, alt=None):
     """Aperçu publié par l'archive (asset « thumbnail » JPEG ou PNG) de l'item le plus récent qui a une emprise,
     entier, ramené à max_px de côté au plus ; contraste étiré seulement si stretch est donné (signalé dans la légende)."""
     for f in stac_items(collection):
-        if not f.get("geometry"): continue
+        if not f.get("geometry") or (skip and re.search(skip, f["id"])): continue
         th = [a for a in f["assets"].values() if set(roles) & set(a.get("roles") or []) and re.search(r"image/(jpeg|png)", a.get("type") or "")]
         if not th: continue
-        r = S.get(th[0]["href"], timeout=300)
-        if not r.ok: print("  aperçu indisponible", r.status_code, th[0]["href"]); continue
-        im = Image.open(io.BytesIO(r.content)); im = im.convert("L") if im.mode in ("L", "LA", "I", "I;16", "P") and not im.getpalette() else im.convert("RGB")
+        href = th[0]["href"]
+        if alt:   # variante plus grande du même aperçu publiée par l'archive (ex. dossier « large » au lieu de « small »), essayée d'abord
+            r = S.get(re.sub(alt[0], alt[1], href), timeout=300)
+            if r.ok and r.headers.get("content-type", "").startswith("image/"): href = r.url
+            else: r = S.get(href, timeout=300)
+        else: r = S.get(href, timeout=300)
+        if not r.ok: print("  aperçu indisponible", r.status_code, href); continue
+        im = Image.open(io.BytesIO(r.content))
+        if max(im.size) < min_px: print("  aperçu trop petit", im.size, href); continue
+        im = im.convert("L") if im.mode in ("L", "LA", "I", "I;16", "P") and not im.getpalette() else im.convert("RGB")
         w, h = im.size; k = min(1.0, max_px / max(w, h)); out = im.resize((max(1, round(w * k)), max(1, round(h * k))), Image.LANCZOS) if k < 1 else im
         if stretch: out = ImageOps.autocontrast(out, cutoff=stretch)
         out.save(os.path.join(DATA, mid + "-img.jpg"), quality=84, optimize=True)
         p = f["properties"]
-        meta = {"archive": archive, "collection": f.get("collection"), "product": f["id"], "datetime": p.get("datetime"), "href": th[0]["href"],
+        meta = {"archive": archive, "collection": f.get("collection"), "product": f["id"], "datetime": p.get("datetime"), "href": href,
                 "stac": STAC + "/collections/" + f.get("collection", "") + "/items/" + f["id"], "instrument": instrument,
                 "full_size": [w, h], "out_size": list(out.size), "stretch": [stretch, 100 - stretch] if stretch else None,
                 "footprint": f.get("geometry"), "fetched": datetime.date.today().isoformat()}
@@ -63,11 +70,16 @@ def browse(mid, collection, instrument, archive, max_px=900, stretch=None, roles
 def mex_hrsc(): browse("mex", "ode-mars-mex-hrsc-rdrv4", "HRSC", "PDS Geosciences Node (NASA), via le catalogue STAC-PLANET du PDSSP")
 def lro_lroc(): browse("lro", "ode-moon-lro-lroc-bdrroi", "LROC NAC", "PDS de LROC (Arizona State University), via le catalogue STAC-PLANET du PDSSP")
 def messenger_mdis(): browse("messenger", "ode-mercury-messenger-mdis-nac-rtmnac", "MDIS NAC", "PDS Imaging Node (NASA), via le catalogue STAC-PLANET du PDSSP")
-def ody_themis(): browse("ody", "ode-mars-ody-themis-vgeo2", "THEMIS VIS", "Arizona State University (THEMIS), via le catalogue STAC-PLANET du PDSSP")
+def ody_themis(): browse("ody", "ode-mars-ody-themis-vgeo2", "THEMIS VIS", "Arizona State University (THEMIS), via le catalogue STAC-PLANET du PDSSP", stretch=0.5, skip=r"POL$")
 def mgs_moc(): browse("mgs", "ode-mars-mgs-moc-na-wa-nasdp", "MOC NA", "PDS Imaging Node (NASA), via le catalogue STAC-PLANET du PDSSP")
 def tgo_cassis(): browse("tgo", "ode-mars-em16tgo-cassis-calsc", "CaSSIS", "Planetary Science Archive (ESA), via le catalogue STAC-PLANET du PDSSP", roles=("thumbnail", "overview"))
-def clem_uvvis(): browse("clem", "ode-moon-clem-uvvis-mdim", "UVVIS", "PDS Imaging Node (NASA), via le catalogue STAC-PLANET du PDSSP", roles=("thumbnail", "overview", "browse"))
-def mgn_sar(): browse("mgn", "ode-venus-mgn-rdrs-fmidr", "SAR", "PDS Imaging Node (NASA), via le catalogue STAC-PLANET du PDSSP", roles=("thumbnail", "overview", "browse"))
+def clem_uvvis():
+    for c in ("ode-moon-clem-uvvis-mdim", "ode-moon-clem-hires-mdim", "ode-moon-clem-nir-mdim"):
+        try: return browse("clem", c, "UVVIS" if "uvvis" in c else "HIRES" if "hires" in c else "NIR", "PDS Geosciences Node (NASA), via le catalogue STAC-PLANET du PDSSP",
+                           roles=("thumbnail", "overview", "browse"), min_px=300, alt=(r"/small/", "/large/"))
+        except RuntimeError as e: print(" ", e)
+    raise RuntimeError("aucun aperçu Clementine assez grand")
+def mgn_sar(): browse("mgn", "ode-venus-mgn-rdrs-fmidr", "SAR", "PDS Geosciences Node (NASA), via le catalogue STAC-PLANET du PDSSP", roles=("thumbnail", "overview", "browse"))
 def cassini_vims(): browse("cassini", "vim-cassini-vims-ir", "VIMS", "Université de Nantes (aperçus VIMS), via le catalogue STAC-PLANET du PDSSP")
 
 # fonds des corps (vue 3D : le corps observé sous la sonde) : textures globales sous licence ouverte, créditées à côté de l'image (règle 8)

@@ -29,7 +29,9 @@ for k, c in SC.items():
     print(k, c, "OK" if h else "ÉCHEC", flush=True)
     if not h: continue
     open(f"{OUT}/{k}.html", "w").write(h); open(f"{OUT}/{k}.txt", "w").write(text(h))
-    for e in sorted(set(re.findall(r"experiment/display\.action\?id=([0-9A-Z-]+)", h))):
+    lh = get(BASE + "spacecraft/displayExperiment.action?spacecraftId=" + c) or ""   # liste des expériences de la sonde
+    if lh: open(f"{OUT}/{k}_exps.txt", "w").write(text(lh))
+    for e in sorted(set(re.findall(r"experiment/display\.action\?id=([0-9A-Z-]+)", h + lh))):
         time.sleep(2)
         eh = get(BASE + "experiment/display.action?id=" + e)
         print("  ", e, "OK" if eh else "ÉCHEC", flush=True)
