@@ -570,7 +570,8 @@ svg.optic g.hl{ filter:drop-shadow(0 0 2px var(--mark)) drop-shadow(0 0 4px var(
   #top{ flex-wrap:wrap; row-gap:0; }
   #views{ margin-left:auto; }
   #tabs{ order:5; flex:0 0 calc(100% + var(--gl) + var(--gr)); margin:0 calc(-1 * var(--gr)) 0 calc(-1 * var(--gl)); border-top:1px solid var(--rule); padding-left:var(--gl); }
-  #tabs .trow{ justify-content:flex-start; }
+  #tabs .trow, #tabs .drow{ justify-content:flex-start; }
+  #tabs .drow{ padding-top:4px; }
   #tabs .tab{ margin-top:0; padding-top:7px; padding-bottom:7px; }
   #tabs .tab:first-child{ border-left:0; }
 }
@@ -610,6 +611,7 @@ svg.optic g.hl{ filter:drop-shadow(0 0 2px var(--mark)) drop-shadow(0 0 4px var(
 .part-body{ font-size:13.5px; line-height:1.45; color:var(--ink-2); padding:4px 2px 10px; }
 .note{ font-size:12px; color:var(--ink-2); margin-top:14px; }
 .sk.wide{ max-width:960px; }
+.sk.full{ max-width:none; }
 .crumb{ margin:0; font-size:13px; } .crumb a{ color:var(--ink-2); }
 .traj svg{ width:100%; max-width:520px; height:auto; background:var(--black); display:block; }
 .traj .sun{ fill:#FFD21F; } .traj .orb-e{ fill:none; stroke:#6FA8FF; stroke-width:1.2; } .traj .orb-t{ fill:none; stroke:#E07A4F; stroke-width:1.2; }
@@ -633,8 +635,16 @@ figure{ margin:0 0 10px; } figcaption{ font-size:12.5px; line-height:1.45; color
 .so-date{ display:flex; flex-direction:column; gap:2px; flex:1 1 260px; font-size:13.5px; font-weight:700; }
 .so-date input{ width:100%; accent-color:var(--mark); }
 .so-zoom{ display:flex; gap:6px; }
-.so-wrap{ background:#05070A; max-width:min(720px, calc(100vh - 250px)); min-width:min(100%, 320px); }
-.so-wrap svg{ display:block; width:100%; aspect-ratio:1; }
+.so-wrap{ background:#05070A; height:calc(100vh - 290px); min-height:360px; }
+.so-wrap svg{ display:block; width:100%; height:100%; }
+.so-main{ display:grid; grid-template-columns:minmax(0, 1fr) 300px; gap:18px; align-items:start; }
+@media (max-width: 900px){ .so-main{ grid-template-columns:1fr; } .so-wrap{ height:auto; aspect-ratio:1; min-height:0; } }
+.so-side h3{ margin-top:0; }
+.so-sel{ display:flex; align-items:center; gap:6px; font-size:13.5px; font-weight:700; }
+.so-sel select{ font:inherit; font-weight:400; padding:4px 6px; background:var(--paper); color:var(--ink); border:1px solid var(--ink); }
+.so-moon{ fill:#E3E6E8; }
+.so-pl-g[data-focus]:not([data-focus=""]){ cursor:pointer; }
+.so-list.so-ml li{ display:block; }
 .so-o{ fill:none; stroke-width:1px; stroke-opacity:.55; vector-effect:non-scaling-stroke; }
 .so-tr{ fill:none; stroke-width:1.6px; vector-effect:non-scaling-stroke; }
 .so-tr.done{ stroke-opacity:.35; stroke-dasharray:4 3; }
@@ -642,7 +652,7 @@ figure{ margin:0 0 10px; } figcaption{ font-size:12.5px; line-height:1.45; color
 .so-ring{ fill:none; stroke-width:2px; vector-effect:non-scaling-stroke; }
 .so-wrap text{ fill:#E3E6E8; font-family:var(--f); }
 .so-wrap a:focus-visible .so-p{ stroke:#fff; stroke-width:2px; vector-effect:non-scaling-stroke; }
-.so-list{ list-style:none; padding:0; margin:0; columns:2 260px; font-size:13.5px; }
+.so-list{ list-style:none; padding:0; margin:0; font-size:13.5px; }
 .so-list li{ padding:3px 0; display:flex; gap:7px; align-items:center; }
 .so-list .sw{ width:12px; height:12px; flex:none; border-radius:50%; }
 
@@ -1283,6 +1293,50 @@ var EN_UI = {
   'Masse au lancement':'Launch mass',
   'Véhicules':'Spacecraft',
   'Durées calculées à partir des dates des fiches ; les valeurs suivies de « ≈ » sont approchées.':'Durations computed from the dates in the fact sheets; values marked “≈” are approximate.',
+  'Corps visé':'Target body',
+  'Les planètes, leurs satellites et les sondes à leur position réelle, vus de dessus. Par défaut, la date du jour ; le curseur remonte le temps.':"The planets, their moons and the spacecraft at their real positions, seen from above. Today's date by default; the slider goes back in time.",
+  'Vitesse':'Speed',
+  'une heure par seconde':'one hour per second',
+  'un jour par seconde':'one day per second',
+  'une semaine par seconde':'one week per second',
+  'un mois par seconde':'one month per second',
+  'un an par seconde':'one year per second',
+  "Aujourd'hui":'Today',
+  'Centrer sur':'Centre on',
+  'le Soleil':'the Sun',
+  'Uranus':'Uranus',
+  'Neptune':'Neptune',
+  'Pluton':'Pluto',
+  "Jusqu'à Neptune":'Out to Neptune',
+  'Tous les satellites':'All moons',
+  'Satellites proches':'Inner moons',
+  'Cliquer sur une planète, ou choisir « Centrer sur », montre ses satellites.':'Click a planet, or use “Centre on”, to see its moons.',
+  'un tour en':'one orbit in',
+  'Satellites de':'Moons of',
+  'Aucun satellite dans les données.':'No moons in the data.',
+  "en orbite à cette date, trop près de la planète pour être placée à cette échelle (position sur l'orbite non publiée ici).":'in orbit on this date, too close to the planet to be placed at this scale (position along the orbit not shown here).',
+  'Vue centrée sur':'View centred on',
+  "Vue de dessus de l'écliptique centrée sur la planète : distances et taille de la planète à l'échelle (rayon moyen, NASA NSSDCA), satellites agrandis.":'Top view of the ecliptic centred on the planet: distances and planet size to scale (mean radius, NASA NSSDCA), moons enlarged.',
+  "Satellites placés à partir des éléments orbitaux JPL Horizons (tous les 180 jours, 30 pour les plus rapides), interpolés entre deux dates : position approchée (≈, quelques degrés sur l'orbite au plus).":"Moons placed from the JPL Horizons orbital elements (every 180 days, 30 for the fastest), interpolated between two dates: approximate position (≈, a few degrees along the orbit at most).",
+  'Phobos':'Phobos',
+  'Deimos':'Deimos',
+  'Io':'Io',
+  'Europe':'Europa',
+  'Ganymède':'Ganymede',
+  'Callisto':'Callisto',
+  'Mimas':'Mimas',
+  'Encelade':'Enceladus',
+  'Téthys':'Tethys',
+  'Dioné':'Dione',
+  'Rhéa':'Rhea',
+  'Japet':'Iapetus',
+  'Miranda':'Miranda',
+  'Ariel':'Ariel',
+  'Umbriel':'Umbriel',
+  'Titania':'Titania',
+  'Obéron':'Oberon',
+  'Triton':'Triton',
+  'Charon':'Charon',
   'Missions':'Missions', 'Système solaire':'Solar System', 'Comparer':'Compare', 'Flotte':'Fleet',
   'Passer au thème clair':'Switch to light theme', 'Passer au thème sombre':'Switch to dark theme',
   'En construction':'Under construction', 'étape 6':'step 6',
@@ -1342,7 +1396,7 @@ var models = {}, globe = null, globeFor = null, ring = null;
 var O = { on:false, th:0.6, view:'probe', rb:1, inc:90, last:0, run:!REDUCED, k:1 }, carrier = null, sunDir = null;
 var V2 = { az:0.4, el:0.35, dist:5 };   /* caméra de la vue d'orbite, en rayons du corps */
 function setBody(t, R){
-  if (globe){ scene.remove(globe); globe = null; }
+  if (globe){ scene.remove(globe); globe = null; } if (ring){ scene.remove(ring); ring = null; }
   var meta = t.body && (window.DATA_FILES || {})['tex-' + t.body.tex];
   O.on = !!meta;
   if (!meta) return false;
@@ -1354,7 +1408,7 @@ function setBody(t, R){
   var i = O.inc * Math.PI / 180, pts = [], ro = O.rb + R * O.k * 2.2;
   for (var a = 0; a <= 128; a++){ var th = a / 128 * 2 * Math.PI; pts.push(new THREE.Vector3(Math.cos(th) * ro, Math.sin(th) * Math.sin(i) * ro, Math.sin(th) * Math.cos(i) * ro)); }
   ring = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color:0x8fb8ff, transparent:true, opacity:0.55 }));
-  globe.add(ring);
+  scene.add(ring);   /* à part du globe : le globe tourne, pas l'orbite */
   return true;
 }
 /* repère de l'orbite au temps th : position p, direction du mouvement vel, verticale locale up */
@@ -1456,6 +1510,7 @@ function frame(now){
     return renderer.render(scene, camera);
   }
   if (O.run) O.th += dt * 2 * Math.PI / (O.view === 'orbit' ? 40 : 120);   /* un tour en 2 min (vue sonde) ou 40 s (vue d'orbite) : accéléré */
+  if (O.run) globe.rotation.y += dt * 2 * Math.PI / 90;   /* le corps tourne aussi sur lui-même, vers l'est (un tour en 90 s : accéléré, schéma de principe) */
   var F = orbitFrame(), big = O.view === 'orbit';
   carrier.position.copy(F.p); carrier.quaternion.copy(F.q); carrier.scale.setScalar(big ? O.k : 1); ring.visible = big;
   if (big){
@@ -1497,36 +1552,70 @@ return { open:open, select:select, explode:function(v){ ex = v; }, spin:function
 })();
 
 /* =================================================================
-   ACCUEIL « SYSTÈME SOLAIRE » — vue de dessus du plan de l'écliptique : orbites des planètes et trajectoires réelles des sondes
-   (JPL Horizons, data/solar.json, recette « solar » de tools/data/fetch_orbits.py), avec un curseur des dates.
-   Distances à l'échelle ; tailles des points non à l'échelle (signalé). SolarPage.html() rend la page, SolarPage.mount() la branche.
+   ACCUEIL « SYSTÈME SOLAIRE » — vue de dessus du plan de l'écliptique (JPL Horizons, data/solar.json, recette « solar » de
+   tools/data/fetch_orbits.py) : planètes, Pluton et sondes à la date choisie (aujourd'hui par défaut), avec curseur, lecture et vitesse.
+   Vue héliocentrique : distances à l'échelle, tailles des points non à l'échelle (signalé).
+   Vue centrée sur une planète : ses satellites, placés à partir des éléments orbitaux Horizons interpolés entre deux époques (≈, signalé) ; distances et taille de la planète à l'échelle.
+   SolarPage.html() rend la page, SolarPage.mount() la branche.
 ================================================================= */
 var SolarPage = (function(){
 'use strict';
 var MON = { Jan:1, Feb:2, Mar:3, Apr:4, May:5, Jun:6, Jul:7, Aug:8, Sep:9, Oct:10, Nov:11, Dec:12 };
-var PCOL = { 'Mercure':'#B9B2A8', 'Vénus':'#E8C26A', 'Terre':'#6FA8FF', 'Mars':'#E07A4F', 'Jupiter':'#D9A66B', 'Saturne':'#E6D08A' };
+var PCOL = { 'Mercure':'#B9B2A8', 'Vénus':'#E8C26A', 'Terre':'#6FA8FF', 'Mars':'#E07A4F', 'Jupiter':'#D9A66B', 'Saturne':'#E6D08A', 'Uranus':'#9FE3E8', 'Neptune':'#6C8CFF', 'Pluton':'#C9A88A' };
+/* rayons moyens en km, NASA NSSDCA « Planetary Fact Sheet » (ref. SRC.nssdc) : taille de la planète dans la vue centrée */
+var RAD = { 'Mercure':2440, 'Vénus':6052, 'Terre':6371, 'Mars':3390, 'Jupiter':69911, 'Saturne':58232, 'Uranus':25362, 'Neptune':24622, 'Pluton':1188 };
+var HZ = { '399':'Terre', '499':'Mars', '599':'Jupiter', '699':'Saturne', '799':'Uranus', '899':'Neptune', '999':'Pluton' };
+var ZOOM = { in:[1.75, 'Jusqu\'à Mars'], mid:[10.4, 'Jusqu\'à Saturne'], out:[33, 'Jusqu\'à Neptune'] };
+var SPEED = [[1/24, 'une heure par seconde'], [1, 'un jour par seconde'], [7, 'une semaine par seconde'], [30, 'un mois par seconde'], [365, 'un an par seconde']];
 var SCOL = ['#FF6B9A', '#4DD0E1', '#B39DDB', '#FFB74D', '#81C784'];   /* une couleur par sonde, dans l'ordre du registre (aucune agence mise en avant) */
-var DAY = 864e5, S = { t:null, zoom:'in', run:false, raf:0 }, D = null;
+var DAY = 864e5, S = { t:null, zoom:'in', focus:'', near:false, run:false, raf:0, last:0, speed:30 }, D = null, T0 = 0, T1 = 0;
 function T(s){ return OBS_T(s); }
 function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function day(s){   /* « 2005-Aug-13 » (Horizons) ou « 2005-08-13 » / « 2006-11 » → jours depuis 1970 */
   var m = /^(\d{4})-(\w{3})-(\d{2})/.exec(s); if (m) return Date.UTC(+m[1], MON[m[2]] - 1, +m[3]) / DAY;
   m = /^(\d{4})-(\d{2})(?:-(\d{2}))?/.exec(s); return Date.UTC(+m[1], +m[2] - 1, m[3] ? +m[3] : 1) / DAY;
 }
-function fmt(t){ return new Date(t * DAY).toLocaleDateString(OBS_LANG === 'en' ? 'en-GB' : 'fr-FR', { day:'numeric', month:'long', year:'numeric', timeZone:'UTC' }); }
+function fmt(t){
+  var o = { day:'numeric', month:'long', year:'numeric', timeZone:'UTC' }; if (S.speed < 1) { o.hour = '2-digit'; o.minute = '2-digit'; }
+  return new Date(t * DAY).toLocaleString(OBS_LANG === 'en' ? 'en-GB' : 'fr-FR', o) + (S.speed < 1 ? ' TU' : '');
+}
+function now(){ return Date.now() / DAY; }
 /* position interpolée d'une série { t0, step, n, xy } au jour t ; null hors de la série */
 function at(s, t){
   var f = (t - s.t) / s.step; if (f < 0 || f > s.n) return null; f = Math.min(f, s.n - 1);   /* un pas de tolérance au bout de la série */
   var i = Math.min(s.n - 2, Math.floor(f)), u = f - i, a = s.xy;
   return [a[2*i] + (a[2*i+2] - a[2*i]) * u, a[2*i+1] + (a[2*i+3] - a[2*i+1]) * u];
 }
-/* une orbite complète : les points depuis le début jusqu'à ce que l'angle ait fait un tour */
+/* un tour d'orbite : la série « orbit » de la recette, sinon les points de la série datée jusqu'à un tour complet */
 function loop(s){
+  if (s.orbit) return s.orbit;
   var a = s.xy, acc = 0, prev = Math.atan2(a[1], a[0]), pts = [a[0], a[1]];
   for (var i = 1; i < s.n; i++){ var th = Math.atan2(a[2*i+1], a[2*i]), d = th - prev; if (d > Math.PI) d -= 2*Math.PI; if (d < -Math.PI) d += 2*Math.PI; acc += Math.abs(d); prev = th; pts.push(a[2*i], a[2*i+1]); if (acc >= 2*Math.PI) break; }
   return pts;
 }
-function P(x, y){ return x.toFixed(3) + ' ' + (-y).toFixed(3); }
+/* satellite : éléments [JD, a km, e, i, Ω, ω, M, n °/j] de l'époque la plus proche → position (km) dans le plan de l'écliptique */
+var RD = Math.PI / 180;
+/* éléments à la date t : interpolés entre les deux époques qui l'encadrent ; la longitude moyenne avance au mouvement moyen effectif
+   qui relie les deux époques (le mouvement osculateur seul dérive vite pour Phobos ou Encelade) */
+function wrap(x){ return ((x + 180) % 360 + 360) % 360 - 180; }
+function moonEl(m, t){
+  var jd = t + 2440587.5, E = m.el, k = 0; while (k < E.length - 2 && E[k + 1][0] <= jd) k++;
+  var A = E[k], B = E[k + 1] || A; if (B === A || jd <= A[0]) return A;
+  var Dt = B[0] - A[0], u = Math.min(1, (jd - A[0]) / Dt), lA = A[4] + A[5] + A[6], lB = B[4] + B[5] + B[6];
+  var n = A[7] + wrap(lB - (lA + A[7] * Dt)) / Dt, O = A[4] + wrap(B[4] - A[4]) * u, w = A[5] + wrap(B[5] - A[5]) * u;
+  return [jd, A[1] + (B[1] - A[1]) * u, A[2] + (B[2] - A[2]) * u, A[3] + (B[3] - A[3]) * u, O, w, lA + n * (jd - A[0]) - O - w, n];
+}
+function kep(el, E){
+  var a = el[1], e = el[2], i = el[3]*RD, O = el[4]*RD, w = el[5]*RD, x = a * (Math.cos(E) - e), y = a * Math.sqrt(1 - e*e) * Math.sin(E);
+  var cO = Math.cos(O), sO = Math.sin(O), cw = Math.cos(w), sw = Math.sin(w), ci = Math.cos(i);
+  return [(cO*cw - sO*sw*ci) * x + (-cO*sw - sO*cw*ci) * y, (sO*cw + cO*sw*ci) * x + (-sO*sw + cO*cw*ci) * y];
+}
+function moonAt(m, t){
+  var el = moonEl(m, t), M = (el[6] % 360) * RD, E = M;
+  for (var k = 0; k < 8; k++) E = E - (E - el[2] * Math.sin(E) - M) / (1 - el[2] * Math.cos(E));
+  return kep(el, E);
+}
+function P(x, y){ return (+x).toFixed(4) + ' ' + (-y).toFixed(4); }
 function status(m, t){
   var ev = m.events || [], st = { k:'avant' };
   ev.forEach(function(e){ if (day(e.date) > t) return;
@@ -1538,34 +1627,64 @@ function status(m, t){
 function statusText(st){
   return st.k === 'avant' ? T('pas encore lancée') : st.k === 'croisiere' ? T('en croisière') : st.k === 'orbite' ? T('en orbite autour de ' + (st.body === 'Lune' ? 'la Lune' : st.body)) : T('mission terminée');
 }
+function moonsOf(p){ return (D && D.moons || []).filter(function(m){ return HZ[m.center] === p; }); }
 function html(){
-  return '<div class="sk wide solar"><h2>' + T('Système solaire') + '</h2>' +
-    '<p class="lead">' + T('Les orbites des planètes et la trajectoire réelle de chaque sonde, vues de dessus. Faites glisser le curseur pour remonter le temps.') + '</p>' +
-    '<div class="so-tools"><button class="m-b so-play" id="so-play" aria-pressed="false">' + T('Lecture') + '</button>' +
-    '<label class="so-date"><span id="so-day" aria-live="off"></span><input id="so-t" type="range" step="1" aria-label="' + T('Date') + '"></label>' +
-    '<div class="so-zoom" role="group" aria-label="' + T('Cadrage') + '"><button class="m-b" data-sz="in" aria-pressed="true">' + T('Jusqu\'à Mars') + '</button><button class="m-b" data-sz="out" aria-pressed="false">' + T('Jusqu\'à Saturne') + '</button></div></div>' +
-    '<div class="so-wrap"><svg id="so-svg" role="group" aria-labelledby="so-cap"><g id="so-orb"></g><g id="so-trail"></g><g id="so-pts"></g></svg></div>' +
-    '<p class="sr-only" id="so-cap"></p>' +
-    '<h3>' + T('Les sondes à cette date') + '</h3><ul class="so-list" id="so-list"></ul>' +
-    '<p class="note" id="so-note"></p></div>';
+  var foc = ['Terre', 'Mars', 'Jupiter', 'Saturne', 'Uranus', 'Neptune', 'Pluton'];
+  return '<div class="sk full solar"><h2>' + T('Système solaire') + '</h2>' +
+    '<p class="lead">' + T('Les planètes, leurs satellites et les sondes à leur position réelle, vus de dessus. Par défaut, la date du jour ; le curseur remonte le temps.') + '</p>' +
+    '<div class="so-tools">' +
+      '<button class="m-b so-play" id="so-play" aria-pressed="false">' + T('Lecture') + '</button>' +
+      '<label class="so-sel">' + T('Vitesse') + ' <select id="so-speed">' + SPEED.map(function(s){ return '<option value="' + s[0] + '"' + (s[0] === S.speed ? ' selected' : '') + '>' + T(s[1]) + '</option>'; }).join('') + '</select></label>' +
+      '<label class="so-date"><span id="so-day"></span><input id="so-t" type="range" step="any" aria-label="' + T('Date') + '"></label>' +
+      '<button class="m-b" id="so-now">' + T('Aujourd\'hui') + '</button>' +
+    '</div><div class="so-tools">' +
+      '<label class="so-sel">' + T('Centrer sur') + ' <select id="so-focus"><option value="">' + T('le Soleil') + '</option>' + foc.map(function(p){ return '<option value="' + p + '"' + (p === S.focus ? ' selected' : '') + '>' + T(p) + '</option>'; }).join('') + '</select></label>' +
+      '<div class="so-zoom" role="group" aria-label="' + T('Cadrage') + '" id="so-zoom"></div>' +
+    '</div>' +
+    '<div class="so-main"><div class="so-wrap" id="so-wrap"><svg id="so-svg" role="group" aria-labelledby="so-cap" preserveAspectRatio="xMidYMid meet"><g id="so-orb"></g><g id="so-trail"></g><g id="so-pts"></g></svg></div>' +
+    '<aside class="so-side"><p class="sr-only" id="so-cap"></p><h3>' + T('Les sondes à cette date') + '</h3><ul class="so-list" id="so-list"></ul>' +
+    '<div id="so-moons"></div><p class="note" id="so-note"></p></aside></div></div>';
 }
+function zoomButtons(){
+  var h = S.focus ? [['all', 'Tous les satellites'], ['near', 'Satellites proches']].map(function(z){ return '<button class="m-b" data-sz="' + z[0] + '" aria-pressed="' + ((z[0] === 'near') === S.near) + '">' + T(z[1]) + '</button>'; }).join('')
+    : Object.keys(ZOOM).map(function(z){ return '<button class="m-b" data-sz="' + z + '" aria-pressed="' + (z === S.zoom) + '">' + T(ZOOM[z][1]) + '</button>'; }).join('');
+  document.getElementById('so-zoom').innerHTML = h;
+}
+/* cadre : rayon R (unités de la vue) dans la plus petite dimension ; k : taille d'un pixel d'écran dans ces unités */
+function frameBox(R){
+  var svg = document.getElementById('so-svg'), w = Math.max(280, svg.clientWidth || 600), h = Math.max(280, svg.clientHeight || 600), m = Math.min(w, h);
+  var k = 2 * R / m, W = w * k, H = h * k;
+  svg.setAttribute('viewBox', [-W/2, -H/2, W, H].map(function(v){ return v.toFixed(5); }).join(' '));
+  return { k:k, W:W, H:H };
+}
+/* étiquette de taille fixe à l'écran : texte de 12 px mis à l'échelle k (les navigateurs plafonnent les très grandes tailles de police) */
+function label(x, y, k, txt, cls, col){ return '<text transform="translate(' + (x + 7*k).toFixed(5) + ' ' + (-y - 6*k).toFixed(5) + ') scale(' + k.toPrecision(6) + ')" style="font-size:12px' + (col ? ';fill:' + col : '') + '"' + (cls ? ' class="' + cls + '"' : '') + '>' + esc(txt) + '</text>'; }
 function render(){
-  if (!D) return;
-  var t = S.t, R = S.zoom === 'in' ? 1.75 : 10.4, svg = document.getElementById('so-svg'); if (!svg) return stop();
-  var k = 2 * R / Math.max(280, svg.clientWidth || 600);   /* k : taille d'un pixel d'écran en UA (points et textes de taille fixe à l'écran) */
-  svg.setAttribute('viewBox', [-R, -R, 2*R, 2*R].join(' '));
+  if (!D || !document.getElementById('so-svg')) return stop();
+  var t = S.t;
   document.getElementById('so-day').textContent = fmt(t);
-  var pts = '<circle cx="0" cy="0" r="' + (7*k).toFixed(4) + '" class="so-sun"/>', cap = [];
+  var inp = document.getElementById('so-t'); inp.value = t; inp.setAttribute('aria-valuetext', fmt(t));
+  var list = '', cap = [];
+  MISSIONS.forEach(function(m, i){ var st = status(m, t);
+    list += '<li><span class="sw" style="background:' + SCOL[i % SCOL.length] + '"></span><a href="#' + m.id + '"><strong>' + esc(m.short) + '</strong></a> · ' + statusText(st) + '</li>'; cap.push(m.short + ' : ' + statusText(st)); });
+  document.getElementById('so-list').innerHTML = list;
+  if (S.focus) renderFocus(t, cap); else renderSun(t, cap);
+}
+function renderSun(t, cap){
+  var R = ZOOM[S.zoom][0], B = frameBox(R), k = B.k, pts = '<circle cx="0" cy="0" r="' + (7*k).toFixed(5) + '" class="so-sun"/>';
+  document.getElementById('so-orb').innerHTML = D.planets.map(function(p){
+    var a = loop(p), d = ''; for (var i = 0; i < a.length; i += 2) d += (i ? 'L' : 'M') + P(a[i], a[i+1]);
+    return '<path d="' + d + 'Z" class="so-o" style="stroke:' + PCOL[p.name] + '"/>';
+  }).join('');
+  var small = { in:{}, mid:{ 'Mercure':1, 'Vénus':1 }, out:{ 'Mercure':1, 'Vénus':1, 'Terre':1, 'Mars':1 } }[S.zoom];
   D.planets.forEach(function(p){
     var q = at(p, t); if (!q) return;
-    pts += '<circle cx="' + q[0].toFixed(3) + '" cy="' + (-q[1]).toFixed(3) + '" r="' + (4.5*k).toFixed(4) + '" style="fill:' + PCOL[p.name] + '"/>';
-    if (Math.hypot(q[0], q[1]) < R && !(S.zoom === 'out' && (p.name === 'Mercure' || p.name === 'Vénus'))) pts += '<text x="' + (q[0] + 7*k).toFixed(3) + '" y="' + (-q[1] - 6*k).toFixed(3) + '" style="font-size:' + (12*k).toFixed(4) + 'px">' + esc(T(p.name)) + '</text>';
+    pts += '<g class="so-pl-g" data-focus="' + (RAD[p.name] && p.name !== 'Mercure' && p.name !== 'Vénus' ? p.name : '') + '"><circle cx="' + q[0].toFixed(4) + '" cy="' + (-q[1]).toFixed(4) + '" r="' + (4.5*k).toFixed(5) + '" style="fill:' + PCOL[p.name] + '"/>' +
+      (small[p.name] ? '' : label(q[0], q[1], k, T(p.name))) + '</g>';
   });
-  var trail = '', list = '', rings = {};
+  var trail = '', rings = {};
   MISSIONS.forEach(function(m, i){
     var s = D.probes.filter(function(x){ return x.id === m.id; })[0], st = status(m, t), col = SCOL[i % SCOL.length];
-    list += '<li><span class="sw" style="background:' + col + '"></span><a href="#' + m.id + '"><strong>' + esc(m.short) + '</strong></a> · ' + statusText(st) + '</li>';
-    cap.push(m.short + ' : ' + statusText(st));
     if (!s || st.k === 'avant') return;
     /* trace : la croisière seulement (du lancement à l'arrivée) ; ensuite la sonde suit sa planète, dont l'orbite est déjà tracée */
     var arr = (m.events || []).filter(function(e){ return e.type === 'arrival' || e.type === 'orbit'; })[0], tc = arr ? day(arr.date) : Infinity;
@@ -1574,57 +1693,74 @@ function render(){
     var q = at(s, end); if (q) d += 'L' + P(q[0], q[1]);
     trail += '<path d="' + d + '" style="stroke:' + col + '" class="so-tr' + (st.k === 'fin' ? ' done' : '') + '"/>';
     if (st.k === 'fin') return;
-    if (st.k === 'orbite'){   /* en orbite : un anneau de sa couleur autour de la planète (la Lune : autour de la Terre) */
-      var b = st.body === 'Lune' ? 'Terre' : st.body; (rings[b] = rings[b] || []).push([m, col]); return;
-    }
+    if (st.k === 'orbite'){ var b = st.body === 'Lune' ? 'Terre' : st.body; (rings[b] = rings[b] || []).push([m, col]); return; }   /* anneau autour de la planète */
     q = at(s, t); if (!q) return;
-    trail += '<a href="#' + m.id + '"><circle cx="' + q[0].toFixed(3) + '" cy="' + (-q[1]).toFixed(3) + '" r="' + (5*k).toFixed(4) + '" style="fill:' + col + '" class="so-p"/>' +
-      '<text x="' + (q[0] + 8*k).toFixed(3) + '" y="' + (-q[1] + 14*k).toFixed(3) + '" style="font-size:' + (12*k).toFixed(4) + 'px;fill:' + col + '" class="so-pl">' + esc(m.short) + '</text></a>';
+    trail += '<a href="#' + m.id + '"><circle cx="' + q[0].toFixed(4) + '" cy="' + (-q[1]).toFixed(4) + '" r="' + (5*k).toFixed(5) + '" style="fill:' + col + '" class="so-p"/>' +
+      label(q[0] + k, q[1] - 20*k, k, m.short, '', col) + '</a>';
   });
-  D.planets.forEach(function(p){
-    var q = at(p, t); if (!q || !rings[p.name]) return;
-    rings[p.name].forEach(function(r, j){ trail += '<a href="#' + r[0].id + '" aria-label="' + esc(r[0].short) + '"><circle cx="' + q[0].toFixed(3) + '" cy="' + (-q[1]).toFixed(3) + '" r="' + ((8 + 3.5*j)*k).toFixed(4) + '" style="stroke:' + r[1] + '" class="so-ring"/></a>'; });
-  });
+  D.planets.forEach(function(p){ var q = at(p, t); if (!q || !rings[p.name]) return;
+    rings[p.name].forEach(function(r, j){ trail += '<a href="#' + r[0].id + '" aria-label="' + esc(r[0].short) + '"><circle cx="' + q[0].toFixed(4) + '" cy="' + (-q[1]).toFixed(4) + '" r="' + ((8 + 3.5*j)*k).toFixed(5) + '" style="stroke:' + r[1] + '" class="so-ring"/></a>'; }); });
   document.getElementById('so-pts').innerHTML = pts; document.getElementById('so-trail').innerHTML = trail;
-  document.getElementById('so-list').innerHTML = list;
+  document.getElementById('so-moons').innerHTML = '';
   document.getElementById('so-cap').textContent = T('Vue de dessus du Système solaire au') + ' ' + fmt(t) + '. ' + cap.join(' ; ') + '.';
+  document.getElementById('so-note').innerHTML = esc(T('Positions : JPL Horizons, vecteurs héliocentriques projetés sur le plan de l\'écliptique J2000, téléchargés le') + ' ' + fmt(day(D.fetched)).replace(/ \d\d:\d\d TU$/, '') + '. ' +
+    T('Distances à l\'échelle ; tailles du Soleil, des planètes et des sondes non à l\'échelle.') + ' ' + T('Une sonde en orbite autour d\'une planète se confond avec elle à cette échelle : elle est marquée par un anneau de sa couleur, et seule sa croisière est tracée.') + ' ' +
+    T('Cliquer sur une planète, ou choisir « Centrer sur », montre ses satellites.'));
 }
-function orbits(){
-  document.getElementById('so-orb').innerHTML = D.planets.map(function(p){
-    var a = loop(p), d = ''; for (var i = 0; i < a.length; i += 2) d += (i ? 'L' : 'M') + P(a[i], a[i+1]);
-    return '<path d="' + d + 'Z" class="so-o" style="stroke:' + PCOL[p.name] + '"/>';
-  }).join('');
+function renderFocus(t, cap){
+  var p = S.focus, ms = moonsOf(p), aMax = ms.reduce(function(r, m){ return Math.max(r, moonEl(m, t)[1] * (1 + moonEl(m, t)[2])); }, RAD[p] * 4);
+  var sorted = ms.map(function(m){ return moonEl(m, t)[1]; }).sort(function(a, b){ return a - b; });
+  var R = S.near && sorted.length > 2 ? sorted[Math.floor(sorted.length / 2) - 1] * 1.25 : aMax * 1.12;
+  var B = frameBox(R), k = B.k, orb = '', pts = '', rows = '';
+  ms.forEach(function(m){
+    var el = moonEl(m, t), d = ''; for (var j = 0; j <= 96; j++){ var q = kep(el, j / 96 * 2 * Math.PI); d += (j ? 'L' : 'M') + P(q[0], q[1]); }
+    orb += '<path d="' + d + 'Z" class="so-o" style="stroke:#9FB3C8"/>';
+    var q = moonAt(m, t);
+    pts += '<circle cx="' + q[0].toFixed(1) + '" cy="' + (-q[1]).toFixed(1) + '" r="' + (3.2*k).toFixed(2) + '" class="so-moon"/>' + (el[1] * (1 + el[2]) < R * 1.4 ? label(q[0], q[1], k, T(m.name)) : '');
+    rows += '<li><strong>' + esc(T(m.name)) + '</strong> · ' + OBS_NUM(Math.round(el[1]).toLocaleString('fr-FR')) + ' km · ' + T('un tour en') + ' ' + OBS_NUM((360 / el[7]).toFixed(2).replace('.', ',')) + ' ' + T('jours') + '</li>';
+  });
+  pts = '<circle cx="0" cy="0" r="' + Math.max(RAD[p], 4*k).toFixed(1) + '" style="fill:' + PCOL[p] + '"/>' + label(Math.max(RAD[p], 4*k) * 0.7, Math.max(RAD[p], 4*k) * 0.7, k, T(p)) + pts;
+  var here = MISSIONS.filter(function(m){ var st = status(m, t); return st.k === 'orbite' && (st.body === p || (p === 'Terre' && st.body === 'Lune')); });
+  document.getElementById('so-orb').innerHTML = orb; document.getElementById('so-pts').innerHTML = pts; document.getElementById('so-trail').innerHTML = '';
+  document.getElementById('so-moons').innerHTML = '<h3>' + T('Satellites de') + ' ' + esc(T(p)) + '</h3>' + (rows ? '<ul class="so-list so-ml">' + rows + '</ul>' : '<p class="note">' + T('Aucun satellite dans les données.') + '</p>') +
+    (here.length ? '<p class="note">' + here.map(function(m){ return esc(m.short); }).join(', ') + ' : ' + T('en orbite à cette date, trop près de la planète pour être placée à cette échelle (position sur l\'orbite non publiée ici).') + '</p>' : '');
+  document.getElementById('so-cap').textContent = T('Vue centrée sur') + ' ' + T(p) + ', ' + fmt(t) + '. ' + ms.map(function(m){ return T(m.name); }).join(', ') + '.';
+  document.getElementById('so-note').innerHTML = esc(T('Vue de dessus de l\'écliptique centrée sur la planète : distances et taille de la planète à l\'échelle (rayon moyen, NASA NSSDCA), satellites agrandis.') + ' ' +
+    T('Satellites placés à partir des éléments orbitaux JPL Horizons (tous les 180 jours, 30 pour les plus rapides), interpolés entre deux dates : position approchée (≈, quelques degrés sur l\'orbite au plus).')) +
+    ' <a class="src" href="https://nssdc.gsfc.nasa.gov/planetary/factsheet/" rel="noopener" target="_blank">NASA NSSDCA</a> <a class="src" href="https://ssd.jpl.nasa.gov/horizons/" rel="noopener" target="_blank">JPL Horizons</a>';
 }
-function frame(){
+function frame(ts){
   if (!S.run) return;
-  var inp = document.getElementById('so-t'); if (!inp) return stop();
-  S.t = Math.min(+inp.max, S.t + 6); inp.value = S.t; render();
-  if (S.t >= +inp.max) return stop();
+  if (!document.getElementById('so-t')) return stop();
+  var dt = S.last ? Math.min(0.1, (ts - S.last) / 1000) : 0; S.last = ts;
+  S.t = Math.min(T1, S.t + dt * S.speed); render();
+  if (S.t >= T1) return stop();
   S.raf = requestAnimationFrame(frame);
 }
-function stop(){ S.run = false; cancelAnimationFrame(S.raf); var b = document.getElementById('so-play'); if (b){ b.setAttribute('aria-pressed', 'false'); b.textContent = T('Lecture'); } }
+function stop(){ S.run = false; S.last = 0; cancelAnimationFrame(S.raf); var b = document.getElementById('so-play'); if (b){ b.setAttribute('aria-pressed', 'false'); b.textContent = T('Lecture'); } }
+function setFocus(p){ S.focus = p || ''; S.near = false; var sel = document.getElementById('so-focus'); if (sel) sel.value = S.focus; zoomButtons(); render(); }
 function mount(){
   D = (window.DATA_FILES || {})['solar'];
-  if (!D){ document.querySelector('.so-wrap').innerHTML = '<p class="note">' + T('Positions pas encore téléchargées (workflow « Données réelles »).') + '</p>'; return; }
+  if (!D){ document.getElementById('so-wrap').innerHTML = '<p class="note">' + T('Positions pas encore téléchargées (workflow « Données réelles »).') + '</p>'; return; }
   D.planets.concat(D.probes).forEach(function(s){ s.t = day(s.t0); });
-  var t0 = Math.min.apply(null, D.probes.map(function(s){ return s.t; })), t1 = day(D.fetched) - 1, inp = document.getElementById('so-t');
-  inp.min = t0; inp.max = t1; if (S.t == null || S.t < t0 || S.t > t1) S.t = t1; inp.value = S.t;
-  inp.setAttribute('aria-valuetext', fmt(S.t));
-  inp.addEventListener('input', function(){ S.t = +inp.value; inp.setAttribute('aria-valuetext', fmt(S.t)); render(); });
+  D.moons = D.moons || [];
+  T0 = Math.min.apply(null, D.probes.map(function(s){ return s.t; })); T1 = day(D.fetched);
+  var inp = document.getElementById('so-t'); inp.min = T0; inp.max = T1;
+  if (S.t == null || S.t < T0 || S.t > T1) S.t = Math.min(T1, now());   /* par défaut : maintenant (dans la limite des données) */
+  inp.addEventListener('input', function(){ S.t = +inp.value; render(); });
+  document.getElementById('so-now').addEventListener('click', function(){ S.t = Math.min(T1, now()); render(); });
+  document.getElementById('so-speed').addEventListener('change', function(e){ S.speed = +e.target.value; render(); });
+  document.getElementById('so-focus').addEventListener('change', function(e){ setFocus(e.target.value); });
   document.getElementById('so-play').addEventListener('click', function(e){
     if (S.run) return stop();
-    if (S.t >= t1) S.t = t0;
-    S.run = true; e.currentTarget.setAttribute('aria-pressed', 'true'); e.currentTarget.textContent = T('Pause'); frame();
+    if (S.t >= T1) S.t = T0;
+    S.run = true; e.currentTarget.setAttribute('aria-pressed', 'true'); e.currentTarget.textContent = T('Pause'); S.raf = requestAnimationFrame(frame);
   });
-  document.querySelector('.so-zoom').addEventListener('click', function(e){ var z = e.target.getAttribute('data-sz'); if (!z) return; S.zoom = z;
-    document.querySelectorAll('[data-sz]').forEach(function(b){ b.setAttribute('aria-pressed', String(b.getAttribute('data-sz') === z)); }); orbits(); render(); });
-  document.querySelectorAll('[data-sz]').forEach(function(b){ b.setAttribute('aria-pressed', String(b.getAttribute('data-sz') === S.zoom)); });
-  var miss = D.probes.filter(function(s){ return !s.full; }).map(function(s){ return s.id; });
-  document.getElementById('so-note').textContent = T('Positions : JPL Horizons, vecteurs héliocentriques projetés sur le plan de l\'écliptique J2000, téléchargés le') + ' ' + fmt(day(D.fetched)) + '. ' +
-    T('Distances à l\'échelle ; tailles du Soleil, des planètes et des sondes non à l\'échelle.') + ' ' + T('Une sonde en orbite autour d\'une planète se confond avec elle à cette échelle : elle est marquée par un anneau de sa couleur, et seule sa croisière est tracée.') +
-    (miss.length ? ' ' + T('Horizons ne couvre que la croisière pour :') + ' ' + miss.map(function(id){ var m = MISSIONS.filter(function(x){ return x.id === id; })[0]; return m ? m.short : id; }).join(', ') + '.' : '');
+  document.getElementById('so-zoom').addEventListener('click', function(e){ var z = e.target.getAttribute('data-sz'); if (!z) return;
+    if (S.focus) S.near = z === 'near'; else S.zoom = z; zoomButtons(); render(); });
+  document.getElementById('so-svg').addEventListener('click', function(e){ var g = e.target.closest && e.target.closest('[data-focus]'); if (g && g.getAttribute('data-focus')) setFocus(g.getAttribute('data-focus')); });
   if (!window.__soResize){ window.__soResize = 1; window.addEventListener('resize', function(){ if (document.getElementById('so-svg')) render(); }); }
-  orbits(); render();
+  zoomButtons(); render();
 }
 return { html:html, mount:mount, stop:stop };
 })();
@@ -1684,7 +1820,7 @@ function fleet(){
     });
   });
   var leg = [['Survol', '<circle cx="8" cy="8" r="3.5"/>'], ['Arrivée ou mise en orbite', '<path d="M8 1l7 7l-7 7l-7-7z"/>'], ['Atterrissage', '<path d="M8 2l6 10h-12z"/>'], ['Fin de mission', '<rect x="4" y="4" width="8" height="8"/>']];
-  var h = '<div class="sk wide"><h2>' + T('Flotte') + '</h2><p class="lead">' + T('Les missions du site sur une même frise, rangées par corps visé : lancement, survols, arrivée et fin de mission, chaque date sourcée dans la liste plus bas.') + '</p>' +
+  var h = '<div class="sk full"><h2>' + T('Flotte') + '</h2><p class="lead">' + T('Les missions du site sur une même frise, rangées par corps visé : lancement, survols, arrivée et fin de mission, chaque date sourcée dans la liste plus bas.') + '</p>' +
     '<div class="fl-wrap"><svg viewBox="0 -4 ' + W + ' ' + (Ht + 22) + '" class="fl" role="group" aria-labelledby="fl-cap">' + svg + '</svg></div>' +
     '<p class="sr-only" id="fl-cap">' + T('Frise des missions de') + ' ' + y0 + ' ' + T('à aujourd\'hui') + '. ' + T('Le détail est dans la liste qui suit.') + '</p>' +
     '<p class="fl-leg">' + leg.map(function(l){ return '<span><svg viewBox="0 0 16 16" aria-hidden="true">' + l[1] + '</svg>' + T(l[0]) + '</span>'; }).join('') +
@@ -1707,7 +1843,7 @@ function bars(items, unit){
   }).join('') + '</ul>';
 }
 function compare(){
-  var h = '<div class="sk wide"><h2>' + T('Comparer') + '</h2><p class="lead">' + T('Les missions côte à côte, avec les valeurs de leurs fiches et les mêmes sources.') + '</p>';
+  var h = '<div class="sk full"><h2>' + T('Comparer') + '</h2><p class="lead">' + T('Les missions côte à côte, avec les valeurs de leurs fiches et les mêmes sources.') + '</p>';
   var trip = MISSIONS.map(function(m){ var l = launch(m), a = arrival(m); if (!l || !a) return null; var d = day(a.date) - day(l.date);
     return { m:m, v:d, label:OBS_NUM(String(Math.round(d))) + ' ' + T('jours') + ' (' + (d / 365.25).toFixed(1).replace('.', OBS_LANG === 'en' ? '.' : ',') + ' ' + T('ans') + ') · ' + esc(T(a.body)) + src(m, a.ref) }; }).filter(Boolean);
   h += '<h3>' + T('Durée du voyage') + '</h3><p class="note">' + T('Du lancement à l\'arrivée (ou à la mise en orbite) autour du corps visé.') + '</p>' + bars(trip);
@@ -1744,7 +1880,15 @@ function renderHeader(route){
   /* onglets des sondes, comme les onglets d'observatoires d'Observatories : sur une page de mission, on passe d'une sonde à l'autre
      en restant sur le même type de page (vue 3D ou « Mission et données ») */
   var cur = mission(route.replace(/-donnees$/, '')), dat = /-donnees$/.test(route);
-  $('tabs').innerHTML = cur ? '<div class="trow" role="tablist" aria-label="' + T('Sonde') + '">' + MISSIONS.map(function(m){
+  /* deux rangées, comme les domaines spectraux d'Observatories : les corps visés (filtrent), puis les sondes du corps choisi */
+  function bodyOf(m){ return m.body ? m.body.name : m.targets[0]; }
+  var bodies = []; MISSIONS.forEach(function(m){ if (bodies.indexOf(bodyOf(m)) < 0) bodies.push(bodyOf(m)); });
+  if (cur && !window.SSE_BODY_LOCK) window.SSE_BODY = bodyOf(cur);
+  var sb = window.SSE_BODY || (cur && bodyOf(cur));
+  $('tabs').innerHTML = cur ? '<div class="drow" role="group" aria-label="' + T('Corps visé') + '">' + bodies.map(function(b){
+    var n = MISSIONS.filter(function(m){ return bodyOf(m) === b; }).length;
+    return '<button class="dsel' + (b === bodyOf(cur) ? ' cur' : '') + '" data-body="' + esc(b) + '" aria-pressed="' + (b === sb) + '"><span class="dl">' + esc(T(b)) + '</span><span class="ds">' + esc(T(b)) + '</span><span class="dn">' + n + '</span></button>';
+  }).join('') + '</div><div class="trow" role="tablist" aria-label="' + T('Sonde') + '">' + MISSIONS.filter(function(m){ return bodyOf(m) === sb; }).map(function(m){
     return '<button class="tab" role="tab" data-go="' + m.id + (dat ? '-donnees' : '') + '" aria-selected="' + (m.id === cur.id) + '">' + esc(m.short || m.name) + '<small>' + esc(m.year || '') + '</small></button>';
   }).join('') + '</div>' : '';
   $('views').innerHTML = '<div class="views">' + VIEWS.map(function(v){
@@ -1894,6 +2038,7 @@ var PAGES = {
   flotte: function(){ return Views.fleet(); }
 };
 
+function currentRoute(){ var r = (location.hash || '').replace(/^#/, '').replace(/^(en|fr)-/, ''); return r; }
 function route(){
   var r = (location.hash || '').replace(/^#/, '').replace(/^(en|fr)-/, '') || 'accueil';
   var dm = /^(\w+)-donnees$/.exec(r), m = mission(dm ? dm[1] : r);
@@ -1909,11 +2054,13 @@ function route(){
 }
 
 document.addEventListener('click', function(e){
-  var el = e.target.closest ? e.target.closest('#b-lang,#b-theme,[data-go],[data-ptab],[data-part]') : null;
+  var el = e.target.closest ? e.target.closest('#b-lang,#b-theme,[data-go],[data-ptab],[data-part],[data-body]') : null;
   if (!el) return;
   var cm = mission((location.hash || '').replace(/^#/, '').replace(/^(en|fr)-/, ''));
   if (el.hasAttribute('data-ptab') && cm){ MS.tab = el.getAttribute('data-ptab'); renderPanel(cm); return; }
   if (el.hasAttribute('data-part') && cm){ var k = el.getAttribute('data-part'); MS.part = MS.part === k ? null : k; Viewer.select(MS.part); renderPanel(cm); var b = document.querySelector('[data-part="' + k + '"]'); if (b) b.focus(); return; }
+  if (el.hasAttribute('data-body')){ window.SSE_BODY = el.getAttribute('data-body'); window.SSE_BODY_LOCK = true; renderHeader(currentRoute()); window.SSE_BODY_LOCK = false;
+    var f = document.querySelector('#tabs .trow .tab'); if (f) f.focus(); return; }
   if (el.id === 'b-lang'){ var nl = OBS_LANG === 'en' ? 'fr' : 'en'; try { localStorage.setItem('sse-lang', nl); } catch(x){} location.hash = nl + '-' + (location.hash || '').replace(/^#/, '').replace(/^(en|fr)-/, ''); location.reload(); return; }
   if (el.id === 'b-theme'){ var nt = isDark() ? 'light' : 'dark'; document.documentElement.setAttribute('data-theme', nt); try { localStorage.setItem('sse-theme', nt); } catch(x){} route(); $('b-theme').focus(); return; }
   location.hash = el.getAttribute('data-go');

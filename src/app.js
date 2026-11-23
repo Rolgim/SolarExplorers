@@ -19,7 +19,15 @@ function renderHeader(route){
   /* onglets des sondes, comme les onglets d'observatoires d'Observatories : sur une page de mission, on passe d'une sonde à l'autre
      en restant sur le même type de page (vue 3D ou « Mission et données ») */
   var cur = mission(route.replace(/-donnees$/, '')), dat = /-donnees$/.test(route);
-  $('tabs').innerHTML = cur ? '<div class="trow" role="tablist" aria-label="' + T('Sonde') + '">' + MISSIONS.map(function(m){
+  /* deux rangées, comme les domaines spectraux d'Observatories : les corps visés (filtrent), puis les sondes du corps choisi */
+  function bodyOf(m){ return m.body ? m.body.name : m.targets[0]; }
+  var bodies = []; MISSIONS.forEach(function(m){ if (bodies.indexOf(bodyOf(m)) < 0) bodies.push(bodyOf(m)); });
+  if (cur && !window.SSE_BODY_LOCK) window.SSE_BODY = bodyOf(cur);
+  var sb = window.SSE_BODY || (cur && bodyOf(cur));
+  $('tabs').innerHTML = cur ? '<div class="drow" role="group" aria-label="' + T('Corps visé') + '">' + bodies.map(function(b){
+    var n = MISSIONS.filter(function(m){ return bodyOf(m) === b; }).length;
+    return '<button class="dsel' + (b === bodyOf(cur) ? ' cur' : '') + '" data-body="' + esc(b) + '" aria-pressed="' + (b === sb) + '"><span class="dl">' + esc(T(b)) + '</span><span class="ds">' + esc(T(b)) + '</span><span class="dn">' + n + '</span></button>';
+  }).join('') + '</div><div class="trow" role="tablist" aria-label="' + T('Sonde') + '">' + MISSIONS.filter(function(m){ return bodyOf(m) === sb; }).map(function(m){
     return '<button class="tab" role="tab" data-go="' + m.id + (dat ? '-donnees' : '') + '" aria-selected="' + (m.id === cur.id) + '">' + esc(m.short || m.name) + '<small>' + esc(m.year || '') + '</small></button>';
   }).join('') + '</div>' : '';
   $('views').innerHTML = '<div class="views">' + VIEWS.map(function(v){
@@ -169,6 +177,7 @@ var PAGES = {
   flotte: function(){ return Views.fleet(); }
 };
 
+function currentRoute(){ var r = (location.hash || '').replace(/^#/, '').replace(/^(en|fr)-/, ''); return r; }
 function route(){
   var r = (location.hash || '').replace(/^#/, '').replace(/^(en|fr)-/, '') || 'accueil';
   var dm = /^(\w+)-donnees$/.exec(r), m = mission(dm ? dm[1] : r);
@@ -184,11 +193,13 @@ function route(){
 }
 
 document.addEventListener('click', function(e){
-  var el = e.target.closest ? e.target.closest('#b-lang,#b-theme,[data-go],[data-ptab],[data-part]') : null;
+  var el = e.target.closest ? e.target.closest('#b-lang,#b-theme,[data-go],[data-ptab],[data-part],[data-body]') : null;
   if (!el) return;
   var cm = mission((location.hash || '').replace(/^#/, '').replace(/^(en|fr)-/, ''));
   if (el.hasAttribute('data-ptab') && cm){ MS.tab = el.getAttribute('data-ptab'); renderPanel(cm); return; }
   if (el.hasAttribute('data-part') && cm){ var k = el.getAttribute('data-part'); MS.part = MS.part === k ? null : k; Viewer.select(MS.part); renderPanel(cm); var b = document.querySelector('[data-part="' + k + '"]'); if (b) b.focus(); return; }
+  if (el.hasAttribute('data-body')){ window.SSE_BODY = el.getAttribute('data-body'); window.SSE_BODY_LOCK = true; renderHeader(currentRoute()); window.SSE_BODY_LOCK = false;
+    var f = document.querySelector('#tabs .trow .tab'); if (f) f.focus(); return; }
   if (el.id === 'b-lang'){ var nl = OBS_LANG === 'en' ? 'fr' : 'en'; try { localStorage.setItem('sse-lang', nl); } catch(x){} location.hash = nl + '-' + (location.hash || '').replace(/^#/, '').replace(/^(en|fr)-/, ''); location.reload(); return; }
   if (el.id === 'b-theme'){ var nt = isDark() ? 'light' : 'dark'; document.documentElement.setAttribute('data-theme', nt); try { localStorage.setItem('sse-theme', nt); } catch(x){} route(); $('b-theme').focus(); return; }
   location.hash = el.getAttribute('data-go');

@@ -53,7 +53,7 @@ function fleet(){
     });
   });
   var leg = [['Survol', '<circle cx="8" cy="8" r="3.5"/>'], ['Arrivée ou mise en orbite', '<path d="M8 1l7 7l-7 7l-7-7z"/>'], ['Atterrissage', '<path d="M8 2l6 10h-12z"/>'], ['Fin de mission', '<rect x="4" y="4" width="8" height="8"/>']];
-  var h = '<div class="sk wide"><h2>' + T('Flotte') + '</h2><p class="lead">' + T('Les missions du site sur une même frise, rangées par corps visé : lancement, survols, arrivée et fin de mission, chaque date sourcée dans la liste plus bas.') + '</p>' +
+  var h = '<div class="sk full"><h2>' + T('Flotte') + '</h2><p class="lead">' + T('Les missions du site sur une même frise, rangées par corps visé : lancement, survols, arrivée et fin de mission, chaque date sourcée dans la liste plus bas.') + '</p>' +
     '<div class="fl-wrap"><svg viewBox="0 -4 ' + W + ' ' + (Ht + 22) + '" class="fl" role="group" aria-labelledby="fl-cap">' + svg + '</svg></div>' +
     '<p class="sr-only" id="fl-cap">' + T('Frise des missions de') + ' ' + y0 + ' ' + T('à aujourd\'hui') + '. ' + T('Le détail est dans la liste qui suit.') + '</p>' +
     '<p class="fl-leg">' + leg.map(function(l){ return '<span><svg viewBox="0 0 16 16" aria-hidden="true">' + l[1] + '</svg>' + T(l[0]) + '</span>'; }).join('') +
@@ -76,7 +76,7 @@ function bars(items, unit){
   }).join('') + '</ul>';
 }
 function compare(){
-  var h = '<div class="sk wide"><h2>' + T('Comparer') + '</h2><p class="lead">' + T('Les missions côte à côte, avec les valeurs de leurs fiches et les mêmes sources.') + '</p>';
+  var h = '<div class="sk full"><h2>' + T('Comparer') + '</h2><p class="lead">' + T('Les missions côte à côte, avec les valeurs de leurs fiches et les mêmes sources.') + '</p>';
   var trip = MISSIONS.map(function(m){ var l = launch(m), a = arrival(m); if (!l || !a) return null; var d = day(a.date) - day(l.date);
     return { m:m, v:d, label:OBS_NUM(String(Math.round(d))) + ' ' + T('jours') + ' (' + (d / 365.25).toFixed(1).replace('.', OBS_LANG === 'en' ? '.' : ',') + ' ' + T('ans') + ') · ' + esc(T(a.body)) + src(m, a.ref) }; }).filter(Boolean);
   h += '<h3>' + T('Durée du voyage') + '</h3><p class="note">' + T('Du lancement à l\'arrivée (ou à la mise en orbite) autour du corps visé.') + '</p>' + bars(trip);

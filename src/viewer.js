@@ -16,7 +16,7 @@ var models = {}, globe = null, globeFor = null, ring = null;
 var O = { on:false, th:0.6, view:'probe', rb:1, inc:90, last:0, run:!REDUCED, k:1 }, carrier = null, sunDir = null;
 var V2 = { az:0.4, el:0.35, dist:5 };   /* caméra de la vue d'orbite, en rayons du corps */
 function setBody(t, R){
-  if (globe){ scene.remove(globe); globe = null; }
+  if (globe){ scene.remove(globe); globe = null; } if (ring){ scene.remove(ring); ring = null; }
   var meta = t.body && (window.DATA_FILES || {})['tex-' + t.body.tex];
   O.on = !!meta;
   if (!meta) return false;
@@ -28,7 +28,7 @@ function setBody(t, R){
   var i = O.inc * Math.PI / 180, pts = [], ro = O.rb + R * O.k * 2.2;
   for (var a = 0; a <= 128; a++){ var th = a / 128 * 2 * Math.PI; pts.push(new THREE.Vector3(Math.cos(th) * ro, Math.sin(th) * Math.sin(i) * ro, Math.sin(th) * Math.cos(i) * ro)); }
   ring = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color:0x8fb8ff, transparent:true, opacity:0.55 }));
-  globe.add(ring);
+  scene.add(ring);   /* à part du globe : le globe tourne, pas l'orbite */
   return true;
 }
 /* repère de l'orbite au temps th : position p, direction du mouvement vel, verticale locale up */
@@ -130,6 +130,7 @@ function frame(now){
     return renderer.render(scene, camera);
   }
   if (O.run) O.th += dt * 2 * Math.PI / (O.view === 'orbit' ? 40 : 120);   /* un tour en 2 min (vue sonde) ou 40 s (vue d'orbite) : accéléré */
+  if (O.run) globe.rotation.y += dt * 2 * Math.PI / 90;   /* le corps tourne aussi sur lui-même, vers l'est (un tour en 90 s : accéléré, schéma de principe) */
   var F = orbitFrame(), big = O.view === 'orbit';
   carrier.position.copy(F.p); carrier.quaternion.copy(F.q); carrier.scale.setScalar(big ? O.k : 1); ring.visible = big;
   if (big){

@@ -71,9 +71,10 @@ Ordre de l'étape 4 : MRO d'abord (HiRISE).
 Pages, sur le modèle du premier site :
 
 - **Mission** : vue 3D de la sonde (pièces, Soleil réel, éclaté), fiche sourcée, page « Mission et données » (instruments, trajet de la lumière, trajectoire, données réelles, chaîne de traitement).
-- **Sélection de la sonde** : rangée d'onglets dans l'en-tête (une par mission, avec l'année), comme les onglets d'observatoires du premier site ; on reste sur le même type de page (vue 3D ou « Mission et données ») en changeant de sonde.
-- **Vue 3D en orbite** : la sonde tourne autour du corps qu'elle observe, instruments tournés vers lui. Deux vues : « sonde » (caméra attachée à la sonde, le sol défile dessous) et « orbite » (le corps entier, la trace de l'orbite, sonde agrandie). Schéma de principe signalé : tailles, altitude, inclinaison et vitesse non respectées ; bouton Pause (WCAG 2.2.2), mouvement arrêté si « mouvement réduit ».
-- **Système solaire** (accueil) : les orbites des planètes et la trajectoire réelle de chaque sonde, avec un curseur des années.
+- **Sélection de la sonde** : deux rangées dans l'en-tête, comme les domaines spectraux et les observatoires du premier site : les corps visés (Mars, Lune, Saturne, Mercure), puis les sondes du corps choisi (avec l'année) ; on reste sur le même type de page (vue 3D ou « Mission et données ») en changeant de sonde.
+- **Vue 3D en orbite** : la sonde tourne autour du corps qu'elle observe, instruments tournés vers lui. Le corps tourne aussi sur lui-même. Deux vues : « sonde » (caméra attachée à la sonde, le sol défile dessous) et « orbite » (le corps entier, la trace de l'orbite, sonde agrandie). Schéma de principe signalé : tailles, altitude, inclinaison et vitesse non respectées ; bouton Pause (WCAG 2.2.2), mouvement arrêté si « mouvement réduit ».
+- **Système solaire** (accueil, pleine page) : planètes jusqu'à Neptune, Pluton et sondes à leur position réelle à la date choisie (aujourd'hui par défaut), curseur, lecture à vitesse réglable ; vue centrée sur une planète avec ses satellites.
+- **Comparer** et **Flotte** : pleine page.
 - **Comparer** : sous-pages (domaine spectral, résolution au sol, trajectoires, tableau).
 - **Flotte** : frise des missions par agence et par cible, « qui a fait quoi » sourcé.
 
@@ -93,6 +94,7 @@ Pages, sur le modèle du premier site :
    - Flotte : frise de 1997 à aujourd'hui, une ligne par mission rangée par corps visé (lancement, survols, arrivée ou mise en orbite, atterrissage, fin ou « en cours ») ; « qui a fait quoi » : agences et dates de chaque mission, chaque date sourcée ;
    - Comparer : durée du voyage (lancement → arrivée), masse au lancement, véhicules et instruments côte à côte, avec les sources des fiches ;
    - pas encore faits faute de valeurs structurées et sourcées : domaine spectral et résolution au sol des instruments.
+8. **Retours du 23 novembre 2026** : corps qui tourne sur lui-même ; sondes regroupées par corps dans l'en-tête ; Système solaire, Comparer et Flotte en pleine page ; lecture plus lente (un mois par seconde par défaut, réglable d'une heure à un an par seconde) ; Uranus, Neptune, Pluton et 21 satellites (éléments orbitaux Horizons tous les 180 jours, 30 pour Phobos, Mimas et Encelade, interpolés : écart ≤ 3° vérifié en retirant une époque sur deux).
 
 ## Sources
 
