@@ -618,7 +618,7 @@ var MISSIONS = [
     model:{ none:true },
     body:{ name:'Lune', tex:'moon', nadir:[0, -1, 0] },
     view:{ az:0.8, el:0.3, dist:1.5, r:3 }, sun:[0.4, 0.8, 0.4],
-    real:{ key:'sln-img', alt:'Aperçu d\'une image de Kaguya', none:'Pas encore d\'aperçu image de Kaguya téléchargé depuis STAC-PLANET.' },
+    real:{ key:'sln-img', alt:'Aperçu d\'une image de la caméra TC de Kaguya', none:'Pas encore d\'aperçu image de Kaguya téléchargé depuis STAC-PLANET.' },
     desc:"Grande sonde lunaire japonaise, Kaguya a tourné autour de la Lune de 2007 à 2009 avec quinze instruments et deux petits satellites, Okina et Ouna. Ensemble, ils ont mesuré le relief, la composition, le sous-sol et la gravité de la Lune, y compris celle de la face cachée. La sonde a été précipitée sur la Lune à la fin de la mission.",
     checked:'2026-11-23',
     refs:{
@@ -661,7 +661,7 @@ var MISSIONS = [
     model:{ none:true },
     body:{ name:'Lune', tex:'moon', nadir:[0, -1, 0] },
     view:{ az:0.8, el:0.3, dist:1.5, r:3 }, sun:[0.4, 0.8, 0.4],
-    real:{ key:'ch1-img', alt:'Aperçu d\'une image de Chandrayaan-1', none:'Pas encore d\'aperçu image de Chandrayaan-1 téléchargé depuis STAC-PLANET.' },
+    real:{ key:'ch1-img', alt:'Aperçu d\'une bande d\'images du spectromètre M3 de Chandrayaan-1', none:'Pas encore d\'aperçu image de Chandrayaan-1 téléchargé depuis STAC-PLANET.' },
     desc:"Première sonde lunaire de l'Inde, Chandrayaan-1 a tourné autour de la Lune de novembre 2008 à août 2009 avec onze instruments, dont six venus d'autres pays. Son spectromètre M3, fourni par la NASA, a détecté de l'eau et des molécules hydroxyle à la surface, et son radar Mini-SAR des signes de glace au fond des cratères polaires.",
     checked:'2026-11-23',
     refs:{

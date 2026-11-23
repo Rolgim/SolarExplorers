@@ -91,7 +91,7 @@ def _try(mid, cols, inst, arch, **kw):
 def vo_vis(): _try("vo", ("ode-mars-vo-visab-mdim", "ode-mars-vo-visab-mdimc", "ode-mars-vo-visab-edr"), "VIS", "PDS Geosciences Node (NASA), via le catalogue STAC-PLANET du PDSSP")
 def sln_tc(): _try("sln", ("ode-moon-sln-tc-tcwl2b", "ode-moon-sln-tc-tcsl2b", "ode-moon-sln-tc-tcort"), "TC", "JAXA (SELENE Data Archive) / PDS Geosciences Node, via le catalogue STAC-PLANET du PDSSP", crop=3)
 def ch1_m3(): _try("ch1", ("ode-moon-ch1-orb-m3-refimg", "ode-moon-ch1-orb-m3-caliv3"), "M3", "PDS Imaging Node (NASA), via le catalogue STAC-PLANET du PDSSP", crop=3)
-def kplo_shadowcam(): _try("kplo", ("ode-moon-kplo-shadowcam-cmos", "ode-moon-kplo-shadowcam-umos", "ode-moon-kplo-shadowcam-dtm", "ode-moon-kplo-shadowcam-cal"), "ShadowCam", "PDS de ShadowCam (Arizona State University), via le catalogue STAC-PLANET du PDSSP", stretch=0.5, min_side=200, crop=3)
+def kplo_shadowcam(): _try("kplo", ("ode-moon-kplo-shadowcam-cmos", "ode-moon-kplo-shadowcam-umos", "ode-moon-kplo-shadowcam-cal"),   # pas « dtm » : ses aperçus sont des graphiques d'erreur, pas des images "ShadowCam", "PDS de ShadowCam (Arizona State University), via le catalogue STAC-PLANET du PDSSP", stretch=0.5, min_side=200, crop=3)
 def cassini_vims(): browse("cassini", "vim-cassini-vims-ir", "VIMS", "Université de Nantes (aperçus VIMS), via le catalogue STAC-PLANET du PDSSP")
 
 # fonds des corps (vue 3D : le corps observé sous la sonde) : textures globales sous licence ouverte, créditées à côté de l'image (règle 8)

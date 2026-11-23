@@ -165,9 +165,10 @@ function orbitPlot(m){
   var W = 420, c = W / 2, k = (W / 2 - 16) / mx, d = '', dh = '', prev = null;
   /* vue de dessus : un point sous l'écliptique (z < 0) qui se projette sur le disque est caché par le corps (tirets pâles) */
   for (i = 0; i < xy.length; i += 2){ var hid = !!(smp.z && smp.z[i / 2] < 0 && Math.hypot(xy[i], xy[i + 1]) < R), pt = (c + xy[i] * k).toFixed(1) + ' ' + (c - xy[i + 1] * k).toFixed(1);
-    if (prev !== null){ if (hid) dh += (prev.h ? 'L' : 'M' + prev.p) + 'L' + pt; else d += (prev.h ? 'M' + prev.p : '') + 'L' + pt; } else d += 'M' + pt;
+    if (prev === null){ if (hid) dh += 'M' + pt; else d += 'M' + pt; }
+    else if (hid) dh += (prev.h ? '' : 'M' + prev.p) + 'L' + pt;
+    else d += (prev.h ? 'M' + prev.p : '') + 'L' + pt;
     prev = { h:hid, p:pt }; }
-  d = d.replace(/^L/, 'M'); dh = dh.replace(/LL/g, 'L');
   var mins = smp.step_min * (xy.length / 2 - 1), dur = mins >= 2880 ? num(mins / 1440, 0) + ' ' + L('jours', 'days') : mins >= 120 ? num(mins / 60, 1) + ' h' : mins + ' min';
   var mk = Marks(m);
   return '<figure class="traj"><svg viewBox="0 0 ' + W + ' ' + W + '" role="img" aria-label="' + esc(L('Orbite réelle de ', 'Real orbit of ') + m.short + L(' autour de ', ' around ') + OBS_T(o.body)) + '">' +
