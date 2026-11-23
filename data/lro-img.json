@@ -1,0 +1,46 @@
+{
+ "archive": "PDS de LROC (Arizona State University), via le catalogue STAC-PLANET du PDSSP",
+ "collection": "ode-moon-lro-lroc-bdrroi",
+ "product": "bdr.nac_roi.gruithsnlof.nac_roi_gruithsnlof_e364n3201",
+ "datetime": "2025-04-21T01:01:53Z",
+ "href": "https://pds.lroc.im-ldi.com/data/LRO-L-LROC-5-RDR-V1.0/LROLRC_2001/EXTRAS/BROWSE/NAC_ROI/GRUITHSNLOF/NAC_ROI_GRUITHSNLOF_E364N3201.BROWSE.PNG",
+ "stac": "https://stac.stacplanet.pdssp.eu/collections/ode-moon-lro-lroc-bdrroi/items/bdr.nac_roi.gruithsnlof.nac_roi_gruithsnlof_e364n3201",
+ "instrument": "LROC NAC",
+ "full_size": [
+  906,
+  1709
+ ],
+ "out_size": [
+  477,
+  900
+ ],
+ "stretch": null,
+ "footprint": {
+  "type": "Polygon",
+  "coordinates": [
+   [
+    [
+     -40.4577,
+     35.631
+    ],
+    [
+     -39.3885,
+     35.631
+    ],
+    [
+     -39.3885,
+     37.2547
+    ],
+    [
+     -40.4577,
+     37.2547
+    ],
+    [
+     -40.4577,
+     35.631
+    ]
+   ]
+  ]
+ },
+ "fetched": "2026-11-23"
+}

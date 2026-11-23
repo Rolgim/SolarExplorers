@@ -1,0 +1,46 @@
+{
+ "archive": "PDS Imaging Node (NASA), via le catalogue STAC-PLANET du PDSSP",
+ "collection": "ode-mercury-messenger-mdis-nac-rtmnac",
+ "product": "mdis_rtm_n01_007481_8156732_1",
+ "datetime": "2015-03-16T09:29:32.376000Z",
+ "href": "https://d29bxnxiw0kjau.cloudfront.net/MSGRMDS_8001/EXTRAS/BROWSE/MDIS_RTM_N01/2015_075/MDIS_RTM_N01_007481_8156732_1.PNG",
+ "stac": "https://stac.stacplanet.pdssp.eu/collections/ode-mercury-messenger-mdis-nac-rtmnac/items/mdis_rtm_n01_007481_8156732_1",
+ "instrument": "MDIS NAC",
+ "full_size": [
+  2831,
+  4418
+ ],
+ "out_size": [
+  577,
+  900
+ ],
+ "stretch": null,
+ "footprint": {
+  "type": "Polygon",
+  "coordinates": [
+   [
+    [
+     -98.4604,
+     72.4055
+    ],
+    [
+     -94.8913,
+     72.4055
+    ],
+    [
+     -94.8913,
+     74.089
+    ],
+    [
+     -98.4604,
+     74.089
+    ],
+    [
+     -98.4604,
+     72.4055
+    ]
+   ]
+  ]
+ },
+ "fetched": "2026-11-23"
+}
