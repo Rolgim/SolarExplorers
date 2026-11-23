@@ -117,6 +117,7 @@ function hzDate(s){   /* « 2005-Aug-13 » (Horizons) → date lisible dans la l
 var BODY_COL = { 'Terre':'#6FA8FF', 'Mars':'#E07A4F', 'Vénus':'#E8C26A', 'Mercure':'#B9B2A8', 'Jupiter':'#D9A66B', 'Saturne':'#E6D08A', 'Lune':'#C8C8C8' };
 var STEP = { '1 d':['position par jour', 'position per day'], '2 d':['position tous les 2 jours', 'position every 2 days'], '1 h':['position par heure', 'position per hour'] };
 function trajSvg(m){
+  if (!m.horizons) return '<p class="note">' + T('JPL Horizons ne publie pas la trajectoire de cette sonde : pas de tracé réel possible.') + '</p>';
   var d = (window.DATA_FILES || {})[m.id + '-traj']; if (!d) return '<p class="note">' + T('Trajectoire pas encore téléchargée (workflow « Données réelles »).') + '</p>';
   var bodies = d.bodies || [{ name:'Terre', orbit:d.earth, marks:[] }, { name:d.target.name, orbit:d.target.orbit, marks:[] }];
   var pr = d.probe, a = pr[0], b = pr[pr.length - 1], R = 0;

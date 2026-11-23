@@ -107,5 +107,105 @@ messenger:{
   ],
   refs:{ moi:{ t:'MESSENGER Mercury Orbit Insertion, Press Kit (mars 2011)', p:'NASA', u:'https://www.nasa.gov/pdf/525164main_MercuryMOI_PK.pdf' } },
   checked:'2026-11-23'
+},
+ody:{
+  intro:L('Après six mois de croisière, Odyssey s\'est placée autour de Mars en octobre 2001, puis a freiné trois mois dans la haute atmosphère pour rejoindre son orbite de travail, basse et polaire. Plus de vingt ans après, elle observe encore et relaie les données des robots martiens.',
+          'After a six-month cruise, Odyssey entered orbit around Mars in October 2001, then braked for three months in the upper atmosphere to reach its low, polar working orbit. More than twenty years on, it is still observing and relaying data from Mars rovers.'),
+  phases:[
+    [L('7 avril 2001', '7 April 2001'), L('Lancement', 'Launch'), L('Delta II 7925 depuis Cap Canaveral.', 'Delta II 7925 from Cape Canaveral.'), 'kit'],
+    [L('24 octobre 2001', '24 October 2001'), L('Mise en orbite de Mars', 'Mars orbit insertion'), L('Poussée de ≈ 20 minutes du moteur principal de 695 N.', 'A ≈ 20-minute burn of the 695 N main engine.'), 'kit'],
+    [L('fin 2001 – début 2002', 'late 2001 – early 2002'), L('Aérofreinage', 'Aerobraking'), L('Environ trois mois de passages dans la haute atmosphère pour arrondir l\'orbite.', 'About three months of passes through the upper atmosphere to circularise the orbit.'), 'kit'],
+    [L('février 2002 – août 2004', 'February 2002 – August 2004'), L('Mission principale', 'Primary mission'), L('Cartographie des minéraux et de l\'hydrogène.', 'Mapping of minerals and hydrogen.'), 'hz'],
+    [L('depuis août 2004', 'since August 2004'), L('Missions prolongées', 'Extended missions'), L('Science et relais radio des robots posés sur Mars.', 'Science and radio relay for rovers on Mars.'), 'hz']
+  ],
+  ops:[
+    [L('Orbite', 'Orbit'), L('polaire, presque héliosynchrone, ≈ 400 km, 118 min', 'polar, nearly Sun-synchronous, ≈ 400 km, 118 min'), 'kit'],
+    [L('Relais', 'Relay'), L('radio UHF pour les engins posés sur Mars', 'UHF radio for landers and rovers on Mars'), 'kit'],
+    [L('Opérations', 'Operations'), L('JPL (Pasadena) et Lockheed Martin (Denver)', 'JPL (Pasadena) and Lockheed Martin (Denver)'), 'kit']
+  ],
+  refs:{}, checked:'2026-11-23'
+},
+mgs:{
+  intro:L('MGS a mis dix mois à rejoindre Mars, puis près d\'un an et demi à descendre sur son orbite de cartographie, à cause d\'un panneau solaire endommagé qui obligeait à freiner doucement. Elle a ensuite observé Mars pendant plus de sept ans.',
+          'MGS took ten months to reach Mars, then nearly a year and a half to descend to its mapping orbit, because a damaged solar array forced gentle braking. It then observed Mars for more than seven years.'),
+  phases:[
+    [L('7 novembre 1996', '7 November 1996'), L('Lancement', 'Launch'), L('Delta II 7925 depuis Cap Canaveral.', 'Delta II 7925 from Cape Canaveral.'), 'nssdc'],
+    [L('12 septembre 1997', '12 September 1997'), L('Mise en orbite de Mars', 'Mars orbit insertion'), L('Orbite de capture très allongée.', 'Very elongated capture orbit.'), 'nssdc'],
+    [L('1997 – février 1999', '1997 – February 1999'), L('Aérofreinage', 'Aerobraking'), L('Ralenti, puis interrompu cinq mois, pour ménager le panneau solaire endommagé.', 'Slowed, then paused for five months, to spare the damaged solar array.'), 'nssdc'],
+    [L('mars 1999 – janvier 2001', 'March 1999 – January 2001'), L('Mission principale', 'Primary mission'), L('Une année martienne de cartographie.', 'One Martian year of mapping.'), 'nssdc'],
+    [L('2 novembre 2006', '2 November 2006'), L('Fin de mission', 'End of mission'), L('Contact perdu, après plusieurs prolongations.', 'Contact lost, after several extensions.'), 'nssdc']
+  ],
+  ops:[
+    [L('Orbite', 'Orbit'), L('polaire, héliosynchrone (2 h / 14 h), 378 km, 118 min', 'polar, Sun-synchronous (2 a.m. / 2 p.m.), 378 km, 118 min'), 'nssdc'],
+    [L('Cycle', 'Cycle'), L('quasi-répétition tous les 7 jours, carte complète en 26 jours', 'near-repeat every 7 days, full map in 26 days'), 'nssdc'],
+    [L('Coût', 'Cost'), L('≈ 154 millions de dollars (construction), 65 (lancement)', '≈ $154 million (development), $65 million (launch)'), 'nssdc']
+  ],
+  refs:{}, checked:'2026-11-23'
+},
+tgo:{
+  intro:L('Lancée avec l\'atterrisseur Schiaparelli, la sonde l\'a largué trois jours avant l\'arrivée puis s\'est placée sur une orbite très allongée. Un an d\'aérofreinage l\'a amenée sur son orbite de travail, basse et circulaire.',
+          'Launched with the Schiaparelli lander, the spacecraft released it three days before arrival, then entered a very elongated orbit. A year of aerobraking brought it down to its low, circular working orbit.'),
+  phases:[
+    [L('14 mars 2016', '14 March 2016'), L('Lancement', 'Launch'), L('Proton-M/Briz-M depuis Baïkonour.', 'Proton-M/Breeze-M from Baikonur.'), 'fs'],
+    [L('16 octobre 2016', '16 October 2016'), L('Largage de Schiaparelli', 'Schiaparelli release'), L('L\'atterrisseur ne s\'est pas posé correctement le 19 octobre.', 'The lander failed to land correctly on 19 October.'), ['nssdc', 'fs']],
+    [L('19 octobre 2016', '19 October 2016'), L('Mise en orbite de Mars', 'Mars orbit insertion'), L('Orbite de 4 jours, 200 × 98 000 km.', '4-day orbit, 200 × 98,000 km.'), ['fs', 'nssdc']],
+    [L('mars 2017 – février 2018', 'March 2017 – February 2018'), L('Aérofreinage', 'Aerobraking'), L('L\'orbite descend à 200 × 1 050 km, puis devient circulaire.', 'The orbit comes down to 200 × 1,050 km, then becomes circular.'), 'nssdc'],
+    [L('2018', '2018'), L('Début de la science', 'Science begins'), L('Mesures de l\'atmosphère et images CaSSIS ; relais radio des missions au sol.', 'Atmospheric measurements and CaSSIS images; radio relay for surface missions.'), 'fs']
+  ],
+  ops:[
+    [L('Orbite', 'Orbit'), L('circulaire, ≈ 400 km, ≈ 2 h', 'circular, ≈ 400 km, ≈ 2 h'), 'nssdc'],
+    [L('Relais', 'Relay'), L('radios UHF Electra, pour les robots posés sur Mars', 'Electra UHF radios, for rovers on Mars'), 'nssdc'],
+    [L('Maître d\'œuvre', 'Prime contractor'), 'Thales Alenia Space Italia', 'fs']
+  ],
+  refs:{}, checked:'2026-11-23'
+},
+vex:{
+  intro:L('Construite en un temps record sur le modèle de Mars Express, Venus Express a mis cinq mois à rejoindre Vénus. Prévue pour 500 jours, sa mission a duré plus de huit ans, jusqu\'à l\'épuisement des ergols.',
+          'Built in record time on the Mars Express design, Venus Express took five months to reach Venus. Planned for 500 days, its mission lasted more than eight years, until its propellant ran out.'),
+  phases:[
+    [L('9 novembre 2005', '9 November 2005'), L('Lancement', 'Launch'), L('Soyouz-Fregat depuis Baïkonour.', 'Soyuz-Fregat from Baikonur.'), 'fs'],
+    [L('11 avril 2006', '11 April 2006'), L('Mise en orbite de Vénus', 'Venus orbit insertion'), L('Poussée d\'≈ 50 minutes ; orbite de capture de 9 jours, puis abaissement de l\'apocentre en mai.', 'A ≈ 50-minute burn; 9-day capture orbit, then apocentre lowering in May.'), 'voi'],
+    [L('2006 – 2014', '2006 – 2014'), L('Observations', 'Observations'), L('Orbite de 24 h, quasi polaire ; périapside abaissée en 2008.', '24-hour, quasi-polar orbit; pericentre lowered in 2008.'), 'fs'],
+    [L('mai – juillet 2014', 'May – July 2014'), L('Aérofreinage expérimental', 'Experimental aerobraking'), L('Plongées dans l\'atmosphère, puis remontée de l\'orbite.', 'Dips into the atmosphere, then orbit raising.'), 'fs'],
+    [L('28 novembre – 16 décembre 2014', '28 November – 16 December 2014'), L('Fin de mission', 'End of mission'), L('Contact perdu pendant des manœuvres, fin officielle le 16 décembre.', 'Contact lost during manoeuvres, official end on 16 December.'), 'fs']
+  ],
+  ops:[
+    [L('Orbite', 'Orbit'), L('24 h, quasi polaire, ≈ 250 × 66 000 km au début', '24 h, quasi-polar, ≈ 250 × 66,000 km at first'), 'fs'],
+    [L('Plateforme', 'Platform'), L('celle de Mars Express, modifiée', 'that of Mars Express, modified'), 'fs']
+  ],
+  refs:{}, checked:'2026-11-23'
+},
+mgn:{
+  intro:L('Arrivée à Vénus en août 1990, Magellan a cartographié la planète au radar pendant trois cycles de 243 jours, le temps que Vénus tourne une fois sous son orbite. Elle a ensuite abaissé son orbite en freinant dans l\'atmosphère pour mesurer la gravité.',
+          'Arriving at Venus in August 1990, Magellan mapped the planet by radar over three 243-day cycles, the time it takes Venus to turn once under its orbit. It then lowered its orbit by braking in the atmosphere to measure gravity.'),
+  phases:[
+    [L('4 mai 1989', '4 May 1989'), L('Lancement', 'Launch'), L('Départ de la Terre.', 'Departure from Earth.'), 'nssdc'],
+    [L('10 août 1990', '10 August 1990'), L('Mise en orbite de Vénus', 'Venus orbit insertion'), L('Orbite elliptique presque polaire, 294 km au plus près.', 'Near-polar elliptical orbit, 294 km at closest.'), 'nssdc'],
+    [L('septembre 1990 – septembre 1992', 'September 1990 – September 1992'), L('Cartographie radar', 'Radar mapping'), L('Trois cycles : visée à gauche, à droite, puis à gauche.', 'Three cycles: left-looking, right-looking, then left again.'), 'nssdc'],
+    [L('1992 – 1994', '1992 – 1994'), L('Gravité', 'Gravity'), L('Cycles 4 et 5 ; aérofreinage vers une orbite circulaire à partir de mai 1993.', 'Cycles 4 and 5; aerobraking to a circular orbit from May 1993.'), 'nssdc'],
+    [L('12 octobre 1994', '12 October 1994'), L('Fin de mission', 'End of mission'), L('Expérience finale dans l\'atmosphère, puis perte du signal.', 'Final experiment in the atmosphere, then loss of signal.'), 'nssdc']
+  ],
+  ops:[
+    [L('Cycle de cartographie', 'Mapping cycle'), L('243 jours (une rotation de Vénus)', '243 days (one rotation of Venus)'), 'nssdc'],
+    [L('Orbites radar utilisables', 'Usable radar orbits'), '4 225', 'nssdc']
+  ],
+  refs:{}, checked:'2026-11-23'
+},
+clem:{
+  intro:L('Clementine devait montrer que des capteurs légers de la défense antimissile pouvaient servir à l\'exploration. Elle a passé un peu plus de deux mois autour de la Lune avant de repartir vers l\'astéroïde Geographos, qu\'une panne l\'a empêchée d\'atteindre.',
+          'Clementine was meant to show that lightweight missile-defence sensors could serve exploration. It spent a little over two months around the Moon before heading for asteroid Geographos, which a failure prevented it from reaching.'),
+  phases:[
+    [L('25 janvier 1994', '25 January 1994'), L('Lancement', 'Launch'), L('Titan II depuis Vandenberg.', 'Titan II from Vandenberg.'), 'info'],
+    [L('19 février 1994', '19 February 1994'), L('Mise en orbite lunaire', 'Lunar orbit insertion'), L('Orbite polaire elliptique de ≈ 5 h.', 'Polar elliptical orbit of ≈ 5 h.'), 'info'],
+    [L('26 février – 21 avril 1994', '26 February – 21 April 1994'), L('Cartographie', 'Mapping'), L('Deux cycles, en onze couleurs.', 'Two cycles, in eleven colours.'), 'info'],
+    [L('5 mai 1994', '5 May 1994'), L('Départ de la Lune', 'Departure from the Moon'), L('Cap sur l\'astéroïde Geographos.', 'Bound for asteroid Geographos.'), 'info'],
+    [L('7 mai 1994', '7 May 1994'), L('Panne', 'Failure'), L('Un propulseur vide les réservoirs ; la sonde tourne à 80 tours par minute et le survol est abandonné.', 'A thruster drains the tanks; the spacecraft spins at 80 rpm and the flyby is abandoned.'), 'info']
+  ],
+  ops:[
+    [L('Orbite', 'Orbit'), L('polaire, ≈ 5 h, 425 ± 25 km au plus près', 'polar, ≈ 5 h, 425 ± 25 km at closest'), 'info'],
+    [L('Images', 'Images'), L('près d\'un million en onze couleurs, 620 000 en haute résolution, 320 000 en infrarouge thermique', 'nearly one million in eleven colours, 620,000 high-resolution, 320,000 thermal infrared'), 'info'],
+    [L('Appui de la NASA', 'NASA support'), L('Deep Space Network, Goddard et JPL', 'Deep Space Network, Goddard and JPL'), 'info']
+  ],
+  refs:{}, checked:'2026-11-23'
 }
 };

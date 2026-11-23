@@ -9,6 +9,12 @@ Reprise telle quelle d'Observatories v1.0 (`tools/models/`). Les fichiers `model
 | `lro.glb` | NASA 3D Resources « Lunar Reconnaissance Orbiter (B) » (la version A a son antenne repliée au centre) | `copy` → `seg_lib` + `lro_cls.js` → idem |
 | `cassini.glb` | NASA 3D Resources « Cassini-Huygens (A) » | `copy` → `seg_lib` + `cassini_cls.js` → idem |
 | `messenger.glb` | NASA 3D Resources « MESSENGER » | `copy` → `seg_lib` + `messenger_cls.js` → idem |
+| `ody.glb` | NASA 3D Resources « Mars Odyssey » | `copy` → `seg_lib` + `ody_cls.js` → idem |
+| `mgs.glb` | NASA 3D Resources « Mars Global Surveyor » (version complète, antenne déployée) | `copy` → `seg_lib` + `mgs_cls.js` → idem |
+| `mgn.glb` | NASA 3D Resources « Magellan » | `copy` → `seg_lib` + `mgn_cls.js` → idem |
+| `clem.glb` | NASA 3D Resources « Clementine » | `copy` → `seg_lib` + `clem_cls.js` → idem |
+| `tgo.glb` | ESA SCIFLEET « trace_gas_orbiter » (OBJ + textures) | `obj2glb.py` → `seg_lib` + `tgo_cls.js` → idem |
+| `vex.glb` | ESA SCIFLEET « venus_express » (OBJ + textures, 271 000 sommets) | `obj2glb.py` → `seg_lib` + `vex_cls.js` → resize 1024 → `slimtex.mjs` (simplification à 12 % en gardant les textures, quantize) |
 
 Les classifieurs propres à chaque maquette (`<id>_cls.js`) s'ajoutent ici, mission par mission. Ceux d'Observatories restent consultables au tag `v1.0` de ce dépôt-là.
 

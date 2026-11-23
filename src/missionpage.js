@@ -182,7 +182,7 @@ function orbitSec(m, X){
     L('Positions réelles calculées par le JPL (Horizons) : d\'abord le voyage depuis la Terre, puis l\'orbite autour du corps étudié.', 'Real positions computed by JPL (Horizons): first the journey from Earth, then the orbit around the body studied.') + '</p></div><div class="inst-cols">';
   s += '<div class="isec"><h3>' + L('Croisière', 'Cruise') + '</h3>' + X.traj(m) + '</div>';
   var op = orbitPlot(m), sec = (m.sections || []).filter(function(x){ return /^Orbite/.test(x.title); })[0];
-  s += '<div class="isec"><h3>' + L('Autour de ', 'Around ') + esc(OBS_T(m.targets[0])) + '</h3>' + (op || '<p class="note">' + L('Orbite pas encore téléchargée.', 'Orbit not downloaded yet.') + '</p>') +
+  s += '<div class="isec"><h3>' + L('Autour de ', 'Around ') + esc(OBS_T(m.targets[0])) + '</h3>' + (op || '<p class="note">' + (m.horizons ? L('Orbite pas encore téléchargée.', 'Orbit not downloaded yet.') : L('JPL Horizons ne publie pas l\'orbite de cette sonde : pas de tracé réel possible.', 'JPL Horizons does not publish this spacecraft\'s orbit: no real plot possible.')) + '</p>') +
     (sec ? table(sec.rows.map(function(r){ return [OBS_T(r[0]), OBS_T(r[1]), r[2]]; }), mk) : '') + '</div>';
   return s + mk.list() + '</div>';
 }

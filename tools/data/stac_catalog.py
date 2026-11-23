@@ -6,7 +6,7 @@ import os, re, json
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 SRC = os.path.join(ROOT, "tools", "probe", "stacplanet-2026-11-23.md")
 reg = open(os.path.join(ROOT, "src", "data-missions.js"), encoding="utf8").read()
-pref = dict(re.findall(r"^    id:'(\w+)'.*?\n(?:.*\n)*?    horizons:'[^']*', stac:'([^']+)'", reg, re.M))
+pref = dict(re.findall(r"^    id:'(\w+)'.*?\n(?:.*\n)*?    horizons:(?:null|'[^']*'), stac:'([^']+)'", reg, re.M))
 extra = {"messenger": ["ode-venus-messenger-"]}
 out = {k: [] for k in pref}
 for line in open(SRC, encoding="utf8"):
