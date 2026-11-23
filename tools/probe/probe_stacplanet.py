@@ -74,6 +74,20 @@ def discover():
         scripts += [m for m in re.findall(r'href="([^"]+\.js)"', html)]
         for cfg in ("config.json", "env.js", "config.js", "assets/config.json", "app.config.json", "runtime-config.js", "settings.json"):
             scripts.append(cfg)
+        # l'application (React + Cesium) lit sa configuration au démarrage, dont STAC_API_URL :
+        # /config/config.stacplanet.json, puis config.stacplanet.local.json, puis config.json (relevé dans son bundle, 23/11/2026)
+        for cfg in ("config/config.stacplanet.json", "config/config.stacplanet.local.json", "config/config.json"):
+            st3, cj, _ = get(urljoin(PUBLIC, cfg), tries=2)
+            log(f"- configuration {cfg} : statut {st3}{' (JSON)' if isinstance(cj, dict) else ''}")
+            if st3 == 200 and isinstance(cj, dict):
+                save(os.path.basename(cfg), cj)
+                for k, v in cj.items():
+                    if isinstance(v, str) and v.startswith("http") and re.search(r"URL", k):
+                        log(f"  - {k} = {v}")
+                api = cj.get("STAC_API_URL")
+                if api:
+                    found.insert(0, (urljoin(PUBLIC, api), "STAC_API_URL de " + cfg))
+                    break
         texts = [("page", html)]
         for s in dict.fromkeys(scripts):
             u = urljoin(fin or PUBLIC, s)
