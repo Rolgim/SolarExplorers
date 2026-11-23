@@ -81,13 +81,25 @@ def discover():
                 continue   # bibliothèques tierces (CDN) : inutiles ici
             st2, t, _ = get(u, accept_json=False, tries=1)
             log(f"- script {u} : statut {st2}, {len(t) if isinstance(t, str) else 0} caractères")
-            if st2 == 200 and isinstance(t, str): texts.append((u, t))
+            if st2 == 200 and isinstance(t, str):
+                if t.strip() == html.strip():
+                    log("  (la même page HTML : l'application renvoie sa page pour toute adresse inconnue)"); continue
+                texts.append((u, t))
+                if "/cesium/" not in u:   # le bundle de l'application, gardé pour lecture hors ligne
+                    os.makedirs(os.path.join(OUT, "bundle"), exist_ok=True)
+                    with open(os.path.join(OUT, "bundle", os.path.basename(urlparse(u).path) or "index.js"), "w") as f: f.write(t)
+        # extraits du bundle autour des mots qui désignent une API (l'adresse peut y être relative ou assemblée)
+        with open(os.path.join(OUT, "snippets.txt"), "w") as f:
+            for origin, t in texts:
+                if "/cesium/" in origin: continue
+                for m in re.finditer(r"stac_?url|stacUrl|STAC_|apiUrl|API_URL|baseURL|baseUrl|catalogUrl|/collections|/search|VITE_|fetch\(", t):
+                    f.write(f"--- {origin} @{m.start()}\n{t[max(0, m.start() - 220):m.end() + 220]}\n")
         urls = {}
         for origin, t in texts:
             for m in re.findall(r'https?://[A-Za-z0-9._~:/?#\[\]@!$&()*+,;=%-]+', t):
                 m = m.rstrip("\\'\",);")
                 if re.search(r"stac|api|pdssp|catalog|search|collections", m, re.I) and not re.search(r"\.(png|jpe?g|svg|woff2?|css)(\?|$)", m, re.I) \
-                        and not re.search(r"stac-extensions\.github\.io|schemas\.stacspec|github\.com|w3\.org|openlayers|leaflet|maplibre|mapbox|cesium|googleapis", m, re.I):
+                        and not re.search(r"stac-extensions\.github\.io|schemas\.stacspec|api\.stacspec\.org|opengis\.net|stackoverflow|jsperf|arcgis|bentley|github\.com|w3\.org|openlayers|leaflet|maplibre|mapbox|cesium|googleapis", m, re.I):
                     urls.setdefault(m, origin)
             for m in re.findall(r'["\'](/(?:api|stac)[A-Za-z0-9/_.-]*)["\']', t):
                 urls.setdefault(urljoin(PUBLIC, m), origin + " (chemin relatif)")
