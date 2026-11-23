@@ -92,6 +92,11 @@ function renderPanel(m){
 }
 
 /* ---------- page « Mission et données » ---------- */
+var MON = { Jan:1, Feb:2, Mar:3, Apr:4, May:5, Jun:6, Jul:7, Aug:8, Sep:9, Oct:10, Nov:11, Dec:12 };
+function hzDate(s){   /* « 2005-Aug-13 » (Horizons) → date lisible dans la langue du site */
+  var m = /^(\d{4})-(\w{3})-(\d{2})/.exec(s); if (!m) return s;
+  return new Date(Date.UTC(+m[1], MON[m[2]] - 1, +m[3])).toLocaleDateString(OBS_LANG === 'en' ? 'en-GB' : 'fr-FR', { day:'numeric', month:'long', year:'numeric', timeZone:'UTC' });
+}
 function trajSvg(m){
   var d = (window.DATA_FILES || {})[m.id + '-traj']; if (!d) return '<p class="note">' + T('Trajectoire pas encore téléchargée (workflow « Données réelles »).') + '</p>';
   var W = 520, c = W/2, S = W/2/1.75;   /* échelle : 1,75 UA au bord */
@@ -106,7 +111,7 @@ function trajSvg(m){
     dot(ea, 4, 'pt-e') + dot(mb, 4, 'pt-t') +
     '<text x="' + (c + ea[1]*S + 8).toFixed(0) + '" y="' + (c - ea[2]*S + 14).toFixed(0) + '">' + T('Terre au départ') + '</text>' +
     '<text x="' + (c + mb[1]*S + 8).toFixed(0) + '" y="' + (c - mb[2]*S).toFixed(0) + '">' + T(d.target.name) + ' ' + T('à l\'arrivée') + '</text>' +
-    '</svg><figcaption>' + T('Croisière du') + ' ' + esc(a[0]) + ' ' + T('au') + ' ' + esc(b[0]) + ' (' + pr.length + ' ' + T('positions quotidiennes') + '). ' +
+    '</svg><figcaption>' + T('Croisière du') + ' ' + esc(hzDate(a[0])) + ' ' + T('au') + ' ' + esc(hzDate(b[0])) + ' (' + pr.length + ' ' + T('positions quotidiennes') + '). ' +
     T('Source') + ' : ' + esc(d.source) + ', ' + T('objet') + ' ' + esc(d.horizons) + ', ' + T('téléchargé le') + ' ' + esc(d.fetched) + '.</figcaption></figure>';
 }
 function realData(m){
@@ -114,7 +119,8 @@ function realData(m){
   return '<figure class="real"><img src="data/' + m.id + '-ctx.jpg" width="900" height="900" alt="' + T('Extrait d\'une image CTX de la surface de Mars') + ' (' + esc(d.product) + ')">' +
     '<figcaption><strong>' + esc(d.instrument) + ' · ' + esc(d.product) + '</strong><br>' + T('Prise le') + ' ' + esc(String(d.datetime).slice(0, 10)) + '. ' +
     (OBS_LANG === 'en' ? 'Central square of the ' + d.full_size[0] + ' × ' + d.full_size[1] + ' pixel strip (' + d.crop_px + ' pixels wide), scaled to ' + d.out_px + ' × ' + d.out_px
-                       : 'Carré central de la bande de ' + d.full_size[0] + ' × ' + d.full_size[1] + ' pixels (' + d.crop_px + ' pixels de côté), ramené à ' + d.out_px + ' × ' + d.out_px) + '.<br>' +
+                       : 'Carré central de la bande de ' + d.full_size[0] + ' × ' + d.full_size[1] + ' pixels (' + d.crop_px + ' pixels de côté), ramené à ' + d.out_px + ' × ' + d.out_px) +
+    (d.stretch ? (OBS_LANG === 'en' ? ', contrast stretched between the ' + d.stretch[0] + ' and ' + d.stretch[1] + ' percentiles' : ', contraste étiré entre les centiles ' + OBS_NUM(String(d.stretch[0]).replace('.', ',')) + ' et ' + OBS_NUM(String(d.stretch[1]).replace('.', ','))) : '') + '.<br>' +
     T('Archive') + ' : ' + T(d.archive) + ' · ' + T('collection') + ' <code>' + esc(d.collection) + '</code> · <a href="' + esc(d.href) + '" rel="noopener" target="_blank">' + T('aperçu d\'origine') + '</a> · ' + T('téléchargé le') + ' ' + esc(d.fetched) + '</figcaption></figure>';
 }
 function dataPage(m){
