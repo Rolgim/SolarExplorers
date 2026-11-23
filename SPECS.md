@@ -56,15 +56,17 @@ STAC-PLANET est le catalogue STAC du Pôle de données et services Surfaces plan
 - **Géométrie** : sur 487 items lus (un par collection), 233 ont une empreinte (Polygon, MultiPolygon, LineString) et 254 n'en ont pas (`geometry: null`, par exemple CRISM CDR) : les empreintes ne seront disponibles que pour une partie des collections.
 - **Fichiers** : hébergés chez les nœuds PDS (pds-geosciences.wustl.edu, ode.rsl.wustl.edu, pds.lroc.im-ldi.com, data.darts.isas.jaxa.jp, hirise.lpl.arizona.edu…). Aperçus prêts : HiRISE (JPEG browse, JP2), CTX (JPEG), HRSC (JPEG), LROC (PNG, GeoTIFF), Kaguya TC (JPEG), Cassini VIMS (JPEG/PNG). Sans aperçu : MDIS (MESSENGER), OMEGA, Magellan (fichiers PDS à convertir en CI).
 
-## 5. Périmètre proposé (à valider d'après la sonde)
+## 5. Périmètre retenu (choisi le 23 novembre 2026, d'après la sonde)
 
-| Mission | Cible | Pourquoi en premier |
-|---|---|---|
-| Mars Express (OMEGA, HRSC) | Mars | collections citées dans le modèle STAC du PDSSP |
-| Mars Reconnaissance Orbiter (HiRISE) | Mars | collections PDS ODE citées |
-| Cassini (VIMS) | Saturne, Titan | collection Titan citée |
-| Une mission lunaire | Lune | catalogue Lune prévu |
-| À choisir après la sonde | — | selon les collections réellement présentes |
+| Mission | Cible | Collections STAC-PLANET (préfixe) | Aperçus prêts |
+|---|---|---|---|
+| Mars Reconnaissance Orbiter (HiRISE, CTX, CRISM) | Mars | `ode-mars-mro-` (34) | oui : HiRISE JPEG/JP2, CTX JPEG |
+| Mars Express (HRSC, OMEGA, MARSIS) | Mars | `ode-mars-mex-` (18) | HRSC JPEG ; OMEGA et MARSIS sans aperçu |
+| Lunar Reconnaissance Orbiter (LROC, LOLA, Diviner…) | Lune | `ode-moon-lro-` (77) | LROC PNG et GeoTIFF |
+| Cassini (VIMS) | Titan | `vim-cassini-vims-ir` (1) | oui : orthographique et équirectangulaire |
+| MESSENGER (MDIS, MASCS, MLA…) | Mercure, survols de Vénus | `ode-mercury-messenger-`, `ode-venus-messenger-` | non : images PDS à convertir en CI |
+
+Ordre de l'étape 4 : MRO d'abord (HiRISE).
 
 Pages, sur le modèle du premier site :
 
@@ -78,7 +80,7 @@ Pages, sur le modèle du premier site :
 
 1. **Squelette** — fait (23 novembre 2026) : chaîne d'Observatories (build, tests, workflows, `tools/models`, `tools/probe`), contenu vidé.
 2. **Sonde STAC-PLANET** — faite le 23 novembre 2026 (résultats en section 4) : racine de l'API, collections (corps, mission, instrument, nombre d'items), un item par collection (propriétés, géométrie, assets).
-3. Choix des missions avec l'utilisatrice, d'après la sonde.
+3. **Choix des missions** — fait le 23 novembre 2026 (section 5).
 4. Première mission complète : maquette, fiche, instruments, trajectoire Horizons, une donnée réelle (et retour de la vue 3D d'Observatories).
 5. Carte d'un corps (Mars) avec les empreintes STAC.
 6. Accueil Système solaire, puis Comparer et Flotte.
