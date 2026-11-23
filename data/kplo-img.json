@@ -1,0 +1,50 @@
+{
+ "archive": "PDS de ShadowCam (Arizona State University), via le catalogue STAC-PLANET du PDSSP",
+ "collection": "ode-moon-kplo-shadowcam-dtm",
+ "product": "shadowcam_dtm_nobile-west-rim1_p853s0364_dtm_5m",
+ "datetime": "2024-02-20T01:29:22.133000Z",
+ "href": "https://pds.shadowcam.im-ldi.com/derived/dtm/nobile-west-rim1_p853s0364/shadowcam_dtm_nobile-west-rim1_p853s0364_lola-offsets-diff_plot.png",
+ "stac": "https://stac.stacplanet.pdssp.eu/collections/ode-moon-kplo-shadowcam-dtm/items/shadowcam_dtm_nobile-west-rim1_p853s0364_dtm_5m",
+ "instrument": "ShadowCam",
+ "full_size": [
+  1289,
+  938
+ ],
+ "crop": null,
+ "out_size": [
+  900,
+  655
+ ],
+ "stretch": [
+  0.5,
+  99.5
+ ],
+ "footprint": {
+  "type": "Polygon",
+  "coordinates": [
+   [
+    [
+     34.7866,
+     -85.4803
+    ],
+    [
+     38.0822,
+     -85.4803
+    ],
+    [
+     38.0822,
+     -85.1996
+    ],
+    [
+     34.7866,
+     -85.1996
+    ],
+    [
+     34.7866,
+     -85.4803
+    ]
+   ]
+  ]
+ },
+ "fetched": "2026-11-23"
+}

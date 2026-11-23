@@ -1,18 +1,19 @@
 {
  "archive": "JAXA (SELENE Data Archive) / PDS Geosciences Node, via le catalogue STAC-PLANET du PDSSP",
- "collection": "ode-moon-sln-tc-tcort",
- "product": "TCO_MAP_02_N69E024N66E027SC",
- "datetime": "2010-03-10T09:08:10Z",
- "href": "https://data.darts.isas.jaxa.jp/pub/pds3/sln-l-tc-5-ortho-map-v2.0/lon024/browse/small/TCO_MAP_02_N69E024N66E027SC.jpg",
- "stac": "https://stac.stacplanet.pdssp.eu/collections/ode-moon-sln-tc-tcort/items/TCO_MAP_02_N69E024N66E027SC",
+ "collection": "ode-moon-sln-tc-tcwl2b",
+ "product": "TC2W2B0_01_07536S868E0806",
+ "datetime": "2009-06-10T18:18:56.201000Z",
+ "href": "https://data.darts.isas.jaxa.jp/pub/pds3/sln-l-tc-3-w-level2b0-v1.0/20090610/browse/small/TC2W2B0_01_07536S868E0806.jpg",
+ "stac": "https://stac.stacplanet.pdssp.eu/collections/ode-moon-sln-tc-tcwl2b/items/TC2W2B0_01_07536S868E0806",
  "instrument": "TC",
  "full_size": [
   256,
-  256
+  206
  ],
+ "crop": null,
  "out_size": [
   256,
-  256
+  206
  ],
  "stretch": null,
  "footprint": {
@@ -20,24 +21,24 @@
   "coordinates": [
    [
     [
-     24.0,
-     66.0002
+     81.5013,
+     -86.58
     ],
     [
-     26.9998,
-     66.0002
+     79.7533,
+     -86.5767
     ],
     [
-     26.9998,
-     69.0
+     79.6222,
+     -87.0367
     ],
     [
-     24.0,
-     69.0
+     81.6651,
+     -87.0399
     ],
     [
-     24.0,
-     66.0002
+     81.5013,
+     -86.58
     ]
    ]
   ]
