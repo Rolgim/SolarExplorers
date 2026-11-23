@@ -110,7 +110,8 @@ def solar():
            "planets": [], "probes": []}
     d0 = datetime.date.fromisoformat(SOLAR_T0)
     for name, hid, st, per in PLANETS:
-        o = series(hid, SOLAR_T0, (d0 + datetime.timedelta(days=per + per // 240 + 1)).isoformat(), max(1, per // 240))
+        o0 = d0 if per < 60000 else datetime.date(1950, 1, 1)   # Horizons ne donne pas Pluton après 2199 : son tour commence en 1950
+        o = series(hid, o0.isoformat(), (o0 + datetime.timedelta(days=per + per // 240 + 1)).isoformat(), max(1, per // 240))
         out["planets"].append(dict(name=name, horizons=hid, orbit=o["xy"], **series(hid, SOLAR_T0, today, st)))
         print("planète", name, out["planets"][-1]["n"], "orbite", o["n"])
     out["moons"] = []
