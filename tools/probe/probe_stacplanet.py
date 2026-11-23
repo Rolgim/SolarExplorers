@@ -15,7 +15,7 @@ que le workflow « Sonde » pousse seul sur la branche probe-out, et le résumé
 5. Un item par collection : propriétés, type de géométrie, bbox, assets (clé, type, rôles, hôte).
 
 Usage : python tools/probe/probe_stacplanet.py [URL_API]   (URL_API facultative : saute la découverte)
-Variables : MAX_COLL (défaut 400) collections examinées au plus ; MAX_DEPTH (défaut 6) profondeur du parcours.
+Variables : MAX_COLL (défaut 3000) collections examinées au plus ; MAX_DEPTH (défaut 6) profondeur du parcours.
 """
 import json, os, re, sys, time
 from urllib.parse import urljoin, urlparse
@@ -24,7 +24,7 @@ import requests
 PUBLIC = "https://stacplanet.pdssp.eu/"
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "_out", "stacplanet")
 os.makedirs(os.path.join(OUT, "items"), exist_ok=True)
-MAX_COLL = int(os.environ.get("MAX_COLL", "400"))
+MAX_COLL = int(os.environ.get("MAX_COLL", "3000"))
 MAX_DEPTH = int(os.environ.get("MAX_DEPTH", "6"))
 H = {"User-Agent": "explorateurs-probe/1.0 (+https://github.com/Rolgim/SolarExplorers)", "Accept": "application/json, application/geo+json, */*;q=0.5"}
 S = requests.Session(); S.headers.update(H)
@@ -208,7 +208,12 @@ def count_items(root_url, root, cid, col_url):
         if st == 200 and isinstance(j, dict):
             n = j.get("numberMatched", (j.get("context") or {}).get("matched"))
             feats = j.get("features") or []
-            return n, (feats[0] if feats else None), "search"
+            if feats or not n: return n, (feats[0] if feats else None), "search"
+            # compte donné mais aucun item renvoyé : on lit l'item par /collections/{id}/items
+            st2, j2, _ = get(urljoin(root_url.rstrip("/") + "/", f"collections/{cid}/items"), params={"limit": 1}, tries=2)
+            f2 = (j2.get("features") or []) if st2 == 200 and isinstance(j2, dict) else []
+            if not f2: log(f"  {cid} : search sans item (clés {sorted(j.keys())}) ; items : statut {st2}")
+            return n, (f2[0] if f2 else None), "search + items"
     iu = None
     for l in links(col_url[1], "items"): iu = urljoin(col_url[0], l["href"])
     if not iu and root_url: iu = urljoin(root_url.rstrip("/") + "/", f"collections/{cid}/items")
@@ -306,6 +311,15 @@ def main():
     for r in sorted(rows, key=lambda r: (str(r["targets"]), str(r["mission"] or r["platform"]), str(r["id"]))):
         per = " → ".join(str(x)[:10] for x in (r["temporal"] or []) if x)
         md.append(f"| `{r['id']}` | {r['path']} | {r['targets']} | {r['mission'] or r['platform']} | {r['instruments']} | {r['product_type']} | {r['items'] if r['items'] is not None else '?'} | {per} |")
+    agg = {}
+    for r in rows:
+        k = (r["targets"] or "?", (r["mission"] or r["platform"] or "?"))
+        a = agg.setdefault(k, {"n": 0, "items": 0, "inst": set(), "platform": set()})
+        a["n"] += 1; a["items"] += r["items"] if isinstance(r["items"], int) else 0
+        a["inst"].add(r["instruments"] or "?"); a["platform"].add(r["platform"] or "")
+    md += ["", "## Synthèse par cible et par mission", "", "| Cible | Mission (champ mission, sinon platform) | Plateforme | Collections | Items | Instruments |", "|---|---|---|---|---|---|"]
+    for (t, m), a in sorted(agg.items(), key=lambda kv: (kv[0][0], -kv[1]["items"])):
+        md.append(f"| {t} | {m} | {', '.join(sorted(x for x in a['platform'] if x))} | {a['n']} | {a['items']} | {'; '.join(sorted(a['inst']))} |")
     md += ["", "## Un item par collection", ""]
     for r in rows:
         d = r["first_item"]
