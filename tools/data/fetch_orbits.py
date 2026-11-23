@@ -29,10 +29,10 @@ MISSIONS = {
         ("Vénus", "299", 225, "3 d", [("2006-10-24", "survol"), ("2007-06-05", "survol")]),
         ("Mercure", "199", 88, "1 d", [("2008-01-14", "survol"), ("2008-10-06", "survol"), ("2009-09-29", "survol"), ("2011-03-18", "arrivee")])]},
 }
-def query(cmd, center, start, stop, step):
+def query(cmd, center, start, stop, step, units="AU-D"):
     q = {"format": "json", "COMMAND": f"'{cmd}'", "OBJ_DATA": "NO", "MAKE_EPHEM": "YES", "EPHEM_TYPE": "VECTORS", "CENTER": f"'{center}'",
          "START_TIME": f"'{start}'", "STOP_TIME": f"'{stop}'", "STEP_SIZE": f"'{step}'", "VEC_TABLE": "'1'", "REF_PLANE": "ECLIPTIC",
-         "OUT_UNITS": "AU-D", "CSV_FORMAT": "YES", "VEC_LABELS": "NO"}
+         "OUT_UNITS": units, "CSV_FORMAT": "YES", "VEC_LABELS": "NO"}
     for k in range(4):
         try:
             r = requests.get(API, params=q, headers=H, timeout=120); r.raise_for_status(); res = r.json()["result"]; break
@@ -102,6 +102,28 @@ def elements(cmd, center, start, stop, step):
 # sondes : du lancement à la fin de mission (ou à aujourd'hui) ; repli sur la croisière si Horizons ne couvre pas toute la durée
 PROBES = [("mro", "-74", "2005-08-13", None), ("mex", "-41", "2003-06-03", None), ("lro", "-85", "2009-06-19", None),
           ("cassini", "-82", "1997-10-16", "2017-09-15"), ("messenger", "-236", "2004-08-04", "2015-04-30")]
+# orbites des sondes autour de leur corps : une fenêtre par an (du début de la phase en orbite à la fin, ou au téléchargement),
+# vecteurs centrés sur le corps, en km, écliptique J2000 : (id, sonde, corps Horizons, nom du corps, début, fin, durée en minutes, pas en minutes)
+ORBITERS = [("mro", "-74", "499", "Mars", "2006-11-15", None, 120, 1), ("mex", "-41", "499", "Mars", "2004-02-01", None, 440, 2),
+            ("lro", "-85", "301", "Lune", "2009-09-20", None, 120, 1), ("cassini", "-82", "699", "Saturne", "2004-08-01", "2017-09-10", 43200, 180),
+            ("messenger", "-236", "199", "Mercure", "2011-04-04", "2015-04-28", 750, 3)]
+def probe_orbits(today):
+    out = []
+    for mid, sc, cen, body, first, last, dur, st in ORBITERS:
+        last = last or today; y0, y1 = int(first[:4]), int(last[:4]); samples = []
+        for y in range(y0, y1 + 1):
+            d = max(datetime.date.fromisoformat(first), datetime.date(y, 1, 15)) if y == y0 else datetime.date(y, 1, 15)
+            if y == y1 and y1 != y0: d = min(datetime.date(y, 1, 15), datetime.date.fromisoformat(last) - datetime.timedelta(days=dur // 1440 + 1))
+            a = datetime.datetime.combine(d, datetime.time()); b = a + datetime.timedelta(minutes=dur)
+            try:
+                rows = query(sc, f"500@{cen}", a.strftime("%Y-%m-%d %H:%M"), b.strftime("%Y-%m-%d %H:%M"), f"{st} m", "KM-S")
+                xy = []
+                for line in rows:
+                    p = [x.strip() for x in line.split(",")]; xy += [round(float(p[2])), round(float(p[3]))]
+                samples.append({"t0": d.isoformat(), "step_min": st, "xy": xy}); print("orbite", mid, d, len(xy) // 2)
+            except Exception as e: print("  ÉCHEC orbite", mid, d, repr(e)[:200])
+        out.append({"id": mid, "body": body, "center": cen, "samples": samples})
+    return out
 def series(cmd, start, stop, step_d):
     v = vectors(cmd, SUN, start, stop, f"{step_d} d", 3)
     return {"t0": v[0][0], "step": step_d, "n": len(v), "xy": [c for p in v for c in p[1:]]}
@@ -129,6 +151,7 @@ def solar():
             try:
                 out["probes"].append(dict(id=mid, horizons=hid, full=(b == stop), **series(hid, start, b, 4))); print("sonde", mid, a, b, out["probes"][-1]["n"]); break
             except Exception as e: print("  repli", mid, repr(e)[:200])
+    out["orbits"] = probe_orbits(today)
     json.dump(out, open(os.path.join(ROOT, "data", "solar.json"), "w"), separators=(",", ":"), ensure_ascii=False)
 if __name__ == "__main__":
     want = sys.argv[1:] or list(MISSIONS) + ["solar"]

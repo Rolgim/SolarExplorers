@@ -25,7 +25,15 @@ SRC = {
   "mex-instruments": "https://www.esa.int/Science_Exploration/Space_Science/Mars_Express/Mars_Express_orbiter_instruments",
   "lro-presskit-raw": "https://webarchive.library.unt.edu/web/20090922191046id_/http://lro.gsfc.nasa.gov/images/LRO_LCROSS_presskit.pdf",
   "messenger-launch-raw": "https://webarchive.library.unt.edu/eot2008/20081102145358id_/http://www.nasa.gov/pdf/168019main_MESSENGER_71504_PressKit.pdf",
+  "mro-arrival": "https://mars.nasa.gov/files/mro/mro-arrival.pdf",
+  "mro-launch": "https://www.jpl.nasa.gov/news/press_kits/mro-launch.pdf",
+  "mro-launch-unt": "https://webarchive.library.unt.edu/eot2008/20081025014401id_/http://www.jpl.nasa.gov/news/press_kits/mro-launch.pdf",
+  "mro-nssdc": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=2005-029A",
 }
+# fiches d'expériences de la NSSDCA (une par instrument) : identifiant COSPAR de la sonde suivi de -01, -02…
+for _k, _cospar in (("mro", "2005-029A"), ("mex", "2003-022A"), ("lro", "2009-031A"), ("cassini", "1997-061A"), ("messenger", "2004-030A")):
+    for _i in range(1, 15):
+        SRC[f"{_k}-exp{_i:02d}"] = f"https://nssdc.gsfc.nasa.gov/nmc/experiment/display.action?id={_cospar}-{_i:02d}"
 ONLY = set(os.environ.get("ONLY", "").split()) or set(__import__("sys").argv[1:])
 if ONLY: SRC = {k: v for k, v in SRC.items() if k in ONLY}
 idx = ["| clé | statut | octets | URL finale |", "|---|---|---|---|"]
