@@ -1,0 +1,27 @@
+name: Tests
+# Vérifie que index.html est bien construit à partir de src/, puis parcourt le site dans un vrai navigateur.
+on:
+  push:
+    branches: [main]
+    paths: ['src/**', 'build.js', 'index.html', 'models/**', 'data/**', 'tools/*.js', '.github/workflows/tests.yml']
+  pull_request:
+  workflow_dispatch:
+jobs:
+  smoke:
+    # ubuntu-latest est passé à 26.04, que Playwright 1.56 ne prend pas en charge
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - name: index.html à jour
+        run: |
+          node build.js
+          git diff --exit-code --stat index.html || (echo "index.html ne correspond pas aux sources : relancer node build.js et commiter" && exit 1)
+      - run: npm install --no-save playwright@1.56.0 axe-core@4.10.2 && npx playwright install --with-deps chromium
+      - run: node tools/smoke.js
+      - name: Accessibilité (axe-core, WCAG 2.1 A et AA)
+        run: node tools/a11y.js
+      - name: Traduction (aucune chaîne française en anglais)
+        run: node tools/i18n-scan.js

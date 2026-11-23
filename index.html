@@ -1,0 +1,758 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Planetary probes in 3D, with sourced facts, instruments, trajectories and real archive data. In English and French.">
+<title>Solar System Explorers</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#14171A">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>[hidden]{display:none!important}</style>
+<style>
+/* Parti pris : une fiche technique imprimée (papier gris froid, encre noire, une seule famille de caractères)
+   posée à côté d'un hublot noir sur la maquette. Un seul accent : le jaune de surligneur, réservé à « ce qui est sélectionné ». */
+:root{
+  --paper:#ECEEEF; --sheet:#F7F8F8; --ink:#14171A; --ink-2:#3A4147; --mute:#5A6369; --rule:#C8CDD1; --rule-2:#98A1A7;
+  --mark:#FFD21F; --on-mark:#14171A; --black:#000; --ok:#0B7A4B; --on-ok:#FFFFFF; --on-bad:#FFFFFF; --warn:#8A5200; --bad:#B3261E;
+  --f:'Archivo', 'Helvetica Neue', Arial, sans-serif; --f-code:'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  --gl:max(16px, env(safe-area-inset-left, 0px)); --gr:max(16px, env(safe-area-inset-right, 0px));
+  color-scheme: light;
+}
+/* thème sombre : gris anthracite, distinct du noir du ciel */
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --paper:#1C1F22; --sheet:#262A2E; --ink:#F1F3F4; --ink-2:#C6CCD1; --mute:#939CA3; --rule:#3B4147; --rule-2:#5C656D; --ok:#2FA872; --on-ok:#0E1A14; --on-bad:#14171A; --warn:#E3A33C; --bad:#D9463C; color-scheme:dark; } }
+:root[data-theme="dark"]{ --paper:#1C1F22; --sheet:#262A2E; --ink:#F1F3F4; --ink-2:#C6CCD1; --mute:#939CA3; --rule:#3B4147; --rule-2:#5C656D; --ok:#2FA872; --on-ok:#0E1A14; --on-bad:#14171A; --warn:#E3A33C; --bad:#D9463C; color-scheme:dark; }
+/* couleurs neutres écrites dans les SVG générés : ramenées aux jetons du thème */
+svg [fill="#14171A"]{ fill:var(--ink); } svg [stroke="#14171A"]{ stroke:var(--ink); }
+svg [fill="#3A4147"]{ fill:var(--ink-2); } svg [stroke="#3A4147"]{ stroke:var(--ink-2); }
+svg [fill="#667077"]{ fill:var(--mute); } svg [stroke="#98A1A7"]{ stroke:var(--rule-2); } svg [stroke="#C8CDD1"]{ stroke:var(--rule); }
+svg [fill="#F7F8F8"]{ fill:var(--sheet); } svg [fill="#ECEEEF"]{ fill:var(--paper); }
+svg [fill="#FFD21F"][stroke="#14171A"]{ stroke:var(--on-mark); }
+*{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html, body{ height:100%; }
+body{ margin:0; background:var(--paper); color:var(--ink); font-family:var(--f); font-size:14px; overflow:hidden; }
+button{ font-family:inherit; color:inherit; }
+button:focus-visible, a:focus-visible, input:focus-visible{ outline:2px solid var(--ink); outline-offset:2px; }
+#stage button:focus-visible, #stage input:focus-visible{ outline-color:#fff; outline-offset:3px; }
+
+#app{ height:100%; display:flex; flex-direction:column; min-height:0; position:relative; }
+
+/* ---------- en-tête ---------- */
+#top{ flex:none; display:flex; min-height:55px; align-items:stretch; gap:24px; padding-left:var(--gl); padding-right:var(--gr); background:var(--paper); }
+.brand{ display:flex; align-items:center; min-width:0; padding-block:11px; }
+.brand h1{ font-weight:800; font-stretch:75%; font-size:21px; letter-spacing:.1px; margin:0; white-space:nowrap; }
+/* navigation en deux rangées : domaines spectraux (filtres), puis observatoires du domaine choisi */
+#tabs{ display:flex; flex-direction:column; margin-left:auto; min-width:0; }
+.drow, .trow{ display:flex; overflow-x:auto; scrollbar-width:none; min-width:0; }
+.drow::-webkit-scrollbar, .trow::-webkit-scrollbar{ display:none; }
+.trow{ flex:1; justify-content:flex-end; }
+.drow{ justify-content:flex-end; gap:2px; padding-top:5px; }
+.dsel{ flex:none; border:0; background:transparent; color:var(--mute); font-size:12px; font-weight:500; padding:2px 8px 3px; cursor:pointer; border-bottom:2px solid transparent; display:flex; align-items:baseline; gap:4px; white-space:nowrap; }
+.dsel:hover{ color:var(--ink); }
+.dsel[aria-pressed="true"]{ color:var(--ink); font-weight:700; border-bottom-color:var(--ink); }
+.dsel .dn{ font-size:10.5px; color:var(--mute); font-weight:400; font-variant-numeric:tabular-nums; }
+.dsel.cur .dl::after, .dsel.cur .ds::after{ content:""; display:inline-block; width:5px; height:5px; border-radius:50%; background:var(--mark); margin-left:4px; vertical-align:2px; }
+.dsel .ds{ display:none; }
+#tabs .fade-r, .pills .fade-r{ -webkit-mask-image:linear-gradient(90deg, #000 calc(100% - 36px), transparent); mask-image:linear-gradient(90deg, #000 calc(100% - 36px), transparent); }
+#tabs .fade-l, .pills .fade-l{ -webkit-mask-image:linear-gradient(90deg, transparent, #000 36px); mask-image:linear-gradient(90deg, transparent, #000 36px); }
+#tabs .fade-l.fade-r, .pills .fade-l.fade-r{ -webkit-mask-image:linear-gradient(90deg, transparent, #000 36px, #000 calc(100% - 36px), transparent); mask-image:linear-gradient(90deg, transparent, #000 36px, #000 calc(100% - 36px), transparent); }
+.tab{ flex:none; position:relative; border:0; border-left:1px solid var(--rule); background:transparent; color:var(--ink-2); cursor:pointer; padding:6px 16px 8px; font-size:14px; font-weight:600; display:flex; align-items:center; gap:7px; margin-top:4px; }
+/* groupes par domaine spectral : un trait plein entre les groupes, pointillé à l'intérieur, le nom du groupe au-dessus de son premier onglet */
+.tab small{ font-size:11.5px; font-weight:400; color:var(--mute); font-variant-numeric:tabular-nums; }
+.tab:hover{ background:var(--sheet); color:var(--ink); }
+.tab[aria-selected="true"]{ background:var(--mark); color:var(--on-mark); }
+.tab[aria-selected="true"] small{ color:var(--on-mark); opacity:.75; }
+.tab.cmp{ border-right:1px solid var(--rule); }
+
+/* ---------- vue 3D ---------- */
+#main{ flex:1; display:flex; min-height:0; position:relative; }
+#stage{ flex:1; position:relative; min-width:0; min-height:0; background:var(--black); color:#fff; }
+#stage canvas{ position:absolute; inset:0; width:100%; height:100%; display:block; touch-action:none; cursor:grab; }
+#stage canvas.dragging{ cursor:grabbing; }
+#stage canvas.over-part{ cursor:pointer; }
+
+.hud{ position:absolute; pointer-events:none; }
+#hud-title{ left:var(--gl); top:16px; right:var(--gr); }
+#t-name{ font-weight:800; font-stretch:75%; font-size:clamp(24px, 3.4vw, 40px); line-height:1; text-shadow:0 2px 14px #000; }
+#t-sub{ color:#C9CED2; font-size:13px; margin-top:7px; text-shadow:0 1px 8px #000; }
+#t-src{ color:#8E979D; font-size:11.5px; margin-top:3px; text-shadow:0 1px 8px #000; }
+
+#hover-tip{ position:absolute; pointer-events:none; padding:3px 8px; background:#fff; color:#14171A; font-size:12px; font-weight:600; max-width:260px; transform:translate(12px, 14px); z-index:3; }
+#dep{ position:absolute; left:50%; bottom:calc(66px + env(safe-area-inset-bottom, 0px)); transform:translateX(-50%); width:min(560px, calc(100% - 24px)); background:var(--paper); color:var(--ink); padding:10px 14px 8px; z-index:3; border-top:3px solid var(--mark); }
+.dep-head{ display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; }
+#dep-date{ font-size:12px; color:var(--ink-2); font-variant-numeric:tabular-nums; }
+#dep-title{ font-size:15px; }
+#dep-text{ margin:4px 0 8px; font-size:13px; line-height:1.4; color:var(--ink-2); min-height:2.8em; }
+.dep-ctl{ display:flex; align-items:center; gap:8px; }
+#dep-range{ flex:1; min-width:0; accent-color:var(--ink); }
+.dep-b{ height:30px; min-width:30px; padding:0 10px; border:1px solid var(--rule-2); background:transparent; color:var(--ink); font:600 14px var(--f); cursor:pointer; }
+.dep-b:hover{ background:var(--sheet); }
+.dep-play{ font-size:13px; }
+.dep-note{ margin:6px 0 0; font-size:11px; color:var(--mute); }
+#stage.dep-on #hint{ display:none; }
+#dep.dep-below{ position:static; transform:none; width:auto; flex:none; padding:8px max(16px, env(safe-area-inset-left, 0px)) 8px; border-top:3px solid var(--mark); border-bottom:1px solid var(--rule); }
+#dep.dep-below #dep-text{ min-height:0; }
+.explode[hidden], .tool-sep[hidden]{ display:none; }
+#cut-note{ position:absolute; right:12px; top:12px; max-width:min(420px, calc(100% - 24px)); margin:0; padding:6px 10px; background:var(--paper); color:var(--ink); font-size:12px; line-height:1.4; border-left:3px solid var(--mark); z-index:2; pointer-events:none; }
+#callout{ position:absolute; pointer-events:none; transform:translate(-50%, -150%); padding:3px 9px; background:var(--mark); color:var(--on-mark); font-size:12.5px; font-weight:700; white-space:nowrap; z-index:2; }
+#callout::after{ content:""; position:absolute; left:50%; top:100%; width:2px; height:12px; margin-left:-1px; background:var(--mark); }
+#hint{ position:absolute; left:50%; bottom:calc(66px + env(safe-area-inset-bottom, 0px)); transform:translateX(-50%); font-size:12px; color:#AEB5BA; pointer-events:none; text-shadow:0 1px 6px #000; white-space:nowrap; transition:opacity .6s; max-width:92%; overflow:hidden; text-overflow:ellipsis; }
+#hint.gone{ opacity:0; }
+
+#toolbar{ position:absolute; left:50%; bottom:calc(14px + env(safe-area-inset-bottom, 0px)); transform:translateX(-50%); display:flex; align-items:stretch; background:var(--paper); color:var(--ink); max-width:calc(100% - 24px); }
+.tool{ display:flex; align-items:center; gap:7px; height:38px; padding:0 13px; border:0; border-left:1px solid var(--rule); background:transparent; color:var(--ink); font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap; }
+.tool svg{ width:16px; height:16px; flex:none; }
+.tool:hover{ background:var(--sheet); }
+.tool[aria-pressed="true"]{ background:var(--mark); color:var(--on-mark); }
+.tool:disabled{ opacity:.35; cursor:default; }
+.tool-sep{ display:none; }
+.explode{ display:flex; align-items:center; gap:9px; padding:0 13px; height:38px; color:var(--ink); font-size:13px; font-weight:600; }
+.explode svg{ width:16px; height:16px; }
+.explode input{ width:120px; accent-color:var(--ink); }
+.explode input:disabled{ opacity:.5; }
+
+#loader{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; background:rgba(0,0,0,.78); z-index:4; text-align:center; padding:0 24px; }
+#loader .l-title{ font-weight:700; font-stretch:75%; font-size:22px; }
+#loader .l-sub{ color:#AEB5BA; font-size:12.5px; font-variant-numeric:tabular-nums; max-width:420px; line-height:1.5; }
+#loader .bar{ width:min(280px, 70%); height:4px; background:#33393E; overflow:hidden; }
+#loader .bar i{ display:block; height:100%; width:0%; background:var(--mark); transition:width .15s linear; }
+#loader .l-err{ color:#FFB4A8; max-width:420px; line-height:1.5; font-size:13px; }
+#loader button{ border:0; background:var(--mark); color:var(--on-mark); padding:8px 16px; cursor:pointer; font-size:13px; font-weight:700; }
+
+#cmp-labels{ position:absolute; inset:0; pointer-events:none; overflow:hidden; }
+.cmp-label{ position:absolute; transform:translate(-50%, 8px); text-align:center; pointer-events:auto; cursor:pointer; background:#fff; border:0; padding:5px 10px; color:#14171A; }
+.cmp-label:hover{ background:var(--mark); }
+.cmp-label b{ display:block; font-weight:800; font-stretch:75%; font-size:16px; }
+.cmp-label span{ display:block; font-size:11.5px; color:#3A4147; margin-top:1px; white-space:nowrap; font-variant-numeric:tabular-nums; }
+.cmp-ruler{ position:absolute; transform:translate(-50%, -24px); font-size:12px; font-weight:600; color:#fff; white-space:nowrap; }
+.cmp-human{ transform:translate(-50%, calc(-100% - 6px)); text-align:center; line-height:1.25; }
+
+/* ---------- fiche ---------- */
+#panel{ width:400px; flex:none; display:flex; flex-direction:column; min-height:0; background:var(--paper); }
+#ptabs{ flex:none; display:flex; border-top:1px solid var(--rule); border-bottom:1px solid var(--rule-2); }
+.ptab{ flex:1; padding:11px 8px 10px; background:transparent; border:0; border-right:1px solid var(--rule); color:var(--ink-2); cursor:pointer; font-size:13px; font-weight:600; white-space:nowrap; }
+.ptl{ display:contents; }
+.ptab:last-child{ border-right:0; }
+.ptl:not(:last-child) .ptab:last-child{ border-right:1px solid var(--rule); }
+.ptab:hover{ background:var(--sheet); }
+.ptab[aria-selected="true"]{ background:var(--mark); color:var(--on-mark); }
+.ptab .n{ font-weight:400; margin-left:5px; opacity:.7; font-variant-numeric:tabular-nums; }
+.ptab.go{ text-decoration:underline; text-underline-offset:3px; }
+#pbody{ flex:1; overflow-y:auto; padding:20px 22px calc(28px + env(safe-area-inset-bottom, 0px)); padding-right:max(22px, env(safe-area-inset-right, 0px)); -webkit-overflow-scrolling:touch; }
+#pbody h2{ font-weight:800; font-stretch:75%; font-size:26px; line-height:1.05; margin:0; text-wrap:balance; }
+.launch{ color:var(--mute); font-size:12.5px; margin-top:6px; line-height:1.5; }
+.facts{ display:grid; grid-template-columns:1fr 1fr; margin-top:16px; border-top:2px solid var(--ink); border-left:1px solid var(--rule); }
+.facts div{ padding:8px 10px 9px; border-right:1px solid var(--rule); border-bottom:1px solid var(--rule); min-width:0; }
+.facts dt{ font-size:11.5px; color:var(--mute); }
+.facts dd{ margin:2px 0 0; font-weight:700; font-stretch:75%; font-size:19px; line-height:1.15; font-variant-numeric:tabular-nums; }
+.facts dd small{ font-size:12px; font-weight:500; font-stretch:100%; color:var(--ink-2); }
+.desc{ font-size:14px; line-height:1.6; color:var(--ink); margin:16px 0 0; }
+.where{ margin-top:16px; background:var(--sheet); border:1px solid var(--rule); padding:10px 10px 6px; }
+.where svg{ width:100%; height:auto; display:block; }
+.spec-section{ margin-top:24px; }
+.spec-section-title{ font-weight:800; font-stretch:75%; font-size:16px; padding-bottom:5px; border-bottom:2px solid var(--ink); }
+.spec-row{ display:flex; justify-content:space-between; gap:16px; padding:7px 0; border-bottom:1px solid var(--rule); font-size:13px; }
+.spec-row .k{ color:var(--ink-2); flex:0 0 auto; max-width:44%; }
+.spec-row .v{ text-align:right; font-weight:600; min-width:0; line-height:1.4; font-variant-numeric:tabular-nums; }
+.source-note{ font-size:12px; line-height:1.55; color:var(--mute); margin-top:20px; }
+.cta{ display:block; width:100%; margin-top:16px; padding:11px 14px; text-align:left; border:2px solid var(--ink); background:var(--sheet); color:var(--ink); font-weight:700; font-size:14px; cursor:pointer; }
+.cta:hover{ background:var(--mark); color:var(--on-mark); }
+.cta:hover small{ color:var(--on-mark); }
+.cta small{ display:block; font-size:12px; color:var(--ink-2); margin-top:3px; font-weight:400; line-height:1.4; }
+
+.parts-intro{ font-size:13px; color:var(--ink-2); line-height:1.55; margin:0 0 12px; }
+.part{ border-bottom:1px solid var(--rule); }
+.part:first-of-type{ border-top:2px solid var(--ink); }
+.part > button{ display:flex; width:100%; align-items:center; gap:10px; text-align:left; padding:10px 8px; background:transparent; border:0; cursor:pointer; font-size:14px; font-weight:600; }
+.part > button:hover{ background:var(--sheet); }
+.part .dot{ width:9px; height:9px; border:1.5px solid var(--ink); flex:none; }
+.part.on > button{ background:var(--mark); color:var(--on-mark); }
+.part.on .dot{ background:var(--on-mark); border-color:var(--on-mark); }
+.part .pd{ display:none; padding:10px 8px 14px 27px; font-size:13.5px; line-height:1.6; }
+.part.on .pd{ display:block; }
+.part .pf{ margin-top:10px; padding-top:8px; border-top:1px solid var(--rule); font-size:12.5px; line-height:1.7; font-weight:600; font-variant-numeric:tabular-nums; }
+.cmp-table{ width:100%; border-collapse:collapse; font-size:13px; margin-top:16px; }
+.cmp-table th{ text-align:left; color:var(--mute); font-weight:500; padding:7px 6px 7px 0; border-bottom:2px solid var(--ink); font-size:12px; }
+.cmp-table td{ padding:8px 6px 8px 0; border-bottom:1px solid var(--rule); font-variant-numeric:tabular-nums; }
+.cmp-table td:first-child{ font-weight:700; }
+.cmp-table tr[data-go]{ cursor:pointer; }
+.cmp-table tr[data-go]:hover td{ background:var(--sheet); }
+.barcell{ display:flex; align-items:center; gap:8px; white-space:nowrap; }
+.barcell i{ display:block; height:8px; background:var(--ink); min-width:2px; }
+.barcell i.alt{ background:var(--rule-2); }
+
+#err-banner{ position:fixed; left:50%; top:calc(12px + env(safe-area-inset-top, 0px)); transform:translateX(-50%); background:var(--bad); color:var(--on-bad); font-size:12.5px; padding:9px 13px; z-index:999; max-width:88vw; }
+
+@media (max-width: 860px){
+  #top{ flex-direction:column; gap:0; padding:0; }
+  .brand{ padding:9px var(--gr) 8px var(--gl); }
+  .brand h1{ font-size:18px; }
+  #tabs{ margin-left:0; border-top:1px solid var(--rule); }
+  .drow{ justify-content:flex-start; padding:4px var(--gr) 0 var(--gl); gap:0; }
+  .dsel{ padding:3px 7px 4px; font-size:12px; }
+  .dsel:first-child{ padding-left:0; }
+  .dsel .dl{ display:none; } .dsel .ds{ display:inline; }
+  .dsel .dn{ display:none; }
+  .trow{ justify-content:flex-start; border-top:1px solid var(--rule); }
+  .tab{ padding:9px 13px; font-size:13.5px; margin-top:0; }
+  #tabs .tab{ flex:1 1 auto; padding:9px 6px; justify-content:center; }   /* quatre observatoires et « Comparer » tiennent sur 400 px */
+  .tab:first-child{ border-left:0; }
+  .tab small{ display:none; }
+  .tab.util{ padding:0 8px; }
+  #utils{ position:absolute; top:0; right:var(--gr); height:40px; margin:0; }
+  #main{ flex-direction:column; }
+  #stage{ flex:0 0 46%; }
+  #panel{ width:auto; flex:1; }
+  #pbody{ padding-left:var(--gl); padding-right:var(--gr); }
+  #hud-title{ top:10px; }
+  #t-src, #hint{ display:none; }
+  .tool span.lbl, .explode .lbl{ display:none; }
+  .tool{ padding:0 11px; }
+  .explode input{ width:84px; }
+  #toolbar{ bottom:8px; }
+  .cmp-label{ padding:3px 6px; } .cmp-label b{ font-size:13px; } .cmp-label span{ font-size:10px; }
+}
+@media (prefers-reduced-motion: reduce){ *{ transition-duration:.001ms !important; animation-duration:.001ms !important; } }
+
+.plink{ display:inline-block; margin-top:10px; padding:0; border:0; background:transparent; font-size:13px; font-weight:700; text-decoration:underline; text-underline-offset:3px; cursor:pointer; color:var(--ink); }
+
+/* réglages (langue, thème) : icônes discrètes, séparées des onglets d'observatoires */
+.tab.util{ border-left:0; align-items:center; padding:0 9px; color:var(--mute); gap:4px; }
+.tab.util:hover{ background:transparent; color:var(--ink); }
+#utils{ display:flex; flex:none; margin-left:14px; }
+#top{ position:relative; }
+.tab.util svg{ width:18px; height:18px; display:block; }
+.tab.util span{ font-size:11.5px; font-weight:700; letter-spacing:.4px; }
+
+/* appels de source et liste des sources */
+sup.ref{ font-size:10px; font-weight:600; color:var(--mute); margin-left:3px; vertical-align:super; line-height:0; }
+sup.ref.nv{ color:var(--warn); cursor:help; }
+ol.refs{ margin:8px 0 0; padding-left:20px; font-size:12px; line-height:1.5; color:var(--ink-2); }
+ol.refs li{ margin-bottom:6px; overflow-wrap:anywhere; }
+ol.refs a{ color:var(--ink); text-underline-offset:2px; }
+ol.refs span{ color:var(--mute); }
+
+/* ---------- glossaire (lot C1) ---------- */
+abbr.gl{ text-decoration:underline dotted; text-decoration-color:var(--mute); text-underline-offset:3px; text-decoration-thickness:1px; cursor:help; border-radius:2px; }
+abbr.gl:hover, abbr.gl:focus-visible{ text-decoration-color:var(--ink); background:color-mix(in srgb, var(--mark) 35%, transparent); outline:none; }
+#gloss-tip{ position:fixed; z-index:60; padding:10px 12px; background:var(--sheet); color:var(--ink); border:1px solid var(--ink); box-shadow:3px 3px 0 var(--mark); font-size:13px; line-height:1.5; pointer-events:none; }
+#gloss-tip b{ display:block; font-weight:700; margin-bottom:3px; }
+
+/* accessibilité : texte lu par les lecteurs d'écran, invisible à l'écran ; focus de la vue 3D */
+.sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0; }
+#stage canvas:focus-visible{ outline:2px solid var(--mark); outline-offset:-4px; }
+
+/* sources sous les faits d'une pièce */
+ol.refs.pref{ margin:8px 0 0; padding-left:18px; font-size:11.5px; line-height:1.45; color:var(--ink-2); }
+ol.refs.pref li{ margin:0 0 2px; }
+
+/* onglet Mission */
+.ms-tl{ list-style:none; margin:0; padding:0; }
+.ms-tl li{ display:grid; grid-template-columns:7.4em 1fr; gap:10px; padding:9px 0; border-bottom:1px solid var(--rule); }
+.ms-tl li:last-child{ border-bottom:0; }
+.ms-d{ font-size:12px; color:var(--ink-2); font-variant-numeric:tabular-nums; line-height:1.35; }
+.ms-d small{ display:block; color:var(--warn); font-size:11px; margin-top:2px; }
+.ms-tl strong, .ms-chain strong{ font-size:13.5px; }
+.ms-tl p, .ms-chain p{ margin:3px 0 0; font-size:13px; line-height:1.45; color:var(--ink-2); }
+.ms-rel li.plan strong{ font-weight:600; }
+.ms-intro{ font-size:13px; line-height:1.5; color:var(--ink-2); margin:8px 0 10px; }
+.ms-chain{ list-style:none; margin:0; padding:0; counter-reset:ms; }
+.ms-chain li{ position:relative; display:grid; grid-template-columns:6.6em 1fr; gap:10px; padding:0 0 14px; }
+.ms-chain li::before{ content:""; position:absolute; left:3.3em; top:24px; bottom:0; width:2px; background:var(--rule-2); }
+.ms-chain li:last-child::before{ display:none; }
+.ms-lv{ position:relative; z-index:1; align-self:start; text-align:center; padding:3px 4px; background:var(--mark); color:var(--on-mark); font-family:var(--f-code); font-size:11px; font-weight:600; line-height:1.3; word-break:break-word; }
+.ms-st code{ display:inline-block; margin-top:5px; font-family:var(--f-code); font-size:11.5px; color:var(--ink); background:var(--sheet); border:1px solid var(--rule); padding:1px 6px; }
+.inst-mission{ max-width:52rem; }
+
+/* vues d'ensemble (Comparer, Flotte) : boutons à part des onglets d'observatoires */
+#views{ display:flex; flex:none; align-items:center; gap:6px; margin-left:14px; }
+.vbtn{ border:1.5px solid var(--ink); background:transparent; color:var(--ink); font:inherit; font-size:13.5px; font-weight:700; padding:6px 12px; cursor:pointer; }
+.vbtn:hover{ background:var(--sheet); }
+.vbtn[aria-pressed="true"]{ background:var(--mark); border-color:var(--mark); color:var(--on-mark); }
+@media (max-width: 860px){
+  #views{ margin:0; gap:6px; padding:5px var(--gr) 5px var(--gl); border-top:1px solid var(--rule); }
+  .vbtn{ font-size:12.5px; padding:3px 10px; }
+}
+#tabs:empty{ border:0; }
+
+/* ===== Instruments et données : un manuel d'instrument, sur toute la largeur ===== */
+#inst-page{ position:absolute; inset:0; z-index:30; display:flex; flex-direction:column; background:var(--paper); }
+.inst-top{ display:flex; align-items:stretch; padding-left:var(--gl); padding-right:var(--gr); border-bottom:2px solid var(--ink); flex-wrap:wrap; }
+.inst-back{ font-size:13px; font-weight:700; background:var(--sheet); color:var(--ink); border:2px solid var(--ink); padding:0 12px; margin:9px 16px 9px 0; height:30px; cursor:pointer; }
+.inst-back:hover{ background:var(--mark); color:var(--on-mark); }
+.inst-title{ font-weight:800; font-stretch:75%; font-size:21px; align-self:center; padding-block:10px; }
+.pills{ display:flex; flex-direction:column; margin-left:auto; min-width:0; }
+.pill{ flex:none; border:0; border-left:1px solid var(--rule); background:transparent; color:var(--ink-2); font-size:14px; font-weight:600; padding:6px 16px; cursor:pointer; }
+.pill:last-child{ border-right:1px solid var(--rule); }
+.pill:hover{ background:var(--sheet); }
+.pill.on{ background:var(--mark); color:var(--on-mark); }
+.inst-body{ flex:1; display:flex; min-height:0; }
+.inst-nav{ width:232px; flex:none; border-right:1px solid var(--ink); overflow-y:auto; padding-left:env(safe-area-inset-left, 0px); }
+.nav-i{ display:block; width:100%; text-align:left; padding:10px 14px 10px 12px; border:0; border-bottom:1px solid var(--rule); border-left:6px solid var(--c, transparent); background:transparent; cursor:pointer; }
+.nav-i .n{ display:block; font-weight:700; font-size:14px; }
+.nav-i .k{ display:block; font-size:12px; color:var(--mute); margin-top:1px; }
+.nav-i:hover{ background:var(--sheet); }
+.nav-i.on{ background:var(--mark); color:var(--on-mark); }
+.nav-i.on .k{ color:var(--on-mark); opacity:.8; }
+.inst-main{ flex:1; overflow-y:auto; padding:24px 32px calc(70px + env(safe-area-inset-bottom, 0px)); padding-right:max(32px, env(safe-area-inset-right, 0px)); min-width:0; -webkit-overflow-scrolling:touch; }
+.inst-head{ padding-bottom:20px; border-bottom:2px solid var(--ink); display:grid; grid-template-columns:minmax(0, 1fr) minmax(0, 1.25fr); gap:8px 40px; align-items:end; }
+.inst-h{ display:block; }
+.inst-name{ font-weight:800; font-stretch:75%; font-size:clamp(30px, 4vw, 52px); line-height:.98; }
+.inst-full{ color:var(--ink-2); font-size:14px; margin-top:8px; }
+.kind{ display:inline-block; font-size:12.5px; font-weight:600; border:1.5px solid var(--ink); padding:1px 8px; margin-top:10px; }
+.inst-sum{ font-size:15px; line-height:1.6; margin:0; max-width:72ch; }
+.inst-use{ font-size:16px; line-height:1.55; margin:0 0 12px; max-width:68ch; padding-left:12px; border-left:4px solid var(--mark); }
+.inst-use b{ display:block; font-size:13px; font-weight:700; color:var(--ink-2); margin-bottom:2px; }
+.inst-use + .inst-sum{ font-size:14px; color:var(--ink-2); }
+.inst-range{ display:flex; gap:6px 18px; flex-wrap:wrap; margin-top:12px; }
+.rng{ font-size:13px; padding-left:8px; border-left:6px solid var(--c); color:var(--ink-2); font-variant-numeric:tabular-nums; }
+.rng b{ color:var(--ink); font-weight:700; }
+.inst-cols{ columns:2 440px; column-gap:40px; }
+.isec{ padding-top:24px; break-inside:avoid; }
+.isec.wide{ column-span:all; }
+.isec h4{ font-weight:800; font-stretch:75%; font-size:17px; margin:0 0 10px; padding-bottom:5px; border-bottom:2px solid var(--ink); }
+.cap{ font-size:12px; color:var(--mute); margin-top:8px; line-height:1.5; }
+.stable .srow{ display:flex; gap:18px; padding:7px 0; border-bottom:1px solid var(--rule); font-size:13px; }
+.stable .k{ flex:0 0 36%; color:var(--ink-2); }
+.stable .v{ flex:1; min-width:0; font-weight:600; line-height:1.45; font-variant-numeric:tabular-nums; overflow-wrap:anywhere; }
+.codewrap{ position:relative; }
+pre.code{ margin:0; padding:14px 16px; background:#0B0D0F; color:#E4E7E9; overflow-x:auto; font:12px/1.6 var(--f-code); }
+.copy{ position:absolute; top:0; right:0; font-size:11.5px; font-weight:700; color:#14171A; background:#fff; border:0; padding:4px 9px; cursor:pointer; }
+.copy:hover{ background:var(--mark); }
+.ex-head{ display:flex; justify-content:space-between; align-items:baseline; gap:10px; margin-bottom:8px; flex-wrap:wrap; }
+.ex-title{ font-size:13px; font-weight:600; }
+.tag{ font-size:11.5px; font-weight:700; padding:1px 7px; white-space:nowrap; }
+.tag.real{ background:var(--ok); color:var(--on-ok); }
+.tag.illus{ border:1.5px solid var(--warn); color:var(--warn); }
+.chips{ display:flex; flex-wrap:wrap; gap:4px; margin-bottom:12px; }
+.chip{ font-size:12px; font-weight:600; padding:3px 7px; border:1px solid var(--rule-2); background:transparent; cursor:pointer; font-variant-numeric:tabular-nums; }
+.chip:hover{ background:var(--sheet); border-color:var(--ink); }
+.chip.on{ background:var(--mark); border-color:var(--mark); color:var(--on-mark); }
+.filter-detail{ margin-top:10px; font-size:13px; min-height:20px; }
+.filter-detail b{ font-weight:800; background:var(--mark); color:var(--on-mark); padding:0 4px; }
+.svgwrap{ overflow-x:auto; }
+svg.cov, svg.mini, svg.optic{ width:100%; min-width:400px; height:auto; display:block; }
+ol.notes{ padding-left:20px; }
+.fov-leg li:not([data-inst]):not([data-jump]){ cursor:default; font-weight:400; }
+.cov-row{ cursor:pointer; }
+.cov-lab{ fill:var(--ink); font:600 12.5px Archivo, Arial, sans-serif; }
+.cov-row.sel .cov-lab{ font-weight:800; text-decoration:underline; }
+.cov-row:hover .cov-lab{ text-decoration:underline; }
+.cov-band{ fill:#fff; font:700 10.5px Archivo, Arial, sans-serif; pointer-events:none; }
+.cov-tick{ fill:var(--ink-2); font:11px Archivo, Arial, sans-serif; }
+.cov-grid{ stroke:var(--rule); stroke-width:1; }
+.cov-axis{ stroke:var(--ink); stroke-width:1.5; }
+.cov-unit{ fill:var(--mute); font:11px Archivo, Arial, sans-serif; }
+.cov-vis{ fill:var(--ink-2); font:11px Archivo, Arial, sans-serif; }
+.fov{ display:flex; gap:22px; flex-wrap:wrap; align-items:flex-start; }
+.fov-svg{ width:300px; max-width:100%; height:auto; }
+.fov-svg [data-inst]{ cursor:pointer; }
+.fov-leg{ list-style:none; margin:0; padding:0; font-size:13px; min-width:190px; flex:1; }
+.fov-leg li{ display:flex; align-items:center; gap:8px; padding:6px 0; cursor:pointer; border-bottom:1px solid var(--rule); }
+.fov-leg li:hover, .fov-leg li.sel{ font-weight:700; }
+.fov-leg i{ width:11px; height:11px; flex:none; }
+.fov-leg span{ margin-left:auto; padding-left:12px; color:var(--ink-2); white-space:nowrap; font-variant-numeric:tabular-nums; }
+.fov-bar{ stroke:var(--ink); stroke-width:2; }
+.fov-barlab{ fill:var(--ink-2); font:11px Archivo, Arial, sans-serif; }
+.archs{ display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); border-top:1px solid var(--rule); border-left:1px solid var(--rule); }
+.arch{ display:block; padding:12px 14px; border-right:1px solid var(--rule); border-bottom:1px solid var(--rule); text-decoration:none; color:var(--ink); }
+.arch:hover{ background:var(--sheet); }
+.a-l{ display:block; font-weight:700; font-size:14px; text-decoration:underline; text-underline-offset:3px; }
+.a-d{ display:block; color:var(--ink-2); font-size:12.5px; line-height:1.5; margin-top:4px; }
+.a-u{ display:block; color:var(--mute); font-size:12px; margin-top:6px; }
+.icards{ display:grid; grid-template-columns:repeat(auto-fill,minmax(170px,1fr)); gap:0; border-top:1px solid var(--rule); border-left:1px solid var(--rule); }
+.icard{ text-align:left; padding:10px 12px 12px; background:transparent; border:0; border-right:1px solid var(--rule); border-bottom:1px solid var(--rule); border-top:6px solid var(--c); cursor:pointer; }
+.icard:hover{ background:var(--sheet); }
+.ic-n{ display:block; font-weight:800; font-stretch:75%; font-size:19px; }
+.ic-k{ display:block; color:var(--ink-2); font-size:12.5px; margin-top:2px; }
+.ic-r{ display:block; font-size:12.5px; font-weight:600; margin-top:8px; font-variant-numeric:tabular-nums; }
+.notes{ margin:0; padding-left:18px; font-size:13.5px; line-height:1.6; }
+.notes li{ margin-bottom:6px; }
+.lnks{ display:flex; flex-direction:column; }
+.lnk{ display:flex; justify-content:space-between; gap:14px; padding:8px 0; border-bottom:1px solid var(--rule); color:var(--ink); font-size:13.5px; font-weight:600; text-underline-offset:3px; }
+.lnk em{ font-style:normal; font-weight:400; font-size:12.5px; color:var(--mute); text-decoration:none; white-space:nowrap; }
+@media (max-width: 860px){
+  .inst-top{ padding:0; }
+  .inst-back{ margin:9px 12px 9px var(--gl); }
+  .inst-title{ font-size:17px; }
+  .pills{ border-top:1px solid var(--rule); margin-left:0; flex:1 1 100%; }
+  .pills .drow{ justify-content:flex-start; padding:4px var(--gr) 0 var(--gl); }
+  .pills .trow{ justify-content:flex-start; border-top:1px solid var(--rule); }
+  .pill{ flex:1 1 auto; padding:9px 6px; font-size:13.5px; }
+  .pills .trow .pill:first-child{ border-left:0; }
+  .inst-body{ flex-direction:column; }
+  .inst-nav{ width:auto; display:flex; overflow-x:auto; overflow-y:hidden; border-right:0; border-bottom:1px solid var(--ink); flex:none; padding-left:0; }
+  .nav-i{ flex:none; width:auto; white-space:nowrap; border-bottom:0; border-left:0; border-top:5px solid var(--c, transparent); border-right:1px solid var(--rule); padding:7px 13px 9px; }
+  .nav-i:first-child{ padding-left:var(--gl); }
+  .nav-i .k{ display:none; }
+  .inst-main{ padding:18px var(--gr) calc(60px + env(safe-area-inset-bottom, 0px)) var(--gl); }
+  .inst-head{ grid-template-columns:minmax(0, 1fr); gap:14px; }
+  .inst-cols{ columns:1; }
+  .stable .srow{ flex-direction:column; gap:2px; }
+  .stable .k{ flex:none; }
+}
+
+/* comparaison entre observatoires */
+.cmp-figs{ display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:16px 40px; }
+.cmp-figs h5{ font-size:13px; font-weight:700; margin:0 0 8px; }
+.obs-key{ display:flex; flex-wrap:wrap; gap:6px 18px; margin:0 0 10px; padding:0; list-style:none; font-size:13px; font-weight:600; }
+.obs-key i{ display:inline-block; width:11px; height:11px; margin-right:6px; vertical-align:-1px; }
+svg.cov.big{ min-width:640px; }
+.cov-obs{ fill:var(--ink); font:800 13px Archivo, Arial, sans-serif; font-stretch:75%; }
+.cov-reg{ fill:var(--mute); font:11px Archivo, Arial, sans-serif; }
+.cov-sep{ stroke:var(--ink); stroke-width:1; }
+.tablewrap{ overflow-x:auto; }
+.ctable{ width:100%; border-collapse:collapse; font-size:13px; min-width:720px; }
+.ctable th{ text-align:left; font-size:12px; font-weight:500; color:var(--mute); padding:6px 14px 6px 0; border-bottom:2px solid var(--ink); white-space:nowrap; }
+.ctable td{ padding:7px 14px 7px 0; border-bottom:1px solid var(--rule); vertical-align:top; font-variant-numeric:tabular-nums; }
+.ctable td.o{ font-weight:800; font-stretch:75%; font-size:15px; white-space:nowrap; border-left:6px solid var(--c); padding-left:8px; }
+.ctable td.n{ font-weight:700; white-space:nowrap; }
+.ctable tr[data-jump]{ cursor:pointer; }
+.ctable tr[data-jump]:hover td{ background:var(--sheet); }
+.ctable tr.first td{ border-top:1px solid var(--ink); }
+
+/* observations réelles */
+.real-img{ display:block; width:100%; height:auto; background:#000; }
+
+/* orbites */
+canvas.orb{ display:block; width:100%; max-width:560px; height:auto; background:var(--sheet); border:1px solid var(--rule); }
+.orb-ctl{ display:flex; align-items:center; gap:12px; margin-top:8px; min-height:26px; }
+.orb-read{ font-size:13px; font-weight:600; font-variant-numeric:tabular-nums; }
+
+.real-item + .real-item{ margin-top:26px; padding-top:18px; border-top:1px solid var(--rule); }
+.real-meta{ margin-top:10px; }
+.real-meta summary{ cursor:pointer; font-size:13px; font-weight:600; padding:4px 0; }
+.real-meta .lnks{ margin-top:4px; }
+.orb-key{ display:flex; flex-wrap:wrap; gap:6px 18px; font-size:13px; font-weight:600; margin:0 0 10px; padding:0; list-style:none; }
+.orb-key i{ display:inline-block; width:11px; height:11px; margin-right:6px; vertical-align:-1px; }
+
+/* élément du schéma optique relié à la pièce choisie dans la maquette (D3) */
+svg.optic g[data-el]{ transition:filter .15s; }
+svg.optic g.hl{ filter:drop-shadow(0 0 2px var(--mark)) drop-shadow(0 0 4px var(--mark)) drop-shadow(0 0 6px var(--mark)); }
+.hl-cap{ display:inline-block; margin-top:6px; padding:2px 8px; background:var(--mark); color:var(--on-mark); }
+@media (prefers-reduced-motion: reduce){ svg.optic g[data-el]{ transition:none; } }
+
+/* zone du ciel observable (F4) : date choisie au curseur */
+.vis-day{ display:flex; align-items:center; gap:10px; flex:1; min-width:0; font-size:13px; font-weight:600; }
+.vis-day span{ min-width:11em; }
+.vis-day input{ flex:1; min-width:120px; accent-color:var(--ink); }
+@media (max-width: 600px){ .vis-day{ flex-basis:100%; } }
+
+/* cartes de pointés : choix de l'instrument */
+.sky-ins{ display:flex; flex-wrap:wrap; gap:6px; align-items:center; margin:8px 0 2px; }
+.sky-ins .chip i{ display:inline-block; width:9px; height:9px; margin-right:6px; vertical-align:0; }
+.sky-ins .chip.on{ background:var(--mark); color:var(--on-mark); border-color:var(--mark); }
+.sky-more{ font-size:12px; color:var(--mute); }
+
+/* ===== Comparer : sélecteur de groupe et types d'instrument (spécifications, priorité 2) ===== */
+.chip[aria-pressed="true"]{ background:var(--mark); border-color:var(--mark); color:var(--on-mark); }
+.chip small{ font-weight:400; opacity:.75; margin-left:2px; }
+.chip .ticon{ vertical-align:-2px; }
+.cmpsel{ display:flex; flex-direction:column; gap:6px; margin:4px 0 6px; }
+.cmpsel-by, .cmpsel-g{ display:flex; flex-wrap:wrap; gap:4px; align-items:center; }
+.cmpsel-by > span{ font-size:12px; color:var(--mute); margin-right:4px; }
+/* catégorie de filtre : onglets soulignés, distincts des boutons de filtre (chips) qu'ils commandent */
+.cmpsel-by{ gap:0 !important; border-bottom:1px solid var(--rule); }
+.seg{ border:0; border-bottom:3px solid transparent; background:transparent; color:var(--mute); font:inherit; font-size:13px; font-weight:700; padding:4px 10px 5px; margin-bottom:-1px; cursor:pointer; }
+.seg:hover{ color:var(--ink); border-bottom-color:var(--rule-2); }
+.seg[aria-pressed="true"]{ color:var(--ink); border-bottom-color:var(--ink); }   /* même graisse : rien ne bouge au clic */
+.inst-head.cmp-head{ align-items:start; }
+.cmpsel-g .chip{ font-size:13px; padding:4px 9px; }
+.cmpsel-g .chip.mix{ border-style:dashed; }
+.cmpsel-def{ font-size:12.5px; color:var(--mute); margin:0; }
+.tkey{ display:flex; flex-wrap:wrap; gap:4px; }
+.ticon{ display:inline-block; flex:none; }
+.ctable td.ty{ white-space:nowrap; font-weight:600; }
+.ctable td.ty .ticon{ vertical-align:-2px; margin-right:3px; }
+.ctable td.ty small{ display:block; font-weight:400; color:var(--mute); white-space:normal; max-width:22ch; }
+.fov-leg .ticon{ vertical-align:-1px; }
+.orb-key small{ font-weight:400; color:var(--mute); margin-left:4px; }
+.orb-fam{ max-width:580px; }
+
+/* page Flotte */
+.fl-filters{ display:flex; flex-direction:column; gap:6px; margin:4px 0 10px; }
+.fl-f{ display:grid; grid-template-columns:136px minmax(0, 1fr); align-items:start; column-gap:8px; }
+.fl-f > span{ font-size:12px; font-weight:700; color:var(--ink-2); padding-top:5px; }
+.fl-f > .fl-opts{ display:flex; flex-wrap:wrap; gap:4px; }
+@media (max-width: 560px){ .fl-f{ grid-template-columns:1fr; row-gap:4px; } .fl-f > span{ padding-top:0; } }
+.fl-f .chip[aria-pressed="true"]{ background:var(--mark); border-color:var(--mark); color:var(--on-mark); }
+.fl-count{ font-size:13px; color:var(--ink-2); margin:6px 0; }
+.fl-tl svg{ width:100%; min-width:640px; height:auto; }
+.fl-tl{ overflow-x:auto; }
+.fl-row{ cursor:pointer; }
+.fl-row:hover rect:first-child, .fl-row:focus rect:first-child{ fill:var(--sheet); }
+.fl-row:focus{ outline:2px solid var(--ink); outline-offset:-2px; }
+.fl-now{ stroke:var(--bad); } .fl-nowt{ fill:var(--bad); }
+.fl-who{ margin:14px 0; }
+.fl-who h4{ margin:0 0 4px; font-size:15px; }
+.fl-who h4 small{ font-weight:400; color:var(--mute); font-size:12px; margin-left:6px; }
+.fl-who .k small{ display:block; font-weight:400; color:var(--mute); font-size:11.5px; }
+.linkish{ background:none; border:0; padding:0; font:inherit; color:inherit; text-decoration:underline; cursor:pointer; }
+.fl-who .spec-row{ display:grid; grid-template-columns:minmax(120px, 200px) 1fr; gap:12px; align-items:baseline; }
+.fl-who .spec-row .v{ text-align:left; font-weight:400; }
+#inst-views{ align-self:center; margin-left:18px; }
+.inst-title{ min-width:186px; }   /* même largeur pour « Flotte », « Comparer » et « Mission et données » : les boutons ne bougent pas */
+@media (max-width: 860px){ .inst-title{ min-width:0; } #inst-views{ flex:1 1 100%; margin:0; padding:0 var(--gr) 8px var(--gl); } }
+.views{ display:flex; gap:6px; }
+
+/* ---------- accueil : le ciel observé (home.js) ---------- */
+.home-link{ color:inherit; text-decoration:none; }
+.home-link:hover{ text-decoration:underline; text-decoration-thickness:2px; text-underline-offset:4px; }
+#home-page{ position:absolute; inset:0; z-index:30; background:var(--paper); overflow:auto; }
+.home{ display:grid; grid-template-columns:minmax(0, 1fr) 340px; gap:0; min-height:100%; }
+.home-map{ min-width:0; padding:18px 24px 24px var(--gl); display:flex; flex-direction:column; gap:10px; }
+.home-head h2{ margin:0 0 4px; font-weight:800; font-stretch:75%; font-size:28px; letter-spacing:.1px; }
+.home-head p{ margin:0; max-width:none; color:var(--ink-2); line-height:1.5; }
+.home-sky{ position:relative; background:var(--black); padding:10px; }
+#home-cv{ display:block; max-width:100%; cursor:crosshair; }
+.home-zoom{ position:absolute; top:16px; right:16px; display:flex; gap:4px; }
+.home-zoom button{ min-width:30px; height:30px; border:1px solid rgba(255,255,255,.5); background:rgba(5,7,10,.75); color:#fff; font:inherit; font-size:13px; font-weight:700; cursor:pointer; padding:0 8px; }
+.home-zoom button:hover{ border-color:#fff; }
+.home-zoom button[aria-pressed="true"]{ background:#FFD21F; color:#14171A; border-color:#FFD21F; }
+.home-al{ margin:0 0 10px; font-size:12.5px; }
+#home-cv{ touch-action:none; }
+.home-tip{ position:absolute; pointer-events:none; background:var(--paper); color:var(--ink); border:1px solid var(--ink); font-size:12px; font-weight:600; padding:3px 7px; white-space:nowrap; z-index:2; }
+.home-ctl{ display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+.home-ctl input[type=range]{ flex:1 1 200px; min-width:140px; accent-color:var(--ink); }
+.home-yr{ font-weight:700; font-variant-numeric:tabular-nums; min-width:22ch; }
+.home-mode{ display:flex; gap:6px; }
+.home-ctl .dep-b{ border:1.5px solid var(--ink); background:transparent; color:var(--ink); width:34px; height:30px; cursor:pointer; font-size:13px; }
+.home-side{ border-left:2px solid var(--ink); padding:18px var(--gr) 24px 20px; background:var(--sheet); min-width:0; }
+.home-side h3{ font-size:13.5px; font-weight:800; margin:18px 0 8px; }
+.home-side h3:first-child{ margin-top:0; }
+.home-pick{ border-bottom:1px solid var(--rule); padding-bottom:12px; }
+.home-pos{ margin:0 0 8px; font-variant-numeric:tabular-nums; color:var(--ink-2); font-size:12.5px; }
+.home-leg{ display:flex; flex-direction:column; gap:4px; }
+.home-li{ display:grid; grid-template-columns:12px auto 1fr; column-gap:8px; align-items:baseline; text-align:left; border:1px solid var(--rule); background:var(--paper); color:var(--ink); font:inherit; padding:6px 8px; cursor:pointer; }
+.home-li i{ width:12px; height:12px; align-self:center; }
+.home-li span{ font-size:12px; color:var(--mute); text-align:right; font-variant-numeric:tabular-nums; }
+.home-li small{ grid-column:2 / 4; font-size:11.5px; color:var(--mute); }
+.home-li[aria-pressed="false"]{ opacity:.45; }
+.home-li[aria-pressed="false"] i{ background:transparent !important; outline:1.5px solid var(--rule-2); outline-offset:-1.5px; }
+.home-li:hover{ border-color:var(--ink); }
+.home-all{ margin-top:6px; display:flex; gap:14px; font-size:12.5px; }
+.home-sv, .home-who{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:7px; font-size:13px; line-height:1.45; color:var(--ink-2); }
+.home-sv i, .home-who i{ display:inline-block; width:10px; height:10px; margin-right:6px; vertical-align:0; }
+.home-sv .linkish, .home-who .linkish{ font-weight:700; }
+.home-who small{ display:block; color:var(--mute); font-size:12px; padding-left:16px; }
+@media (max-width: 860px){
+  .home{ grid-template-columns:1fr; }
+  .home-map{ padding:14px var(--gr) 16px var(--gl); }
+  .home-head h2{ font-size:22px; }
+  .home-sky{ padding:4px; }
+  .home-side{ border-left:0; border-top:2px solid var(--ink); padding:14px var(--gr) 24px var(--gl); }
+}
+.inst-top[hidden] + .inst-body{ border-top:2px solid var(--ink); }
+
+/* Squelette : pages défilantes sous l'en-tête (la vue 3D d'Observatories reviendra à l'étape 4). */
+#page{ flex:1; min-height:0; overflow-y:auto; background:var(--paper); padding:24px var(--gr) 48px var(--gl); }
+#page:focus{ outline:none; }
+.sk{ max-width:760px; }
+.sk h2{ font-weight:800; font-stretch:75%; font-size:clamp(26px, 4vw, 38px); line-height:1.05; margin:8px 0 12px; }
+.sk h3{ font-size:15px; margin:24px 0 6px; }
+.sk .lead{ font-size:16px; line-height:1.5; color:var(--ink-2); margin:0 0 14px; }
+.sk-state{ display:inline-block; font-size:12.5px; font-weight:700; color:var(--ink); border-left:4px solid var(--mark); padding:3px 9px; background:var(--sheet); margin:0; }
+.sk-list{ list-style:none; padding:0; margin:0; border-top:1px solid var(--rule); }
+.sk-list a{ display:flex; gap:10px; align-items:baseline; padding:10px 2px; border-bottom:1px solid var(--rule); color:var(--ink); text-decoration:none; }
+.sk-list a:hover{ background:var(--sheet); }
+.sk-list span{ color:var(--mute); font-size:13px; }
+.sk-table{ border-collapse:collapse; width:100%; font-size:13.5px; }
+.sk-table th, .sk-table td{ text-align:left; vertical-align:top; padding:6px 8px 6px 0; border-bottom:1px solid var(--rule); }
+.sk-table th{ font-weight:600; color:var(--ink-2); width:38%; }
+.sk-table .src{ font-size:11.5px; color:var(--ink-2); }
+.home-link{ color:inherit; text-decoration:none; }
+@media (max-width: 720px){
+  #top{ flex-wrap:wrap; gap:0 12px; }
+  #views{ order:3; margin-left:0; width:100%; overflow-x:auto; padding-bottom:8px; }
+}
+
+</style>
+</head>
+<body>
+<div id="app">
+  <header id="top">
+    <div class="brand">
+      <h1><a href="#accueil" class="home-link">Explorateurs du Système solaire</a></h1>
+    </div>
+    <nav id="views" aria-label="Vues d'ensemble"></nav>
+    <div id="utils"></div>
+  </header>
+
+  <main id="page" tabindex="-1"></main>
+  <div id="live" class="sr-only" aria-live="polite"></div>
+</div>
+<script>
+/* Langue du site : français ou anglais.
+   Ordre de décision : préfixe du lien (#en-mro, #fr-mro), puis choix mémorisé, sinon anglais.
+   Les textes français sont dans les sources ; les textes anglais sont dans src/en/ et appliqués par src/i18n.js. */
+var OBS_LANG = (function(){
+  var m = /^#(en|fr)-/.exec(location.hash || ''), v = m && m[1];
+  if (!v) try { v = localStorage.getItem('sse-lang'); } catch(e){}
+  if (v !== 'en' && v !== 'fr') v = 'en';   /* anglais par défaut ; le français se choisit par le bouton FR ou un lien #fr-… */
+  try { document.documentElement.lang = v; } catch(e){}
+  return v;
+})();
+/* nombres : virgule décimale et espace des milliers en français, point et virgule en anglais */
+function OBS_NUM(s){ return OBS_LANG === 'en' ? String(s).replace(/(\d),(\d)/g, '$1.$2').replace(/(\d)[   ](?=\d{3}(\D|$))/g, '$1,') : s; }
+
+/* =================================================================
+   MISSIONS — registre des sondes (équivalent de TELESCOPES dans Observatories, src/data-tele.js).
+   Registre : ajouter une mission = une entrée ici (et ses textes dans data-inst, data-mission, data-fleet, en/*) ;
+   app.js n'a pas à changer. build.js et tools/smoke.js lisent ce registre (une ligne « id:'…' » par mission, indentée de 4 espaces).
+     id, name, short, year      identifiant (ancre #id), nom complet, nom court, année de lancement
+     agency                     agences, en texte (règle 5 : aucune n'est mise en avant)
+     targets                    corps visités, du plus important au moins important (noms du thésaurus PDSSP : 'Mars', 'Titan'…)
+     events                     [{ type:'launch'|'flyby'|'orbit'|'landing'|'end', body, date:'AAAA-MM-JJ', ref }] : survols et mises en orbite datés
+     horizons                   identifiant JPL Horizons de la sonde (trajectoire, tools/data/fetch_orbits.py)
+     stac                       identifiants des collections STAC-PLANET de la mission (d'après la sonde tools/probe/probe_stacplanet.py)
+     file, bytes, axis, size    maquette (models/<id>.glb), comme dans Observatories ; licence dans src (règle 8)
+     refs                       sources : { clé:{ t:titre, p:éditeur, u:URL } } ; chaque valeur chiffrée cite une clé (règle 1)
+     sections                   fiche : [{ title, rows:[[libellé, valeur, clé de source]] }] ; « ≈ » pour l'approximatif (règle 2)
+     checked                    date de la dernière vérification des valeurs
+================================================================= */
+var MISSIONS = [
+];
+
+/* FLOTTE — « qui a fait quoi » par mission : FLEET[id] = { agencies:[…], who:[[agence, rôle, …, clé(s) de source]] }.
+   Règle 5 : les agences sont nommées, sans badge ni couleur réservée. */
+var FLEET = {}, FLEET_REFS = {};
+
+/* INSTRUMENTS — par mission : INST_DATA[id] = { summary, archives:[…], instruments:[…] } (schéma d'Observatories v1.0, src/data-inst.js). */
+var INST_DATA = {};
+
+/* DÉROULÉ DES MISSIONS ET CHAÎNES DE TRAITEMENT — MISSION[id] (schéma d'Observatories v1.0, src/data-mission.js). */
+var MISSION = {};
+
+/* Textes anglais des missions : EN_MISSIONS[id] = { name, agency, desc, sections, refs } (mêmes champs que MISSIONS). */
+var EN_MISSIONS = {};
+
+/* Textes d'interface en anglais : clé = texte français tel qu'il est écrit dans le code ou dans body.html. */
+var EN_UI = {
+  'Explorateurs du Système solaire':'Solar System Explorers',
+  "Vues d'ensemble":'Overviews',
+  'Missions':'Missions', 'Système solaire':'Solar System', 'Comparer':'Compare', 'Flotte':'Fleet',
+  'Passer au thème clair':'Switch to light theme', 'Passer au thème sombre':'Switch to dark theme',
+  'En construction':'Under construction', 'étape 6':'step 6',
+  "Aucune mission pour l'instant : la liste sera choisie d'après ce que la sonde de STAC-PLANET trouve dans le catalogue.":
+    'No mission yet: the list will be chosen from what the STAC-PLANET probe finds in the catalogue.',
+  'Les orbites des planètes et la trajectoire réelle de chaque sonde, avec un curseur des années ; un clic sur un corps ouvre sa carte et les empreintes des observations.':
+    'The orbits of the planets and the real trajectory of each probe, with a year slider; clicking a body opens its map and the footprints of the observations.',
+  'Domaine spectral, résolution au sol, trajectoires et tableau des instruments.':
+    'Spectral range, ground resolution, trajectories and a table of all instruments.',
+  '« qui a fait quoi »':'“who did what”',
+  'Frise des missions par agence et par cible, et « qui a fait quoi », chaque ligne sourcée.':
+    'Timeline of the missions by agency and by target, and “who did what”, every line sourced.'
+};
+
+/* =================================================================
+   ANGLAIS — applique les textes de src/en/ quand OBS_LANG vaut « en ».
+   1. Contenu structuré (fiches des missions) : remplacé champ par champ avant le premier rendu.
+   2. Textes d'interface écrits dans le code ou dans body.html : traduits par dictionnaire (EN_UI).
+      Toute chaîne absente du dictionnaire reste en français : tools/i18n-scan.js liste ce qui manque.
+================================================================= */
+var OBS_T = function(s){ return s; }, OBS_I18N = { static:function(){} };
+(function(){
+  if (OBS_LANG !== 'en') return;
+  window.__i18nMiss = window.__i18nMiss || {};
+  MISSIONS.forEach(function(m){
+    var e = EN_MISSIONS[m.id]; if (!e) return;
+    var frSec = m.sections;
+    ['name','agency','desc','sections'].forEach(function(k){ if (e[k]) m[k] = e[k]; });
+    (m.sections || []).forEach(function(sec, i){ sec.rows.forEach(function(r, j){ var o = frSec && frSec[i] && frSec[i].rows[j]; if (o && o[2]) r[2] = o[2]; }); });
+    if (e.refs) Object.keys(e.refs).forEach(function(k){ if (m.refs[k]) m.refs[k].t = e.refs[k]; });
+  });
+  OBS_T = function(s){ if (EN_UI[s] != null) return EN_UI[s]; window.__i18nMiss[s] = 1; return s; };
+  /* body.html : attributs et textes fixes */
+  OBS_I18N.static = function(){
+    document.querySelectorAll('[aria-label],[title]').forEach(function(el){ ['aria-label','title'].forEach(function(a){ var v = el.getAttribute(a); if (v) el.setAttribute(a, OBS_T(v)); }); });
+    var h = document.querySelector('.home-link'); if (h) h.textContent = OBS_T(h.textContent);
+  };
+})();
+
+/* =================================================================
+   APPLICATION — en-tête, routage par ancre, pages.
+   Squelette (étape 1 du dossier de lancement) : la vue 3D d'Observatories v1.0 (src/app.js là-bas)
+   sera reprise avec la première mission (étape 4). Rien ici n'est propre à une mission : tout part de MISSIONS.
+================================================================= */
+(function(){
+'use strict';
+function $(id){ return document.getElementById(id); }
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function mission(id){ for (var i = 0; i < MISSIONS.length; i++) if (MISSIONS[i].id === id) return MISSIONS[i]; return null; }
+var T = OBS_T;
+
+function isDark(){ var a = document.documentElement.getAttribute('data-theme'); return a ? a === 'dark' : !!(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches); }
+(function(){ try { var v = localStorage.getItem('sse-theme'); if (v === 'dark' || v === 'light') document.documentElement.setAttribute('data-theme', v); } catch(e){} })();
+
+/* vues d'ensemble : boutons fixes en haut à droite, même graisse quel que soit l'état (règle 6) */
+var VIEWS = [['missions', 'Missions'], ['accueil', 'Système solaire'], ['comparer', 'Comparer'], ['flotte', 'Flotte']];
+function renderHeader(route){
+  $('views').innerHTML = '<div class="views">' + VIEWS.map(function(v){
+    var on = route === v[0] || (v[0] === 'missions' && mission(route));
+    return '<button class="vbtn" data-go="' + v[0] + '" aria-pressed="' + !!on + '">' + T(v[1]) + '</button>';
+  }).join('') + '</div>';
+  var ll = OBS_LANG === 'en' ? 'Lire en français' : 'Read in English';
+  var h = '<button class="tab util lang" id="b-lang" title="' + ll + '" aria-label="' + ll + '" lang="' + (OBS_LANG === 'en' ? 'fr' : 'en') + '"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="10" cy="10" r="7.6"/><path d="M2.4 10h15.2M10 2.4c2.2 2.1 3.3 4.6 3.3 7.6s-1.1 5.5-3.3 7.6M10 2.4C7.8 4.5 6.7 7 6.7 10s1.1 5.5 3.3 7.6"/></svg><span>' + (OBS_LANG === 'en' ? 'FR' : 'EN') + '</span></button>';
+  var dk = isDark(), lab = T(dk ? 'Passer au thème clair' : 'Passer au thème sombre');
+  h += '<button class="tab util theme" id="b-theme" title="' + lab + '" aria-label="' + lab + '"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">' +
+       (dk ? '<circle cx="10" cy="10" r="3.6"/><path d="M10 1.8v2.2M10 16v2.2M1.8 10H4M16 10h2.2M4.2 4.2l1.6 1.6M14.2 14.2l1.6 1.6M4.2 15.8l1.6-1.6M14.2 5.8l1.6-1.6"/>'
+           : '<path d="M16.6 12.1A7 7 0 0 1 7.9 3.4a7 7 0 1 0 8.7 8.7z" stroke-linejoin="round"/>') + '</svg></button>';
+  $('utils').innerHTML = h;
+}
+
+/* ---------- pages ---------- */
+function soon(title, what, step){
+  return '<div class="sk"><h2>' + T(title) + '</h2><p class="lead">' + T(what) + '</p><p class="sk-state">' + T('En construction') + ' · ' + T(step) + '</p></div>';
+}
+function missionsPage(){
+  var h = '<div class="sk"><h2>' + T('Missions') + '</h2>';
+  if (!MISSIONS.length) return h + '<p class="lead">' + T('Aucune mission pour l\'instant : la liste sera choisie d\'après ce que la sonde de STAC-PLANET trouve dans le catalogue.') + '</p></div>';
+  h += '<ul class="sk-list">' + MISSIONS.map(function(m){
+    return '<li><a href="#' + m.id + '"><strong>' + esc(m.short || m.name) + '</strong> <span>' + esc(m.year || '') + ' · ' + esc((m.targets || []).join(', ')) + '</span></a></li>';
+  }).join('') + '</ul></div>';
+  return h;
+}
+function missionPage(m){
+  var h = '<div class="sk"><h2>' + esc(m.name) + '</h2><p class="lead">' + esc(m.agency || '') + '</p>';
+  (m.sections || []).forEach(function(sec){
+    h += '<h3>' + esc(sec.title) + '</h3><table class="sk-table"><tbody>' + sec.rows.map(function(r){
+      var ref = r[2] && m.refs && m.refs[r[2]];
+      return '<tr><th scope="row">' + esc(r[0]) + '</th><td>' + esc(OBS_NUM(r[1])) + (ref ? ' <a class="src" href="' + esc(ref.u) + '" rel="noopener" target="_blank">' + esc(ref.p) + '</a>' : '') + '</td></tr>';
+    }).join('') + '</tbody></table>';
+  });
+  return h + '</div>';
+}
+var PAGES = {
+  missions: missionsPage,
+  accueil: function(){ return soon('Système solaire', 'Les orbites des planètes et la trajectoire réelle de chaque sonde, avec un curseur des années ; un clic sur un corps ouvre sa carte et les empreintes des observations.', 'étape 6'); },
+  comparer: function(){ return soon('Comparer', 'Domaine spectral, résolution au sol, trajectoires et tableau des instruments.', 'étape 6'); },
+  flotte: function(){ return soon('Flotte', 'Frise des missions par agence et par cible, et « qui a fait quoi », chaque ligne sourcée.', 'étape 6'); }
+};
+
+function route(){
+  var r = (location.hash || '').replace(/^#/, '').replace(/^(en|fr)-/, '') || 'accueil';
+  var m = mission(r);
+  if (!m && !PAGES[r]) r = 'accueil';
+  renderHeader(r);
+  $('page').innerHTML = m ? missionPage(m) : PAGES[r]();
+  var h2 = $('page').querySelector('h2');
+  document.title = (h2 ? h2.textContent + ' · ' : '') + T('Explorateurs du Système solaire');
+  $('live').textContent = h2 ? h2.textContent : '';
+}
+
+document.addEventListener('click', function(e){
+  var el = e.target.closest ? e.target.closest('#b-lang,#b-theme,[data-go]') : null;
+  if (!el) return;
+  if (el.id === 'b-lang'){ var nl = OBS_LANG === 'en' ? 'fr' : 'en'; try { localStorage.setItem('sse-lang', nl); } catch(x){} location.hash = nl + '-' + (location.hash || '').replace(/^#/, '').replace(/^(en|fr)-/, ''); location.reload(); return; }
+  if (el.id === 'b-theme'){ var nt = isDark() ? 'light' : 'dark'; document.documentElement.setAttribute('data-theme', nt); try { localStorage.setItem('sse-theme', nt); } catch(x){} route(); $('b-theme').focus(); return; }
+  location.hash = el.getAttribute('data-go');
+});
+window.addEventListener('hashchange', route);
+OBS_I18N.static();
+route();
+window.__sse = { route:route, mission:mission };
+})();
+
+</script>
+</body>
+</html>
