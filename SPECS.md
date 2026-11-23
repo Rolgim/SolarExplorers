@@ -106,6 +106,15 @@ Pages, sur le modèle du premier site :
    - Système solaire : en zoomant sur le corps d'une sonde en orbite, son orbite réelle remplace l'anneau (Horizons centré sur le corps, une fenêtre par an à partir du 15 janvier, hauteur z gardée pour mettre en tirets la partie cachée derrière le corps) ; la sonde y est placée en répétant ce tour (≈), seule l'orbite est tracée en lecture rapide ; fond de ciel réel : carte du ciel de Gaia EDR3 reprojetée vers le pôle sud de l'écliptique (`tools/data/make_solarbg.py`, ESA/Gaia/DPAC, A. Moitinho, CC BY-SA 3.0 IGO), assombri ;
    - pas faits : bande du radar de Cassini (fréquence non trouvée dans les sources relevées), trajet de la lumière des instruments, collections STAC-PLANET pour plusieurs instruments de Mars Express et de Cassini (absentes du catalogue).
 
+11. **Quatrième retour du 23 novembre 2026 : barre, orientation, fond fixe, onze missions de plus** :
+   - barre de séparation sous l'en-tête (comme Flotte d'Observatories) ; fond Gaia du Système solaire fixe, il ne suit plus le zoom ni le déplacement ;
+   - orientation des sondes vérifiée d'après les repères SPICE publiés (NAIF) quand il y en a, sinon repérée à l'œil et signalée dans `src/data-missions.js` ;
+   - avec maquette : Mars Odyssey, Mars Global Surveyor, ExoMars TGO, Venus Express, Magellan, Clementine (commit 567319c) ;
+   - sans maquette libre de droits (la sonde est un point bleu sur son orbite, vue d'orbite par défaut, note sur la page) : Kaguya, Chandrayaan-1, Danuri, Lunar Prospector, GRAIL, orbiteur de Viking 1 ; sources JAXA, ISRO, NASA, Planetary Society, Korea.net et NSSDCA ;
+   - Horizons n'a ni MGS, ni Magellan, ni Kaguya (-131), ni Viking 1, et pas Chandrayaan-1 avant juillet 2016 : message dédié à la place de la trajectoire ;
+   - aperçus : Viking (mosaïque VIS), Kaguya (TC), Chandrayaan-1 (milieu d'une bande M3) ; pas d'aperçu utilisable pour Danuri (ShadowCam : vignettes de 36 px de large, aperçus DTM qui sont des graphiques d'erreur), TGO (401 à la PSA), Venus Express ; la date STAC d'un produit postérieur à la mission est signalée comme telle (« ce n'est pas la date de prise de vue ») ;
+   - frise de la Flotte élargie à partir de 1975, agence KARI ajoutée aux filtres.
+
 ## Sources
 
 - PDSSP STAC Model, documentation du PDSSP ; extension STACPlanet : https://github.com/pdssp/stacplanet
