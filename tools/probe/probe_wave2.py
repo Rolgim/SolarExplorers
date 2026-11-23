@@ -31,6 +31,10 @@ MISSIONS = {
     "vo": {"nasa": r"viking", "scifleet": None, "hz": "-27", "stac": []},
     "rosetta": {"nasa": r"rosetta", "scifleet": r"rosetta", "hz": "-226", "stac": []},
 }
+import sys
+DL = os.environ.get("DL") or "--dl" in sys.argv
+ONLY = [a for a in sys.argv[1:] if not a.startswith("--")]
+if ONLY: MISSIONS = {k: v for k, v in MISSIONS.items() if k in ONLY}
 MODEL_EXT = r"\.(glb|gltf|obj|mtl|3ds|fbx|blend|zip|txt|pdf)$"
 
 # ---------- 1. maquettes ----------
@@ -45,7 +49,7 @@ try:
         for p in hits: log("  - " + p)
         d = os.path.join(OUT, mid, "model"); os.makedirs(d, exist_ok=True)
         for p in hits:
-            if not re.search(MODEL_EXT, p, re.I) or not os.environ.get("DL"): continue
+            if not re.search(MODEL_EXT, p, re.I) or not DL: continue
             r = S.get("https://raw.githubusercontent.com/nasa/NASA-3D-Resources/master/" + quote(p), timeout=300)
             if r.ok and len(r.content) < 90_000_000:
                 open(os.path.join(d, os.path.basename(p)), "wb").write(r.content); log(f"  téléchargé {os.path.basename(p)} ({len(r.content)} o)")
@@ -72,7 +76,7 @@ try:
             log(f"  téléchargements : {d['downloads']}")
             dl = d["downloads"]; keys = [k for k in ("glb", "gltf", "obj", "textures") if dl.get(k)] or [k for k in ("cosmographia", "fbx") if dl.get(k)][:1]
             od = os.path.join(OUT, mid, "scifleet"); os.makedirs(od, exist_ok=True)
-            for k in (keys if os.environ.get("DL") else []):
+            for k in (keys if DL else []):
                 r = S.get("https://scifleet.esa.int/downloads/" + str(d.get("id")) + "/" + dl[k], timeout=300)
                 if r.ok: open(os.path.join(od, dl[k].split("/")[-1]), "wb").write(r.content); log(f"  téléchargé {k} {dl[k]} ({len(r.content)} o)")
                 else: log(f"  échec {k} {r.status_code}")

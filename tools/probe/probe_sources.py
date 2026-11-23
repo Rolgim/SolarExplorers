@@ -36,7 +36,19 @@ SRC = {
   "pds-glossary": "https://pds.nasa.gov/datastandards/documents/glossary/",
 }
 # fiches d'expériences de la NSSDCA (une par instrument) : identifiant COSPAR de la sonde suivi de -01, -02…
-for _k, _cospar in (("mro", "2005-029A"), ("mex", "2003-022A"), ("lro", "2009-031A"), ("cassini", "1997-061A"), ("messenger", "2004-030A")):
+WAVE2 = (("ody", "2001-014A"), ("mgs", "1996-062A"), ("tgo", "2016-017A"), ("vex", "2005-045A"), ("mgn", "1989-033B"), ("clem", "1994-004A"),
+         ("sln", "2007-039A"), ("lp", "1998-001A"), ("ch1", "2008-052A"), ("grail", "2011-046A"), ("kplo", "2022-084A"), ("vo1", "1975-075A"))
+for _k, _cospar in WAVE2: SRC[f"{_k}-nssdc"] = f"https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id={_cospar}"
+SRC.update({
+  "tgo-esa": "https://www.esa.int/Science_Exploration/Human_and_Robotic_Exploration/Exploration/ExoMars/ExoMars_Trace_Gas_Orbiter_instruments",
+  "tgo-facts": "https://www.esa.int/Science_Exploration/Human_and_Robotic_Exploration/Exploration/ExoMars/ExoMars_2016_Trace_Gas_Orbiter_and_Schiaparelli_facts",
+  "vex-facts": "https://www.esa.int/Science_Exploration/Space_Science/Venus_Express/Venus_Express_factsheet",
+  "vex-sci": "https://sci.esa.int/web/venus-express/-/34640-spacecraft",
+  "ody-arrival": "https://www.jpl.nasa.gov/news/press_kits/odysseyarrival.pdf",
+  "mgs-arrival": "https://www.jpl.nasa.gov/news/press_kits/mgsarriv.pdf",
+  "mgn-arrival": "https://www.jpl.nasa.gov/news/press_kits/magellan.pdf",
+})
+for _k, _cospar in (("mro", "2005-029A"), ("mex", "2003-022A"), ("lro", "2009-031A"), ("cassini", "1997-061A"), ("messenger", "2004-030A")) + WAVE2:
     for _i in range(1, 15):
         SRC[f"{_k}-exp{_i:02d}"] = f"https://nssdc.gsfc.nasa.gov/nmc/experiment/display.action?id={_cospar}-{_i:02d}"
 ONLY = set(os.environ.get("ONLY", "").split()) or set(__import__("sys").argv[1:])
