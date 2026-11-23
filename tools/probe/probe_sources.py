@@ -29,6 +29,11 @@ SRC = {
   "mro-launch": "https://www.jpl.nasa.gov/news/press_kits/mro-launch.pdf",
   "mro-launch-unt": "https://webarchive.library.unt.edu/eot2008/20081025014401id_/http://www.jpl.nasa.gov/news/press_kits/mro-launch.pdf",
   "mro-nssdc": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=2005-029A",
+  # niveaux de traitement des produits (CODMAC / PDS), pour la page « Mission et traitements »
+  "pds3-sr": "https://pds.nasa.gov/datastandards/pds3/standards/sr/StdRef_20090227_v3.8.pdf",
+  "pds4-proc": "https://pds.nasa.gov/datastandards/documents/im/current/index_1M00.html",
+  "ode-mars-help": "https://ode.rsl.wustl.edu/mars/pagehelp/Content/Missions_Instruments/Mars%20Reconnaissance%20Orbiter/CTX/CTX.htm",
+  "pds-glossary": "https://pds.nasa.gov/datastandards/documents/glossary/",
 }
 # fiches d'expériences de la NSSDCA (une par instrument) : identifiant COSPAR de la sonde suivi de -01, -02…
 for _k, _cospar in (("mro", "2005-029A"), ("mex", "2003-022A"), ("lro", "2009-031A"), ("cassini", "1997-061A"), ("messenger", "2004-030A")):
