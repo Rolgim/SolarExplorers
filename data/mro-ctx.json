@@ -12,6 +12,10 @@
  ],
  "crop_px": 5056,
  "out_px": 900,
+ "stretch": [
+  0.5,
+  99.5
+ ],
  "footprint": {
   "type": "Polygon",
   "coordinates": [
