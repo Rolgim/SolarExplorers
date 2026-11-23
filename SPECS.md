@@ -95,6 +95,10 @@ Pages, sur le modèle du premier site :
    - Comparer : durée du voyage (lancement → arrivée), masse au lancement, véhicules et instruments côte à côte, avec les sources des fiches ;
    - pas encore faits faute de valeurs structurées et sourcées : domaine spectral et résolution au sol des instruments.
 8. **Retours du 23 novembre 2026** : corps qui tourne sur lui-même ; sondes regroupées par corps dans l'en-tête ; Système solaire, Comparer et Flotte en pleine page ; lecture plus lente (un mois par seconde par défaut, réglable d'une heure à un an par seconde) ; Uranus, Neptune, Pluton et 21 satellites (éléments orbitaux Horizons tous les 180 jours, 30 pour Phobos, Mimas et Encelade, interpolés : écart ≤ 3° vérifié en retirant une époque sur deux).
+9. **Mise en page d'Observatories (second retour du 23 novembre 2026)** :
+   - Flotte et Comparer reprennent la page « Flotte » et « Comparer » d'Observatories (`src/views.js`, classes de `src/inst.css`) : sous-pages dans une colonne à gauche (Flotte : frise, qui a fait quoi ; Comparer : vue d'ensemble, durée du voyage, masse au lancement, véhicules, orbites, instruments), grand titre, filtres en pastilles (agence, état, corps visé), frise triée par date de lancement avec les étapes marquées, tableaux `ctable` ; sources numérotées dans « Qui a fait quoi » ;
+   - Système solaire reprend le « Ciel » d'Observatories : carte noire avec boutons de cadrage dessus (+, −, planètes intérieures, système entier), barre de lecture dessous (lecture, curseur, date, vitesse, aujourd'hui), colonne à droite (centrer sur un corps, satellites, état des sondes) ; zoom continu à la molette, au double clic ou au pincement, déplacement en glissant, du système entier jusqu'aux satellites d'une planète, la vue suit le corps choisi ; la lecture démarre à l'ouverture (une semaine par seconde, sauf « mouvement réduit ») ;
+   - planètes et satellites téléchargés jusqu'à deux ans après la date du jour (prévision Horizons, signalée « prévision » à côté de la date), pour que la lecture parte d'aujourd'hui ; positions des planètes interpolées par spline (Catmull-Rom).
 
 ## Sources
 

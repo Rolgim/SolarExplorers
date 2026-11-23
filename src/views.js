@@ -1,93 +1,187 @@
 /* =================================================================
-   VUES D'ENSEMBLE « FLOTTE » ET « COMPARER » — tirées du registre (src/data-missions.js), sans autre donnée :
-   chaque date, chaque valeur garde la source de la fiche (règle 1). Aucune agence n'a de couleur ni de badge (règle 5).
-   FleetPage.html() : frise des missions par corps visé et « qui a fait quoi » ;
-   ComparePage.html() : durée du voyage, masse au lancement, véhicules et instruments côte à côte.
+   VUES D'ENSEMBLE « FLOTTE » ET « COMPARER », sur le modèle des pages du même nom d'Observatories (src/fleet.js, inst-render.js) :
+   sous-pages dans une colonne à gauche (.inst-nav), en-tête (.inst-head), filtres en pastilles (.chip), frise et tableaux (.ctable).
+   Tout vient du registre (src/data-missions.js) : chaque date, chaque valeur garde la source de la fiche (règle 1).
+   Aucune agence n'a de couleur ni de badge (règle 5) : les couleurs sont celles des sondes, dans l'ordre du registre.
+   Views.page(route) rend #flotte, #flotte-qui, #comparer, #comparer-<sous-page> ; null pour une autre route.
 ================================================================= */
 var Views = (function(){
 'use strict';
 var DAY = 864e5, COL = ['#D63C6E', '#0E8FA3', '#7B5CC4', '#C77700', '#3F8F46'];   /* une couleur par sonde, ordre du registre (même ordre que l'accueil) */
+var FS = { ag:null, st:null, body:null }, CS = { body:null, st:null }, cur = null;
 function T(s){ return OBS_T(s); }
+function en(){ return OBS_LANG === 'en'; }
+function colon(){ return en() ? ': ' : ' : '; }
 function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function day(s){ var m = /^(\d{4})-(\d{2})(?:-(\d{2}))?/.exec(s); return Date.UTC(+m[1], +m[2] - 1, m[3] ? +m[3] : 1) / DAY; }
 function fmt(s){ var o = { month:'long', year:'numeric', timeZone:'UTC' }; if (s.length > 7) o.day = 'numeric';
-  return new Date(day(s) * DAY).toLocaleDateString(OBS_LANG === 'en' ? 'en-GB' : 'fr-FR', o); }
+  return new Date(day(s) * DAY).toLocaleDateString(en() ? 'en-GB' : 'fr-FR', o); }
 function today(){ var d = new Date(); return Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()) / DAY; }
 function src(m, k){ var r = k && m.refs && m.refs[k]; return r ? ' <a class="src" href="' + esc(r.u) + '" rel="noopener" target="_blank" title="' + esc(r.t) + '">' + esc(r.p) + '</a>' : ''; }
 function col(m){ return COL[MISSIONS.indexOf(m) % COL.length]; }
 var EV = { launch:'Lancement', flyby:'Survol', arrival:'Arrivée', orbit:'Mise en orbite', landing:'Atterrissage de Huygens', end:'Fin de mission' };
-function evName(e){ var b = e.type === 'launch' || e.type === 'landing' ? '' : (OBS_LANG === 'en' ? ': ' : ' : ') + T(e.body); return T(EV[e.type]) + b; }
-function arrival(m){ return (m.events || []).filter(function(e){ return e.type === 'arrival' || e.type === 'orbit'; })[0]; }
-function launch(m){ return (m.events || []).filter(function(e){ return e.type === 'launch'; })[0]; }
-function end(m){ return (m.events || []).filter(function(e){ return e.type === 'end'; })[0]; }
+function evName(e){ var b = e.type === 'launch' || e.type === 'landing' ? '' : colon() + T(e.body); return T(EV[e.type]) + b; }
+function ev(m, ty){ return (m.events || []).filter(function(e){ return ty.indexOf(e.type) >= 0; })[0]; }
+function launch(m){ return ev(m, ['launch']); }
+function arrival(m){ return ev(m, ['arrival', 'orbit']); }
+function end(m){ return ev(m, ['end']); }
+/* agences nommées dans le texte de la fiche, telles qu'écrites (sigles) */
+function agencies(m){ var a = []; (String(m.agency).match(/\b(NASA|ESA|ASI|JAXA|CNES|DLR|ISRO|Roscosmos|CNSA)\b/g) || []).forEach(function(x){ if (a.indexOf(x) < 0) a.push(x); }); return a; }
+function allAgencies(){ var n = {}; MISSIONS.forEach(function(m){ agencies(m).forEach(function(a){ n[a] = (n[a] || 0) + 1; }); });
+  return Object.keys(n).sort(function(a, b){ return n[b] - n[a] || (a < b ? -1 : 1); }); }
+function bodies(){ var b = []; MISSIONS.forEach(function(m){ if (b.indexOf(m.targets[0]) < 0) b.push(m.targets[0]); }); return b; }
+function keep(F, m){
+  if (F.ag && agencies(m).indexOf(F.ag) < 0) return false;
+  if (F.st === 'on' && end(m)) return false; if (F.st === 'off' && !end(m)) return false;
+  if (F.body && m.targets[0] !== F.body) return false;
+  return true;
+}
+function chips(scope, F, key, label, opts){
+  return '<div class="fl-f" role="group" aria-label="' + esc(T(label)) + '"><span>' + esc(T(label)) + '</span><div class="fl-opts">' +
+    '<button class="chip" data-xf="' + scope + ':' + key + ':" aria-pressed="' + !F[key] + '">' + esc(T('Toutes')) + '</button>' +
+    opts.map(function(o){ return '<button class="chip" data-xf="' + scope + ':' + key + ':' + esc(o[0]) + '" aria-pressed="' + (F[key] === o[0]) + '">' + esc(T(o[1])) + '</button>'; }).join('') + '</div></div>';
+}
+var STATES = [['on', 'En cours'], ['off', 'Terminées']];
+/* gabarit commun : sous-pages à gauche, contenu à droite */
+function shell(label, items, on, main){
+  return '<div class="xp inst-body"><nav class="inst-nav" aria-label="' + esc(T(label)) + '">' + items.map(function(x){
+    return '<a class="nav-i' + (x[0] === on ? ' on' : '') + '" href="#' + x[0] + '"' + (x[0] === on ? ' aria-current="page"' : '') + '><span class="n">' + esc(T(x[1])) + '</span><span class="k">' + esc(T(x[2])) + '</span></a>';
+  }).join('') + '</nav><div class="inst-main" id="xp-main">' + main + '</div></div>';
+}
+function head(name, full, right){
+  return '<div class="inst-head"><div class="inst-h"><h2 class="inst-name">' + esc(T(name)) + '</h2><div class="inst-full">' + esc(T(full)) + '</div></div>' + right + '</div>';
+}
 
 /* ---------- Flotte ---------- */
-function fleet(){
-  var y0 = 1997, y1 = new Date().getUTCFullYear() + 1, t0 = Date.UTC(y0, 0, 1) / DAY, t1 = Date.UTC(y1, 0, 1) / DAY, now = today();
-  var W = 900, L = 150, H = 34, x = function(t){ return (L + (t - t0) / (t1 - t0) * (W - L - 10)).toFixed(1); };
-  var groups = [];   /* lignes rangées par corps visé principal, dans l'ordre du registre */
-  MISSIONS.forEach(function(m){ var g = groups.filter(function(g){ return g.body === m.targets[0]; })[0]; if (!g) groups.push(g = { body:m.targets[0], ms:[] }); g.ms.push(m); });
-  var rows = 0; groups.forEach(function(g){ rows += g.ms.length; });
-  var Ht = 30 + rows * H + groups.length * 22, svg = '';
-  for (var y = y0; y <= y1; y++){ var xx = x(Date.UTC(y, 0, 1) / DAY);
-    svg += '<line x1="' + xx + '" y1="22" x2="' + xx + '" y2="' + Ht + '" class="fl-grid' + (y % 5 ? '' : ' major') + '"/>';
-    if (y % 5 === 0 && y < y1) svg += '<text x="' + xx + '" y="14" class="fl-year">' + y + '</text>'; }
-  svg += '<line x1="' + x(now) + '" y1="18" x2="' + x(now) + '" y2="' + Ht + '" class="fl-now"/><text x="' + x(now) + '" y="' + (Ht + 14) + '" class="fl-year" style="text-anchor:end">' + T('aujourd\'hui') + '</text>';
-  var yy = 30;
-  groups.forEach(function(g){
-    svg += '<text x="0" y="' + (yy + 12) + '" class="fl-body">' + esc(T(g.body)) + '</text>'; yy += 22;
-    g.ms.forEach(function(m){
-      var l = launch(m), e = end(m), c = col(m), a = day(l.date), b = e ? day(e.date) : now, cy = yy + H / 2 - 4;
-      svg += '<a href="#' + m.id + '"><text x="10" y="' + (cy + 4) + '" class="fl-name">' + esc(m.short) + '</text></a>';
-      svg += '<rect x="' + x(a) + '" y="' + (cy - 5) + '" width="' + (x(b) - x(a)).toFixed(1) + '" height="10" style="fill:' + c + '" class="fl-bar' + (e ? '' : ' live') + '"><title>' + esc(m.short) + ' : ' + fmt(l.date) + ' – ' + (e ? fmt(e.date) : T('en cours')) + '</title></rect>';
-      if (!e) svg += '<path d="M' + x(b) + ' ' + (cy - 8) + 'l7 8l-7 8z" style="fill:' + c + '"/>';
-      (m.events || []).forEach(function(ev){
-        if (ev.type === 'launch') return; var ex = +x(day(ev.date)), sh;
-        if (ev.type === 'flyby') sh = '<circle cx="' + ex + '" cy="' + cy + '" r="3.5"/>';
-        else if (ev.type === 'end') sh = '<rect x="' + (ex - 4) + '" y="' + (cy - 4) + '" width="8" height="8"/>';
-        else if (ev.type === 'landing') sh = '<path d="M' + ex + ' ' + (cy - 6) + 'l6 10h-12z"/>';
-        else sh = '<path d="M' + ex + ' ' + (cy - 7) + 'l7 7l-7 7l-7-7z"/>';
-        svg += '<g class="fl-ev">' + sh.replace('/>', '><title>' + esc(evName(ev) + ' · ' + fmt(ev.date)) + '</title></' + sh.match(/^<(\w+)/)[1] + '>') + '</g>';
-      });
-      yy += H;
-    });
+var FLEET_SECS = [['flotte', 'Frise chronologique', 'Du lancement à la fin de mission'], ['flotte-qui', 'Qui a fait quoi', 'Agences, corps visés, étapes datées']];
+var SHAPE = {
+  flyby:function(x, y){ return '<circle cx="' + x + '" cy="' + y + '" r="3.5"/>'; },
+  end:function(x, y){ return '<rect x="' + (x - 4) + '" y="' + (y - 4) + '" width="8" height="8"/>'; },
+  landing:function(x, y){ return '<path d="M' + x + ' ' + (y - 6) + 'l6 10h-12z"/>'; },
+  orbit:function(x, y){ return '<path d="M' + x + ' ' + (y - 6) + 'l6 6l-6 6l-6-6z"/>'; }
+};
+SHAPE.arrival = SHAPE.orbit;
+function timeline(L){
+  var y0 = 1995, y1 = Math.max(2028, new Date().getUTCFullYear() + 2), W = 1000, lw = 120, rh = 30, top = 26, H = top + L.length * rh + 30, now = today();
+  var t0 = Date.UTC(y0, 0, 1) / DAY, t1 = Date.UTC(y1, 0, 1) / DAY;
+  function X(t){ return +(lw + (t - t0) / (t1 - t0) * (W - lw - 40)).toFixed(1); }
+  var s = '';
+  for (var y = y0; y <= y1; y += 5){ var xx = X(Date.UTC(y, 0, 1) / DAY); s += '<line x1="' + xx + '" y1="' + (top - 6) + '" x2="' + xx + '" y2="' + (H - 22) + '" class="fl-grid"/><text x="' + xx + '" y="14" text-anchor="middle" class="fl-year">' + y + '</text>'; }
+  s += '<line x1="' + X(now) + '" y1="' + (top - 6) + '" x2="' + X(now) + '" y2="' + (H - 22) + '" stroke-width="1.5" stroke-dasharray="3 3" class="fl-now"/><text x="' + X(now) + '" y="' + (H - 8) + '" text-anchor="middle" class="fl-nowt">' + esc(T('aujourd\'hui')) + '</text>';
+  L.forEach(function(m, i){
+    var l = launch(m), e = end(m), a = X(day(l.date)), b = e ? X(day(e.date)) : X(now), yy = top + i * rh, cy = yy + 12, c = col(m);
+    var tip = m.short + colon() + fmt(l.date) + ' – ' + (e ? fmt(e.date) : T('en cours'));
+    s += '<g class="fl-row" data-go="' + m.id + '" tabindex="0" role="link" aria-label="' + esc(tip) + '"><title>' + esc(tip) + '</title>' +
+      '<rect x="0" y="' + (yy - 3) + '" width="' + W + '" height="' + rh + '" fill="transparent"/>' +
+      '<text x="' + (lw - 10) + '" y="' + (cy + 4.5) + '" text-anchor="end" class="fl-lab">' + esc(m.short) + '</text>' +
+      '<rect x="' + a + '" y="' + (cy - 7) + '" width="' + Math.max(3, b - a).toFixed(1) + '" height="14" fill="' + c + '"' + (e ? ' fill-opacity="0.55"' : '') + '/>' +
+      (e ? '' : '<path d="M' + b + ' ' + (cy - 7) + ' l7 7 l-7 7 z" fill="' + c + '"/>') +
+      '<g class="fl-ev">' + (m.events || []).filter(function(x){ return SHAPE[x.type]; }).map(function(x){ return SHAPE[x.type](X(day(x.date)), cy); }).join('') + '</g></g>';
   });
-  var leg = [['Survol', '<circle cx="8" cy="8" r="3.5"/>'], ['Arrivée ou mise en orbite', '<path d="M8 1l7 7l-7 7l-7-7z"/>'], ['Atterrissage', '<path d="M8 2l6 10h-12z"/>'], ['Fin de mission', '<rect x="4" y="4" width="8" height="8"/>']];
-  var h = '<div class="sk full"><h2>' + T('Flotte') + '</h2><p class="lead">' + T('Les missions du site sur une même frise, rangées par corps visé : lancement, survols, arrivée et fin de mission, chaque date sourcée dans la liste plus bas.') + '</p>' +
-    '<div class="fl-wrap"><svg viewBox="0 -4 ' + W + ' ' + (Ht + 22) + '" class="fl" role="group" aria-labelledby="fl-cap">' + svg + '</svg></div>' +
-    '<p class="sr-only" id="fl-cap">' + T('Frise des missions de') + ' ' + y0 + ' ' + T('à aujourd\'hui') + '. ' + T('Le détail est dans la liste qui suit.') + '</p>' +
-    '<p class="fl-leg">' + leg.map(function(l){ return '<span><svg viewBox="0 0 16 16" aria-hidden="true">' + l[1] + '</svg>' + T(l[0]) + '</span>'; }).join('') +
-      '<span><i class="fl-live"></i>' + T('mission en cours') + '</span></p>';
-  h += '<h3>' + T('Qui a fait quoi') + '</h3><div class="fl-who">' + MISSIONS.map(function(m){
-    return '<section class="fl-card" style="--c:' + col(m) + '"><h4><a href="#' + m.id + '">' + esc(m.name) + '</a></h4><p class="fl-ag">' + esc(m.agency) + '</p><ul>' +
-      (m.events || []).map(function(ev){ return '<li><span>' + fmt(ev.date) + '</span> ' + esc(evName(ev)) + src(m, ev.ref) + '</li>'; }).join('') +
-      (end(m) ? '' : '<li><span>' + T('aujourd\'hui') + '</span> ' + T('mission en cours') + '</li>') + '</ul></section>';
-  }).join('') + '</div><p class="note">' + T('Agences citées telles que les sources les nomment ; l\'ordre suit le registre du site, sans hiérarchie.') + '</p></div>';
-  return h;
+  var leg = [['Survol', SHAPE.flyby(8, 8)], ['Arrivée ou mise en orbite', SHAPE.orbit(8, 8)], ['Atterrissage', SHAPE.landing(8, 8)], ['Fin de mission', SHAPE.end(8, 8)]];
+  return '<div class="isec"><h3>' + esc(T('Les missions, du lancement à la fin')) + '</h3><div class="svgwrap fl-tl"><svg viewBox="0 0 ' + W + ' ' + H + '" role="group" aria-label="' + esc(T('Frise chronologique des missions')) + '">' + s + '</svg></div>' +
+    '<p class="fl-leg">' + leg.map(function(l){ return '<span><svg viewBox="0 0 16 16" aria-hidden="true">' + l[1] + '</svg>' + esc(T(l[0])) + '</span>'; }).join('') + '<span><i class="fl-live"></i>' + esc(T('mission en cours')) + '</span></p>' +
+    '<div class="cap">' + esc(T('Une barre par mission, du lancement à la fin de mission ; pleine et fléchée si elle est en cours. Les étapes datées sont marquées sur la barre ; leurs sources sont dans « Qui a fait quoi ». Cliquer une barre ouvre la sonde en 3D.')) + '</div></div>';
+}
+function who(L){
+  var nums = {}, refs = [], h = '';
+  function ref(m, k){ if (!k || !m.refs || !m.refs[k]) return ''; var id = m.id + ':' + k; if (!nums[id]){ refs.push(m.refs[k]); nums[id] = refs.length; } return '<sup class="ref">' + nums[id] + '</sup>'; }
+  L.forEach(function(m){
+    var l = launch(m), e = end(m);
+    h += '<div class="fl-who"><h3><a href="#' + m.id + '">' + esc(m.name) + '</a> <small>' + fmt(l.date) + ' – ' + (e ? fmt(e.date) : esc(T('en cours'))) + '</small></h3>' +
+      '<div class="spec-row"><div class="k"><b>' + esc(T('Agences')) + '</b></div><div class="v">' + esc(m.agency) + '</div></div>' +
+      '<div class="spec-row"><div class="k"><b>' + esc(T('Corps visés')) + '</b></div><div class="v">' + m.targets.map(function(b){ return esc(T(b)); }).join(', ') + '</div></div>' +
+      (m.events || []).map(function(x){ return '<div class="spec-row"><div class="k"><b>' + esc(evName(x)) + '</b></div><div class="v">' + fmt(x.date) + ref(m, x.ref) + '</div></div>'; }).join('') + '</div>';
+  });
+  return h + (refs.length ? '<div class="spec-section"><div class="spec-section-title">' + esc(T('Sources')) + '</div><ol class="refs">' + refs.map(function(r){
+    return '<li><a href="' + esc(r.u) + '" target="_blank" rel="noopener">' + esc(r.t) + '</a> <span>' + esc(r.p) + '</span></li>'; }).join('') + '</ol></div>' : '') +
+    '<p class="cap">' + esc(T('Agences citées telles que les sources les nomment ; l\'ordre suit le registre du site, sans hiérarchie.')) + '</p>';
+}
+function fleet(sec){
+  var L = MISSIONS.filter(function(m){ return keep(FS, m); }).sort(function(a, b){ return day(launch(a).date) - day(launch(b).date); });
+  var main = head('Flotte', 'Toutes les sondes présentées sur ce site', '<p class="inst-sum">' + esc(T('Chaque sonde a sa fiche, sa maquette et ses données. Les filtres se combinent ; le nombre affiché est celui des missions retenues.')) + '</p>') +
+    '<div class="fl-filters">' + chips('f', FS, 'ag', 'Agence', allAgencies().map(function(a){ return [a, a]; })) + chips('f', FS, 'st', 'État', STATES) +
+      chips('f', FS, 'body', 'Corps visé', bodies().map(function(b){ return [b, b]; })) + '</div>' +
+    '<p class="fl-count">' + esc(T('Missions affichées')) + colon() + '<b>' + L.length + '</b> / ' + MISSIONS.length + '</p>';
+  main += !L.length ? '<p class="cap">' + esc(T('Aucune mission ne correspond à ces filtres.')) + '</p>' : sec === 'flotte-qui' ? who(L) : timeline(L);
+  return shell('Flotte', FLEET_SECS, sec, main);
 }
 
 /* ---------- Comparer ---------- */
-function massRow(m){ var v = (m.sections && m.sections[0] && m.sections[0].rows || []).filter(function(r){ return /^(Masse au lancement|Launch mass)$/.test(r[0]); })[0]; return v; }
-function num(s){ var m = /^[\d\s  ,.]+/.exec(s); return m ? +m[0].replace(OBS_LANG === 'en' ? /[^\d.]/g : /[^\d,]/g, '').replace(',', '.') : NaN; }
-function bars(items, unit){
+var CMP_SECS = [['comparer', 'Vue d\'ensemble', 'Années, masses, corps visés, agences'], ['comparer-voyage', 'Durée du voyage', 'Du lancement à l\'arrivée'],
+                ['comparer-masse', 'Masse au lancement', 'Ergols compris'], ['comparer-vehicules', 'Véhicules', 'Dimensions et construction'],
+                ['comparer-orbites', 'Orbites', 'Autour du corps visé'], ['comparer-instruments', 'Instruments', 'Tous les instruments, côte à côte']];
+function massRow(m){ return (m.sections && m.sections[0] && m.sections[0].rows || []).filter(function(r){ return /^(Masse au lancement|Launch mass)$/.test(r[0]); })[0]; }
+function num(s){ var m = /^[\d\s  ,.]+/.exec(s); return m ? +m[0].replace(en() ? /[^\d.]/g : /[^\d,]/g, '').replace(',', '.') : NaN; }
+function trip(m){ var l = launch(m), a = arrival(m); return l && a ? day(a.date) - day(l.date) : null; }
+function years(d){ return (d / 365.25).toFixed(1).replace('.', en() ? '.' : ','); }
+function bars(items){
   var max = Math.max.apply(null, items.map(function(i){ return i.v; }));
   return '<ul class="cp-bars">' + items.map(function(i){
     return '<li><a href="#' + i.m.id + '" class="cp-n">' + esc(i.m.short) + '</a><span class="cp-t"><i style="width:' + (i.v / max * 100).toFixed(1) + '%;background:' + col(i.m) + '"></i></span><span class="cp-v">' + i.label + '</span></li>';
   }).join('') + '</ul>';
 }
-function compare(){
-  var h = '<div class="sk full"><h2>' + T('Comparer') + '</h2><p class="lead">' + T('Les missions côte à côte, avec les valeurs de leurs fiches et les mêmes sources.') + '</p>';
-  var trip = MISSIONS.map(function(m){ var l = launch(m), a = arrival(m); if (!l || !a) return null; var d = day(a.date) - day(l.date);
-    return { m:m, v:d, label:OBS_NUM(String(Math.round(d))) + ' ' + T('jours') + ' (' + (d / 365.25).toFixed(1).replace('.', OBS_LANG === 'en' ? '.' : ',') + ' ' + T('ans') + ') · ' + esc(T(a.body)) + src(m, a.ref) }; }).filter(Boolean);
-  h += '<h3>' + T('Durée du voyage') + '</h3><p class="note">' + T('Du lancement à l\'arrivée (ou à la mise en orbite) autour du corps visé.') + '</p>' + bars(trip);
-  var mass = MISSIONS.map(function(m){ var r = massRow(m); if (!r) return null; var v = num(r[1]); return isNaN(v) ? null : { m:m, v:v, label:esc(OBS_NUM(r[1])) + src(m, r[2]) }; }).filter(Boolean);
-  h += '<h3>' + T('Masse au lancement') + '</h3>' + bars(mass);
-  [[0, 'Véhicules'], [3, 'Instruments']].forEach(function(s){
-    h += '<h3>' + T(s[1]) + '</h3><div class="cp-grid">' + MISSIONS.map(function(m){ var sec = m.sections && m.sections[s[0]]; if (!sec) return '';
-      return '<section class="fl-card" style="--c:' + col(m) + '"><h4><a href="#' + m.id + '">' + esc(m.short) + '</a></h4><table class="sk-table"><tbody>' +
-        sec.rows.map(function(r){ return '<tr><th scope="row">' + esc(r[0]) + '</th><td>' + esc(OBS_NUM(r[1])) + src(m, r[2]) + '</td></tr>'; }).join('') + '</tbody></table></section>'; }).join('') + '</div>';
-  });
-  return h + '<p class="note">' + T('Durées calculées à partir des dates des fiches ; les valeurs suivies de « ≈ » sont approchées.') + '</p></div>';
+function overview(L){
+  var maxK = Math.max.apply(null, L.map(function(m){ var r = massRow(m); return r ? num(r[1]) || 0 : 0; })) || 1;
+  var rows = L.map(function(m){
+    var l = launch(m), e = end(m), r = massRow(m), k = r ? num(r[1]) : NaN, d = trip(m), a = arrival(m), ins = m.sections && m.sections[3];
+    return '<tr><td class="o" style="--c:' + col(m) + '"><a href="#' + m.id + '">' + esc(m.short) + '</a></td>' +
+      '<td>' + l.date.slice(0, 4) + '–' + (e ? e.date.slice(0, 4) : ' <small>' + esc(T('en cours')) + '</small>') + '</td>' +
+      '<td>' + (isNaN(k) ? '—' : '<div class="barcell"><i class="alt" style="width:' + Math.round(k / maxK * 54) + 'px"></i>' + esc(OBS_NUM((r[1].match(/^\D*[\d\s  ,.]*\d\s*kg/) || [r[1]])[0])) + '</div>') + '</td>' +
+      '<td>' + m.targets.map(function(b){ return esc(T(b)); }).join(', ') + '</td>' +
+      '<td>' + esc(agencies(m).join(', ')) + '</td>' +
+      '<td>' + (d == null ? '—' : OBS_NUM(Math.round(d).toLocaleString('fr-FR')) + ' ' + esc(T('jours')) + ' <small>' + (a ? esc(T(a.body)) : '') + '</small>') + '</td>' +
+      '<td>' + (ins ? ins.rows.length : '—') + '</td></tr>';
+  }).join('');
+  return '<div class="isec"><h3>' + esc(T('Les missions côte à côte')) + '</h3><div class="tablewrap"><table class="ctable"><thead><tr><th scope="col">' + esc(T('Mission')) + '</th><th scope="col">' + esc(T('Années')) + '</th><th scope="col">' + esc(T('Masse au lancement')) + '</th>' +
+    '<th scope="col">' + esc(T('Corps visés')) + '</th><th scope="col">' + esc(T('Agences')) + '</th><th scope="col">' + esc(T('Durée du voyage')) + '</th><th scope="col">' + esc(T('Instruments')) + '</th></tr></thead><tbody>' + rows + '</tbody></table></div>' +
+    '<div class="cap">' + esc(T('Valeurs des fiches de chaque sonde, où leur source est citée ; « Durée du voyage » : du lancement à l\'arrivée (ou à la mise en orbite) autour du corps visé. Cliquer un nom ouvre la sonde en 3D.')) + '</div></div>';
 }
-return { fleet:fleet, compare:compare };
+function rowsTable(L, idx, title, cap){
+  var rows = '';
+  L.forEach(function(m){ var s = m.sections && m.sections[idx]; if (!s) return;
+    s.rows.forEach(function(r, j){ rows += '<tr' + (j ? '' : ' class="first"') + '><td class="o" style="--c:' + col(m) + '">' + (j ? '' : '<a href="#' + m.id + '">' + esc(m.short) + '</a><small class="cp-sec">' + esc(s.title) + '</small>') + '</td>' +
+      '<td class="n">' + esc(r[0]) + '</td><td>' + esc(OBS_NUM(r[1])) + src(m, r[2]) + '</td></tr>'; }); });
+  return '<div class="isec"><h3>' + esc(T(title)) + '</h3><div class="tablewrap"><table class="ctable cp-rows"><thead><tr><th scope="col">' + esc(T('Mission')) + '</th><th scope="col">' + esc(T('Élément')) + '</th><th scope="col">' + esc(T('Valeur et source')) + '</th></tr></thead><tbody>' + rows + '</tbody></table></div>' +
+    '<div class="cap">' + esc(T(cap)) + '</div></div>';
+}
+function compare(sec){
+  var L = MISSIONS.filter(function(m){ return keep(CS, m); }), cs = CMP_SECS.filter(function(x){ return x[0] === sec; })[0];
+  var main = head(cs[1], 'Comparer : les missions sur les mêmes axes, avec les valeurs et les sources de leurs fiches',
+    '<div class="fl-filters">' + chips('c', CS, 'body', 'Corps visé', bodies().map(function(b){ return [b, b]; })) + chips('c', CS, 'st', 'État', STATES) + '</div>');
+  if (!L.length) return shell('Comparer', CMP_SECS, sec, main + '<p class="cap">' + esc(T('Aucune mission ne correspond à ces filtres.')) + '</p>');
+  if (sec === 'comparer') main += overview(L);
+  else if (sec === 'comparer-voyage'){
+    var tr = L.map(function(m){ var d = trip(m), a = arrival(m); if (d == null) return null;
+      return { m:m, v:d, label:OBS_NUM(Math.round(d).toLocaleString('fr-FR')) + ' ' + esc(T('jours')) + ' (' + years(d) + ' ' + esc(T('ans')) + ') · ' + esc(T(a.body)) + src(m, a.ref) }; }).filter(Boolean);
+    main += '<div class="isec"><h3>' + esc(T('Du lancement à l\'arrivée')) + '</h3>' + bars(tr) + '<div class="cap">' + esc(T('Du lancement à l\'arrivée (ou à la mise en orbite) autour du corps visé, calculé à partir des dates des fiches. Les survols en chemin allongent le voyage mais économisent du carburant.')) + '</div></div>';
+  } else if (sec === 'comparer-masse'){
+    var ms = L.map(function(m){ var r = massRow(m); if (!r) return null; var v = num(r[1]); return isNaN(v) ? null : { m:m, v:v, label:esc(OBS_NUM(r[1])) + src(m, r[2]) }; }).filter(Boolean);
+    main += '<div class="isec"><h3>' + esc(T('Masse au lancement')) + '</h3>' + bars(ms) + '<div class="cap">' + esc(T('Masse totale au lancement, ergols compris, telle que la publie la source citée ; les valeurs suivies de « ≈ » sont approchées.')) + '</div></div>';
+  } else if (sec === 'comparer-vehicules') main += rowsTable(L, 0, 'Véhicules', 'Valeurs de la section « Véhicule » de chaque fiche.');
+  else if (sec === 'comparer-orbites') main += rowsTable(L, 2, 'Orbites', 'Valeurs de la section « Orbite » de chaque fiche ; Cassini a changé d\'orbite autour de Saturne tout au long de sa mission.');
+  else main += rowsTable(L, 3, 'Instruments', 'Valeurs de la section « Instruments » de chaque fiche ; le détail de chaque instrument est dans « Mission et données » de la sonde.');
+  return shell('Comparer', CMP_SECS, sec, main);
+}
+
+function page(r){
+  if (FLEET_SECS.some(function(x){ return x[0] === r; })){ cur = r; return fleet(r); }
+  if (CMP_SECS.some(function(x){ return x[0] === r; })){ cur = r; return compare(r); }
+  return null;
+}
+/* pastilles de filtre : la page est redessinée sur place, défilement et focus gardés */
+document.addEventListener('click', function(e){
+  var b = e.target.closest && e.target.closest('[data-xf]'); if (!b || !cur) return;
+  var p = b.getAttribute('data-xf').split(':'), F = p[0] === 'f' ? FS : CS; F[p[1]] = p[2] || null;
+  var mm = document.getElementById('xp-main'), top = mm ? mm.scrollTop : 0, key = b.getAttribute('data-xf');
+  document.getElementById('page').innerHTML = page(cur);
+  mm = document.getElementById('xp-main'); if (mm) mm.scrollTop = top;
+  var nb = document.querySelector('[data-xf="' + key.replace(/"/g, '\\"') + '"]'); if (nb) nb.focus();
+});
+/* lignes de la frise : Entrée ou Espace ouvrent la sonde (role=link) */
+document.addEventListener('keydown', function(e){
+  var g = e.target.closest && e.target.closest('.fl-row[data-go]'); if (!g || (e.key !== 'Enter' && e.key !== ' ')) return;
+  e.preventDefault(); location.hash = g.getAttribute('data-go');
+});
+return { page:page, base:function(r){ return /^flotte/.test(r) ? 'flotte' : /^comparer/.test(r) ? 'comparer' : r; } };
 })();

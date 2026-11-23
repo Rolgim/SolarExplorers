@@ -82,58 +82,65 @@ figure{ margin:0 0 10px; } figcaption{ font-size:12.5px; line-height:1.45; color
 .m-body-note{ position:absolute; right:var(--gr); bottom:12px; margin:0; max-width:46%; text-align:right; font-size:12px; color:#E3E6E8; background:rgba(0,0,0,.72); padding:2px 8px; }
 @media (max-width: 720px){ .m-body-note{ top:74px; bottom:auto; left:var(--gl); max-width:none; text-align:left; } }
 
-/* ---------- accueil « Système solaire » ---------- */
-.so-tools{ display:flex; flex-wrap:wrap; gap:10px 14px; align-items:center; margin:6px 0 10px; }
-.so-tools .m-b{ background:var(--paper); color:var(--ink); border-color:var(--ink); }
-.so-tools .m-b[aria-pressed="true"]{ background:var(--mark); color:var(--on-mark); border-color:var(--mark); }
-.so-date{ display:flex; flex-direction:column; gap:2px; flex:1 1 260px; font-size:13.5px; font-weight:700; }
-.so-date input{ width:100%; accent-color:var(--mark); }
-.so-zoom{ display:flex; gap:6px; }
-.so-wrap{ background:#05070A; height:calc(100vh - 290px); min-height:360px; }
-.so-wrap svg{ display:block; width:100%; height:100%; }
-.so-main{ display:grid; grid-template-columns:minmax(0, 1fr) 300px; gap:18px; align-items:start; }
-@media (max-width: 900px){ .so-main{ grid-template-columns:1fr; } .so-wrap{ height:auto; aspect-ratio:1; min-height:0; } }
-.so-side h3{ margin-top:0; }
-.so-sel{ display:flex; align-items:center; gap:6px; font-size:13.5px; font-weight:700; }
+/* ---------- accueil « Système solaire » : mise en page du « Ciel » d'Observatories (.home…, inst.css) ---------- */
+#page.is-solar{ padding:0; }
+.home.solar{ min-height:100%; }
+.so-sky{ padding:0; height:calc(100vh - 300px); min-height:340px; overflow:hidden; }
+.so-sky svg{ display:block; width:100%; height:100%; touch-action:none; cursor:grab; user-select:none; -webkit-user-select:none; font-family:var(--f); }
+.so-sky .home-zoom{ flex-wrap:wrap; justify-content:flex-end; left:16px; }
+.so-sky .home-zoom button{ background:rgba(5,7,10,.75); }
+.so-ctl .dep-b{ font-size:12px; }
+.so-ctl .home-yr{ min-width:0; flex:0 1 auto; }
+.so-fut{ display:inline-block; font-size:11.5px; font-weight:700; margin-left:6px; padding:1px 6px; border:1px solid var(--ink); }
+.so-sel{ display:flex; align-items:center; gap:6px; font-size:13px; font-weight:600; }
 .so-sel select{ font:inherit; font-weight:400; padding:4px 6px; background:var(--paper); color:var(--ink); border:1px solid var(--ink); }
-.so-moon{ fill:#E3E6E8; }
-.so-pl-g[data-focus]:not([data-focus=""]){ cursor:pointer; }
-.so-list.so-ml li{ display:block; }
-.so-o{ fill:none; stroke-width:1px; stroke-opacity:.55; vector-effect:non-scaling-stroke; }
-.so-tr{ fill:none; stroke-width:1.6px; vector-effect:non-scaling-stroke; }
+.so-o{ fill:none; stroke-width:1px; stroke-opacity:.55; }
+.so-mo{ stroke:#9FB3C8; stroke-opacity:.45; }
+.so-tr{ fill:none; stroke-width:1.6px; }
 .so-tr.done{ stroke-opacity:.35; stroke-dasharray:4 3; }
 .so-sun{ fill:#FFD54F; }
-.so-ring{ fill:none; stroke-width:2px; vector-effect:non-scaling-stroke; }
-.so-wrap text{ fill:#E3E6E8; font-family:var(--f); }
-.so-wrap a:focus-visible .so-p{ stroke:#fff; stroke-width:2px; vector-effect:non-scaling-stroke; }
-.so-list{ list-style:none; padding:0; margin:0; font-size:13.5px; }
-.so-list li{ padding:3px 0; display:flex; gap:7px; align-items:center; }
-.so-list .sw{ width:12px; height:12px; flex:none; border-radius:50%; }
+.so-moon{ fill:#E3E6E8; }
+.so-p{ stroke:#05070A; stroke-width:1.5px; }
+.so-ring{ fill:none; stroke-width:2px; }
+.so-sky text{ fill:#E3E6E8; font-size:12px; font-weight:600; paint-order:stroke; stroke:#05070A; stroke-width:3px; stroke-linejoin:round; }
+.so-sky text.so-ml{ font-weight:400; fill:#C9D2DA; }
+.so-scale path{ fill:none; stroke:#E3E6E8; stroke-width:1.5px; }
+.so-sky .home-tip{ transform:translateY(-50%); }
+.home-li b{ font-weight:700; }
+.solar .home-li[aria-pressed="false"]{ opacity:1; }
+.solar .home-li[aria-pressed="false"] i{ outline:0; }
+.solar .home-li[aria-pressed="true"]{ border-color:var(--mark); box-shadow:inset 4px 0 0 var(--mark); background:var(--sheet); }
+#so-probes .home-li small{ grid-column:2 / 4; }
+@media (max-width: 860px){ .so-sky{ height:min(110vw, 70vh); min-height:300px; } .so-sky .home-zoom{ top:8px; right:8px; left:8px; } }
 
-/* ---------- Flotte et Comparer ---------- */
-.fl-wrap{ overflow-x:auto; margin:8px 0 4px; }
-.fl{ display:block; width:100%; min-width:640px; font-family:var(--f); }
-.fl-grid{ stroke:var(--rule); stroke-width:1; } .fl-grid.major{ stroke:var(--rule-2, var(--mute)); }
-.fl-now{ stroke:var(--ink); stroke-width:1.5; stroke-dasharray:3 3; }
-.fl-year{ font-size:12px; fill:var(--ink-2); text-anchor:middle; }
-.fl-body{ font-size:13px; font-weight:800; fill:var(--ink); text-transform:uppercase; letter-spacing:.4px; }
-.fl-name{ font-size:13.5px; font-weight:700; fill:var(--ink); text-decoration:underline; }
-.fl-bar.live{ opacity:.95; }
+/* ---------- Flotte et Comparer : mise en page d'Observatories (.inst-nav, .inst-head, .ctable…, inst.css) ---------- */
+#page.is-xp{ padding:0; overflow:hidden; display:flex; }
+.xp{ flex:1; min-width:0; }
+a.nav-i{ color:inherit; text-decoration:none; }
+.inst-head h2.inst-name{ margin:0; }
+.isec h3{ font-weight:800; font-stretch:75%; font-size:17px; margin:0 0 10px; padding-bottom:5px; border-bottom:2px solid var(--ink); }
+.inst-head .fl-filters{ margin:0; }
+.fl-grid{ stroke:var(--rule); stroke-width:1; }
+.fl-year{ font-size:11px; fill:var(--ink-2); }
+.fl-lab{ font-size:12.5px; font-weight:700; fill:var(--ink); }
+.fl-tl svg{ font-family:var(--f); }
 .fl-ev{ fill:var(--paper); stroke:var(--ink); stroke-width:1.5; }
-.fl-leg{ display:flex; flex-wrap:wrap; gap:6px 18px; font-size:12.5px; color:var(--ink-2); margin:6px 0 0; }
+.fl-nowt{ font-size:11px; }
+.fl-leg{ display:flex; flex-wrap:wrap; gap:6px 18px; font-size:12.5px; color:var(--ink-2); margin:8px 0 0; }
 .fl-leg span{ display:inline-flex; align-items:center; gap:6px; }
 .fl-leg svg{ width:16px; height:16px; fill:var(--paper); stroke:var(--ink); stroke-width:1.5; }
 .fl-live{ display:inline-block; width:22px; height:8px; background:var(--ink-2); clip-path:polygon(0 0, 75% 0, 100% 50%, 75% 100%, 0 100%); }
-.fl-who, .cp-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:14px; }
-.fl-card{ border-top:4px solid var(--c); background:var(--sheet); padding:10px 12px; }
-.fl-card h4{ margin:0 0 4px; font-size:14.5px; } .fl-card h4 a{ color:var(--ink); }
-.fl-ag{ margin:0 0 6px; font-size:12.5px; color:var(--ink-2); }
-.fl-card ul{ list-style:none; padding:0; margin:0; font-size:13px; }
-.fl-card li{ padding:3px 0; border-bottom:1px solid var(--rule); } .fl-card li span{ display:inline-block; min-width:9.5em; color:var(--ink-2); font-variant-numeric:tabular-nums; }
-.fl-card .sk-table{ font-size:12.5px; } .fl-card .sk-table th{ width:42%; }
+.fl-who h3{ margin:0 0 4px; font-size:15px; } .fl-who h3 a{ color:var(--ink); }
+.fl-who h3 small{ font-weight:400; color:var(--mute); font-size:12px; margin-left:6px; }
+.ctable td.o a{ color:var(--ink); }
+.ctable td small{ color:var(--mute); }
+.ctable td.o .cp-sec{ display:block; font-weight:400; font-stretch:100%; font-size:11.5px; }
+.cp-rows td.n{ white-space:normal; width:24%; }
 .cp-bars{ list-style:none; padding:0; margin:6px 0 0; }
-.cp-bars li{ display:grid; grid-template-columns:110px 1fr; grid-template-rows:auto auto; gap:2px 10px; align-items:center; padding:5px 0; border-bottom:1px solid var(--rule); font-size:13px; }
-.cp-n{ font-weight:700; color:var(--ink); grid-row:span 2; }
-.cp-t{ height:12px; background:var(--sheet); } .cp-t i{ display:block; height:100%; }
+.cp-bars li{ display:grid; grid-template-columns:120px 1fr; grid-template-rows:auto auto; gap:2px 10px; align-items:center; padding:6px 0; border-bottom:1px solid var(--rule); font-size:13px; }
+.cp-n{ font-weight:800; font-stretch:75%; font-size:15px; color:var(--ink); grid-row:span 2; }
+.cp-t{ height:14px; background:var(--sheet); } .cp-t i{ display:block; height:100%; }
 .cp-v{ color:var(--ink-2); font-size:12.5px; }
 #tabs .tab[aria-selected="true"] small{ opacity:1; }
+.fl-who .spec-row .k{ max-width:none; }
+.nav-i.on .k{ opacity:1; }

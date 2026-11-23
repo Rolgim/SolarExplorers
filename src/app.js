@@ -173,18 +173,19 @@ function dataPage(m){
 var PAGES = {
   missions: missionsPage,
   accueil: function(){ return SolarPage.html(); },
-  comparer: function(){ return Views.compare(); },
-  flotte: function(){ return Views.fleet(); }
 };
 
 function currentRoute(){ var r = (location.hash || '').replace(/^#/, '').replace(/^(en|fr)-/, ''); return r; }
 function route(){
   var r = (location.hash || '').replace(/^#/, '').replace(/^(en|fr)-/, '') || 'accueil';
   var dm = /^(\w+)-donnees$/.exec(r), m = mission(dm ? dm[1] : r);
-  if (!m && !PAGES[r]) r = 'accueil';
-  renderHeader(m ? m.id + (dm ? '-donnees' : '') : r);
-  $('page').innerHTML = m ? (dm ? dataPage(m) : missionPage(m)) : PAGES[r]();
+  var xp = !m && Views.page(r);   /* Flotte, Comparer et leurs sous-pages */
+  if (!m && !xp && !PAGES[r]) r = 'accueil';
+  renderHeader(m ? m.id + (dm ? '-donnees' : '') : Views.base(r));
+  $('page').innerHTML = m ? (dm ? dataPage(m) : missionPage(m)) : xp || PAGES[r]();
   $('page').classList.toggle('is-mission', !!(m && !dm));
+  $('page').classList.toggle('is-xp', !!xp);
+  $('page').classList.toggle('is-solar', !m && !xp && r === 'accueil');
   if (m && !dm) mountMission(m);
   if (!m && r === 'accueil') SolarPage.mount(); else SolarPage.stop();
   var h2 = $('page').querySelector('h2');
