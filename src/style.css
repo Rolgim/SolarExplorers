@@ -1,8 +1,8 @@
 /* Parti pris : une fiche technique imprimée (papier gris froid, encre noire, une seule famille de caractères)
-   posée à côté d'un hublot noir sur la maquette. Un seul accent : le jaune de surligneur, réservé à « ce qui est sélectionné ». */
+   posée à côté d'un hublot noir sur la maquette. Un seul accent : le bleu de surlignage, réservé à « ce qui est sélectionné ». */
 :root{
   --paper:#ECEEEF; --sheet:#F7F8F8; --ink:#14171A; --ink-2:#3A4147; --mute:#5A6369; --rule:#C8CDD1; --rule-2:#98A1A7;
-  --mark:#FFD21F; --on-mark:#14171A; --black:#000; --ok:#0B7A4B; --on-ok:#FFFFFF; --on-bad:#FFFFFF; --warn:#8A5200; --bad:#B3261E;
+  --mark:#2F6FE4; --on-mark:#FFFFFF; --black:#000; --ok:#0B7A4B; --on-ok:#FFFFFF; --on-bad:#FFFFFF; --warn:#8A5200; --bad:#B3261E;
   --f:'Archivo', 'Helvetica Neue', Arial, sans-serif; --f-code:'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
   --gl:max(16px, env(safe-area-inset-left, 0px)); --gr:max(16px, env(safe-area-inset-right, 0px));
   color-scheme: light;

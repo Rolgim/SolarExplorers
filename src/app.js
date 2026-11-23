@@ -52,20 +52,25 @@ function fiche(m){
       return '<tr><th scope="row">' + esc(r[0]) + '</th><td>' + esc(OBS_NUM(r[1])) + src(m, r[2]) + '</td></tr>';
     }).join('') + '</tbody></table>';
   });
-  return h + '<button class="cta" data-go="' + m.id + '-donnees">' + T('Mission et données') + '<small>' + T('Instruments, trajectoire réelle et données tirées des archives.') + '</small></button>';
+  return h + bodyCredit(m) + '<button class="cta" data-go="' + m.id + '-donnees">' + T('Mission et données') + '<small>' + T('Instruments, trajectoire réelle et données tirées des archives.') + '</small></button>';
 }
 function partsHtml(m, sel){
   return '<ul class="parts">' + m.parts.map(function(p){
     var on = p.key === sel;
     return '<li class="part' + (on ? ' on' : '') + '"><button data-part="' + p.key + '" aria-expanded="' + on + '">' + esc(p.name) + '</button>' +
       (on ? '<div class="part-body"><p>' + esc(p.desc) + '</p>' + (p.facts.length ? '<ul>' + p.facts.map(function(f){ return '<li>' + esc(OBS_NUM(f[0])) + src(m, f[1]) + '</li>'; }).join('') + '</ul>' : '') + '</div>' : '') + '</li>';
-  }).join('') + '</ul><p class="note">' + T('Maquette') + ' : ' + esc(m.model.src) + ' · ' + T('Licence') + ' : ' + esc(m.model.license) + '</p>';
+  }).join('') + '</ul><p class="note">' + T('Maquette') + ' : ' + esc(m.model.src) + ' · ' + T('Licence') + ' : ' + esc(m.model.license) + '</p>' + bodyCredit(m);
+}
+function bodyCredit(m){
+  var d = m.body && (window.DATA_FILES || {})['tex-' + m.body.tex]; if (!d) return '';
+  return '<p class="note">' + T(m.body.name) + ' : ' + T(d.credit) + ' · ' + T('Licence') + ' : <a href="' + esc(d.page) + '" rel="noopener" target="_blank">' + esc(d.license) + '</a></p>';
 }
 var MS = { tab:'fiche', part:null, explode:0 };
 function missionPage(m){
   return '<div class="mission"><section id="stage" class="m-stage" aria-label="' + T('Vue 3D de la sonde') + '">' +
     '<div class="m-hud"><div class="m-name">' + esc(m.name) + '</div><div class="m-sub">' + esc(m.agency) + ' · ' + esc(m.targets.join(', ')) + '</div></div>' +
     '<p class="m-msg" id="m-msg" hidden></p>' +
+    (m.body ? '<p class="m-body-note" id="m-body-note" hidden>' + T(m.body.name) + ' ' + T('sous la sonde, côté instruments : taille et distance non respectées (schéma de principe)') + '</p>' : '') +
     '<div class="m-tools" role="toolbar" aria-label="' + T('Affichage') + '">' +
       '<label class="m-ex"><span>' + T('Éclater') + '</span><input id="m-explode" type="range" min="0" max="100" value="' + Math.round(MS.explode*100) + '" aria-label="' + T('Écarter les pièces') + '"></label>' +
       '<button class="m-b" id="m-reset">' + T('Recadrer') + '</button></div>' +
@@ -80,7 +85,7 @@ function mountMission(m){
   if (!m.file || !Viewer.available()){ msg.hidden = false; msg.textContent = T('La vue 3D demande WebGL, indisponible ici. La fiche reste lisible à droite.'); return; }
   Viewer.open($('stage'), m, {
     onPick:function(k){ MS.part = k; MS.tab = 'parts'; renderPanel(m); },
-    onState:function(st){ msg.hidden = st === 'ready'; msg.textContent = st === 'loading' ? T('Chargement de la maquette…') : st === 'nogl' ? T('La vue 3D demande WebGL, indisponible ici. La fiche reste lisible à droite.') : st === 'error' ? T('La maquette n\'a pas pu être chargée.') : ''; }
+    onState:function(st, hasBody){ msg.hidden = st === 'ready'; if ($('m-body-note')) $('m-body-note').hidden = !(st === 'ready' && hasBody); msg.textContent = st === 'loading' ? T('Chargement de la maquette…') : st === 'nogl' ? T('La vue 3D demande WebGL, indisponible ici. La fiche reste lisible à droite.') : st === 'error' ? T('La maquette n\'a pas pu être chargée.') : ''; }
   });
   Viewer.select(MS.part); Viewer.explode(MS.explode);
   $('m-explode').addEventListener('input', function(e){ MS.explode = e.target.value / 100; Viewer.explode(MS.explode); });

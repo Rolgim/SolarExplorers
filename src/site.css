@@ -63,3 +63,5 @@ figure{ margin:0 0 10px; } figcaption{ font-size:12.5px; line-height:1.45; color
   .m-stage{ min-height:56vh; }
   .m-panel{ width:auto; border-left:0; }
 }
+.m-body-note{ position:absolute; right:var(--gr); bottom:12px; margin:0; max-width:46%; text-align:right; font-size:12px; color:#C9CED2; text-shadow:0 1px 6px #000; }
+@media (max-width: 720px){ .m-body-note{ top:74px; bottom:auto; left:var(--gl); max-width:none; text-align:left; } }

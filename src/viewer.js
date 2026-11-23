@@ -9,7 +9,20 @@ var Viewer = (function(){
 var REDUCED = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 var renderer = null, scene, camera, key, fill, hemi, loader, M = null, host = null, opts = {}, raf = 0, sel = null, hov = null, spin = !REDUCED, ex = 0;
 var C = { az:0.5, el:0.25, dist:20 };
-var models = {};
+var models = {}, globe = null, globeFor = null;
+/* corps survolé : grande sphère texturée posée sous la sonde, du côté de ses instruments (schéma de principe : ni la taille ni la distance ne sont à l'échelle) */
+function setBody(t, R){
+  if (globe){ scene.remove(globe); globe = null; }
+  var meta = t.body && (window.DATA_FILES || {})['tex-' + t.body.tex];
+  if (!meta) return false;
+  var rb = R * 30, n = new THREE.Vector3().fromArray(t.body.nadir).normalize();
+  var tex = new THREE.TextureLoader().load('data/tex-' + t.body.tex + '.jpg'); tex.encoding = THREE.sRGBEncoding; tex.anisotropy = 4;
+  globe = new THREE.Mesh(new THREE.SphereGeometry(rb, 96, 48), new THREE.MeshStandardMaterial({ map:tex, roughness:1, metalness:0 }));
+  globe.position.copy(n).multiplyScalar(rb + R * 2.4);
+  globe.lookAt(0, 0, 0); globe.rotateX(Math.PI / 2);   /* le pôle de la texture vers l'horizon : on survole une région, pas un pôle */
+  scene.add(globe); globeFor = t.id;
+  return true;
+}
 
 function ok(){ return !!(window.THREE && THREE.GLTFLoader); }
 function init(){
@@ -25,7 +38,7 @@ function init(){
   cv.addEventListener('pointerdown', function(e){ drag = { x:e.clientX, y:e.clientY, moved:false }; cv.setPointerCapture(e.pointerId); spin = false; });
   cv.addEventListener('pointermove', function(e){
     if (drag){ var dx = e.clientX - drag.x, dy = e.clientY - drag.y; if (Math.abs(dx) + Math.abs(dy) > 3) drag.moved = true;
-      C.az -= dx * 0.008; C.el = Math.max(-1.4, Math.min(1.4, C.el + dy * 0.006)); drag.x = e.clientX; drag.y = e.clientY; cv.classList.add('dragging'); return; }
+      C.az -= dx * 0.008; C.el = Math.max(globe ? -0.3 : -1.4, Math.min(1.4, C.el + dy * 0.006)); drag.x = e.clientX; drag.y = e.clientY; cv.classList.add('dragging'); return; }
     var k = pick(e); if (k !== hov){ hov = k; highlight(); cv.classList.toggle('over-part', !!k); }
   });
   cv.addEventListener('pointerup', function(e){ cv.classList.remove('dragging'); if (drag && !drag.moved){ var k = pick(e); select(sel === k ? null : k); if (opts.onPick) opts.onPick(sel); } drag = null; });
@@ -74,7 +87,7 @@ function highlight(){
   M.meshes.forEach(function(o){ var m = o.material, k = o.userData.part; if (!m.emissive) return;
     if (m.userData.c0 === undefined){ m.userData.c0 = m.color.clone(); m.userData.e0 = m.emissive.clone(); }
     m.emissive.copy(m.userData.e0); m.color.copy(m.userData.c0);
-    if (k && k === sel){ m.emissive.setHex(0xFFC81A); m.emissiveIntensity = 0.18; }
+    if (k && k === sel){ m.emissive.setHex(0x3D7BFF); m.emissiveIntensity = 0.35; }
     else if (k && k === hov){ m.emissive.setHex(0xffffff); m.emissiveIntensity = 0.1; }
     else if (sel) m.color.multiplyScalar(0.5); });
 }
@@ -95,7 +108,9 @@ function open(el, t, o){
   sel = null; hov = null; ex = 0;
   if (M) scene.remove(M.root);
   var show = function(R){ M = R; scene.add(M.root); C.az = t.view.az; C.el = t.view.el; C.dist = M.radius * 2 * t.view.dist;
-    key.position.fromArray(t.sun).multiplyScalar(M.radius * 4); fill.position.set(-0.6, -0.2, -0.5); highlight(); if (opts.onState) opts.onState('ready'); };
+    key.position.fromArray(t.sun).multiplyScalar(M.radius * 4); fill.position.set(-0.6, -0.2, -0.5); highlight();
+    var hasBody = setBody(t, M.radius); camera.far = M.radius * 200; camera.updateProjectionMatrix();
+    if (opts.onState) opts.onState('ready', hasBody); };
   if (models[t.id]) return show(models[t.id]);
   if (opts.onState) opts.onState('loading');
   var url = t.file;

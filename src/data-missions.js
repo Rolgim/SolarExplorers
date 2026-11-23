@@ -10,6 +10,8 @@
      stac                       préfixe des collections STAC-PLANET de la mission (sonde tools/probe/probe_stacplanet.py)
      file, bytes, axis, size    maquette (models/<id>.glb) ; size = dimension réelle en mètres le long de axis
      model                      { src, license } : provenance et licence de la maquette, écrites à côté d'elle (règle 8)
+     body                       { name, tex, nadir } : corps survolé, dessiné sous la sonde (texture data/tex-<tex>.jpg) du côté
+                                nadir (direction des instruments dans le repère de la maquette) ; taille et distance non respectées
      view, sun                  cadrage initial { az, el, dist } ; direction de la lumière dans le repère de la maquette
      parts                      pièces cliquables : { key (nom du nœud), name, desc, facts:[[texte, clé de source]] }
      refs                       sources : { clé:{ t:titre, p:éditeur, u:URL } } ; chaque valeur chiffrée cite une clé (règle 1)
@@ -30,7 +32,8 @@ var MISSIONS = [
     horizons:'-74', stac:'ode-mars-mro-',
     file:'models/mro.glb', bytes:0, axis:'z', size:13.6,
     model:{ src:'NASA 3D Resources, « Mars Reconnaissance Orbiter (MRO) (A) »', license:'NASA, usage libre (conditions d\'utilisation des médias de la NASA)', u:'https://github.com/nasa/NASA-3D-Resources' },
-    view:{ az:0.55, el:0.28, dist:1.6 }, sun:[0.6, 0.7, 0.4],
+    body:{ name:'Mars', tex:'mars', nadir:[0, -1, 0] },
+    view:{ az:0.55, el:0.22, dist:1.7 }, sun:[0.6, 0.7, 0.4],
     desc:"Lancée en 2005, MRO tourne autour de Mars sur une orbite basse presque polaire. Sa caméra HiRISE voit des détails de la taille d'une table, CTX cartographie la planète entière, CRISM en dresse la minéralogie et le radar SHARAD sonde le sous-sol. Elle sert aussi de relais radio aux robots posés sur Mars.",
     checked:'2026-11-23',
     refs:{

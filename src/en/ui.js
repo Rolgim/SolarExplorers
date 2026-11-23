@@ -1,5 +1,7 @@
 /* Textes d'interface en anglais : clé = texte français tel qu'il est écrit dans le code ou dans body.html. */
 var EN_UI = {
+  'sous la sonde, côté instruments : taille et distance non respectées (schéma de principe)':'below the spacecraft, on the instrument side: size and distance not to scale (schematic)',
+  "Solar System Scope, texture « Mars » 2k, d'après des données de la NASA":'Solar System Scope, 2k “Mars” texture, based on NASA data',
   'JPL Horizons (ssd.jpl.nasa.gov), vecteurs héliocentriques, écliptique J2000, UA':'JPL Horizons (ssd.jpl.nasa.gov), heliocentric vectors, ecliptic J2000, astronomical units',
   "Mission et données":"Mission and data",
   "Instruments, trajectoire réelle et données tirées des archives.":"Instruments, real trajectory and data from the archives.",

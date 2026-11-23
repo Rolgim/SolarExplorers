@@ -38,7 +38,21 @@ def mro_ctx():
         print("mro_ctx :", f["id"], p.get("datetime"), w, "×", h); return
     raise RuntimeError("aucun aperçu CTX récupéré")
 
-RECIPES = {"mro_ctx": mro_ctx}
+# fonds des corps (vue 3D : le corps observé sous la sonde) : textures globales sous licence ouverte, créditées à côté de l'image (règle 8)
+BODIES = {
+    "mars": ("https://www.solarsystemscope.com/textures/download/2k_mars.jpg", "Solar System Scope, texture « Mars » 2k, d'après des données de la NASA", "CC BY 4.0", "https://www.solarsystemscope.com/textures/"),
+}
+def body_textures():
+    for k, (u, credit, lic, page) in BODIES.items():
+        r = S.get(u, timeout=300); r.raise_for_status()
+        im = Image.open(io.BytesIO(r.content)).convert("RGB")
+        if im.width > 2048: im = im.resize((2048, 1024), Image.LANCZOS)
+        im.save(os.path.join(DATA, "tex-" + k + ".jpg"), quality=82, optimize=True)
+        json.dump({"body": k, "href": u, "credit": credit, "license": lic, "page": page, "size": list(im.size), "fetched": datetime.date.today().isoformat()},
+                  open(os.path.join(DATA, "tex-" + k + ".json"), "w"), indent=1, ensure_ascii=False)
+        print("texture", k, im.size)
+
+RECIPES = {"mro_ctx": mro_ctx, "textures": body_textures}
 if __name__ == "__main__":
     want = sys.argv[1:] or list(RECIPES)
     bad = 0
