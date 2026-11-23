@@ -107,18 +107,21 @@ def series(cmd, start, stop, step_d):
     return {"t0": v[0][0], "step": step_d, "n": len(v), "xy": [c for p in v for c in p[1:]]}
 def solar():
     today = datetime.date.today().isoformat()
-    out = {"source": "JPL Horizons (ssd.jpl.nasa.gov), vecteurs héliocentriques, écliptique J2000, UA", "fetched": today,
+    # planètes et satellites : jusqu'à deux ans après le téléchargement (éphémérides calculées par Horizons, signalées « prévision » sur la page),
+    # pour que la lecture parte d'aujourd'hui ; les sondes s'arrêtent au jour du téléchargement
+    until = (datetime.date.today() + datetime.timedelta(days=730)).isoformat()
+    out = {"source": "JPL Horizons (ssd.jpl.nasa.gov), vecteurs héliocentriques, écliptique J2000, UA", "fetched": today, "until": until,
            "planets": [], "probes": []}
     d0 = datetime.date.fromisoformat(SOLAR_T0)
     for name, hid, st, per in PLANETS:
         o0 = d0 if per < 60000 else datetime.date(1950, 1, 1)   # Horizons ne donne pas Pluton après 2199 : son tour commence en 1950
         o = series(hid, o0.isoformat(), (o0 + datetime.timedelta(days=per + per // 240 + 1)).isoformat(), max(1, per // 240))
-        out["planets"].append(dict(name=name, horizons=hid, orbit=o["xy"], **series(hid, SOLAR_T0, today, st)))
+        out["planets"].append(dict(name=name, horizons=hid, orbit=o["xy"], **series(hid, SOLAR_T0, until, st)))
         print("planète", name, out["planets"][-1]["n"], "orbite", o["n"])
     out["moons"] = []
     for name, hid, center in MOONS:
         try:
-            out["moons"].append({"name": name, "horizons": hid, "center": center, "el": elements(hid, center, SOLAR_T0, today, "30 d" if hid in FAST else "180 d")}); print("satellite", name, len(out["moons"][-1]["el"]))
+            out["moons"].append({"name": name, "horizons": hid, "center": center, "el": elements(hid, center, SOLAR_T0, until, "30 d" if hid in FAST else "180 d")}); print("satellite", name, len(out["moons"][-1]["el"]))
         except Exception as e: print("  ÉCHEC satellite", name, repr(e)[:200])
     for mid, hid, start, stop in PROBES:
         stop = stop or today
