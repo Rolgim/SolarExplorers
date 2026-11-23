@@ -1,0 +1,46 @@
+{
+ "archive": "PDS Imaging Node (NASA), via le catalogue STAC-PLANET du PDSSP",
+ "collection": "ode-venus-mgn-rdrs-fmidr",
+ "product": "fmidr_25s095_1",
+ "datetime": "2023-10-17T12:57:44Z",
+ "href": "https://pds-geosciences.wustl.edu/mgn/urn-nasa-pds-magellan_midr/browse/fmidr/fmidr_25s095_1_brw.jpg",
+ "stac": "https://stac.stacplanet.pdssp.eu/collections/ode-venus-mgn-rdrs-fmidr/items/fmidr_25s095_1",
+ "instrument": "SAR",
+ "full_size": [
+  4096,
+  3584
+ ],
+ "out_size": [
+  900,
+  788
+ ],
+ "stretch": null,
+ "footprint": {
+  "type": "Polygon",
+  "coordinates": [
+   [
+    [
+     91.3918,
+     -27.5447
+    ],
+    [
+     97.9532,
+     -27.5447
+    ],
+    [
+     97.9532,
+     -22.4542
+    ],
+    [
+     91.3918,
+     -22.4542
+    ],
+    [
+     91.3918,
+     -27.5447
+    ]
+   ]
+  ]
+ },
+ "fetched": "2026-11-23"
+}
