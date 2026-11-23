@@ -66,10 +66,38 @@ def build(mid, c):
     path = os.path.join(ROOT, "data", mid + "-traj.json")
     json.dump(data, open(path, "w"), separators=(",", ":"), ensure_ascii=False)
     print(mid, len(data["probe"]), "points ->", path)
-# vue d'ensemble (accueil « Système solaire ») : positions héliocentriques des planètes et des sondes, à pas régulier,
+# vue d'ensemble (accueil « Système solaire ») : positions héliocentriques des planètes, de Pluton et des sondes, éléments des satellites, à pas régulier,
 # du lancement de Cassini à aujourd'hui ; chaque série = { t0, step (jours), xy:[x0, y0, x1, y1, …] } en UA (3 décimales ≈ 150 000 km)
 SOLAR_T0 = "1997-10-01"
-PLANETS = [("Mercure", "199", 3), ("Vénus", "299", 6), ("Terre", "399", 6), ("Mars", "499", 8), ("Jupiter", "599", 30), ("Saturne", "699", 30)]
+# planètes et Pluton : (nom, id Horizons, pas de la série datée en jours, période orbitale approchée en jours, servant seulement à
+# échantillonner un tour complet pour tracer l'orbite)
+PLANETS = [("Mercure", "199", 3, 88), ("Vénus", "299", 6, 225), ("Terre", "399", 6, 365), ("Mars", "499", 8, 687), ("Jupiter", "599", 30, 4333),
+           ("Saturne", "699", 30, 10759), ("Uranus", "799", 60, 30687), ("Neptune", "899", 60, 60190), ("Pluton", "999", 60, 90560)]
+# satellites : (nom, id Horizons, corps central) ; éléments orbitaux osculateurs autour du corps central tous les 180 jours, propagés
+# par la page (mouvement képlérien) depuis l'époque la plus proche
+MOONS = [("Lune", "301", "399"), ("Phobos", "401", "499"), ("Deimos", "402", "499"),
+         ("Io", "501", "599"), ("Europe", "502", "599"), ("Ganymède", "503", "599"), ("Callisto", "504", "599"),
+         ("Mimas", "601", "699"), ("Encelade", "602", "699"), ("Téthys", "603", "699"), ("Dioné", "604", "699"), ("Rhéa", "605", "699"),
+         ("Titan", "606", "699"), ("Japet", "608", "699"),
+         ("Miranda", "705", "799"), ("Ariel", "701", "799"), ("Umbriel", "702", "799"), ("Titania", "703", "799"), ("Obéron", "704", "799"),
+         ("Triton", "801", "899"), ("Charon", "901", "999")]
+def elements(cmd, center, start, stop, step):
+    q = {"format": "json", "COMMAND": f"'{cmd}'", "OBJ_DATA": "NO", "MAKE_EPHEM": "YES", "EPHEM_TYPE": "ELEMENTS", "CENTER": f"'500@{center}'",
+         "START_TIME": f"'{start}'", "STOP_TIME": f"'{stop}'", "STEP_SIZE": f"'{step}'", "REF_PLANE": "ECLIPTIC", "OUT_UNITS": "KM-D", "CSV_FORMAT": "YES"}
+    for k in range(4):
+        try:
+            r = requests.get(API, params=q, headers=H, timeout=120); r.raise_for_status(); res = r.json()["result"]; break
+        except Exception as e:
+            print("  essai", k, cmd, repr(e)[:150]); time.sleep(10)
+    else: raise RuntimeError("Horizons injoignable pour " + cmd)
+    m = re.search(r"\$\$SOE(.*?)\$\$EOE", res, re.S)
+    if not m: raise RuntimeError("réponse Horizons sans éléments pour " + cmd + " : " + res[:300])
+    out = []
+    for line in m.group(1).strip().splitlines():
+        p = [x.strip() for x in line.split(",")]
+        # JD, a (km), e, i, Ω, ω (degrés), M (degrés), n (degrés/jour)
+        out.append([round(float(p[0]), 1), round(float(p[11]), 1), round(float(p[2]), 6), round(float(p[4]), 4), round(float(p[5]), 4), round(float(p[6]), 4), round(float(p[9]), 4), float("%.9g" % float(p[8]))])
+    return out
 # sondes : du lancement à la fin de mission (ou à aujourd'hui) ; repli sur la croisière si Horizons ne couvre pas toute la durée
 PROBES = [("mro", "-74", "2005-08-13", None), ("mex", "-41", "2003-06-03", None), ("lro", "-85", "2009-06-19", None),
           ("cassini", "-82", "1997-10-16", "2017-09-15"), ("messenger", "-236", "2004-08-04", "2015-04-30")]
@@ -80,9 +108,16 @@ def solar():
     today = datetime.date.today().isoformat()
     out = {"source": "JPL Horizons (ssd.jpl.nasa.gov), vecteurs héliocentriques, écliptique J2000, UA", "fetched": today,
            "planets": [], "probes": []}
-    for name, hid, st in PLANETS:
-        out["planets"].append(dict(name=name, horizons=hid, **series(hid, SOLAR_T0, today, st)))
-        print("planète", name, out["planets"][-1]["n"])
+    d0 = datetime.date.fromisoformat(SOLAR_T0)
+    for name, hid, st, per in PLANETS:
+        o = series(hid, SOLAR_T0, (d0 + datetime.timedelta(days=per + per // 240 + 1)).isoformat(), max(1, per // 240))
+        out["planets"].append(dict(name=name, horizons=hid, orbit=o["xy"], **series(hid, SOLAR_T0, today, st)))
+        print("planète", name, out["planets"][-1]["n"], "orbite", o["n"])
+    out["moons"] = []
+    for name, hid, center in MOONS:
+        try:
+            out["moons"].append({"name": name, "horizons": hid, "center": center, "el": elements(hid, center, SOLAR_T0, today, "180 d")}); print("satellite", name, len(out["moons"][-1]["el"]))
+        except Exception as e: print("  ÉCHEC satellite", name, repr(e)[:200])
     for mid, hid, start, stop in PROBES:
         stop = stop or today
         for a, b in ((start, stop), (start, MISSIONS[mid]["stop"][:10])):
