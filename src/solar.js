@@ -100,11 +100,29 @@ function posOf(f, t){
 }
 /* demi-largeur de vue (UA) qui montre une cible et son entourage : les satellites d'une planète, le voisinage d'une sonde */
 function reach(f, t){
-  if (/^probe:/.test(f)){ var st = status(mission(f.slice(6)), t); return st.k === 'orbite' ? reach(st.body, t) : 0.25; }
+  if (/^probe:/.test(f)){ var st = status(mission(f.slice(6)), t), ob = st.k === 'orbite' && orbitAt(f.slice(6), t); return ob ? Math.max(ob.s.rmax, (RAD[st.body] || 0)) * 1.5 / AU : st.k === 'orbite' ? reach(st.body, t) : 0.25; }
   var ms = moonsOf(f), a = ms.reduce(function(r, m){ var el = moonEl(m, t); return Math.max(r, el[1] * (1 + el[2])); }, 0);
   return (a ? a * 1.15 : (RAD[f] || 3000) * 30) / AU;
 }
 
+/* orbite réelle d'une sonde autour de son corps (data/solar.json, « orbits ») : fenêtre Horizons la plus récente avant t.
+   Période : premier tour complet de l'angle autour du corps dans la fenêtre ; hors de la fenêtre, la sonde est placée en répétant
+   ce tour (≈ : la phase dérive avec le temps, l'orbite elle-même évolue d'une année à l'autre). */
+function orbitAt(id, t){
+  var o = (D.orbits || []).filter(function(x){ return x.id === id; })[0]; if (!o || !o.samples.length) return null;
+  var sm = null; o.samples.forEach(function(x){ if (x.tt == null) x.tt = day(x.t0); if (x.tt <= t) sm = x; }); sm = sm || o.samples[0];
+  if (sm.per === undefined){ var xy = sm.xy, a0 = Math.atan2(xy[1], xy[0]), acc = 0, prev = a0, rm = 0; sm.per = 0;
+    for (var i = 1; i < xy.length / 2; i++){ var a = Math.atan2(xy[2*i+1], xy[2*i]), d = a - prev; if (d > Math.PI) d -= 2 * Math.PI; if (d < -Math.PI) d += 2 * Math.PI; acc += d; prev = a;
+      if (!sm.per && Math.abs(acc) >= 2 * Math.PI){ sm.per = i - (Math.abs(acc) - 2 * Math.PI) / Math.abs(d); } }
+    for (i = 0; i < xy.length; i += 2) rm = Math.max(rm, Math.hypot(xy[i], xy[i+1])); sm.rmax = rm; }
+  return { o:o, s:sm };
+}
+function onOrbit(sm, t){   /* position (km, relative au corps) à l'instant t, et minutes par tour */
+  var n = sm.xy.length / 2, u = (t - sm.tt) * 1440 / sm.step_min;
+  if (sm.per) u = ((u % sm.per) + sm.per) % sm.per; else if (u < 0 || u > n - 1) return null;
+  var i = Math.min(n - 2, Math.floor(u)), f = u - i;
+  return [sm.xy[2*i] + (sm.xy[2*i+2] - sm.xy[2*i]) * f, sm.xy[2*i+1] + (sm.xy[2*i+3] - sm.xy[2*i+1]) * f];
+}
 function html(){
   var sp = SPEED.map(function(s){ return '<option value="' + s[0] + '"' + (s[0] === S.speed ? ' selected' : '') + '>' + esc(T(s[1])) + '</option>'; }).join('');
   return '<div class="home solar">' +
@@ -210,7 +228,24 @@ function render(){
     probes += '<circle cx="' + f1(x) + '" cy="' + f1(y) + '" r="5" style="fill:' + c + '" class="so-p"/>' + label(x + 8, y - 8, m.short, 'so-pl', c);
     hits.push([x, y, m.short, 'probe:' + m.id, 5]);
   });
-  Object.keys(rings).forEach(function(b){ var q = pos[b]; if (!q) return; var x = X(q[0]), y = Y(q[1]), br = Math.max((RAD[b] || 0) / AU / k, b === 'Lune' ? 3 : 4.5);
+  Object.keys(rings).forEach(function(b){ var q = pos[b]; if (!q) return; var x = X(q[0]), y = Y(q[1]), br = Math.max((RAD[b] || 0) / AU / k, b === 'Lune' ? 3 : 4.5), RB = RAD[b] || 0;
+    rings[b] = rings[b].filter(function(r){
+      /* assez de zoom : l'orbite réelle (Horizons) remplace l'anneau ; en tirets, la partie cachée derrière le corps */
+      var ob = orbitAt(r[0].id, t); if (!ob || ob.s.rmax / AU / k < 9 || !vis(x, y, ob.s.rmax / AU / k)) return true;
+      var sm = ob.s, P = { v:['', ''], h:['', ''] }, pv = null, ph = false;
+      function seg(w, a, z){ var o = P[w]; o[0] += (o[1] === a ? '' : 'M' + a) + 'L' + z; o[1] = z; }
+      for (var i = 0; i < sm.xy.length; i += 2){ var hid = !!(sm.z && sm.z[i / 2] < 0 && Math.hypot(sm.xy[i], sm.xy[i+1]) < RB), pt = f1(x + sm.xy[i] / AU / k) + ' ' + f1(y - sm.xy[i+1] / AU / k);
+        if (pv) seg(hid || ph ? 'h' : 'v', pv, pt); pv = pt; ph = hid;
+        if (sm.per && i / 2 > sm.per + 1) break; }
+      probes += '<path d="' + P.v[0] + '" style="stroke:' + r[1] + '" class="so-orb"/>' + (P.h[0] ? '<path d="' + P.h[0] + '" style="stroke:' + r[1] + '" class="so-orb hid"/>' : '');
+      var fast = sm.per && S.run && S.speed * 1440 / (sm.per * sm.step_min) > 1.5, pq = !fast && onOrbit(sm, t);
+      if (pq){ var px = x + pq[0] / AU / k, py = y - pq[1] / AU / k;
+        probes += '<circle cx="' + f1(px) + '" cy="' + f1(py) + '" r="5" style="fill:' + r[1] + '" class="so-p"/>' + label(px + 8, py - 8, r[0].short, 'so-pl', r[1]);
+        hits.push([px, py, r[0].short, 'probe:' + r[0].id, 5]); }
+      else probes += label(x + sm.rmax / AU / k * 0.72 + 4, y - sm.rmax / AU / k * 0.72, r[0].short, 'so-pl', r[1]);
+      S.orbShown = S.orbShown || {}; S.orbShown[r[0].id] = sm.t0;
+      return false;
+    });
     rings[b].forEach(function(r, j){ var rr = Math.max(br * 1.35, br + 4) + 3.5 * j; probes += '<circle cx="' + f1(x) + '" cy="' + f1(y) + '" r="' + f1(Math.min(rr, 4e4)) + '" style="stroke:' + r[1] + '" class="so-ring"/>';
       if (br > 12) probes += label(x + rr * 0.72 + 4, y - rr * 0.72 - 2 - 14 * j, r[0].short, 'so-pl', r[1]); }); });
   /* étiquettes des planètes après celles des sondes, à l'écart du Soleil quand le système entier est cadré */
@@ -243,10 +278,13 @@ function ui(){
   $('so-cap').textContent = T('Vue de dessus du Système solaire au') + ' ' + fmt(t) + ', ' + T('centrée sur') + ' ' + fn + '. ' + cap.join(' ; ') + '.';
 }
 function note(){
+  var bg = (window.DATA_FILES || {})['solar-bg'] || {};
   $('so-note').innerHTML = esc(T('Positions : JPL Horizons, vecteurs héliocentriques projetés sur le plan de l\'écliptique J2000, téléchargés le') + ' ' + fmt(TF) + (T1 > TF + 1 ? ' ; ' + T('au-delà, prévision Horizons jusqu\'au') + ' ' + fmt(T1) : '') + '. ' +
     T('Distances à l\'échelle. Soleil, planètes et Lune à l\'échelle dès qu\'ils dépassent quelques pixels ; en deçà, et pour les autres satellites et les sondes, des points de taille fixe.') + ' ' +
     T('Satellites placés à partir des éléments orbitaux Horizons (tous les 180 jours, 30 pour les plus rapides), interpolés entre deux dates : position approchée (≈, quelques degrés sur l\'orbite au plus).') + ' ' +
-    T('Une sonde en orbite est marquée par un anneau de sa couleur autour de son corps (sa position sur l\'orbite n\'est pas publiée ici) ; seule sa croisière est tracée.')) +
+    T('Une sonde en orbite est marquée de loin par un anneau de sa couleur. En zoomant sur son corps, son orbite réelle apparaît (Horizons, centrée sur le corps, une fenêtre par an à partir du 15 janvier ; en tirets, la partie cachée derrière le corps) : entre deux fenêtres, la sonde y est placée en répétant ce tour (≈, la phase dérive). En lecture rapide, seule l\'orbite est tracée.') + ' ' +
+    T('Fond : le ciel vers le pôle sud de l\'écliptique, d\'après la carte du ciel de Gaia (reprojetée) ; décor, sans rapport d\'échelle avec les orbites.')) +
+    (bg.url ? ' <a class="src" href="' + esc(bg.url) + '" rel="noopener" target="_blank">ESA/Gaia/DPAC, A. Moitinho</a> <a class="src" href="' + esc(bg.licence_url) + '" rel="noopener" target="_blank">CC BY-SA 3.0 IGO</a>' : '') +
     ' <a class="src" href="https://ssd.jpl.nasa.gov/horizons/" rel="noopener" target="_blank">JPL Horizons</a> <a class="src" href="https://nssdc.gsfc.nasa.gov/planetary/factsheet/" rel="noopener" target="_blank">NASA NSSDCA</a>';
 }
 

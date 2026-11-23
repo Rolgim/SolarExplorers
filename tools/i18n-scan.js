@@ -13,7 +13,7 @@ const FRENCH = /[àâçéèêëîïôùûœ«»]|\b(le|la|les|des|du|de|et|un|un
   await pg.addInitScript(() => { window.__i18nMiss = {}; try { localStorage.setItem('sse-lang', 'en'); } catch (e) {} });
   await serve.offline(pg, PORT);
   const miss = {};
-  for (const h of ['accueil', 'missions', 'comparer', 'flotte', 'flotte-qui', 'comparer-voyage', 'comparer-masse', 'comparer-vehicules', 'comparer-orbites', 'comparer-instruments', ...IDS, ...IDS.map(i => i + '-donnees')]) {
+  for (const h of ['accueil', 'missions', 'comparer', 'flotte', 'flotte-qui', 'comparer-voyage', 'comparer-masse', 'comparer-vehicules', 'comparer-orbites', 'comparer-instruments', ...IDS, ...IDS.map(i => i + '-donnees'), ...IDS.map(i => i + '-donnees-mission'), ...IDS.map(i => i + '-donnees-orbite'), 'mro-donnees-ctx', 'mex-donnees-marsis', 'lro-donnees-lola', 'cassini-donnees-iss', 'messenger-donnees-mdis']) {
     await pg.goto('http://localhost:' + PORT + '/index.html#en-' + h); await pg.waitForTimeout(300);
     Object.assign(miss, await pg.evaluate(() => window.__i18nMiss));
     for (const t of await pg.evaluate(() => { const w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT), o = []; let n; while ((n = w.nextNode())) { const s = n.nodeValue.trim(); if (s && n.parentElement.offsetParent !== null) o.push(s); } return o; }))

@@ -18,7 +18,7 @@ var VIEWS = [['missions', 'Missions'], ['accueil', 'Système solaire'], ['compar
 function renderHeader(route){
   /* onglets des sondes, comme les onglets d'observatoires d'Observatories : sur une page de mission, on passe d'une sonde à l'autre
      en restant sur le même type de page (vue 3D ou « Mission et données ») */
-  var cur = mission(route.replace(/-donnees$/, '')), dat = /-donnees$/.test(route);
+  var cur = mission(route.replace(/-donnees(-[\w-]+)?$/, '')), dat = /-donnees/.test(route);
   /* deux rangées, comme les domaines spectraux d'Observatories : les corps visés (filtrent), puis les sondes du corps choisi */
   function bodyOf(m){ return m.body ? m.body.name : m.targets[0]; }
   var bodies = []; MISSIONS.forEach(function(m){ if (bodies.indexOf(bodyOf(m)) < 0) bodies.push(bodyOf(m)); });
@@ -28,7 +28,7 @@ function renderHeader(route){
     var n = MISSIONS.filter(function(m){ return bodyOf(m) === b; }).length;
     return '<button class="dsel' + (b === bodyOf(cur) ? ' cur' : '') + '" data-body="' + esc(b) + '" aria-pressed="' + (b === sb) + '"><span class="dl">' + esc(T(b)) + '</span><span class="ds">' + esc(T(b)) + '</span><span class="dn">' + n + '</span></button>';
   }).join('') + '</div><div class="trow" role="tablist" aria-label="' + T('Sonde') + '">' + MISSIONS.filter(function(m){ return bodyOf(m) === sb; }).map(function(m){
-    return '<button class="tab" role="tab" data-go="' + m.id + (dat ? '-donnees' : '') + '" aria-selected="' + (m.id === cur.id) + '">' + esc(m.short || m.name) + '<small>' + esc(m.year || '') + '</small></button>';
+    return '<button class="tab" role="tab" data-go="' + m.id + (dat ? route.replace(/^\w+?(-donnees)/, '$1') : '') + '" aria-selected="' + (m.id === cur.id) + '">' + esc(m.short || m.name) + '<small>' + esc(m.year || '') + '</small></button>';
   }).join('') + '</div>' : '';
   $('views').innerHTML = '<div class="views">' + VIEWS.map(function(v){
     var on = route === v[0] || (v[0] === 'missions' && cur);
@@ -47,14 +47,6 @@ function renderHeader(route){
 function soon(title, what, step){
   return '<div class="sk"><h2>' + T(title) + '</h2><p class="lead">' + T(what) + '</p><p class="sk-state">' + T('En construction') + ' · ' + T(step) + '</p></div>';
 }
-function missionsPage(){
-  var h = '<div class="sk"><h2>' + T('Missions') + '</h2>';
-  if (!MISSIONS.length) return h + '<p class="lead">' + T('Aucune mission pour l\'instant : la liste sera choisie d\'après ce que la sonde de STAC-PLANET trouve dans le catalogue.') + '</p></div>';
-  h += '<ul class="sk-list">' + MISSIONS.map(function(m){
-    return '<li><a href="#' + m.id + '"><strong>' + esc(m.short || m.name) + '</strong> <span>' + esc(m.year || '') + ' · ' + esc((m.targets || []).join(', ')) + '</span></a></li>';
-  }).join('') + '</ul></div>';
-  return h;
-}
 function src(m, k){
   var r = k && m.refs && m.refs[k];
   return r ? ' <a class="src" href="' + esc(r.u) + '" rel="noopener" target="_blank" title="' + esc(r.t) + '">' + esc(r.p) + '</a>' : '';
@@ -66,7 +58,7 @@ function fiche(m){
       return '<tr><th scope="row">' + esc(r[0]) + '</th><td>' + esc(OBS_NUM(r[1])) + src(m, r[2]) + '</td></tr>';
     }).join('') + '</tbody></table>';
   });
-  return h + bodyCredit(m) + '<button class="cta" data-go="' + m.id + '-donnees">' + T('Mission et données') + '<small>' + T('Instruments, trajectoire réelle et données tirées des archives.') + '</small></button>';
+  return h + bodyCredit(m) + '<button class="cta" data-go="' + m.id + '-donnees">' + T('Mission et instruments') + '<small>' + T('Instruments, trajectoire réelle et données tirées des archives.') + '</small></button>';
 }
 function partsHtml(m, sel){
   return '<ul class="parts">' + m.parts.map(function(p){
@@ -92,9 +84,9 @@ function missionPage(m){
       '<button class="m-b" id="m-run" aria-pressed="' + !MS.run + '">' + T('Pause') + '</button></div>' +
     '<p class="m-hint">' + T('Glisser pour tourner, molette pour zoomer, cliquer une pièce pour l\'identifier') + '</p>' +
     '</section><aside class="m-panel"><h2 class="sr-only">' + esc(m.name) + '</h2>' +
-    '<div class="ptl" role="tablist" aria-label="' + T('Contenu du panneau') + '">' +
-      ['fiche', 'parts'].map(function(k){ return '<button class="ptab" role="tab" data-ptab="' + k + '" aria-selected="' + (MS.tab === k) + '">' + T(k === 'fiche' ? 'Fiche' : 'Pièces') + '</button>'; }).join('') +
-    '</div><div id="m-body">' + (MS.tab === 'fiche' ? fiche(m) : partsHtml(m, MS.part)) + '</div></aside></div>';
+    '<div class="ptl-row"><div class="ptl" role="tablist" aria-label="' + T('Contenu du panneau') + '">' +
+      ['fiche', 'parts'].map(function(k){ return '<button class="ptab" role="tab" data-ptab="' + k + '" aria-selected="' + (MS.tab === k) + '">' + T(k === 'fiche' ? 'Fiche' : 'Pièces') + (k === 'parts' ? ' <small>' + m.parts.length + '</small>' : '') + '</button>'; }).join('') +
+    '</div><a class="ptab go" href="#' + m.id + '-donnees">' + T('Mission et instruments') + '</a></div><div id="m-body">' + (MS.tab === 'fiche' ? fiche(m) : partsHtml(m, MS.part)) + '</div></aside></div>';
 }
 function mountMission(m){
   var msg = $('m-msg');
@@ -112,7 +104,7 @@ function mountMission(m){
   $('m-run').addEventListener('click', function(e){ MS.run = !MS.run; Viewer.run(MS.run); e.currentTarget.setAttribute('aria-pressed', String(!MS.run)); });
 }
 function renderPanel(m){
-  document.querySelectorAll('.m-panel .ptab').forEach(function(b){ b.setAttribute('aria-selected', String(b.getAttribute('data-ptab') === MS.tab)); });
+  document.querySelectorAll('.m-panel [data-ptab]').forEach(function(b){ b.setAttribute('aria-selected', String(b.getAttribute('data-ptab') === MS.tab)); });
   $('m-body').innerHTML = MS.tab === 'fiche' ? fiche(m) : partsHtml(m, MS.part);
 }
 
@@ -162,29 +154,22 @@ function realData(m){
     (d.stretch ? (en ? ', contrast stretched between the ' + d.stretch[0] + ' and ' + d.stretch[1] + ' percentiles' : ', contraste étiré entre les centiles ' + OBS_NUM(String(d.stretch[0]).replace('.', ',')) + ' et ' + OBS_NUM(String(d.stretch[1]).replace('.', ','))) : '') + '.<br>' +
     T('Archive') + ' : ' + T(d.archive) + ' · ' + T('collection') + ' <code>' + esc(d.collection) + '</code> · <a href="' + esc(d.href) + '" rel="noopener" target="_blank">' + T('aperçu d\'origine') + '</a> · ' + T('téléchargé le') + ' ' + esc(d.fetched) + '</figcaption></figure>';
 }
-function dataPage(m){
-  var inst = (m.sections || [])[3];   /* section « Instruments » de la fiche */
-  var h = '<div class="sk wide"><p class="crumb"><a href="#' + m.id + '">' + esc(m.short) + '</a></p><h2>' + T('Mission et données') + '</h2>';
-  h += '<h3>' + T('Trajectoire réelle') + '</h3>' + trajSvg(m);
-  h += '<h3>' + T('Une donnée réelle') + '</h3>' + realData(m);
-  if (inst) h += '<h3>' + esc(inst.title) + '</h3><table class="sk-table"><tbody>' + inst.rows.map(function(r){ return '<tr><th scope="row">' + esc(r[0]) + '</th><td>' + esc(OBS_NUM(r[1])) + src(m, r[2]) + '</td></tr>'; }).join('') + '</tbody></table>';
-  return h + '</div>';
-}
 var PAGES = {
-  missions: missionsPage,
   accueil: function(){ return SolarPage.html(); },
 };
 
 function currentRoute(){ var r = (location.hash || '').replace(/^#/, '').replace(/^(en|fr)-/, ''); return r; }
 function route(){
   var r = (location.hash || '').replace(/^#/, '').replace(/^(en|fr)-/, '') || 'accueil';
-  var dm = /^(\w+)-donnees$/.exec(r), m = mission(dm ? dm[1] : r);
+  if (r === 'missions'){ r = window.SSE_LAST || MISSIONS[0].id; history.replaceState(null, '', '#' + ((location.hash.match(/^#((?:en|fr)-)/) || [])[1] || '') + r); }   /* « Missions » ouvre la vue 3D de la dernière sonde vue */
+  var dm = /^(\w+)-donnees(?:-([\w-]+))?$/.exec(r), m = mission(dm ? dm[1] : r);
+  if (m) window.SSE_LAST = m.id;
   var xp = !m && Views.page(r);   /* Flotte, Comparer et leurs sous-pages */
   if (!m && !xp && !PAGES[r]) r = 'accueil';
-  renderHeader(m ? m.id + (dm ? '-donnees' : '') : Views.base(r));
-  $('page').innerHTML = m ? (dm ? dataPage(m) : missionPage(m)) : xp || PAGES[r]();
+  renderHeader(m ? m.id + (dm ? '-donnees' + (dm[2] && /^(mission|orbite)$/.test(dm[2]) ? '-' + dm[2] : '') : '') : Views.base(r));
+  $('page').innerHTML = m ? (dm ? MissionPage.html(m, dm[2] || '', { traj:trajSvg, real:realData }) : missionPage(m)) : xp || PAGES[r]();
   $('page').classList.toggle('is-mission', !!(m && !dm));
-  $('page').classList.toggle('is-xp', !!xp);
+  $('page').classList.toggle('is-xp', !!(xp || dm));
   $('page').classList.toggle('is-solar', !m && !xp && r === 'accueil');
   if (m && !dm) mountMission(m);
   if (!m && r === 'accueil') SolarPage.mount(); else SolarPage.stop();

@@ -569,6 +569,7 @@ svg.optic g.hl{ filter:drop-shadow(0 0 2px var(--mark)) drop-shadow(0 0 4px var(
 @media (min-width: 861px) and (max-width: 1500px){
   #top{ flex-wrap:wrap; row-gap:0; }
   #views{ margin-left:auto; }
+  .brand, #views, #utils{ min-height:55px; }   /* première rangée de hauteur fixe : les boutons de vue ne bougent pas quand les onglets apparaissent (règle 6) */
   #tabs{ order:5; flex:0 0 calc(100% + var(--gl) + var(--gr)); margin:0 calc(-1 * var(--gr)) 0 calc(-1 * var(--gl)); border-top:1px solid var(--rule); padding-left:var(--gl); }
   #tabs .trow, #tabs .drow{ justify-content:flex-start; }
   #tabs .drow{ padding-top:4px; }
@@ -598,7 +599,10 @@ svg.optic g.hl{ filter:drop-shadow(0 0 2px var(--mark)) drop-shadow(0 0 4px var(
 .m-b:focus-visible, .m-ex input:focus-visible{ outline:2px solid #fff; outline-offset:3px; }
 .m-hint{ position:absolute; left:var(--gl); bottom:12px; margin:0; font-size:12px; color:#E3E6E8; background:rgba(0,0,0,.72); padding:2px 8px; }
 .m-panel{ width:min(400px, 42vw); flex:none; overflow-y:auto; background:var(--sheet); padding:14px 18px 32px; border-left:1px solid var(--rule); }
-.m-panel .ptl{ display:flex; gap:4px; border-bottom:1px solid var(--rule); margin-bottom:12px; }
+.m-panel .ptl-row{ display:flex; align-items:stretch; gap:4px; border-bottom:1px solid var(--rule); margin-bottom:12px; }
+.m-panel .ptl{ display:flex; gap:4px; }
+.m-panel .ptab small{ font-weight:400; opacity:.75; margin-left:3px; }
+.m-panel .ptab.go{ margin-left:auto; color:var(--ink); text-decoration:underline; text-underline-offset:3px; display:flex; align-items:center; }
 .m-panel .ptab{ border:0; border-bottom:3px solid transparent; background:transparent; font:600 14px var(--f); color:var(--ink-2); padding:6px 10px; cursor:pointer; }
 .m-panel .ptab[aria-selected="true"]{ color:var(--ink); border-bottom-color:var(--ink); }
 .m-panel .desc{ font-size:14px; line-height:1.5; color:var(--ink-2); }
@@ -690,6 +694,16 @@ a.nav-i{ color:inherit; text-decoration:none; }
 #tabs .tab[aria-selected="true"] small{ opacity:1; }
 .fl-who .spec-row .k{ max-width:none; }
 .nav-i.on .k{ opacity:1; }
+/* page « Mission et instruments » : cases et liens en <a> (pas de soulignement), source surlignée après un clic sur son numéro */
+a.icard{ text-decoration:none; color:inherit; }
+a.icard:focus-visible{ outline:2px solid var(--focus, #2F6FE4); outline-offset:-2px; }
+.cov-row a:focus-visible rect:first-child{ stroke:var(--ink); stroke-width:1.5; }
+ol.refs li.hl{ background:var(--mark, #FFE9A8); }
+sup.ref a{ text-decoration:none; }
+/* Système solaire : fond de ciel réel (Gaia, voir la note sous la carte), assombri pour garder le contraste des tracés */
+.so-sky{ background:linear-gradient(rgba(5,7,10,.45), rgba(5,7,10,.45)), #05070A url(data/solar-bg.jpg) center/cover no-repeat; }
+.so-orb{ fill:none; stroke-width:1.6px; }
+.so-orb.hid{ stroke-dasharray:3 4; stroke-opacity:.5; }
 
 </style>
 </head>
@@ -1038,11 +1052,696 @@ var MISSIONS = [
    Règle 5 : les agences sont nommées, sans badge ni couleur réservée. */
 var FLEET = {}, FLEET_REFS = {};
 
-/* INSTRUMENTS — par mission : INST_DATA[id] = { summary, archives:[…], instruments:[…] } (schéma d'Observatories v1.0, src/data-inst.js). */
-var INST_DATA = {};
+/* COLLECTIONS STAC-PLANET (PDSSP, CNES) par mission, relevées par la sonde du 23 novembre 2026 (tools/data/stac_catalog.py, ne pas éditer).
+   STAC_COLS[id] = [[collection, instrument, type de produit, nombre d'items, période]] ; API : https://stac.stacplanet.pdssp.eu */
+var STAC_API = 'https://stac.stacplanet.pdssp.eu';
+var STAC_COLS = {"mro":[["ode-mars-mro-crism-ancill","Compact Reconnaissance Imaging Spectrometer for Mars (CRISM)","Spectrum",7453,"2006-09-27/2022-05-07"],
+  ["ode-mars-mro-crism-cdr","Compact Reconnaissance Imaging Spectrometer for Mars (CRISM)","Spectrum",1567744,"1980-01-01/2023-04-04"],
+  ["ode-mars-mro-crism-ddr","Compact Reconnaissance Imaging Spectrometer for Mars (CRISM)","Spectrum",218250,"2006-09-27/2022-05-07"],
+  ["ode-mars-mro-crism-edr","Compact Reconnaissance Imaging Spectrometer for Mars (CRISM)","Spectrum",1064565,"2006-09-27/2022-05-07"],
+  ["ode-mars-mro-crism-ldr","Compact Reconnaissance Imaging Spectrometer for Mars (CRISM)","Spectrum",5928,"2009-07-10/2017-04-29"],
+  ["ode-mars-mro-crism-lmlp","Compact Reconnaissance Imaging Spectrometer for Mars (CRISM)","Spectrum",302,"2010-07-23/2021-07-08"],
+  ["ode-mars-mro-crism-mrdr4","Compact Reconnaissance Imaging Spectrometer for Mars (CRISM)","Spectrum",7056,""],
+  ["ode-mars-mro-crism-mtrdr","Compact Reconnaissance Imaging Spectrometer for Mars (CRISM)","Spectrum",10403,"2006-09-30/2012-05-21"],
+  ["ode-mars-mro-crism-ter","Compact Reconnaissance Imaging Spectrometer for Mars (CRISM)","Spectrum",10407,"2006-09-30/2012-05-21"],
+  ["ode-mars-mro-crism-trdr","Compact Reconnaissance Imaging Spectrometer for Mars (CRISM)","Spectrum",1710730,"2006-09-27/2022-05-07"],
+  ["ode-mars-mro-crism-valrep","Compact Reconnaissance Imaging Spectrometer for Mars (CRISM)","Spectrum",411936,"2006-09-27/2022-05-07"],
+  ["ode-mars-mro-crism-vrdr","Compact Reconnaissance Imaging Spectrometer for Mars (CRISM)","Spectrum",7056,""],
+  ["ode-mars-mro-ctx-edr","Context Camera (CTX)","Image",164625,"2005-08-30/2026-03-01"],
+  ["ode-mars-mro-hirise-anagly","High-Resolution Imaging Science Experiment (HIRISE)","Image",9484,""],
+  ["ode-mars-mro-hirise-anagly4","High-Resolution Imaging Science Experiment (HIRISE)","Image",293,""],
+  ["ode-mars-mro-hirise-dtm","High-Resolution Imaging Science Experiment (HIRISE)","Image",1254,""],
+  ["ode-mars-mro-hirise-edr","High-Resolution Imaging Science Experiment (HIRISE)","Image",1247625,"2006-03-24/2025-07-06"],
+  ["ode-mars-mro-hirise-edr4","High-Resolution Imaging Science Experiment (HIRISE)","Image",96004,"2025-07-06/2026-05-06"],
+  ["ode-mars-mro-hirise-rdr","High-Resolution Imaging Science Experiment (HIRISE)","Image",10,"2006-03-25/2008-03-04"],
+  ["ode-mars-mro-hirise-rdr4","High-Resolution Imaging Science Experiment (HIRISE)","Image",7611,"2025-07-06/2026-05-06"],
+  ["ode-mars-mro-hirise-rdrv11","High-Resolution Imaging Science Experiment (HIRISE)","Image",193181,"2006-03-24/2025-07-06"],
+  ["ode-mars-mro-mcs-ddr","Mars Climate Sounder (MCS)","Spectrum",38921,"2006-09-24/2026-01-31"],
+  ["ode-mars-mro-mcs-edr","Mars Climate Sounder (MCS)","Spectrum",40377,"2006-09-15/2026-01-31"],
+  ["ode-mars-mro-mcs-rdr","Mars Climate Sounder (MCS)","Spectrum",40372,"2006-09-24/2026-01-31"],
+  ["ode-mars-mro-rss-edr","Radio Science Subsystem (RSS)","Image",36260,"2006-01-01/2026-04-30"],
+  ["ode-mars-mro-rss-rsdmap","Radio Science Subsystem (RSS)","Image",30,"1998-03-27/2015-04-30"],
+  ["ode-mars-mro-rss-shadr","Radio Science Subsystem (RSS)","Image",8,"1998-03-27/2019-08-05"],
+  ["ode-mars-mro-rss-shbdr","Radio Science Subsystem (RSS)","Image",4,"1998-03-27/2015-04-30"],
+  ["ode-mars-mro-sharad-edr","Shallow Radar (SHARAD)","Image",39960,"2006-12-06/2025-11-01"],
+  ["ode-mars-mro-sharad-rdr","Shallow Radar (SHARAD)","Image",39933,"2006-12-06/2025-11-01"],
+  ["ode-mars-mro-sharad-sharad3d","Shallow Radar (SHARAD)","Image",4,"2006-12-06/2020-05-23"],
+  ["ode-mars-mro-sharad-shsimu","Shallow Radar (SHARAD)","Image",37498,"2006-12-06/2025-11-15"],
+  ["ode-mars-mro-sharad-usgeomv2","Shallow Radar (SHARAD)","Image",37497,"2006-12-06/2025-11-15"],
+  ["ode-mars-mro-sharad-usrdrv2","Shallow Radar (SHARAD)","Image",37497,"2006-12-06/2025-11-15"]],"mex":[["ode-mars-mex-hrsc-dtmrdr","High Resolution Stereo Camera (HRSC)","Image",9286,"2004-01-10/2009-02-12"],
+  ["ode-mars-mex-hrsc-rdrv4","High Resolution Stereo Camera (HRSC)","Image",62003,"2004-01-10/2025-10-15"],
+  ["ode-mars-mex-hrsc-refdr3","High Resolution Stereo Camera (HRSC)","Image",43888,"2004-01-10/2019-06-29"],
+  ["ode-mars-mex-hrsc-refdr4","High Resolution Stereo Camera (HRSC)","Image",45534,"2005-12-01/2024-11-30"],
+  ["ode-mars-mex-marsis-clutter","Mars Advanced Radar for Subsurface and Ionsphere Sounding (MARSIS)","Image",8811,""],
+  ["ode-mars-mex-marsis-edr","Mars Advanced Radar for Subsurface and Ionsphere Sounding (MARSIS)","Image",26217,"2003-06-16/2019-12-31"],
+  ["ode-mars-mex-marsis-geom","Mars Advanced Radar for Subsurface and Ionsphere Sounding (MARSIS)","Image",8811,"2005-06-29/2022-05-05"],
+  ["ode-mars-mex-marsis-ionosph","Mars Advanced Radar for Subsurface and Ionsphere Sounding (MARSIS)","Image",8811,"2005-06-29/2022-05-05"],
+  ["ode-mars-mex-marsis-radarch","Mars Advanced Radar for Subsurface and Ionsphere Sounding (MARSIS)","Image",17622,"2005-06-29/2022-05-05"],
+  ["ode-mars-mex-marsis-radarop","Mars Advanced Radar for Subsurface and Ionsphere Sounding (MARSIS)","Image",17622,"2005-06-29/2022-05-05"],
+  ["ode-mars-mex-marsis-radarun","Mars Advanced Radar for Subsurface and Ionsphere Sounding (MARSIS)","Image",17622,"2005-06-29/2022-05-05"],
+  ["ode-mars-mex-marsis-rdrais","Mars Advanced Radar for Subsurface and Ionsphere Sounding (MARSIS)","Image",11620,"2005-06-22/2021-06-29"],
+  ["ode-mars-mex-marsis-rdrss","Mars Advanced Radar for Subsurface and Ionsphere Sounding (MARSIS)","Image",8416,"2005-07-04/2019-12-29"],
+  ["ode-mars-mex-omega-ddrgm","Observatoire Mineralogie, Eau, Glaces, Activite (OMEGA)","Map",8,"2004-01-08/2010-08-20"],
+  ["ode-mars-mex-omega-edr","Observatoire Mineralogie, Eau, Glaces, Activite (OMEGA)","Spectral Cube",35626,"2003-02-19/2024-01-15"],
+  ["ode-mars-mex-pfs-edr","Planetary Fourier Spectrometer (PFS)","Spectrum",0,"2003-06-23/2018-12-31"],
+  ["ode-mars-mex-vmc-edr","Visual Monitoring Camera (VMC)","Image",126471,"2003-06-06/2025-06-29"],
+  ["ode-mars-mex-vmc-rdr","Visual Monitoring Camera (VMC)","Image",126462,"2003-06-06/2025-06-29"]],"lro":[["ode-moon-lro-dlre-edr4","DIVINER Lunar Radiometer Experiment (DLRE)","Image",145756,"2009-07-05/2026-03-16"],
+  ["ode-moon-lro-dlre-epf","DIVINER Lunar Radiometer Experiment (DLRE)","Image",51,"2015-10-23/2024-02-26"],
+  ["ode-moon-lro-dlre-gcp","DIVINER Lunar Radiometer Experiment (DLRE)","Image",18,"2009-07-05/2015-04-01"],
+  ["ode-moon-lro-dlre-gdr-l2","DIVINER Lunar Radiometer Experiment (DLRE)","Image",42630,"2009-07-05/2016-10-23"],
+  ["ode-moon-lro-dlre-gdr-l3","DIVINER Lunar Radiometer Experiment (DLRE)","Image",1827,"2009-07-05/2016-10-23"],
+  ["ode-moon-lro-dlre-ghrm","DIVINER Lunar Radiometer Experiment (DLRE)","Image",15,"2009-07-05/2022-08-01"],
+  ["ode-moon-lro-dlre-pcp","DIVINER Lunar Radiometer Experiment (DLRE)","Image",912,"2009-07-05/2020-03-15"],
+  ["ode-moon-lro-dlre-prp","DIVINER Lunar Radiometer Experiment (DLRE)","Image",2,""],
+  ["ode-moon-lro-dlre-rcp","DIVINER Lunar Radiometer Experiment (DLRE)","Image",63,"2009-07-05/2021-03-01"],
+  ["ode-moon-lro-dlre-rdr4","DIVINER Lunar Radiometer Experiment (DLRE)","Image",873963,"2009-07-05/2026-03-16"],
+  ["ode-moon-lro-lamp-edr","Lyman-Alpha Mapping Project (LAMP)","Map",64353,"2009-07-06/2023-06-15"],
+  ["ode-moon-lro-lamp-edr4","Lyman-Alpha Mapping Project (LAMP)","Map",6741,"2023-06-15/2025-03-16"],
+  ["ode-moon-lro-lamp-gdr","Lyman-Alpha Mapping Project (LAMP)","Map",694,"2009-09-01/2010-10-01"],
+  ["ode-moon-lro-lamp-rdr","Lyman-Alpha Mapping Project (LAMP)","Map",60905,"2009-07-06/2023-06-15"],
+  ["ode-moon-lro-lamp-rdr4","Lyman-Alpha Mapping Project (LAMP)","Map",6299,"2023-06-15/2025-03-16"],
+  ["ode-moon-lro-lend-edrsci4","Lunar Exploration Neutron Detector (LEND)","Time Series",6105,"2009-06-20/2026-03-14"],
+  ["ode-moon-lro-lend-rdrald4","Lunar Exploration Neutron Detector (LEND)","Time Series",6,"2009-09-15/2016-09-14"],
+  ["ode-moon-lro-lend-rdrdld4","Lunar Exploration Neutron Detector (LEND)","Time Series",5429,"2009-06-27/2025-12-14"],
+  ["ode-moon-lro-lend-rdrdlx4","Lunar Exploration Neutron Detector (LEND)","Time Series",5428,"2009-06-27/2025-12-14"],
+  ["ode-moon-lro-lend-rdrrsci4","Lunar Exploration Neutron Detector (LEND)","Time Series",6105,"2009-06-20/2026-03-14"],
+  ["ode-moon-lro-lola-edr","Lunar Orbiter Laser Altimeter (LOLA)","Volume",74811,"2009-06-18/2026-03-24"],
+  ["ode-moon-lro-lola-gdrdac","Lunar Orbiter Laser Altimeter (LOLA)","Map",7,"2009-09-15/2010-09-16"],
+  ["ode-moon-lro-lola-gdrdam","Lunar Orbiter Laser Altimeter (LOLA)","Map",7,"2009-09-15/2010-09-16"],
+  ["ode-moon-lro-lola-gdrdec","Lunar Orbiter Laser Altimeter (LOLA)","Map",206,"2009-07-13/2017-02-02"],
+  ["ode-moon-lro-lola-gdrdem","Lunar Orbiter Laser Altimeter (LOLA)","Map",270,"2009-07-13/2017-02-02"],
+  ["ode-moon-lro-lola-gdrdgm","Lunar Orbiter Laser Altimeter (LOLA)","Map",3,"2009-07-13/2011-01-31"],
+  ["ode-moon-lro-lola-gdrdrc","Lunar Orbiter Laser Altimeter (LOLA)","Map",3,"2009-07-13/2014-05-01"],
+  ["ode-moon-lro-lola-gdrdrm","Lunar Orbiter Laser Altimeter (LOLA)","Map",21,"2009-07-13/2014-05-01"],
+  ["ode-moon-lro-lola-gdrdsm","Lunar Orbiter Laser Altimeter (LOLA)","Map",7,"2009-07-13/2011-12-11"],
+  ["ode-moon-lro-lola-gdrpsr","Lunar Orbiter Laser Altimeter (LOLA)","Map",10,"2009-07-13/2013-07-18"],
+  ["ode-moon-lro-lola-gdrsky","Lunar Orbiter Laser Altimeter (LOLA)","Map",4,"2009-07-13/2013-07-18"],
+  ["ode-moon-lro-lola-gdrvis","Lunar Orbiter Laser Altimeter (LOLA)","Map",16,"2009-07-13/2013-07-18"],
+  ["ode-moon-lro-lola-radr","Lunar Orbiter Laser Altimeter (LOLA)","Image",4162,"2009-09-15/2010-09-16"],
+  ["ode-moon-lro-lola-rdr4","Lunar Orbiter Laser Altimeter (LOLA)","Volume",74624,"2009-07-13/2026-03-24"],
+  ["ode-moon-lro-lola-rmhe","Lunar Orbiter Laser Altimeter (LOLA)","Map",1,"2009-07-13/2010-09-14"],
+  ["ode-moon-lro-lola-rmmas","Lunar Orbiter Laser Altimeter (LOLA)","Map",3,"2009-07-13/2010-09-14"],
+  ["ode-moon-lro-lola-sha","Lunar Orbiter Laser Altimeter (LOLA)","Volume",7,""],
+  ["ode-moon-lro-lola-sldem","Lunar Orbiter Laser Altimeter (LOLA)","Map",40,"2009-07-13/2013-07-18"],
+  ["ode-moon-lro-lroc-anagly","Lunar Reconnaissance Orbiter Camera (LROC)","Image",2369,""],
+  ["ode-moon-lro-lroc-aspdtm","Lunar Reconnaissance Orbiter Camera (LROC)","Image",101,"2009-12-09/2021-09-08"],
+  ["ode-moon-lro-lroc-bdr","Lunar Reconnaissance Orbiter Camera (LROC)","Image",4,""],
+  ["ode-moon-lro-lroc-bdrnpl","Lunar Reconnaissance Orbiter Camera (LROC)","Image",1752,"2009-09-29/2018-07-14"],
+  ["ode-moon-lro-lroc-bdrroi","Lunar Reconnaissance Orbiter Camera (LROC)","Image",2373,"2009-07-04/2025-04-21"],
+  ["ode-moon-lro-lroc-bdrwgl","Lunar Reconnaissance Orbiter Camera (LROC)","Image",98,"2009-11-07/2011-01-31"],
+  ["ode-moon-lro-lroc-bdrwmv","Lunar Reconnaissance Orbiter Camera (LROC)","Image",16279,"2009-09-20/2011-12-11"],
+  ["ode-moon-lro-lroc-cdrnac4","Lunar Reconnaissance Orbiter Camera (LROC)","Image",852485,"2009-06-30/2026-03-15"],
+  ["ode-moon-lro-lroc-cdrwac4","Lunar Reconnaissance Orbiter Camera (LROC)","Image",907272,"2009-06-30/2026-03-15"],
+  ["ode-moon-lro-lroc-cdrwam4","Lunar Reconnaissance Orbiter Camera (LROC)","Image",369061,"2009-06-30/2026-03-15"],
+  ["ode-moon-lro-lroc-cdrwau4","Lunar Reconnaissance Orbiter Camera (LROC)","Image",27,"2009-07-07/2025-11-08"],
+  ["ode-moon-lro-lroc-cdrwav4","Lunar Reconnaissance Orbiter Camera (LROC)","Image",153,"2009-07-07/2009-12-16"],
+  ["ode-moon-lro-lroc-edrnac4","Lunar Reconnaissance Orbiter Camera (LROC)","Image",1946710,"2009-06-30/2026-03-15"],
+  ["ode-moon-lro-lroc-edrwac4","Lunar Reconnaissance Orbiter Camera (LROC)","Image",379000,"2009-06-30/2026-03-15"],
+  ["ode-moon-lro-lroc-edrwam4","Lunar Reconnaissance Orbiter Camera (LROC)","Image",369594,"2009-06-30/2026-03-15"],
+  ["ode-moon-lro-lroc-edrwau4","Lunar Reconnaissance Orbiter Camera (LROC)","Image",27,"2009-07-07/2025-11-08"],
+  ["ode-moon-lro-lroc-edrwav4","Lunar Reconnaissance Orbiter Camera (LROC)","Image",153,"2009-07-07/2009-12-16"],
+  ["ode-moon-lro-lroc-mdremp","Lunar Reconnaissance Orbiter Camera (LROC)","Image",74,""],
+  ["ode-moon-lro-lroc-mdrhap","Lunar Reconnaissance Orbiter Camera (LROC)","Image",64,""],
+  ["ode-moon-lro-lroc-sdndtm","Lunar Reconnaissance Orbiter Camera (LROC)","Image",663,"2009-07-18/2025-09-18"],
+  ["ode-moon-lro-lroc-sdppho","Lunar Reconnaissance Orbiter Camera (LROC)","Image",765,"2009-07-12/2020-10-08"],
+  ["ode-moon-lro-lroc-sdpwmg","Lunar Reconnaissance Orbiter Camera (LROC)","Image",65,"2010-01-03/2014-06-18"],
+  ["ode-moon-lro-lroc-sdwdtm","Lunar Reconnaissance Orbiter Camera (LROC)","Image",133,""],
+  ["ode-moon-lro-lroc-sdwhap","Lunar Reconnaissance Orbiter Camera (LROC)","Image",8,""],
+  ["ode-moon-lro-lroc-sdwtio","Lunar Reconnaissance Orbiter Camera (LROC)","Image",16,""],
+  ["ode-moon-lro-mrflro-bsddr","MINI-RF LRO (MRFLRO)","Image",62,"2011-04-06/2018-07-06"],
+  ["ode-moon-lro-mrflro-bsddr4","MINI-RF LRO (MRFLRO)","Image",607,"2009-07-13/2026-02-27"],
+  ["ode-moon-lro-mrflro-bsddrv3","MINI-RF LRO (MRFLRO)","Image",69,"2019-01-28/2021-10-29"],
+  ["ode-moon-lro-mrflro-bsedr","MINI-RF LRO (MRFLRO)","Image",248,"2011-04-06/2018-07-06"],
+  ["ode-moon-lro-mrflro-bsedr4","MINI-RF LRO (MRFLRO)","Time Series",2323,"2022-01-19/2026-02-27"],
+  ["ode-moon-lro-mrflro-bsedrv3","MINI-RF LRO (MRFLRO)","Image",276,"2019-01-28/2021-10-29"],
+  ["ode-moon-lro-mrflro-bsrdr","MINI-RF LRO (MRFLRO)","Image",310,"2011-04-06/2018-07-06"],
+  ["ode-moon-lro-mrflro-bsrdr4","MINI-RF LRO (MRFLRO)","Image",303,"2022-01-19/2026-02-27"],
+  ["ode-moon-lro-mrflro-bsrdrv3","MINI-RF LRO (MRFLRO)","Image",345,"2019-01-28/2021-10-29"],
+  ["ode-moon-lro-mrflro-cdr","MINI-RF LRO (MRFLRO)","Image",8219,"2009-07-13/2011-01-23"],
+  ["ode-moon-lro-mrflro-mapcdr","MINI-RF LRO (MRFLRO)","Map",61176,"2009-07-13/2010-12-26"],
+  ["ode-moon-lro-mrflro-moscdr","MINI-RF LRO (MRFLRO)","Map",24,"2009-07-19/2011-01-11"],
+  ["ode-moon-lro-mrflro-mosddr","MINI-RF LRO (MRFLRO)","Map",22,"2009-07-19/2010-12-26"],
+  ["ode-moon-lro-mrflro-pdr","MINI-RF LRO (MRFLRO)","Image",5076,"2009-07-13/2011-01-23"]],"cassini":[["vim-cassini-vims-ir","VIMS-IR","",20672,""]],"messenger":[["ode-mercury-messenger-grs-cal-ac","Gamma Ray Spectrometer (GRS)","Spectrum",396,"2008-01-13/2012-06-08"],
+  ["ode-mercury-messenger-grs-cal-raw","Gamma Ray Spectrometer (GRS)","Spectrum",396,"2008-01-13/2012-06-08"],
+  ["ode-mercury-messenger-grs-cal-scr","Gamma Ray Spectrometer (GRS)","Spectrum",725,"2013-03-18/2015-04-30"],
+  ["ode-mercury-messenger-grs-cal-sh","Gamma Ray Spectrometer (GRS)","Spectrum",57,"2007-09-26/2010-04-15"],
+  ["ode-mercury-messenger-grs-cal-sh2","Gamma Ray Spectrometer (GRS)","Spectrum",510,"2010-09-17/2012-08-20"],
+  ["ode-mercury-messenger-grs-cal-sh3","Gamma Ray Spectrometer (GRS)","Spectrum",774,"2013-03-18/2015-04-30"],
+  ["ode-mercury-messenger-grs-command","Gamma Ray Spectrometer (GRS)","Spectrum",1295,"2004-08-12/2015-04-30"],
+  ["ode-mercury-messenger-grs-dap","Gamma Ray Spectrometer (GRS)","Spectrum",8,"2011-03-24/2011-10-11"],
+  ["ode-mercury-messenger-grs-fpga","Gamma Ray Spectrometer (GRS)","Spectrum",888,"2004-08-12/2015-04-01"],
+  ["ode-mercury-messenger-grs-grs-eng","Gamma Ray Spectrometer (GRS)","Spectrum",38540,"2007-06-21/2012-06-15"],
+  ["ode-mercury-messenger-grs-hpge-ac","Gamma Ray Spectrometer (GRS)","Spectrum",396,"2004-11-11/2012-06-08"],
+  ["ode-mercury-messenger-grs-hpge-raw","Gamma Ray Spectrometer (GRS)","Spectrum",396,"2004-08-12/2012-06-08"],
+  ["ode-mercury-messenger-grs-meap4","Gamma Ray Spectrometer (GRS)","Spectrum",1,"2004-08-13/2015-04-30"],
+  ["ode-mercury-messenger-grs-meap5","Gamma Ray Spectrometer (GRS)","Spectrum",100,""],
+  ["ode-mercury-messenger-grs-microphonics","Gamma Ray Spectrometer (GRS)","Spectrum",42,"2004-08-12/2012-02-03"],
+  ["ode-mercury-messenger-grs-ratecounters","Gamma Ray Spectrometer (GRS)","Spectrum",1291,"2004-08-12/2015-04-30"],
+  ["ode-mercury-messenger-grs-rdr-sum","Gamma Ray Spectrometer (GRS)","Spectrum",37,"2011-03-24/2011-10-10"],
+  ["ode-mercury-messenger-grs-shield-counter","Gamma Ray Spectrometer (GRS)","Spectrum",740,"2013-03-18/2015-04-30"],
+  ["ode-mercury-messenger-grs-shield-spectra","Gamma Ray Spectrometer (GRS)","Spectrum",58,"2004-08-12/2010-09-17"],
+  ["ode-mercury-messenger-grs-shield-spectra2","Gamma Ray Spectrometer (GRS)","Spectrum",1233,"2010-09-18/2015-04-30"],
+  ["ode-mercury-messenger-grs-status","Gamma Ray Spectrometer (GRS)","Spectrum",1714,"2004-08-12/2015-04-30"],
+  ["ode-mercury-messenger-mascs-ddr","Mercury Atmospheric and Surface Composition Spectrometer (MASCS)","Spectrum",4529,""],
+  ["ode-mercury-messenger-mascs-map","Mercury Atmospheric and Surface Composition Spectrometer (MASCS)","Spectrum",13,"2004-08-13/2015-04-30"],
+  ["ode-mercury-messenger-mascs-meap1","Mercury Atmospheric and Surface Composition Spectrometer (MASCS)","Cube",54,"2004-08-13/2015-04-30"],
+  ["ode-mercury-messenger-mascs-meap2","Mercury Atmospheric and Surface Composition Spectrometer (MASCS)","Cube",87,""],
+  ["ode-mercury-messenger-mascs-uvvcdr","Mercury Atmospheric and Surface Composition Spectrometer (MASCS)","Spectrum",155286,"2004-08-27/2015-04-30"],
+  ["ode-mercury-messenger-mascs-uvvddr","Mercury Atmospheric and Surface Composition Spectrometer (MASCS)","Spectrum",27146,"2011-03-29/2015-04-30"],
+  ["ode-mercury-messenger-mascs-uvvedr","Mercury Atmospheric and Surface Composition Spectrometer (MASCS)","Spectrum",77889,"2004-08-27/2015-04-30"],
+  ["ode-mercury-messenger-mascs-vircdr","Mercury Atmospheric and Surface Composition Spectrometer (MASCS)","Spectrum",67529,"2005-06-28/2015-04-30"],
+  ["ode-mercury-messenger-mascs-virdap","Mercury Atmospheric and Surface Composition Spectrometer (MASCS)","Spectrum",1,"2011-03-29/2015-04-30"],
+  ["ode-mercury-messenger-mascs-virddr","Mercury Atmospheric and Surface Composition Spectrometer (MASCS)","Spectrum",28616,"2008-01-14/2015-04-30"],
+  ["ode-mercury-messenger-mascs-viredr","Mercury Atmospheric and Surface Composition Spectrometer (MASCS)","Spectrum",71880,"2004-08-27/2015-04-30"],
+  ["ode-mercury-messenger-mdis-nac-cdrnac","Mercury Dual Imaging System - Narrow Angle Camera (MDIS-NAC)","Image",306454,"2004-08-19/2015-04-30"],
+  ["ode-mercury-messenger-mdis-nac-ddrnac","Mercury Dual Imaging System - Narrow Angle Camera (MDIS-NAC)","Image",153281,"2008-01-09/2015-04-30"],
+  ["ode-mercury-messenger-mdis-nac-dem","Mercury Dual Imaging System - Narrow Angle Camera (MDIS-NAC)","Image",62,""],
+  ["ode-mercury-messenger-mdis-nac-edrnac","Mercury Dual Imaging System - Narrow Angle Camera (MDIS-NAC)","Image",153275,"2004-08-19/2015-04-30"],
+  ["ode-mercury-messenger-mdis-nac-rtmnac","Mercury Dual Imaging System - Narrow Angle Camera (MDIS-NAC)","Image",2541,"2011-04-05/2015-03-16"],
+  ["ode-mercury-messenger-mdis-wac-cdrwac","Mercury Dual Imaging System - Wide Angle Camera (MDIS-WAC)","Image",376105,"2004-08-19/2015-04-14"],
+  ["ode-mercury-messenger-mdis-wac-ddrwac","Mercury Dual Imaging System - Wide Angle Camera (MDIS-WAC)","Image",167317,"2008-01-09/2015-04-14"],
+  ["ode-mercury-messenger-mdis-wac-edrwac","Mercury Dual Imaging System - Wide Angle Camera (MDIS-WAC)","Image",128133,"2004-08-19/2015-04-14"],
+  ["ode-mercury-messenger-mdis-wac-mapmp5","Mercury Dual Imaging System - Wide Angle Camera (MDIS-WAC)","Image",1,"2000-01-01/2014-11-01"],
+  ["ode-mercury-messenger-mdis-wac-mdrwac","Mercury Dual Imaging System - Wide Angle Camera (MDIS-WAC)","Image",45,"2000-01-01/2014-11-01"],
+  ["ode-mercury-messenger-mdis-wac-nac-dem","Mercury Dual Imaging System (MDIS-WAC/NAC)","Image",9,"2011-03-18/2014-11-01"],
+  ["ode-mercury-messenger-mdis-wac-nac-maphie","Mercury Dual Imaging System (MDIS-WAC/NAC)","Image",54,"2000-01-01/2014-11-01"],
+  ["ode-mercury-messenger-mdis-wac-nac-maphiw","Mercury Dual Imaging System (MDIS-WAC/NAC)","Image",54,"2000-01-01/2014-11-01"],
+  ["ode-mercury-messenger-mdis-wac-nac-maploi","Mercury Dual Imaging System (MDIS-WAC/NAC)","Image",54,"2000-01-01/2014-11-01"],
+  ["ode-mercury-messenger-mdis-wac-nac-photo","Mercury Dual Imaging System (MDIS-WAC/NAC)","Cube",63,""],
+  ["ode-mercury-messenger-mdis-wac-nac-rdrbdr","Mercury Dual Imaging System (MDIS-WAC/NAC)","Image",54,"2000-01-01/2014-11-01"],
+  ["ode-mercury-messenger-mdis-wac-nac-topo","Mercury Dual Imaging System (MDIS-WAC/NAC)","Image",2,""],
+  ["ode-mercury-messenger-mdis-wac-rdrmdr","Mercury Dual Imaging System - Wide Angle Camera (MDIS-WAC)","Image",60,"2000-01-01/2014-11-01"],
+  ["ode-mercury-messenger-mdis-wac-rtmwac","Mercury Dual Imaging System - Wide Angle Camera (MDIS-WAC)","Image",717,"2011-04-05/2015-03-13"],
+  ["ode-mercury-messenger-mla-hdiagnostic","Mercury Laser Altimeter (MLA)","Volume",88,"2004-08-19/2015-04-23"],
+  ["ode-mercury-messenger-mla-hdiagnosticcdr","Mercury Laser Altimeter (MLA)","Volume",86,"2007-06-21/2015-04-23"],
+  ["ode-mercury-messenger-mla-radr","Mercury Laser Altimeter (MLA)","Image",3278,"2008-01-14/2015-04-30"],
+  ["ode-mercury-messenger-mla-scicdr","Mercury Laser Altimeter (MLA)","Volume",3297,"2008-01-14/2015-04-30"],
+  ["ode-mercury-messenger-mla-sciedr","Mercury Laser Altimeter (MLA)","Volume",3297,"2004-08-20/2015-04-30"],
+  ["ode-mercury-messenger-mla-scigdr","Mercury Laser Altimeter (MLA)","Map",13,"2008-01-14/2015-04-30"],
+  ["ode-mercury-messenger-mla-scirdrv1","Mercury Laser Altimeter (MLA)","Volume",3282,"2008-01-14/2015-04-30"],
+  ["ode-mercury-messenger-mla-scirdrv2","Mercury Laser Altimeter (MLA)","Volume",3284,"2011-03-29/2015-04-30"],
+  ["ode-mercury-messenger-mla-shadr","Mercury Laser Altimeter (MLA)","Volume",4,"2008-01-14/2015-04-30"],
+  ["ode-mercury-messenger-mla-status","Mercury Laser Altimeter (MLA)","Volume",7295,"2004-08-19/2015-04-30"],
+  ["ode-mercury-messenger-mla-statuscdr","Mercury Laser Altimeter (MLA)","Volume",6798,"2007-06-21/2015-04-30"],
+  ["ode-mercury-messenger-ns-cdr-counts","Neutron Spectrometer (NS)","Spectrum",2621,"2007-06-21/2015-04-30"],
+  ["ode-mercury-messenger-ns-cdr-eng","Neutron Spectrometer (NS)","Spectrum",2623,"2004-08-12/2015-04-30"],
+  ["ode-mercury-messenger-ns-cdr-gamma-burst","Neutron Spectrometer (NS)","Spectrum",2610,"2005-04-18/2015-04-30"],
+  ["ode-mercury-messenger-ns-cdr-gcr-spectra","Neutron Spectrometer (NS)","Spectrum",2621,"2007-06-21/2015-04-30"],
+  ["ode-mercury-messenger-ns-cdr-spectra","Neutron Spectrometer (NS)","Spectrum",2621,"2007-06-21/2015-04-30"],
+  ["ode-mercury-messenger-ns-ddr-ncp","Neutron Spectrometer (NS)","Spectrum",1,"2011-03-26/2012-02-25"],
+  ["ode-mercury-messenger-ns-ddr-ncr","Neutron Spectrometer (NS)","Spectrum",1355,"2011-03-26/2015-04-30"],
+  ["ode-mercury-messenger-ns-meap3","Neutron Spectrometer (NS)","Spectrum",3,"2011-03-25/2015-04-30"],
+  ["ode-mercury-messenger-ns-raw-calibration","Neutron Spectrometer (NS)","Spectrum",1360,"2008-10-06/2015-04-01"],
+  ["ode-mercury-messenger-ns-raw-command","Neutron Spectrometer (NS)","Spectrum",1533,"2007-08-29/2015-04-30"],
+  ["ode-mercury-messenger-ns-raw-counts","Neutron Spectrometer (NS)","Spectrum",0,"2006-03-09/2006-06-16"],
+  ["ode-mercury-messenger-ns-raw-events","Neutron Spectrometer (NS)","Spectrum",2621,"2007-06-21/2015-04-30"],
+  ["ode-mercury-messenger-ns-raw-full-spectra","Neutron Spectrometer (NS)","Spectrum",2621,"2007-06-21/2015-04-30"],
+  ["ode-mercury-messenger-ns-raw-gamma-burst","Neutron Spectrometer (NS)","Spectrum",2610,"2007-06-21/2015-04-30"],
+  ["ode-mercury-messenger-ns-raw-gcr-spectra","Neutron Spectrometer (NS)","Spectrum",2621,"2007-06-21/2015-04-30"],
+  ["ode-mercury-messenger-ns-raw-short-science","Neutron Spectrometer (NS)","Spectrum",0,"2006-06-16/2006-06-16"],
+  ["ode-mercury-messenger-ns-raw-spectra","Neutron Spectrometer (NS)","Spectrum",0,"2004-08-12/2006-03-11"],
+  ["ode-mercury-messenger-ns-raw-status","Neutron Spectrometer (NS)","Spectrum",2623,"2007-06-21/2015-04-30"],
+  ["ode-mercury-messenger-rss-ant4","Radio Science Subsystem (RSS)","Image",0,"2008-01-01/2015-04-20"],
+  ["ode-mercury-messenger-rss-ddor4","Radio Science Subsystem (RSS)","Image",97,"2007-12-15/2015-04-26"],
+  ["ode-mercury-messenger-rss-ion4","Radio Science Subsystem (RSS)","Image",0,"2007-12-01/2015-05-01"],
+  ["ode-mercury-messenger-rss-ltf4","Radio Science Subsystem (RSS)","Image",318,"2004-08-03/2015-04-30"],
+  ["ode-mercury-messenger-rss-mdm4","Radio Science Subsystem (RSS)","Image",0,"2006-01-10/2015-04-18"],
+  ["ode-mercury-messenger-rss-mpd4","Radio Science Subsystem (RSS)","Image",0,"2007-10-17/2015-04-28"],
+  ["ode-mercury-messenger-rss-occ","Radio Science Subsystem (RSS)","Image",1,"2008-01-14/2015-04-26"],
+  ["ode-mercury-messenger-rss-odf4","Radio Science Subsystem (RSS)","Image",1525,"2007-06-04/2015-04-30"],
+  ["ode-mercury-messenger-rss-rsr4","Radio Science Subsystem (RSS)","Image",2405,"2006-10-18/2015-04-29"],
+  ["ode-mercury-messenger-rss-sff4","Radio Science Subsystem (RSS)","Image",0,"2007-12-19/2015-04-28"],
+  ["ode-mercury-messenger-rss-shadr","Radio Science Subsystem (RSS)","Image",9,"2008-01-07/2015-04-30"],
+  ["ode-mercury-messenger-rss-shbdr","Radio Science Subsystem (RSS)","Image",10,"2008-01-07/2015-04-30"],
+  ["ode-mercury-messenger-rss-tnf4","Radio Science Subsystem (RSS)","Image",3916,"2007-06-04/2015-04-30"],
+  ["ode-mercury-messenger-rss-tro4","Radio Science Subsystem (RSS)","Image",0,"2007-12-01/2015-05-01"],
+  ["ode-mercury-messenger-rss-wea4","Radio Science Subsystem (RSS)","Image",0,"2007-01-01/2015-05-10"],
+  ["ode-mercury-messenger-xrs-command","X-Ray Spectrometer (XRS)","Spectrum",1543,"2007-08-24/2015-04-30"],
+  ["ode-mercury-messenger-xrs-edr","X-Ray Spectrometer (XRS)","Spectrum",2379,"2007-06-21/2015-04-30"],
+  ["ode-mercury-messenger-xrs-footprint","X-Ray Spectrometer (XRS)","Spectrum",350567,"2011-03-24/2015-04-30"],
+  ["ode-mercury-messenger-xrs-rdrmap","X-Ray Spectrometer (XRS)","Spectrum",15,"2011-04-07/2015-04-24"],
+  ["ode-mercury-messenger-xrs-xrscdr","X-Ray Spectrometer (XRS)","Spectrum",2379,"2004-08-30/2015-04-30"],
+  ["ode-venus-messenger-grs-cal-ac","Gamma Ray Spectrometer (GRS)","Spectrum",0,"2004-11-11/2012-06-08"],
+  ["ode-venus-messenger-grs-cal-raw","Gamma Ray Spectrometer (GRS)","Spectrum",0,"2004-08-12/2012-06-08"],
+  ["ode-venus-messenger-grs-cal-scr","Gamma Ray Spectrometer (GRS)","Spectrum",0,"2013-03-18/2015-04-30"],
+  ["ode-venus-messenger-grs-cal-sh","Gamma Ray Spectrometer (GRS)","Spectrum",9,"2007-03-27/2007-06-08"],
+  ["ode-venus-messenger-grs-cal-sh2","Gamma Ray Spectrometer (GRS)","Spectrum",0,"2010-09-17/2012-08-20"],
+  ["ode-venus-messenger-grs-cal-sh3","Gamma Ray Spectrometer (GRS)","Spectrum",0,"2013-03-18/2015-04-30"],
+  ["ode-venus-messenger-grs-command","Gamma Ray Spectrometer (GRS)","Spectrum",21,"2005-09-19/2007-06-08"],
+  ["ode-venus-messenger-grs-dap","Gamma Ray Spectrometer (GRS)","Spectrum",0,"2011-03-24/2011-10-11"],
+  ["ode-venus-messenger-grs-fpga","Gamma Ray Spectrometer (GRS)","Spectrum",0,"2004-08-12/2015-04-01"],
+  ["ode-venus-messenger-grs-grs-eng","Gamma Ray Spectrometer (GRS)","Spectrum",26527,"2005-08-17/2007-06-20"],
+  ["ode-venus-messenger-grs-hpge-ac","Gamma Ray Spectrometer (GRS)","Spectrum",0,"2004-11-11/2012-06-08"],
+  ["ode-venus-messenger-grs-hpge-raw","Gamma Ray Spectrometer (GRS)","Spectrum",0,"2004-08-12/2012-06-08"],
+  ["ode-venus-messenger-grs-microphonics","Gamma Ray Spectrometer (GRS)","Spectrum",6,"2005-09-30/2007-03-30"],
+  ["ode-venus-messenger-grs-ratecounters","Gamma Ray Spectrometer (GRS)","Spectrum",9,"2007-03-27/2007-06-08"],
+  ["ode-venus-messenger-grs-rdr-sum","Gamma Ray Spectrometer (GRS)","Spectrum",0,"2011-03-24/2011-10-10"],
+  ["ode-venus-messenger-grs-shield-counter","Gamma Ray Spectrometer (GRS)","Spectrum",0,"2013-03-18/2015-04-30"],
+  ["ode-venus-messenger-grs-shield-spectra","Gamma Ray Spectrometer (GRS)","Spectrum",9,"2007-03-27/2007-06-08"],
+  ["ode-venus-messenger-grs-shield-spectra2","Gamma Ray Spectrometer (GRS)","Spectrum",0,"2010-09-18/2015-04-30"],
+  ["ode-venus-messenger-grs-status","Gamma Ray Spectrometer (GRS)","Spectrum",647,"2005-08-17/2007-06-20"],
+  ["ode-venus-messenger-mascs-uvvcdr","MERCURY ATMOSPHERIC AND SURFACE COMPOSITION SPECTROMETER (MASCS)","Spectrum",77,"2007-04-15/2010-05-27"],
+  ["ode-venus-messenger-mascs-uvvedr","MERCURY ATMOSPHERIC AND SURFACE COMPOSITION SPECTROMETER (MASCS)","Spectrum",47,"2007-04-15/2010-05-27"],
+  ["ode-venus-messenger-mascs-vircdr","MERCURY ATMOSPHERIC AND SURFACE COMPOSITION SPECTROMETER (MASCS)","Spectrum",14,"2007-04-15/2012-03-25"],
+  ["ode-venus-messenger-mascs-viredr","MERCURY ATMOSPHERIC AND SURFACE COMPOSITION SPECTROMETER (MASCS)","Spectrum",14,"2007-04-15/2012-03-25"],
+  ["ode-venus-messenger-mdis-nac-cdrnac","Mercury Dual Imaging System - Narrow Angle Camera (MDIS-NAC)","Image",472,"2006-08-23/2010-11-03"],
+  ["ode-venus-messenger-mdis-nac-edrnac","Mercury Dual Imaging System - Narrow Angle Camera (MDIS-NAC)","Image",236,"2004-08-19/2015-04-30"],
+  ["ode-venus-messenger-mdis-wac-cdrwac","Mercury Dual Imaging System - Wide Angle Camera (MDIS-WAC)","Image",1118,"2006-08-23/2010-11-03"],
+  ["ode-venus-messenger-mdis-wac-edrwac","Mercury Dual Imaging System - Wide Angle Camera (MDIS-WAC)","Image",564,"2004-08-19/2015-04-14"],
+  ["ode-venus-messenger-mla-hdiagnostic","Mercury Laser Altimeter (MLA)","Volume",12,"2006-09-07/2007-06-20"],
+  ["ode-venus-messenger-mla-hdiagnosticcdr","Mercury Laser Altimeter (MLA)","Volume",12,"2006-09-07/2007-06-21"],
+  ["ode-venus-messenger-mla-radr","Mercury Laser Altimeter (MLA)","Image",0,"2008-01-14/2015-04-30"],
+  ["ode-venus-messenger-mla-scicdr","Mercury Laser Altimeter (MLA)","Volume",1,"2007-06-05/2007-06-05"],
+  ["ode-venus-messenger-mla-sciedr","Mercury Laser Altimeter (MLA)","Volume",1,"2007-06-05/2007-06-05"],
+  ["ode-venus-messenger-mla-scigdr","Mercury Laser Altimeter (MLA)","Map",0,"2008-01-14/2015-04-30"],
+  ["ode-venus-messenger-mla-scirdrv1","Mercury Laser Altimeter (MLA)","Volume",0,"2008-01-14/2015-04-30"],
+  ["ode-venus-messenger-mla-scirdrv2","Mercury Laser Altimeter (MLA)","Volume",0,"2011-03-29/2015-04-30"],
+  ["ode-venus-messenger-mla-shadr","Mercury Laser Altimeter (MLA)","Volume",0,"2008-01-14/2015-04-30"],
+  ["ode-venus-messenger-mla-status","Mercury Laser Altimeter (MLA)","Volume",482,"2006-09-06/2007-06-20"],
+  ["ode-venus-messenger-mla-statuscdr","Mercury Laser Altimeter (MLA)","Volume",481,"2006-09-06/2007-06-20"],
+  ["ode-venus-messenger-ns-cdr-counts","Neutron Spectrometer (NS)","Spectrum",144,"2006-06-16/2007-06-20"],
+  ["ode-venus-messenger-ns-cdr-eng","Neutron Spectrometer (NS)","Spectrum",154,"2005-09-07/2007-06-20"],
+  ["ode-venus-messenger-ns-cdr-gamma-burst","Neutron Spectrometer (NS)","Spectrum",150,"2005-09-07/2007-06-20"],
+  ["ode-venus-messenger-ns-cdr-gcr-spectra","Neutron Spectrometer (NS)","Spectrum",144,"2006-06-16/2007-06-20"],
+  ["ode-venus-messenger-ns-cdr-spectra","Neutron Spectrometer (NS)","Spectrum",144,"2006-06-16/2007-06-20"],
+  ["ode-venus-messenger-ns-ddr-ncp","Neutron Spectrometer (NS)","Spectrum",0,"2011-03-26/2012-02-25"],
+  ["ode-venus-messenger-ns-ddr-ncr","Neutron Spectrometer (NS)","Spectrum",0,"2011-03-26/2015-04-30"],
+  ["ode-venus-messenger-ns-raw-calibration","Neutron Spectrometer (NS)","Spectrum",4,"2006-06-16/2007-06-06"],
+  ["ode-venus-messenger-ns-raw-command","Neutron Spectrometer (NS)","Spectrum",12,"2005-09-07/2007-06-06"],
+  ["ode-venus-messenger-ns-raw-counts","Neutron Spectrometer (NS)","Spectrum",2,"2006-03-09/2006-06-16"],
+  ["ode-venus-messenger-ns-raw-events","Neutron Spectrometer (NS)","Spectrum",152,"2005-09-07/2007-06-20"],
+  ["ode-venus-messenger-ns-raw-full-spectra","Neutron Spectrometer (NS)","Spectrum",144,"2006-06-16/2007-06-20"],
+  ["ode-venus-messenger-ns-raw-gamma-burst","Neutron Spectrometer (NS)","Spectrum",150,"2005-09-07/2007-06-20"],
+  ["ode-venus-messenger-ns-raw-gcr-spectra","Neutron Spectrometer (NS)","Spectrum",144,"2006-06-16/2007-06-20"],
+  ["ode-venus-messenger-ns-raw-short-science","Neutron Spectrometer (NS)","Spectrum",1,"2006-06-16/2006-06-16"],
+  ["ode-venus-messenger-ns-raw-spectra","Neutron Spectrometer (NS)","Spectrum",9,"2005-09-07/2006-03-11"],
+  ["ode-venus-messenger-ns-raw-status","Neutron Spectrometer (NS)","Spectrum",154,"2005-09-07/2007-06-20"],
+  ["ode-venus-messenger-rss-tnf4","Radio Science Subsystem (RSS)","Image",8,"2007-06-04/2007-06-07"],
+  ["ode-venus-messenger-xrs-command","X-Ray Spectrometer (XRS)","Spectrum",7,"2006-01-16/2007-06-07"],
+  ["ode-venus-messenger-xrs-edr","X-Ray Spectrometer (XRS)","Spectrum",65,"2006-01-16/2007-06-20"],
+  ["ode-venus-messenger-xrs-footprint","X-Ray Spectrometer (XRS)","Spectrum",0,"2011-03-24/2015-04-30"],
+  ["ode-venus-messenger-xrs-rdrmap","X-Ray Spectrometer (XRS)","Spectrum",0,"2011-04-07/2015-04-24"],
+  ["ode-venus-messenger-xrs-xrscdr","X-Ray Spectrometer (XRS)","Spectrum",65,"2006-01-16/2007-06-20"]]};
 
-/* DÉROULÉ DES MISSIONS ET CHAÎNES DE TRAITEMENT — MISSION[id] (schéma d'Observatories v1.0, src/data-mission.js). */
-var MISSION = {};
+/* =================================================================
+   INSTRUMENTS ET MISSIONS — page « Mission et instruments » de chaque sonde (schéma d'Observatories v1.0, src/data-inst.js
+   et src/data-mission.js, simplifié). Chaque texte est donné en français et en anglais : L(fr, en).
+   INST_DATA[id] = { summary, refs:{clé:{t,p,u}}, archives:[{label, desc, url}], instruments:[{
+       id, name, full, type (TYPES), use, summary, bands:[{l, lo, hi}] (µm ; radio comprise), specs:[[libellé, valeur, clé(s) de source]],
+       stac (préfixe des collections STAC-PLANET de l'instrument, data-stac.js), docs:[{l, u}] }] }
+   Les clés de source renvoient aux refs de la mission (data-missions.js) ou à celles d'ici. Règle 1 : chaque valeur chiffrée cite sa source.
+   Les fiches d'expérience de la NSSDCA et les dossiers de presse ont été relevés par tools/probe/probe_sources.py (23 novembre 2026).
+================================================================= */
+function L(fr, en){ return OBS_LANG === 'en' ? en : fr; }
+var INST_TYPES = {
+  cam:   { c:'#2F6FE4', l:L('Caméra', 'Camera') },
+  spec:  { c:'#C0398A', l:L('Spectromètre', 'Spectrometer') },
+  radar: { c:'#B86A00', l:L('Radar', 'Radar') },
+  alt:   { c:'#0F8A7A', l:L('Altimètre laser', 'Laser altimeter') },
+  rad:   { c:'#C2452D', l:L('Radiomètre', 'Radiometer') },
+  part:  { c:'#6B55C9', l:L('Particules et champs', 'Particles and fields') },
+  radio: { c:'#5B6770', l:L('Radioscience', 'Radio science') }
+};
+function nssdcExp(cospar, n, title){ return { t:L('Fiche d\'expérience NSSDCA : ', 'NSSDCA experiment page: ') + title, p:'NASA NSSDCA', u:'https://nssdc.gsfc.nasa.gov/nmc/experiment/display.action?id=' + cospar + '-' + n }; }
+var PDS_GEO = { label:'PDS Geosciences Node, Orbital Data Explorer', desc:L('Archive de la NASA d\'où viennent les collections ode-* de STAC-PLANET', 'NASA archive behind the ode-* collections of STAC-PLANET'), url:'https://ode.rsl.wustl.edu/' };
+var STACP = { label:'STAC-PLANET (PDSSP, CNES)', desc:L('Catalogue STAC des données planétaires, interrogé par ce site', 'STAC catalogue of planetary data, queried by this site'), url:'https://stacplanet.pdssp.eu/' };
+
+var INST_DATA = {
+mro:{
+  summary:L('Six instruments scientifiques, plus deux enquêtes qui se servent de la sonde elle-même (gravité, haute atmosphère). Trois façons de travailler : surveillance globale (MARCI, MCS), relevés régionaux (CTX, SHARAD, CRISM en balayage), observations ciblées (HiRISE, CRISM, CTX).',
+            'Six science instruments, along with two investigations that use the spacecraft itself (gravity, upper atmosphere). Three ways of working: global monitoring (MARCI, MCS), regional survey (CTX, SHARAD, CRISM survey), targeted observations (HiRISE, CRISM, CTX).'),
+  refs:{ e01:nssdcExp('2005-029A', '01', 'HiRISE'), e02:nssdcExp('2005-029A', '02', 'CRISM'), e04:nssdcExp('2005-029A', '04', 'CTX'), e06:nssdcExp('2005-029A', '06', 'MCS') },
+  archives:[STACP, PDS_GEO, { label:L('HiRISE (Université d\'Arizona)', 'HiRISE (University of Arizona)'), desc:L('Images et produits de l\'équipe HiRISE', 'Images and products from the HiRISE team'), url:'https://www.uahirise.org/' }],
+  instruments:[
+    { id:'hirise', name:'HiRISE', full:'High Resolution Imaging Science Experiment', type:'cam',
+      use:L('Photographier des zones choisies de Mars avec des détails de la taille d\'une table, en couleur au centre et en relief.', 'Photograph chosen areas of Mars with details the size of a table, in colour at the centre and in 3D.'),
+      summary:L('Télescope de 50 cm, le plus puissant envoyé autour d\'une autre planète à son lancement. Il sert aux observations ciblées : ravines, dunes, couches des calottes polaires, sites d\'atterrissage.', 'A 50 cm telescope, the most powerful sent around another planet at its launch. It is used for targeted observations: gullies, dunes, polar layers, landing sites.'),
+      bands:[{ l:L('bleu-vert', 'blue-green'), lo:0.40, hi:0.60 }, { l:L('rouge', 'red'), lo:0.55, hi:0.85 }, { l:L('proche IR', 'near IR'), lo:0.80, hi:1.00 }],
+      specs:[[L('Miroir primaire', 'Primary mirror'), '50 cm', 'kit'], [L('Optique', 'Optics'), L('Cassegrain à trois miroirs, f/24, focale 12 m', 'three-mirror Cassegrain, f/24, 12 m focal length'), 'e01'],
+        [L('Champ de vue', 'Field of view'), '1,14° × 0,18°', 'e01'], [L('Détecteurs', 'Detectors'), L('14 CCD de 2 048 pixels, 128 lignes d\'intégration (TDI)', '14 CCDs of 2,048 pixels, 128 integration (TDI) lines'), 'e01'],
+        [L('Pixel au sol', 'Ground pixel'), L('30 cm depuis 300 km', '30 cm from 300 km'), 'e01'], [L('Fauchée', 'Swath'), L('6 km en rouge, 1,2 km en couleur', '6 km in red, 1.2 km in colour'), 'e01'],
+        [L('Construction', 'Built by'), L('Ball Aerospace, pour l\'Université d\'Arizona (A. McEwen)', 'Ball Aerospace, for the University of Arizona (A. McEwen)'), 'kit']],
+      stac:'ode-mars-mro-hirise-', docs:[{ l:'HiRISE', u:'https://www.uahirise.org/' }] },
+    { id:'ctx', name:'CTX', full:'Context Camera', type:'cam',
+      use:L('Donner le contexte des images HiRISE et CRISM, et cartographier la planète en noir et blanc à 6 m par pixel.', 'Give the context of HiRISE and CRISM images, and map the planet in black and white at 6 m per pixel.'),
+      summary:L('Caméra monochrome à barrette de 5 000 pixels. Elle a fini par couvrir presque toute la surface de Mars.', 'Monochrome camera with a 5,000-pixel line array. It has ended up covering almost the whole surface of Mars.'),
+      bands:[{ l:L('visible', 'visible'), lo:0.50, hi:0.70 }],
+      specs:[[L('Bande', 'Band'), '500 – 700 nm', 'kit'], [L('Champ de vue', 'Field of view'), '5,8°', 'kit'], [L('Détecteur', 'Detector'), L('barrette de 5 000 pixels', '5,000-pixel line array'), 'kit'],
+        [L('Pixel au sol', 'Ground pixel'), L('≈ 6 m depuis 300 km', '≈ 6 m from 300 km'), 'e04'], [L('Fauchée', 'Swath'), '30 km', 'e04'], [L('Construction', 'Built by'), 'Malin Space Science Systems (M. Malin)', 'kit']],
+      stac:'ode-mars-mro-ctx-', docs:[] },
+    { id:'crism', name:'CRISM', full:'Compact Reconnaissance Imaging Spectrometer for Mars', type:'spec',
+      use:L('Chercher les minéraux formés dans l\'eau (argiles, carbonates, sels) par leur empreinte dans le spectre.', 'Look for minerals formed in water (clays, carbonates, salts) through their fingerprint in the spectrum.'),
+      summary:L('Spectromètre imageur sur cardan : il suit une cible pendant le survol. En mode ciblé, 544 longueurs d\'onde à 18 m par pixel ; en relevé, environ 70 canaux à 100 – 200 m par pixel.', 'Gimballed imaging spectrometer that tracks a target during the pass. Targeted mode: 544 wavelengths at 18 m per pixel; survey: about 70 channels at 100 – 200 m per pixel.'),
+      bands:[{ l:L('visible et IR', 'visible and IR'), lo:0.37, hi:3.94 }],
+      specs:[[L('Domaine', 'Range'), '370 – 3 940 nm', 'kit'], [L('Pas spectral', 'Spectral sampling'), '6,55 nm', 'kit'], [L('Ouverture', 'Aperture'), '10 cm', 'kit'],
+        [L('Mode ciblé', 'Targeted mode'), L('544 longueurs d\'onde, 18 m par pixel', '544 wavelengths, 18 m per pixel'), 'kit'], [L('Relevé', 'Survey'), L('≈ 70 canaux, 100 à 200 m par pixel', '≈ 70 channels, 100 to 200 m per pixel'), 'kit'],
+        [L('Fauchée', 'Swath'), '≈ 10 km', 'kit'], [L('Construction', 'Built by'), L('Johns Hopkins APL (S. Murchie)', 'Johns Hopkins APL (S. Murchie)'), 'kit']],
+      stac:'ode-mars-mro-crism-', docs:[] },
+    { id:'marci', name:'MARCI', full:'Mars Color Imager', type:'cam',
+      use:L('Faire chaque jour la météo de toute la planète : nuages, tempêtes de poussière, calottes polaires, ozone.', 'Make a daily weather map of the whole planet: clouds, dust storms, polar caps, ozone.'),
+      summary:L('Caméra très grand angle (180°) qui voit Mars d\'un horizon à l\'autre, en visible et en ultraviolet.', 'Very wide-angle camera (180°) that sees Mars from horizon to horizon, in visible and ultraviolet light.'),
+      bands:[{ l:L('filtres visibles (centres)', 'visible filters (centres)'), lo:0.425, hi:0.725 }],
+      specs:[[L('Champ de vue', 'Field of view'), '180°', 'kit'], [L('Filtres', 'Filters'), L('7 : cinq visibles (425, 550, 600, 650, 725 nm) et deux ultraviolets', '7: five visible (425, 550, 600, 650, 725 nm) and two ultraviolet'), 'kit'],
+        [L('Pixel au sol', 'Ground pixel'), L('de 1 à 10 km', 'from 1 to 10 km'), 'kit'], [L('Construction', 'Built by'), 'Malin Space Science Systems', 'kit']],
+      stac:'ode-mars-mro-marci-', docs:[] },
+    { id:'mcs', name:'MCS', full:'Mars Climate Sounder', type:'rad',
+      use:L('Mesurer, tranche par tranche, la température, la poussière et la vapeur d\'eau de l\'atmosphère, de jour comme de nuit.', 'Measure, slice by slice, the temperature, dust and water vapour of the atmosphere, by day and by night.'),
+      summary:L('Deux petits télescopes orientables qui regardent surtout le limbe : profils de la surface à 80 km, par tranches de 5 km.', 'Two small steerable telescopes that mostly look at the limb: profiles from the surface to 80 km, in 5 km slices.'),
+      bands:[{ l:L('visible et proche IR', 'visible and near IR'), lo:0.3, hi:3.0 }, { l:L('IR thermique', 'thermal IR'), lo:11.5, hi:45.5 }],
+      specs:[[L('Télescopes', 'Telescopes'), L('deux, de 4 cm d\'ouverture', 'two, 4 cm aperture'), 'kit'], [L('Canaux', 'Channels'), L('9 : 0,3 – 3 µm, puis de 11,5 à 45,5 µm', '9: 0.3 – 3 µm, then from 11.5 to 45.5 µm'), 'e06'],
+        [L('Détecteurs', 'Detectors'), L('21 thermopiles par canal', '21 thermopiles per channel'), 'e06'], [L('Résolution verticale', 'Vertical resolution'), '5 km', 'e06'],
+        [L('Construction', 'Built by'), 'NASA JPL (D. McCleese)', 'kit']],
+      stac:'ode-mars-mro-mcs-', docs:[] },
+    { id:'sharad', name:'SHARAD', full:'Shallow Radar', type:'radar',
+      use:L('Voir sous la surface : couches de glace, de roche, et peut-être d\'eau, jusqu\'à un kilomètre de profondeur.', 'See below the surface: layers of ice, rock and possibly water, down to a kilometre deep.'),
+      summary:L('Radar fourni par l\'Agence spatiale italienne. Il travaille surtout du côté nuit et distingue des couches de 10 m d\'épaisseur, plus finement que MARSIS (Mars Express), qui va plus profond.', 'Radar provided by the Italian Space Agency. It works mostly on the night side and separates layers 10 m thick, more finely than MARSIS (Mars Express), which goes deeper.'),
+      bands:[{ l:'radio 15 – 25 MHz', lo:12e6, hi:20e6 }],
+      specs:[[L('Fréquences', 'Frequencies'), '15 – 25 MHz', 'kit'], [L('Impulsions', 'Pulses'), L('« chirps » de 85 ms, 10 W', '85 ms “chirps”, 10 W'), 'kit'],
+        [L('Profondeur', 'Depth'), L('jusqu\'à 1 km', 'up to 1 km'), 'kit'], [L('Couches distinguées', 'Layers resolved'), L('dès 10 m d\'épaisseur', 'from 10 m thick'), 'kit'],
+        [L('Antenne', 'Antenna'), L('5 m de chaque côté de la sonde', '5 m on each side of the spacecraft'), 'kit'], [L('Fourni par', 'Provided by'), L('ASI (Alenia Spazio ; R. Seu, université La Sapienza)', 'ASI (Alenia Spazio; R. Seu, La Sapienza University)'), 'kit']],
+      stac:'ode-mars-mro-sharad-', docs:[] },
+    { id:'rss', name:L('Gravité', 'Gravity'), full:'Gravity Field Investigation', type:'radio',
+      use:L('Cartographier le champ de gravité de Mars en suivant finement la vitesse de la sonde.', 'Map the gravity field of Mars by finely tracking the spacecraft\'s speed.'),
+      summary:L('Le signal radio de la sonde sert d\'instrument : ses variations de fréquence trahissent les excès de masse sous la surface et le dépôt saisonnier de neige carbonique aux pôles.', 'The spacecraft\'s radio signal is the instrument: its frequency changes reveal mass excesses under the surface and the seasonal deposit of CO₂ snow at the poles.'),
+      bands:null,
+      specs:[[L('Responsable', 'Team leader'), L('M. Zuber (MIT, NASA Goddard)', 'M. Zuber (MIT, NASA Goddard)'), 'kit'], [L('Atout', 'Advantage'), L('orbite plus basse que Mars Global Surveyor et Mars Odyssey : détails plus fins', 'orbit lower than Mars Global Surveyor and Mars Odyssey: finer detail'), 'kit']],
+      stac:'ode-mars-mro-rss-', docs:[] }
+  ]},
+mex:{
+  summary:L('Sept instruments sur l\'orbiteur, plus la petite caméra de contrôle VMC. L\'atterrisseur Beagle 2 n\'a jamais donné signe de vie.', 'Seven instruments on the orbiter, along with the small VMC monitoring camera. The Beagle 2 lander never made contact.'),
+  refs:{},
+  archives:[STACP, PDS_GEO, { label:'ESA Planetary Science Archive', desc:L('Archive des missions planétaires de l\'ESA', 'Archive of ESA\'s planetary missions'), url:'https://archives.esac.esa.int/psa/' }],
+  instruments:[
+    { id:'hrsc', name:'HRSC', full:'High Resolution Stereo Camera', type:'cam',
+      use:L('Cartographier toute la planète en couleur et en relief.', 'Map the whole planet in colour and in 3D.'),
+      summary:L('Caméra à barrettes CCD parallèles : stéréo, couleur et plusieurs angles de vue en un seul passage. Un canal de super-résolution prend des vues cinq fois plus fines au milieu de la bande.', 'Pushbroom camera with parallel CCD lines: stereo, colour and several viewing angles in one pass. A super-resolution channel takes frames five times finer within the swath.'),
+      bands:null,
+      specs:[[L('Résolution', 'Resolution'), L('≈ 10 m par pixel sur toute la planète, 2 m sur des zones choisies', '≈ 10 m per pixel over the whole planet, 2 m on chosen areas'), 'inst'],
+        [L('Principe', 'Principle'), L('barrettes CCD en parallèle (stéréo, couleur, photométrie)', 'parallel CCD lines (stereo, colour, photometry)'), 'inst'], [L('Responsable', 'Principal investigator'), L('DLR, Berlin', 'DLR, Berlin'), 'inst']],
+      stac:'ode-mars-mex-hrsc-', docs:[] },
+    { id:'omega', name:'OMEGA', full:'Observatoire pour la Minéralogie, l\'Eau, les Glaces et l\'Activité', type:'spec',
+      use:L('Cartographier les minéraux de la surface : fer, eau des roches, argiles, carbonates.', 'Map surface minerals: iron, water in rocks, clays, carbonates.'),
+      summary:L('Spectromètre imageur français (IAS, Orsay). C\'est lui qui a trouvé les grandes étendues d\'argiles anciennes de Mars.', 'French imaging spectrometer (IAS, Orsay). It found the large expanses of ancient clays on Mars.'),
+      bands:[{ l:L('visible et IR', 'visible and IR'), lo:0.5, hi:5.2 }],
+      specs:[[L('Domaine', 'Range'), '0,5 – 5,2 µm', 'inst'], [L('Mesure aussi', 'Also measures'), L('la composition de l\'atmosphère traversée', 'the composition of the atmosphere along the way'), 'inst'], [L('Responsable', 'Principal investigator'), L('IAS, Orsay', 'IAS, Orsay'), 'inst']],
+      stac:'ode-mars-mex-omega-', docs:[] },
+    { id:'marsis', name:'MARSIS', full:'Mars Advanced Radar for Subsurface and Ionospheric Sounding', type:'radar',
+      use:L('Sonder le sous-sol jusqu\'à quelques kilomètres, mesurer l\'épaisseur des calottes polaires, étudier l\'ionosphère.', 'Sound the subsurface down to a few kilometres, measure the thickness of the polar caps, study the ionosphere.'),
+      summary:L('Radar basse fréquence à antenne de 40 m. Une partie de l\'onde traverse la croûte et se réfléchit aux limites entre glace, sol et roche.', 'Low-frequency radar with a 40 m antenna. Part of the wave crosses the crust and reflects at boundaries between ice, soil and rock.'),
+      bands:null,
+      specs:[[L('Antenne', 'Antenna'), '40 m', 'inst'], [L('Profondeur', 'Depth'), L('quelques kilomètres', 'a few kilometres'), 'inst'], [L('Responsable', 'Principal investigator'), L('INAF, Italie', 'INAF, Italy'), 'inst']],
+      stac:'ode-mars-mex-marsis-', docs:[] },
+    { id:'spicam', name:'SPICAM', full:'Spectroscopy for the Investigation of the Characteristics of the Atmosphere of Mars', type:'spec',
+      use:L('Suivre l\'ozone et la vapeur d\'eau, et dresser leur profil en altitude.', 'Track ozone and water vapour and profile them with altitude.'),
+      summary:L('Regarde vers le bas, ou à travers l\'atmosphère vers le Soleil ou une étoile qui se couche (occultation). Instrument français (LATMOS).', 'Looks down, or through the atmosphere at the Sun or a setting star (occultation). French instrument (LATMOS).'),
+      bands:[{ l:L('UV : ozone', 'UV: ozone'), lo:0.24, hi:0.26 }, { l:L('IR : vapeur d\'eau', 'IR: water vapour'), lo:1.37, hi:1.39 }],
+      specs:[[L('Ultraviolet', 'Ultraviolet'), L('ozone, qui absorbe vers 0,25 µm', 'ozone, absorbing near 0.25 µm'), 'inst'], [L('Infrarouge', 'Infrared'), L('vapeur d\'eau, qui absorbe vers 1,38 µm', 'water vapour, absorbing near 1.38 µm'), 'inst'],
+        [L('Géométries', 'Geometries'), L('nadir, occultations solaires et stellaires', 'nadir, solar and stellar occultations'), 'inst']],
+      stac:'ode-mars-mex-spicam-', docs:[] },
+    { id:'pfs', name:'PFS', full:'Planetary Fourier Spectrometer', type:'spec',
+      use:L('Mesurer la température de l\'atmosphère en altitude et chercher les gaz rares, dont le méthane.', 'Measure atmospheric temperature with altitude and look for trace gases, including methane.'),
+      summary:L('Spectromètre de Fourier infrarouge : climatologie de la vapeur d\'eau et du monoxyde de carbone.', 'Infrared Fourier spectrometer: climatology of water vapour and carbon monoxide.'),
+      bands:[{ l:'IR', lo:1.2, hi:45 }],
+      specs:[[L('Domaine', 'Range'), '1,2 – 45 µm', 'inst'], [L('Recherche', 'Searches for'), L('méthane, peroxyde d\'hydrogène, formaldéhyde', 'methane, hydrogen peroxide, formaldehyde'), 'inst'], [L('Responsable', 'Principal investigator'), L('IFSI, Rome', 'IFSI, Rome'), 'inst']],
+      stac:'ode-mars-mex-pfs-', docs:[] },
+    { id:'aspera', name:'ASPERA-3', full:'Analyzer of Space Plasma and Energetic Atoms', type:'part',
+      use:L('Mesurer l\'oxygène et l\'hydrogène arrachés à l\'atmosphère par le vent solaire.', 'Measure the oxygen and hydrogen stripped from the atmosphere by the solar wind.'),
+      summary:L('Mars n\'a plus de champ magnétique global : le vent solaire frappe directement la haute atmosphère. ASPERA-3 mesure ions, électrons et atomes neutres énergétiques.', 'Mars no longer has a global magnetic field: the solar wind hits the upper atmosphere directly. ASPERA-3 measures ions, electrons and energetic neutral atoms.'),
+      bands:null, specs:[[L('Mesure', 'Measures'), L('ions, électrons, atomes neutres énergétiques', 'ions, electrons, energetic neutral atoms'), 'inst'], [L('Responsable', 'Principal investigator'), L('IRF, Kiruna (Suède)', 'IRF, Kiruna (Sweden)'), 'inst']],
+      stac:'ode-mars-mex-aspera-', docs:[] },
+    { id:'mars', name:'MaRS', full:'Mars Radio Science Experiment', type:'radio',
+      use:L('Sonder l\'atmosphère, l\'ionosphère et l\'intérieur de Mars avec le signal radio de la sonde.', 'Probe the atmosphere, ionosphere and interior of Mars with the spacecraft\'s radio signal.'),
+      summary:L('Quand la sonde passe derrière Mars vue de la Terre, l\'atmosphère modifie le signal ; les variations de vitesse de la sonde donnent le champ de gravité.', 'When the spacecraft passes behind Mars as seen from Earth, the atmosphere changes the signal; the spacecraft\'s speed changes give the gravity field.'),
+      bands:null, specs:[[L('Principe', 'Principle'), L('occultations radio et suivi Doppler', 'radio occultations and Doppler tracking'), 'inst'], [L('Responsable', 'Principal investigator'), L('université de Cologne (RIU)', 'University of Cologne (RIU)'), 'inst']],
+      stac:'ode-mars-mex-mars-', docs:[] },
+    { id:'vmc', name:'VMC', full:'Visual Monitoring Camera', type:'cam',
+      use:L('À l\'origine, filmer la séparation de Beagle 2 ; aujourd\'hui, des vues de Mars entière publiées pour le public.', 'Originally to film the release of Beagle 2; today, whole-Mars views published for the public.'),
+      summary:L('Petite caméra de contrôle, devenue un instrument de suivi du climat et de médiation.', 'Small monitoring camera, turned into a climate-monitoring and outreach instrument.'),
+      bands:null, specs:[[L('Rôle', 'Role'), L('caméra de contrôle (Beagle 2), puis vues globales', 'monitoring camera (Beagle 2), then global views'), 'inst']],
+      stac:'ode-mars-mex-vmc-', docs:[] }
+  ]},
+lro:{
+  summary:L('Sept instruments pensés pour préparer le retour d\'humains sur la Lune : sites d\'atterrissage, éclairage des pôles, froid des cratères d\'ombre permanente, glace, radiations.', 'Seven instruments designed to prepare the return of humans to the Moon: landing sites, polar lighting, cold of permanently shadowed craters, ice, radiation.'),
+  refs:{ e01:nssdcExp('2009-031A', '01', 'LROC'), e04:nssdcExp('2009-031A', '04', 'LOLA'), e05:nssdcExp('2009-031A', '05', 'LEND') },
+  archives:[STACP, PDS_GEO, { label:'LROC (Arizona State University)', desc:L('Images et produits de l\'équipe LROC', 'Images and products from the LROC team'), url:'https://www.lroc.asu.edu/' }],
+  instruments:[
+    { id:'lroc', name:'LROC', full:'Lunar Reconnaissance Orbiter Camera', type:'cam',
+      use:L('Repérer des obstacles d\'un mètre sur les sites d\'atterrissage et suivre l\'éclairage des pôles à chaque orbite.', 'Spot one-metre hazards at landing sites and follow polar lighting on every orbit.'),
+      summary:L('Deux caméras à petit champ (NAC) et une caméra grand champ couleur (WAC), dérivées de CTX et de MARCI de MRO.', 'Two narrow-angle cameras (NAC) and a wide-angle colour camera (WAC), derived from MRO\'s CTX and MARCI.'),
+      bands:[{ l:L('WAC, 7 bandes', 'WAC, 7 bands'), lo:0.30, hi:0.68 }],
+      specs:[[L('NAC', 'NAC'), L('deux caméras, 0,5 m par pixel sur 5 km de large', 'two cameras, 0.5 m per pixel over a 5 km swath'), 'kit'], [L('WAC', 'WAC'), L('100 m par pixel, 7 bandes, 60 km de large', '100 m per pixel, 7 bands, 60 km swath'), 'kit'],
+        [L('Bandes de la WAC', 'WAC bands'), '300 – 680 nm', 'e01'], [L('Origine', 'Heritage'), L('CTX et MARCI de MRO (Malin Space Science Systems)', 'CTX and MARCI on MRO (Malin Space Science Systems)'), 'kit'], [L('Équipe', 'Team'), 'Arizona State University', 'kit']],
+      stac:'ode-moon-lro-lroc-', docs:[{ l:'LROC', u:'https://www.lroc.asu.edu/' }] },
+    { id:'lola', name:'LOLA', full:'Lunar Orbiter Laser Altimeter', type:'alt',
+      use:L('Mesurer le relief et les pentes de toute la Lune, et l\'éclairage des pôles.', 'Measure the relief and slopes of the whole Moon, and polar lighting.'),
+      summary:L('Un laser divisé en cinq faisceaux : la tache en croix donne les pentes le long et en travers de la trace.', 'One laser split into five beams: the cross-shaped spot pattern gives slopes along and across the track.'),
+      bands:[{ l:L('laser', 'laser'), lo:1.063, hi:1.065 }],
+      specs:[[L('Laser', 'Laser'), L('1 064 nm, cinq faisceaux, 28 tirs par seconde', '1,064 nm, five beams, 28 shots per second'), 'kit'], [L('Résolution', 'Resolution'), L('1 m en hauteur, 50 m à l\'horizontale (objectif)', '1 m vertical, 50 m horizontal (goal)'), 'e04'], [L('Construction', 'Built by'), 'NASA Goddard', 'kit']],
+      stac:'ode-moon-lro-lola-', docs:[] },
+    { id:'diviner', name:'Diviner', full:'Diviner Lunar Radiometer Experiment', type:'rad',
+      use:L('Mesurer la température de la surface, de jour et de nuit, et celle des cratères jamais éclairés.', 'Measure surface temperature, day and night, including craters never lit by the Sun.'),
+      summary:L('Radiomètre à neuf canaux. Il a mesuré les endroits les plus froids connus du Système solaire, au fond des cratères polaires.', 'Nine-channel radiometer. It measured the coldest places known in the Solar System, at the bottom of polar craters.'),
+      bands:[{ l:L('IR thermique', 'thermal IR'), lo:7, hi:200 }],
+      specs:[[L('Canaux', 'Channels'), L('9, entre 7 et 200 µm', '9, between 7 and 200 µm'), 'kit'], [L('Précision', 'Accuracy'), L('5 °C sur des zones de 300 m', '5 °C over 300 m areas'), 'kit'], [L('Équipe', 'Team'), 'UCLA', 'kit']],
+      stac:'ode-moon-lro-dlre-', docs:[] },
+    { id:'lamp', name:'LAMP', full:'Lyman Alpha Mapping Project', type:'spec',
+      use:L('Voir le fond des cratères d\'ombre permanente à la lueur des étoiles et chercher du givre.', 'See the floor of permanently shadowed craters by starlight and look for frost.'),
+      summary:L('Spectromètre imageur ultraviolet, cousin d\'ALICE à bord de New Horizons.', 'Ultraviolet imaging spectrometer, a cousin of ALICE on New Horizons.'),
+      bands:[{ l:L('UV lointain', 'far UV'), lo:0.12, hi:0.18 }],
+      specs:[[L('Domaine', 'Range'), '1 200 – 1 800 Å', 'kit'], [L('Éclairage', 'Lighting'), L('lumière des étoiles et lueur Lyman alpha du ciel', 'starlight and the Lyman-alpha sky glow'), 'kit'], [L('Équipe', 'Team'), 'Southwest Research Institute', 'kit']],
+      stac:'ode-moon-lro-lamp-', docs:[] },
+    { id:'lend', name:'LEND', full:'Lunar Exploration Neutron Detector', type:'part',
+      use:L('Cartographier l\'hydrogène, donc la glace possible, dans le premier mètre du sol.', 'Map hydrogen, hence possible ice, in the top metre of soil.'),
+      summary:L('Détecteur de neutrons russe (IKI, Moscou) muni d\'un collimateur pour voir des zones de 10 km.', 'Russian neutron detector (IKI, Moscow) with a collimator to see 10 km areas.'),
+      bands:null,
+      specs:[[L('Neutrons', 'Neutrons'), L('thermiques jusqu\'à 15 MeV', 'thermal up to 15 MeV'), 'kit'], [L('Résolution', 'Resolution'), '10 km', 'kit'], [L('Fourni par', 'Provided by'), L('IKI, Moscou', 'IKI, Moscow'), 'kit']],
+      stac:'ode-moon-lro-lend-', docs:[] },
+    { id:'crater', name:'CRaTER', full:'Cosmic Ray Telescope for the Effects of Radiation', type:'part',
+      use:L('Mesurer les rayons cosmiques et la dose qu\'ils déposeraient dans un corps humain.', 'Measure cosmic rays and the dose they would deposit in a human body.'),
+      summary:L('Détecteurs au silicium derrière un plastique qui imite les tissus humains.', 'Silicon detectors behind a plastic that mimics human tissue.'),
+      bands:null,
+      specs:[[L('Mesure', 'Measures'), L('transfert d\'énergie linéique de 0,1 keV/µm à 2,2 MeV/µm', 'linear energy transfer from 0.1 keV/µm to 2.2 MeV/µm'), 'kit'], [L('Équipe', 'Team'), L('université de Boston', 'Boston University'), 'kit']],
+      stac:'ode-moon-lro-crater-', docs:[] },
+    { id:'minirf', name:'Mini-RF', full:'Miniature Radio Frequency', type:'radar',
+      use:L('Regarder par radar les zones d\'ombre permanente et la rugosité de la surface.', 'Look at permanently shadowed areas and surface roughness by radar.'),
+      summary:L('Radar à synthèse d\'ouverture, démonstrateur technique, monté de côté à 50°.', 'Synthetic aperture radar, a technology demonstrator, side-mounted at 50°.'),
+      bands:[{ l:L('bandes X et S', 'X and S bands'), lo:25000, hi:150000 }],
+      specs:[[L('Fréquences', 'Frequencies'), L('bande X (8 – 12 GHz) et bande S (2 GHz)', 'X band (8 – 12 GHz) and S band (2 GHz)'), 'kit'], [L('Résolution', 'Resolution'), L('30 et 150 m', '30 and 150 m'), 'kit'], [L('Équipe', 'Team'), 'Johns Hopkins APL', 'kit']],
+      stac:'ode-moon-lro-mrflro-', docs:[] }
+  ]},
+cassini:{
+  summary:L('Douze instruments sur l\'orbiteur : télédétection sur une palette (caméras, spectromètres), champs et particules sur une autre, plus le radar et la radioscience. Six autres sur la sonde Huygens, posée sur Titan.', 'Twelve instruments on the orbiter: remote sensing on one pallet (cameras, spectrometers), fields and particles on another, then the radar and radio science. Six more on the Huygens probe, landed on Titan.'),
+  refs:{ e02:nssdcExp('1997-061A', '02', 'Imaging Science Subsystem (ISS)') },
+  archives:[STACP, { label:'PDS Planetary Rings Node', desc:L('Images ISS et données des anneaux', 'ISS images and ring data'), url:'https://pds-rings.seti.org/cassini/' }, { label:L('VIMS (université de Nantes)', 'VIMS (University of Nantes)'), desc:L('Cubes VIMS de Titan repris par STAC-PLANET', 'VIMS Titan cubes used by STAC-PLANET'), url:'https://vims.univ-nantes.fr/' }],
+  instruments:[
+    { id:'iss', name:'ISS', full:'Imaging Science Subsystem', type:'cam',
+      use:L('Photographier Saturne, ses anneaux, Titan et les lunes glacées.', 'Photograph Saturn, its rings, Titan and the icy moons.'),
+      summary:L('Une caméra à petit champ pour le détail et une grand champ pour l\'ensemble ; elles servent aussi à la navigation optique.', 'A narrow-angle camera for detail and a wide-angle one for context; they also serve for optical navigation.'),
+      bands:[{ l:L('petit champ', 'narrow angle'), lo:0.2, hi:1.1 }, { l:L('grand champ', 'wide angle'), lo:0.38, hi:1.1 }],
+      specs:[[L('Caméras', 'Cameras'), L('petit champ et grand champ', 'narrow-angle and wide-angle'), 'arr'],
+        [L('Petit champ', 'Narrow angle'), L('200 – 1 100 nm, 24 filtres', '200 – 1,100 nm, 24 filters'), 'e02'], [L('Grand champ', 'Wide angle'), L('380 – 1 100 nm, 18 filtres', '380 – 1,100 nm, 18 filters'), 'e02'], [L('Responsable', 'Team leader'), L('C. Porco, Space Science Institute', 'C. Porco, Space Science Institute'), 'arr']],
+      stac:null, docs:[] },
+    { id:'vims', name:'VIMS', full:'Visible and Infrared Mapping Spectrometer', type:'spec',
+      use:L('Faire des images où chaque pixel est un spectre : composition des surfaces, des anneaux et des atmosphères.', 'Make images where every pixel is a spectrum: composition of surfaces, rings and atmospheres.'),
+      summary:L('Deux spectromètres imageurs à réseau. Ses fenêtres infrarouges voient la surface de Titan à travers la brume.', 'Two grating imaging spectrometers. Its infrared windows see Titan\'s surface through the haze.'),
+      bands:[{ l:L('visible et IR', 'visible and IR'), lo:0.35, hi:5.1 }],
+      specs:[[L('Domaine', 'Range'), '0,35 – 5,1 µm', 'arr'], [L('Canaux', 'Channels'), '352', 'arr'], [L('Responsable', 'Team leader'), L('R. H. Brown, université d\'Arizona', 'R. H. Brown, University of Arizona'), 'arr']],
+      stac:'vim-cassini-vims-', docs:[] },
+    { id:'cirs', name:'CIRS', full:'Composite Infrared Spectrometer', type:'spec',
+      use:L('Mesurer températures et gaz des atmosphères de Saturne et de Titan, et la chaleur des anneaux et des lunes.', 'Measure temperatures and gases in the atmospheres of Saturn and Titan, and the heat of rings and moons.'),
+      summary:L('Trois interféromètres dans l\'infrarouge moyen et lointain.', 'Three interferometers in the mid and far infrared.'),
+      bands:[{ l:L('IR moyen et lointain', 'mid and far IR'), lo:7, hi:1000 }],
+      specs:[[L('Domaine', 'Range'), '7 – 1 000 µm', 'arr'], [L('Principe', 'Principle'), L('trois interféromètres', 'three interferometers'), 'arr'], [L('Responsable', 'Principal investigator'), L('M. Flasar, NASA Goddard', 'M. Flasar, NASA Goddard'), 'arr']],
+      stac:null, docs:[] },
+    { id:'uvis', name:'UVIS', full:'Ultraviolet Imaging Spectrograph', type:'spec',
+      use:L('Mesurer l\'ultraviolet des atmosphères et des anneaux, et le rapport deutérium sur hydrogène.', 'Measure ultraviolet light from atmospheres and rings, and the deuterium-to-hydrogen ratio.'),
+      summary:L('Spectrographe à deux voies, une cellule à hydrogène et deutérium, et un photomètre rapide pour les occultations d\'étoiles par les anneaux.', 'Two-channel spectrograph, a hydrogen-deuterium cell, and a fast photometer for stellar occultations by the rings.'),
+      bands:[{ l:L('UV extrême et lointain', 'extreme and far UV'), lo:0.0558, hi:0.19 }],
+      specs:[[L('Domaine', 'Range'), '55,8 – 190 nm', 'arr'], [L('Responsable', 'Principal investigator'), L('L. Esposito, université du Colorado', 'L. Esposito, University of Colorado'), 'arr']],
+      stac:null, docs:[] },
+    { id:'radar', name:'RADAR', full:'Cassini Radar', type:'radar',
+      use:L('Voir la surface de Titan à travers son atmosphère : lacs, dunes, montagnes.', 'See Titan\'s surface through its atmosphere: lakes, dunes, mountains.'),
+      summary:L('Quatre modes : imagerie, altimétrie, rétrodiffusion et radiométrie, choisis selon l\'altitude du survol.', 'Four modes: imaging, altimetry, backscatter and radiometry, chosen by flyby altitude.'),
+      bands:null,
+      specs:[[L('Imagerie', 'Imaging'), L('0,3 à 1,7 km par pixel', '0.3 to 1.7 km per pixel'), 'arr'], [L('Altimétrie', 'Altimetry'), L('24 à 27 km à l\'horizontale, 90 à 150 m en hauteur', '24 to 27 km horizontal, 90 to 150 m vertical'), 'arr'],
+        [L('Imagerie sous', 'Imaging below'), '≈ 4 000 km', 'arr'], [L('Responsable', 'Team leader'), L('C. Elachi, NASA JPL', 'C. Elachi, NASA JPL'), 'arr']],
+      stac:null, docs:[] },
+    { id:'rss', name:'RSS', full:'Radio Science Subsystem', type:'radio',
+      use:L('Sonder atmosphères, ionosphères et anneaux avec le signal radio, et peser les lunes.', 'Probe atmospheres, ionospheres and rings with the radio signal, and weigh the moons.'),
+      summary:L('Utilise la radio de la sonde et les antennes du Deep Space Network, notamment lors des occultations.', 'Uses the spacecraft radio and the Deep Space Network antennas, especially during occultations.'),
+      bands:null, specs:[[L('Responsable', 'Team leader'), L('A. Kliore, NASA JPL', 'A. Kliore, NASA JPL'), 'arr']],
+      stac:null, docs:[] },
+    { id:'caps', name:'CAPS', full:'Cassini Plasma Spectrometer', type:'part',
+      use:L('Mesurer ions et électrons de la magnétosphère de Saturne.', 'Measure ions and electrons in Saturn\'s magnetosphere.'),
+      summary:L('Trois capteurs sur une plateforme qui balaie 208°. Les autres instruments de champs et particules : INMS, CDA, MIMI, MAG, RPWS.', 'Three sensors on a platform that sweeps 208°. The other fields and particles instruments: INMS, CDA, MIMI, MAG, RPWS.'),
+      bands:null,
+      specs:[[L('Électrons', 'Electrons'), '0,7 eV – 30 keV', 'arr'], [L('Ions', 'Ions'), '1 eV – 50 keV', 'arr'], [L('Balayage', 'Scan'), '208°', 'arr'], [L('Responsable', 'Principal investigator'), L('D. T. Young, Southwest Research Institute', 'D. T. Young, Southwest Research Institute'), 'arr']],
+      stac:null, docs:[] }
+  ]},
+messenger:{
+  summary:L('Sept instruments miniaturisés, plus la radioscience, protégés du Soleil par un pare-soleil en céramique : MESSENGER a cartographié tout Mercure pour la première fois.', 'Seven miniaturised instruments and radio science, protected from the Sun by a ceramic sunshade: MESSENGER mapped all of Mercury for the first time.'),
+  refs:{ lk:{ t:L('MESSENGER Launch Press Kit (août 2004)', 'MESSENGER Launch Press Kit (August 2004)'), p:'NASA', u:'https://webarchive.library.unt.edu/eot2008/20081102145358/http://www.nasa.gov/pdf/168019main_MESSENGER_71504_PressKit.pdf' },
+         e01:nssdcExp('2004-030A', '01', 'MDIS'), e02:nssdcExp('2004-030A', '02', 'GRNS'), e03:nssdcExp('2004-030A', '03', 'XRS'), e06:nssdcExp('2004-030A', '06', 'EPPS') },
+  archives:[STACP, PDS_GEO, { label:'MESSENGER (Johns Hopkins APL)', desc:L('Site de la mission', 'Mission website'), url:'https://messenger.jhuapl.edu/' }],
+  instruments:[
+    { id:'mdis', name:'MDIS', full:'Mercury Dual Imaging System', type:'cam',
+      use:L('Photographier tout Mercure, en couleur et en relief.', 'Photograph all of Mercury, in colour and in 3D.'),
+      summary:L('Une caméra grand champ à 12 filtres et une caméra petit champ, sur un pivot qui évite de tourner la sonde.', 'A wide-angle camera with 12 filters and a narrow-angle camera, on a pivot that avoids turning the spacecraft.'),
+      bands:[{ l:L('WAC, 12 filtres', 'WAC, 12 filters'), lo:0.40, hi:1.10 }],
+      specs:[[L('Grand champ', 'Wide angle'), L('10,5°, 12 filtres de 400 à 1 100 nm', '10.5°, 12 filters from 400 to 1,100 nm'), 'lk'], [L('Petit champ', 'Narrow angle'), L('1,5°, détails de 18 m', '1.5°, 18 m details'), 'lk'],
+        [L('Carte globale', 'Global map'), L('250 m par pixel, en stéréo', '250 m per pixel, in stereo'), 'e01'], [L('Masse', 'Mass'), '7,9 kg', 'lk'], [L('Construction', 'Built by'), 'Johns Hopkins APL', 'lk']],
+      stac:['ode-mercury-messenger-mdis-', 'ode-venus-messenger-mdis-'], docs:[] },
+    { id:'grns', name:'GRNS', full:'Gamma-Ray and Neutron Spectrometer', type:'spec',
+      use:L('Mesurer les éléments de la croûte (O, Si, S, Fe, K, Th, U…) et l\'hydrogène des pôles.', 'Measure crustal elements (O, Si, S, Fe, K, Th, U…) and polar hydrogen.'),
+      summary:L('Un cristal de germanium refroidi à −183 °C par un cryoréfrigérateur, au plus près du Soleil.', 'A germanium crystal cooled to −183 °C by a cryocooler, close to the Sun.'),
+      bands:null, specs:[[L('Détecteur gamma', 'Gamma detector'), L('germanium à −183 °C', 'germanium at −183 °C'), 'lk'], [L('Masse', 'Mass'), '13,1 kg', 'lk']],
+      stac:['ode-mercury-messenger-grs-', 'ode-mercury-messenger-ns-', 'ode-venus-messenger-grs-', 'ode-venus-messenger-ns-'], docs:[] },
+    { id:'xrs', name:'XRS', full:'X-Ray Spectrometer', type:'spec',
+      use:L('Mesurer Mg, Al, Si, S, Ca, Ti et Fe dans le premier millimètre de la surface.', 'Measure Mg, Al, Si, S, Ca, Ti and Fe in the top millimetre of the surface.'),
+      summary:L('Les rayons X du Soleil font briller la surface ; un détecteur tourné vers le Soleil mesure ce qui l\'éclaire.', 'Solar X-rays make the surface fluoresce; a Sun-pointing detector measures what lights it.'),
+      bands:[{ l:L('rayons X, 1 – 10 keV', 'X-rays, 1 – 10 keV'), lo:0.000124, hi:0.00124 }],
+      specs:[[L('Énergies', 'Energies'), '1 – 10 keV', 'lk'], [L('Champ de vue', 'Field of view'), '12°', 'lk'], [L('Résolution au sol', 'Ground resolution'), L('jusqu\'à 20 km', 'down to 20 km'), 'e03'], [L('Masse', 'Mass'), '3,4 kg', 'lk']],
+      stac:['ode-mercury-messenger-xrs-', 'ode-venus-messenger-xrs-'], docs:[] },
+    { id:'mla', name:'MLA', full:'Mercury Laser Altimeter', type:'alt',
+      use:L('Mesurer le relief de l\'hémisphère nord et le léger balancement de la planète, qui renseigne sur son noyau.', 'Measure the relief of the northern hemisphere and the planet\'s slight wobble, which tells about its core.'),
+      summary:L('Laser infrarouge et récepteur à quatre lentilles de saphir.', 'Infrared laser and a receiver with four sapphire lenses.'),
+      bands:[{ l:L('laser', 'laser'), lo:1.063, hi:1.065 }],
+      specs:[[L('Laser', 'Laser'), L('1 064 nm, environ 8 tirs par seconde', '1,064 nm, about 8 shots per second'), 'lk'], [L('Portée', 'Range'), L('jusqu\'à 1 000 km, précision 30 cm', 'up to 1,000 km, 30 cm accuracy'), 'lk'], [L('Masse', 'Mass'), '7,4 kg', 'lk']],
+      stac:['ode-mercury-messenger-mla-', 'ode-venus-messenger-mla-'], docs:[] },
+    { id:'mascs', name:'MASCS', full:'Mercury Atmospheric and Surface Composition Spectrometer', type:'spec',
+      use:L('Mesurer les gaz de la très fine atmosphère et les minéraux de fer et de titane de la surface.', 'Measure the gases of the very thin atmosphere and the iron and titanium minerals of the surface.'),
+      summary:L('Un spectromètre ultraviolet et visible pour l\'exosphère, surmonté d\'un spectrographe visible et infrarouge pour la surface.', 'An ultraviolet-visible spectrometer for the exosphere, topped by a visible-infrared spectrograph for the surface.'),
+      bands:null, specs:[[L('Exosphère', 'Exosphere'), L('25 km de résolution au limbe', '25 km resolution at the limb'), 'lk'], [L('Surface', 'Surface'), L('3 km au mieux', '3 km at best'), 'lk'], [L('Masse', 'Mass'), '3,1 kg', 'lk'], [L('Construction', 'Built by'), L('université du Colorado', 'University of Colorado'), 'lk']],
+      stac:['ode-mercury-messenger-mascs-', 'ode-venus-messenger-mascs-'], docs:[] },
+    { id:'epps', name:'EPPS', full:'Energetic Particle and Plasma Spectrometer', type:'part',
+      use:L('Mesurer les particules chargées de la magnétosphère et de l\'exosphère.', 'Measure charged particles in the magnetosphere and exosphere.'),
+      summary:L('Deux têtes : EPS pour les particules énergétiques, FIPS pour le plasma lent.', 'Two heads: EPS for energetic particles, FIPS for slow plasma.'),
+      bands:null, specs:[[L('Ions', 'Ions'), L('≈ 10 keV à 5 MeV', '≈ 10 keV to 5 MeV'), 'e06'], [L('Électrons', 'Electrons'), L('≈ 20 à 700 keV', '≈ 20 to 700 keV'), 'e06'], [L('Champ d\'EPS', 'EPS field'), '160° × 12°', 'lk']],
+      stac:'ode-mercury-messenger-epps-', docs:[] },
+    { id:'mag', name:'MAG', full:'Magnetometer', type:'part',
+      use:L('Décrire en détail le champ magnétique de Mercure.', 'Describe Mercury\'s magnetic field in detail.'),
+      summary:L('Magnétomètre à vanne de flux au bout d\'une perche, loin du champ de la sonde.', 'Fluxgate magnetometer at the end of a boom, away from the spacecraft\'s own field.'),
+      bands:null, specs:[[L('Perche', 'Boom'), '3,6 m', 'lk'], [L('Échantillonnage', 'Sampling'), L('de 50 ms à 1 s', 'from 50 ms to 1 s'), 'lk'], [L('Masse (avec la perche)', 'Mass (with boom)'), '4,4 kg', 'lk']],
+      stac:'ode-mercury-messenger-mag-', docs:[] },
+    { id:'rs', name:'RS', full:'Radio Science', type:'radio',
+      use:L('Mesurer la gravité, la forme et le balancement de Mercure avec le signal radio.', 'Measure Mercury\'s gravity, shape and wobble with the radio signal.'),
+      summary:L('Suivi Doppler de la sonde et occultations radio, avec les données de MLA.', 'Doppler tracking of the spacecraft and radio occultations, combined with MLA data.'),
+      bands:null, specs:[[L('Responsable', 'Lead'), 'NASA Goddard', 'lk']],
+      stac:['ode-mercury-messenger-rss-', 'ode-venus-messenger-rss-'], docs:[] }
+  ]}
+};
+
+/* =================================================================
+   MISSION ET TRAITEMENTS — sous-page « Mission et traitements » de chaque sonde (schéma d'Observatories v1.0, src/data-mission.js).
+   MISSION[id] = { intro, phases:[[date, titre, texte, sources]], ops:[[libellé, valeur, sources]], refs, checked }
+   Textes bilingues par L(fr, en) (data-inst.js). Les clés de source renvoient à MISSION[id].refs, puis à INST_DATA[id].refs,
+   puis aux refs de la fiche (data-missions.js). La chaîne de traitement est calculée à partir des collections STAC-PLANET
+   (data-stac.js) : chaque collection est rangée dans un niveau de traitement d'après son suffixe (EDR, RDR, DDR…).
+   Valeurs relevées dans les dossiers de presse et les fiches NSSDCA (tools/probe/probe_sources.py, 23 novembre 2026).
+================================================================= */
+var MISSION_LEVELS = [
+  /* [clé, nom, ce que c'est, motif du suffixe de collection] ; définitions des niveaux : glossaire et normes du PDS (ref pds) */
+  ['raw', L('Données brutes', 'Raw data'), L('Les valeurs telles que la sonde les a envoyées, remises en ordre et datées (EDR, « Experiment Data Record »).', 'Values as the spacecraft sent them, put back in order and time-tagged (EDR, “Experiment Data Record”).'),
+    /(^|-)(edr\w*|raw\w*|sciedr|viredr|uvvedr|edrnac|edrwac|eng|status|command|hk\w*)$/],
+  ['cal', L('Données étalonnées', 'Calibrated data'), L('Converties en grandeurs physiques (luminance, réflectance, temps aller-retour, comptages corrigés), instrument par instrument (RDR, CDR).', 'Converted into physical quantities (radiance, reflectance, round-trip time, corrected counts), instrument by instrument (RDR, CDR).'),
+    /(^|-)(\w*rdr\w*|\w*cdr\w*|cal\w*|l1\w*|sci\w*)$/],
+  ['der', L('Données dérivées', 'Derived data'), L('Géométrie d\'observation, éclairage, paramètres déduits des mesures (DDR) : ce qui sert à interpréter chaque produit.', 'Viewing geometry, lighting, parameters derived from the measurements (DDR): what is needed to interpret each product.'),
+    /(^|-)(\w*ddr\w*|ancill\w*|geo\w*|spice\w*|\w*ter|lmlp|valrep)$/],
+  ['map', L('Cartes et mosaïques', 'Maps and mosaics'), L('Produits assemblés sur une grille du corps : mosaïques, modèles de terrain, cartes globales (MRDR, GDR, DTM…).', 'Products assembled on a grid of the body: mosaics, terrain models, global maps (MRDR, GDR, DTM…).'),
+    /(^|-)(\w*mrdr\w*|\w*gdr\w*|dtm\w*|\w*map\w*|\w*mos\w*|\w*mdr\w*|\w*shadr|ghrm|gcp|pcp|rcp|prp|epf|l2|l3)$/]
+];
+var MISSION_REFS = {
+  pds:{ t:'Planetary Data System Standards Reference, version 3.8 (niveaux de traitement CODMAC et types de produits)', p:'NASA PDS', u:'https://pds.nasa.gov/datastandards/pds3/standards/sr/StdRef_20090227_v3.8.pdf' }
+};
+var MISSION = {
+mro:{
+  intro:L('Après sept mois de croisière, MRO s\'est mise en orbite autour de Mars en mars 2006, puis a passé six mois à freiner dans la haute atmosphère pour descendre sur son orbite de travail, basse et quasi polaire. Elle observe depuis la fin de 2006 et relaie aussi les données des engins posés sur Mars.',
+          'After a seven-month cruise, MRO entered orbit around Mars in March 2006, then spent six months braking in the upper atmosphere to lower itself onto its low, near-polar working orbit. It has been observing since late 2006 and also relays data from landers and rovers.'),
+  phases:[
+    [L('12 août 2005', '12 August 2005'), L('Lancement', 'Launch'), L('Atlas V depuis Cap Canaveral.', 'Atlas V from Cape Canaveral.'), ['hz', 'kit']],
+    [L('10 mars 2006', '10 March 2006'), L('Mise en orbite de Mars', 'Mars orbit insertion'), L('Freinage par le moteur principal, sur une orbite très allongée.', 'Braking with the main engines, onto a very elongated orbit.'), ['hz', 'kit']],
+    [L('mars à octobre 2006', 'March to October 2006'), L('Aérofreinage', 'Aerobraking'), L('Des centaines de plongées calculées dans la haute atmosphère abaissent l\'orbite.', 'Hundreds of carefully calculated dips into the upper atmosphere lower the orbit.'), 'kit'],
+    [L('novembre 2006 à décembre 2008', 'November 2006 to December 2008'), L('Phase scientifique principale', 'Primary science phase'), L('Deux ans de cartographie et d\'observations ciblées ; 34 térabits de données attendus.', 'Two years of mapping and targeted observations; 34 terabits of data expected.'), ['kit', 'mlk']],
+    [L('janvier 2009 à décembre 2010', 'January 2009 to December 2010'), L('Phase de relais', 'Relay phase'), L('Relais des atterrisseurs et rovers, prévu ensuite pour être prolongé ; la sonde observe toujours.', 'Relay for landers and rovers, then planned to be extended; the spacecraft is still observing.'), 'kit']
+  ],
+  ops:[
+    [L('Orbite de travail', 'Working orbit'), L('quasi polaire, 255 à 320 km, 112 min', 'near polar, 255 to 320 km, 112 min'), 'kit'],
+    [L('Réception au sol', 'Ground stations'), L('Deep Space Network de la NASA (Goldstone, Madrid, Canberra)', 'NASA Deep Space Network (Goldstone, Madrid, Canberra)'), 'kit'],
+    [L('Volume prévu', 'Planned volume'), L('34 térabits pendant la phase scientifique principale', '34 terabits during the primary science phase'), 'mlk']
+  ],
+  refs:{ mlk:{ t:'Mars Reconnaissance Orbiter Launch, Press Kit (août 2005)', p:'NASA JPL', u:'https://www.jpl.nasa.gov/news/press_kits/mro-launch.pdf' } },
+  checked:'2026-11-23'
+},
+mex:{
+  intro:L('Première mission de l\'ESA vers une autre planète. Mars Express a largué l\'atterrisseur Beagle 2, perdu à l\'arrivée, puis s\'est installée sur une orbite polaire très allongée : elle passe près de Mars pour observer, puis s\'en éloigne et tourne son antenne vers la Terre.',
+          'ESA\'s first mission to another planet. Mars Express released the Beagle 2 lander, lost on arrival, then settled on a very elongated polar orbit: it swoops close to Mars to observe, then moves away and turns its antenna to Earth.'),
+  phases:[
+    [L('2 juin 2003', '2 June 2003'), L('Lancement', 'Launch'), L('Soyouz-Fregat depuis Baïkonour.', 'Soyuz-Fregat from Baikonur.'), 'fs'],
+    [L('25 décembre 2003', '25 December 2003'), L('Arrivée à Mars', 'Arrival at Mars'), L('Mise en orbite, avec à bord l\'atterrisseur Beagle 2.', 'Orbit insertion, carrying the Beagle 2 lander.'), 'fs'],
+    [L('6 février 2004', '6 February 2004'), L('Beagle 2 déclaré perdu', 'Beagle 2 declared lost'), L('L\'atterrisseur ne s\'est jamais manifesté ; l\'orbiteur poursuit seul avec ses sept instruments.', 'The lander was never heard from; the orbiter carries on alone with its seven instruments.'), 'fs']
+  ],
+  ops:[
+    [L('Orbite', 'Orbit'), L('polaire (86,3°), 258 × 11 560 km, 6 h 43 min', 'polar (86.3°), 258 × 11,560 km, 6 h 43 min'), 'hz'],
+    [L('Partage du temps (orbite initiale)', 'Time sharing (initial orbit)'), L('jusqu\'à 6 h de communication avec la Terre par orbite de 7,5 h, 1,5 h d\'observation près de Mars', 'up to 6 h of communication with Earth per 7.5 h orbit, 1.5 h of observation close to Mars'), 'eng'],
+    [L('Centre de contrôle', 'Control centre'), L('ESOC, Darmstadt ; station de l\'ESA à Perth (Australie)', 'ESOC, Darmstadt; ESA station in Perth (Australia)'), 'eng'],
+    [L('Débit vers la Terre', 'Downlink rate'), L('jusqu\'à 230 kbit/s', 'up to 230 kbit/s'), 'eng']
+  ],
+  refs:{}, checked:'2026-11-23'
+},
+lro:{
+  intro:L('LRO a été lancée avec l\'impacteur LCROSS pour préparer le retour d\'humains sur la Lune : une année d\'« exploration » sur une orbite circulaire basse, puis une mission scientifique prolongée sur une orbite plus économe en carburant.',
+          'LRO was launched with the LCROSS impactor to prepare for humans returning to the Moon: a year of “exploration” on a low circular orbit, then a long science mission on an orbit that uses less fuel.'),
+  phases:[
+    [L('18 juin 2009', '18 June 2009'), L('Lancement', 'Launch'), L('Atlas V avec LCROSS, depuis le centre spatial Kennedy.', 'Atlas V with LCROSS, from Kennedy Space Center.'), 'nssdc'],
+    [L('23 juin 2009', '23 June 2009'), L('Mise en orbite lunaire', 'Lunar orbit insertion'), L('Après environ quatre jours de trajet, orbite de mise en service de 30 × 216 km, jusqu\'à 60 jours.', 'After about four days of travel, a 30 × 216 km commissioning orbit, for up to 60 days.'), ['nssdc', 'kit']],
+    [L('2009 – 2010', '2009 – 2010'), L('Mission d\'exploration', 'Exploration mission'), L('Un an sur une orbite circulaire de 50 km, pour la NASA Exploration.', 'One year on a 50 km circular orbit, for NASA Exploration.'), 'kit'],
+    [L('depuis septembre 2010', 'since September 2010'), L('Mission scientifique', 'Science mission'), L('Orbite quasi stable d\'environ 30 × 180 km, qui demande peu de corrections ; missions prolongées depuis.', 'Quasi-stable orbit of about 30 × 180 km needing few corrections; extended missions since.'), 'nssdc']
+  ],
+  ops:[
+    [L('Télémesure', 'Telemetry'), L('bande Ka à haut débit vers la Terre ; bande S dans les deux sens à bas débit', 'high-rate Ka-band downlink; low-rate S-band up and down'), 'kit'],
+    [L('Orbite actuelle', 'Current orbit'), L('≈ 30 × 180 km, polaire', '≈ 30 × 180 km, polar'), 'nssdc']
+  ],
+  refs:{}, checked:'2026-11-23'
+},
+cassini:{
+  intro:L('Sept ans de croisière avec quatre assistances gravitationnelles, puis treize ans autour de Saturne : une tournée principale de quatre ans, deux prolongations (Équinoxe et Solstice), et un « grand final » entre la planète et ses anneaux, jusqu\'à la plongée volontaire dans Saturne.',
+          'Seven years of cruise with four gravity assists, then thirteen years around Saturn: a four-year prime tour, two extensions (Equinox and Solstice), and a “Grand Finale” between the planet and its rings, ending with a deliberate plunge into Saturn.'),
+  phases:[
+    [L('15 octobre 1997', '15 October 1997'), L('Lancement', 'Launch'), L('Titan IVB/Centaur depuis Cap Canaveral.', 'Titan IVB/Centaur from Cape Canaveral.'), 'end'],
+    [L('1998 – 2000', '1998 – 2000'), L('Assistances gravitationnelles', 'Gravity assists'), L('Vénus (deux fois), Terre, Jupiter.', 'Venus (twice), Earth, Jupiter.'), 'end'],
+    [L('1er juillet 2004', '1 July 2004'), L('Mise en orbite de Saturne', 'Saturn orbit insertion'), L('Début de la tournée principale de quatre ans, 76 orbites prévues.', 'Start of the four-year prime tour, 76 orbits planned.'), ['end', 'arr']],
+    [L('14 janvier 2005', '14 January 2005'), L('Huygens sur Titan', 'Huygens on Titan'), L('La sonde européenne, larguée le 24 décembre 2004, descend dans l\'atmosphère et se pose.', 'The European probe, released on 24 December 2004, descends through the atmosphere and lands.'), 'end'],
+    [L('2008 – 2010', '2008 – 2010'), L('Mission Équinoxe', 'Equinox mission'), L('Première prolongation, autour de l\'équinoxe de Saturne, quand le Soleil éclaire les anneaux par la tranche.', 'First extension, around Saturn\'s equinox, when the Sun lights the rings edge-on.'), 'end'],
+    [L('2010 – 2017', '2010 – 2017'), L('Mission Solstice', 'Solstice mission'), L('Seconde prolongation, de sept ans, jusqu\'au solstice de Saturne.', 'Second, seven-year extension, up to Saturn\'s solstice.'), 'end'],
+    [L('avril à septembre 2017', 'April to September 2017'), L('Grand final', 'Grand Finale'), L('22 orbites entre la planète et ses anneaux.', '22 orbits between the planet and its rings.'), 'end'],
+    [L('15 septembre 2017', '15 September 2017'), L('Fin de mission', 'End of mission'), L('Plongée dans Saturne après 293 orbites, pour ne pas risquer de contaminer Encelade avec des microbes terrestres.', 'Plunge into Saturn after 293 orbits, so as not to risk contaminating Enceladus with Earth microbes.'), 'end']
+  ],
+  ops:[
+    [L('Orbites autour de Saturne', 'Orbits around Saturn'), '293', 'end'],
+    [L('Tournée principale', 'Prime tour'), L('4 ans, 76 orbites prévues', '4 years, 76 orbits planned'), 'arr']
+  ],
+  refs:{}, checked:'2026-11-23'
+},
+messenger:{
+  intro:L('Six ans et demi de croisière et six survols (Terre, Vénus deux fois, Mercure trois fois) pour freiner assez et se placer autour de Mercure, si près du Soleil que la sonde garde toujours son pare-soleil tourné vers lui.',
+          'Six and a half years of cruise and six flybys (Earth, Venus twice, Mercury three times) to slow down enough to enter orbit around Mercury, so close to the Sun that the spacecraft always keeps its sunshade facing it.'),
+  phases:[
+    [L('3 août 2004', '3 August 2004'), L('Lancement', 'Launch'), L('Delta II depuis Cap Canaveral.', 'Delta II from Cape Canaveral.'), 'nssdc'],
+    [L('2005 – 2009', '2005 – 2009'), L('Six survols', 'Six flybys'), L('Terre (2005), Vénus (2006, 2007), Mercure (2008, 2008, 2009).', 'Earth (2005), Venus (2006, 2007), Mercury (2008, 2008, 2009).'), 'nssdc'],
+    [L('18 mars 2011', '18 March 2011'), L('Mise en orbite de Mercure', 'Mercury orbit insertion'), L('Première sonde en orbite autour de Mercure.', 'First spacecraft in orbit around Mercury.'), ['nssdc', 'moi']],
+    [L('2011 – 2012', '2011 – 2012'), L('Mission principale', 'Primary mission'), L('Une année terrestre, soit deux jours solaires de Mercure ; fin en mars 2012.', 'One Earth year, i.e. two Mercury solar days; ended in March 2012.'), ['moi', 'nssdc']],
+    [L('2012 – 2015', '2012 – 2015'), L('Prolongations', 'Extensions'), L('Trois ans de plus, jusqu\'à épuisement des ergols qui maintenaient l\'orbite.', 'Three more years, until the propellant that kept up the orbit ran out.'), 'nssdc'],
+    [L('30 avril 2015', '30 April 2015'), L('Fin de mission', 'End of mission'), L('Impact sur la surface de Mercure.', 'Impact on the surface of Mercury.'), 'nssdc']
+  ],
+  ops:[
+    [L('Orbite', 'Orbit'), L('80°, 200 × 15 193 km, 12 h', '80°, 200 × 15,193 km, 12 h'), 'nssdc'],
+    [L('Réception au sol', 'Ground stations'), L('Deep Space Network ; centre des opérations à l\'APL (Laurel, Maryland)', 'Deep Space Network; mission operations centre at APL (Laurel, Maryland)'), 'moi'],
+    [L('Attitude', 'Attitude'), L('pare-soleil toujours tourné vers le Soleil', 'sunshade always facing the Sun'), 'moi']
+  ],
+  refs:{ moi:{ t:'MESSENGER Mercury Orbit Insertion, Press Kit (mars 2011)', p:'NASA', u:'https://www.nasa.gov/pdf/525164main_MercuryMOI_PK.pdf' } },
+  checked:'2026-11-23'
+}
+};
 
 /* Textes anglais des missions : EN_MISSIONS[id] = { name, agency, desc, sections, refs, parts, model } (mêmes champs que MISSIONS).
    Les clés de source des lignes de la fiche sont reprises du français. */
@@ -1405,8 +2104,12 @@ var EN_UI = {
   "Masse totale au lancement, ergols compris, telle que la publie la source citée ; les valeurs suivies de « ≈ » sont approchées.":"Total launch mass, propellant included, as published by the cited source; values marked “≈” are approximate.",
   "Satellites placés à partir des éléments orbitaux Horizons (tous les 180 jours, 30 pour les plus rapides), interpolés entre deux dates : position approchée (≈, quelques degrés sur l'orbite au plus).":"Moons placed from Horizons orbital elements (every 180 days, 30 for the fastest), interpolated between two dates: approximate position (≈, a few degrees along the orbit at most).",
   "Une barre par mission, du lancement à la fin de mission ; pleine et fléchée si elle est en cours. Les étapes datées sont marquées sur la barre ; leurs sources sont dans « Qui a fait quoi ». Cliquer une barre ouvre la sonde en 3D.":"One bar per mission, from launch to end of mission; solid with an arrow if it is ongoing. Dated milestones are marked on the bar; their sources are in “Who did what”. Clicking a bar opens the spacecraft in 3D.",
-  "Une sonde en orbite est marquée par un anneau de sa couleur autour de son corps (sa position sur l'orbite n'est pas publiée ici) ; seule sa croisière est tracée.":"A spacecraft in orbit is marked by a ring of its colour around its body (its position on the orbit is not published here); only its cruise is drawn.",
-  "Valeurs de la section « Instruments » de chaque fiche ; le détail de chaque instrument est dans « Mission et données » de la sonde.":"Values from the “Instruments” section of each fact sheet; details of each instrument are in the spacecraft's “Mission and data”.",
+  "Une sonde en orbite est marquée de loin par un anneau de sa couleur. En zoomant sur son corps, son orbite réelle apparaît (Horizons, centrée sur le corps, une fenêtre par an à partir du 15 janvier ; en tirets, la partie cachée derrière le corps) : entre deux fenêtres, la sonde y est placée en répétant ce tour (≈, la phase dérive). En lecture rapide, seule l'orbite est tracée.":"From afar, a spacecraft in orbit is marked by a ring in its colour. Zoom in on its body and its real orbit appears (Horizons, centred on the body, one window per year from 15 January; dashed, the part hidden behind the body): between two windows the spacecraft is placed on it by repeating that loop (≈, the phase drifts). During fast playback only the orbit is drawn.",
+  "Fond : le ciel vers le pôle sud de l'écliptique, d'après la carte du ciel de Gaia (reprojetée) ; décor, sans rapport d'échelle avec les orbites.":"Background: the sky towards the south ecliptic pole, from the Gaia sky map (reprojected); scenery, unrelated to the scale of the orbits.",
+  'Mission et instruments':'Mission and instruments',
+  'Mars Reconnaissance Orbiter Launch, Press Kit (août 2005)':'Mars Reconnaissance Orbiter Launch, Press Kit (August 2005)',
+  'MESSENGER Mercury Orbit Insertion, Press Kit (mars 2011)':'MESSENGER Mercury Orbit Insertion, Press Kit (March 2011)',
+  'Planetary Data System Standards Reference, version 3.8 (niveaux de traitement CODMAC et types de produits)':'Planetary Data System Standards Reference, version 3.8 (CODMAC processing levels and product types)',  "Valeurs de la section « Instruments » de chaque fiche ; le détail de chaque instrument est dans « Mission et données » de la sonde.":"Values from the “Instruments” section of each fact sheet; details of each instrument are in the spacecraft's “Mission and data”.",
   "Valeurs de la section « Orbite » de chaque fiche ; Cassini a changé d'orbite autour de Saturne tout au long de sa mission.":"Values from the “Orbit” section of each fact sheet; Cassini changed orbit around Saturn throughout its mission.",
   "Valeurs de la section « Véhicule » de chaque fiche.":"Values from the “Spacecraft” section of each fact sheet.",
   "Valeurs des fiches de chaque sonde, où leur source est citée ; « Durée du voyage » : du lancement à l'arrivée (ou à la mise en orbite) autour du corps visé. Cliquer un nom ouvre la sonde en 3D.":"Values from each spacecraft's fact sheet, where their source is cited; “Travel time”: from launch to arrival (or orbit insertion) at the target body. Clicking a name opens the spacecraft in 3D.",
@@ -1715,11 +2418,29 @@ function posOf(f, t){
 }
 /* demi-largeur de vue (UA) qui montre une cible et son entourage : les satellites d'une planète, le voisinage d'une sonde */
 function reach(f, t){
-  if (/^probe:/.test(f)){ var st = status(mission(f.slice(6)), t); return st.k === 'orbite' ? reach(st.body, t) : 0.25; }
+  if (/^probe:/.test(f)){ var st = status(mission(f.slice(6)), t), ob = st.k === 'orbite' && orbitAt(f.slice(6), t); return ob ? Math.max(ob.s.rmax, (RAD[st.body] || 0)) * 1.5 / AU : st.k === 'orbite' ? reach(st.body, t) : 0.25; }
   var ms = moonsOf(f), a = ms.reduce(function(r, m){ var el = moonEl(m, t); return Math.max(r, el[1] * (1 + el[2])); }, 0);
   return (a ? a * 1.15 : (RAD[f] || 3000) * 30) / AU;
 }
 
+/* orbite réelle d'une sonde autour de son corps (data/solar.json, « orbits ») : fenêtre Horizons la plus récente avant t.
+   Période : premier tour complet de l'angle autour du corps dans la fenêtre ; hors de la fenêtre, la sonde est placée en répétant
+   ce tour (≈ : la phase dérive avec le temps, l'orbite elle-même évolue d'une année à l'autre). */
+function orbitAt(id, t){
+  var o = (D.orbits || []).filter(function(x){ return x.id === id; })[0]; if (!o || !o.samples.length) return null;
+  var sm = null; o.samples.forEach(function(x){ if (x.tt == null) x.tt = day(x.t0); if (x.tt <= t) sm = x; }); sm = sm || o.samples[0];
+  if (sm.per === undefined){ var xy = sm.xy, a0 = Math.atan2(xy[1], xy[0]), acc = 0, prev = a0, rm = 0; sm.per = 0;
+    for (var i = 1; i < xy.length / 2; i++){ var a = Math.atan2(xy[2*i+1], xy[2*i]), d = a - prev; if (d > Math.PI) d -= 2 * Math.PI; if (d < -Math.PI) d += 2 * Math.PI; acc += d; prev = a;
+      if (!sm.per && Math.abs(acc) >= 2 * Math.PI){ sm.per = i - (Math.abs(acc) - 2 * Math.PI) / Math.abs(d); } }
+    for (i = 0; i < xy.length; i += 2) rm = Math.max(rm, Math.hypot(xy[i], xy[i+1])); sm.rmax = rm; }
+  return { o:o, s:sm };
+}
+function onOrbit(sm, t){   /* position (km, relative au corps) à l'instant t, et minutes par tour */
+  var n = sm.xy.length / 2, u = (t - sm.tt) * 1440 / sm.step_min;
+  if (sm.per) u = ((u % sm.per) + sm.per) % sm.per; else if (u < 0 || u > n - 1) return null;
+  var i = Math.min(n - 2, Math.floor(u)), f = u - i;
+  return [sm.xy[2*i] + (sm.xy[2*i+2] - sm.xy[2*i]) * f, sm.xy[2*i+1] + (sm.xy[2*i+3] - sm.xy[2*i+1]) * f];
+}
 function html(){
   var sp = SPEED.map(function(s){ return '<option value="' + s[0] + '"' + (s[0] === S.speed ? ' selected' : '') + '>' + esc(T(s[1])) + '</option>'; }).join('');
   return '<div class="home solar">' +
@@ -1825,7 +2546,24 @@ function render(){
     probes += '<circle cx="' + f1(x) + '" cy="' + f1(y) + '" r="5" style="fill:' + c + '" class="so-p"/>' + label(x + 8, y - 8, m.short, 'so-pl', c);
     hits.push([x, y, m.short, 'probe:' + m.id, 5]);
   });
-  Object.keys(rings).forEach(function(b){ var q = pos[b]; if (!q) return; var x = X(q[0]), y = Y(q[1]), br = Math.max((RAD[b] || 0) / AU / k, b === 'Lune' ? 3 : 4.5);
+  Object.keys(rings).forEach(function(b){ var q = pos[b]; if (!q) return; var x = X(q[0]), y = Y(q[1]), br = Math.max((RAD[b] || 0) / AU / k, b === 'Lune' ? 3 : 4.5), RB = RAD[b] || 0;
+    rings[b] = rings[b].filter(function(r){
+      /* assez de zoom : l'orbite réelle (Horizons) remplace l'anneau ; en tirets, la partie cachée derrière le corps */
+      var ob = orbitAt(r[0].id, t); if (!ob || ob.s.rmax / AU / k < 9 || !vis(x, y, ob.s.rmax / AU / k)) return true;
+      var sm = ob.s, P = { v:['', ''], h:['', ''] }, pv = null, ph = false;
+      function seg(w, a, z){ var o = P[w]; o[0] += (o[1] === a ? '' : 'M' + a) + 'L' + z; o[1] = z; }
+      for (var i = 0; i < sm.xy.length; i += 2){ var hid = !!(sm.z && sm.z[i / 2] < 0 && Math.hypot(sm.xy[i], sm.xy[i+1]) < RB), pt = f1(x + sm.xy[i] / AU / k) + ' ' + f1(y - sm.xy[i+1] / AU / k);
+        if (pv) seg(hid || ph ? 'h' : 'v', pv, pt); pv = pt; ph = hid;
+        if (sm.per && i / 2 > sm.per + 1) break; }
+      probes += '<path d="' + P.v[0] + '" style="stroke:' + r[1] + '" class="so-orb"/>' + (P.h[0] ? '<path d="' + P.h[0] + '" style="stroke:' + r[1] + '" class="so-orb hid"/>' : '');
+      var fast = sm.per && S.run && S.speed * 1440 / (sm.per * sm.step_min) > 1.5, pq = !fast && onOrbit(sm, t);
+      if (pq){ var px = x + pq[0] / AU / k, py = y - pq[1] / AU / k;
+        probes += '<circle cx="' + f1(px) + '" cy="' + f1(py) + '" r="5" style="fill:' + r[1] + '" class="so-p"/>' + label(px + 8, py - 8, r[0].short, 'so-pl', r[1]);
+        hits.push([px, py, r[0].short, 'probe:' + r[0].id, 5]); }
+      else probes += label(x + sm.rmax / AU / k * 0.72 + 4, y - sm.rmax / AU / k * 0.72, r[0].short, 'so-pl', r[1]);
+      S.orbShown = S.orbShown || {}; S.orbShown[r[0].id] = sm.t0;
+      return false;
+    });
     rings[b].forEach(function(r, j){ var rr = Math.max(br * 1.35, br + 4) + 3.5 * j; probes += '<circle cx="' + f1(x) + '" cy="' + f1(y) + '" r="' + f1(Math.min(rr, 4e4)) + '" style="stroke:' + r[1] + '" class="so-ring"/>';
       if (br > 12) probes += label(x + rr * 0.72 + 4, y - rr * 0.72 - 2 - 14 * j, r[0].short, 'so-pl', r[1]); }); });
   /* étiquettes des planètes après celles des sondes, à l'écart du Soleil quand le système entier est cadré */
@@ -1858,10 +2596,13 @@ function ui(){
   $('so-cap').textContent = T('Vue de dessus du Système solaire au') + ' ' + fmt(t) + ', ' + T('centrée sur') + ' ' + fn + '. ' + cap.join(' ; ') + '.';
 }
 function note(){
+  var bg = (window.DATA_FILES || {})['solar-bg'] || {};
   $('so-note').innerHTML = esc(T('Positions : JPL Horizons, vecteurs héliocentriques projetés sur le plan de l\'écliptique J2000, téléchargés le') + ' ' + fmt(TF) + (T1 > TF + 1 ? ' ; ' + T('au-delà, prévision Horizons jusqu\'au') + ' ' + fmt(T1) : '') + '. ' +
     T('Distances à l\'échelle. Soleil, planètes et Lune à l\'échelle dès qu\'ils dépassent quelques pixels ; en deçà, et pour les autres satellites et les sondes, des points de taille fixe.') + ' ' +
     T('Satellites placés à partir des éléments orbitaux Horizons (tous les 180 jours, 30 pour les plus rapides), interpolés entre deux dates : position approchée (≈, quelques degrés sur l\'orbite au plus).') + ' ' +
-    T('Une sonde en orbite est marquée par un anneau de sa couleur autour de son corps (sa position sur l\'orbite n\'est pas publiée ici) ; seule sa croisière est tracée.')) +
+    T('Une sonde en orbite est marquée de loin par un anneau de sa couleur. En zoomant sur son corps, son orbite réelle apparaît (Horizons, centrée sur le corps, une fenêtre par an à partir du 15 janvier ; en tirets, la partie cachée derrière le corps) : entre deux fenêtres, la sonde y est placée en répétant ce tour (≈, la phase dérive). En lecture rapide, seule l\'orbite est tracée.') + ' ' +
+    T('Fond : le ciel vers le pôle sud de l\'écliptique, d\'après la carte du ciel de Gaia (reprojetée) ; décor, sans rapport d\'échelle avec les orbites.')) +
+    (bg.url ? ' <a class="src" href="' + esc(bg.url) + '" rel="noopener" target="_blank">ESA/Gaia/DPAC, A. Moitinho</a> <a class="src" href="' + esc(bg.licence_url) + '" rel="noopener" target="_blank">CC BY-SA 3.0 IGO</a>' : '') +
     ' <a class="src" href="https://ssd.jpl.nasa.gov/horizons/" rel="noopener" target="_blank">JPL Horizons</a> <a class="src" href="https://nssdc.gsfc.nasa.gov/planetary/factsheet/" rel="noopener" target="_blank">NASA NSSDCA</a>';
 }
 
@@ -2139,6 +2880,244 @@ return { page:page, base:function(r){ return /^flotte/.test(r) ? 'flotte' : /^co
 })();
 
 /* =================================================================
+   PAGE « MISSION ET INSTRUMENTS » d'une sonde, sur le modèle de la page Instruments d'Observatories v1.0 (src/inst-render.js) :
+   sous-pages à gauche (vue d'ensemble, mission et traitements, trajectoire et orbite, un instrument par entrée), contenu à droite.
+   Données : INST_DATA (data-inst.js), MISSION (data-mission.js), STAC_COLS (data-stac.js), DATA_FILES (data/*.json).
+   Chaque valeur chiffrée porte un numéro de source (règle 1) ; les classements approchés sont signalés par « ≈ » (règle 2).
+   MissionPage.html(m, sec, extra) rend la route #<id>-donnees[-<sec>] ; extra = { traj, real } (fonctions de app.js).
+================================================================= */
+var MissionPage = (function(){
+'use strict';
+function en(){ return OBS_LANG === 'en'; }
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function num(v, d){ var t = v.toFixed(d); if (t.indexOf('.') >= 0) t = t.replace(/0+$/,'').replace(/\.$/,''); return en() ? t : t.replace('.', ','); }
+function big(n){ return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, en() ? ',' : '\u202f'); }
+function host(u){ return u.replace(/^https?:\/\//,'').replace(/\/.*$/,''); }
+/* longueur d'onde en µm → texte lisible (nm, µm, mm, cm, m) */
+function wl(um){
+  if (um < 1) return num(um * 1000, um * 1000 < 100 ? 1 : 0) + ' nm';
+  if (um < 1000) return num(um, um < 10 ? 2 : 1) + ' µm';
+  if (um < 1e4) return num(um / 1000, 1) + ' mm';
+  if (um < 1e6) return num(um / 1e4, 1) + ' cm';
+  return num(um / 1e6, 1) + ' m';
+}
+function span(lo, hi){ var a = wl(lo), b = wl(hi); return a === b ? a : a + ' – ' + b; }
+function range(it){ if (!it.bands || !it.bands.length) return L('hors spectre', 'not spectral');
+  var lo = Math.min.apply(null, it.bands.map(function(b){ return b.lo; })), hi = Math.max.apply(null, it.bands.map(function(b){ return b.hi; }));
+  return span(lo, hi); }
+function color(it){ return (INST_TYPES[it.type] || INST_TYPES.radio).c; }
+function kind(it){ return (INST_TYPES[it.type] || INST_TYPES.radio).l; }
+function prefixes(it){ return [].concat(it.stac || []); }
+function cols(m, it){ var p = prefixes(it); return (STAC_COLS[m.id] || []).filter(function(c){ return p.some(function(q){ return c[0].indexOf(q) === 0; }); }); }
+function suffix(it, c){ var p = prefixes(it).filter(function(q){ return c.indexOf(q) === 0; })[0] || ''; return c.slice(p.length); }
+
+/* ---------- sources : refs de la mission (MISSION), des instruments (INST_DATA), de la fiche (MISSIONS) et générales ---------- */
+function refsOf(m){
+  var r = {}, k, all = [m.refs || {}, (INST_DATA[m.id] || {}).refs || {}, (MISSION[m.id] || {}).refs || {}, MISSION_REFS];
+  all.forEach(function(o){ for (k in o) r[k] = o[k]; }); return r;
+}
+function Marks(m){
+  var refs = refsOf(m), nums = {}, n = 0;
+  return {
+    mark:function(keys){ var ks = [].concat(keys || []).filter(function(x){ return refs[x]; }); if (!ks.length) return '';
+      return '<sup class="ref">' + ks.map(function(x){ if (!nums[x]) nums[x] = ++n; return '<a href="#" data-ref="' + nums[x] + '" aria-label="' + esc(L('source ', 'source ') + nums[x]) + '">' + nums[x] + '</a>'; }).join(',') + '</sup>'; },
+    list:function(checked){
+      var keys = Object.keys(nums).sort(function(a, b){ return nums[a] - nums[b]; }); if (!keys.length) return '';
+      var c = (checked || '').split('-');
+      return '<div class="isec wide"><h3>' + L('Sources', 'Sources') + '</h3><ol class="refs">' + keys.map(function(k){ var x = refs[k];
+        return '<li id="ref-' + nums[k] + '"><a href="' + esc(x.u) + '" target="_blank" rel="noopener">' + esc(OBS_T(x.t)) + '</a> <span>' + esc(x.p) + '</span></li>'; }).join('') + '</ol>' +
+        (checked ? '<p class="source-note">' + (en() ? 'Checked against the sources above on ' + checked + '.' : 'Vérifié le ' + c[2] + '/' + c[1] + '/' + c[0] + ' face aux sources ci-dessus.') + '</p>' : '') + '</div>';
+    }
+  };
+}
+
+/* ---------- couverture spectrale : axe logarithmique de l'ultraviolet à la radio ---------- */
+var TICKS = [0.1, 0.3, 1, 3, 10, 30, 100, 1000, 1e4, 1e5, 1e6, 1e7, 1e8];
+function coverage(m, sel){
+  var list = INST_DATA[m.id].instruments.filter(function(it){ return it.bands && it.bands.length; });
+  if (!list.length) return '';
+  var lo = Infinity, hi = 0; list.forEach(function(it){ it.bands.forEach(function(b){ lo = Math.min(lo, b.lo); hi = Math.max(hi, b.hi); }); });
+  lo = Math.pow(10, Math.floor(Math.log(lo) / Math.LN10 * 2) / 2); hi = Math.pow(10, Math.ceil(Math.log(hi) / Math.LN10 * 2) / 2);
+  var W = 560, Lm = 80, R = 14, a = Math.log(lo), b = Math.log(hi);
+  function X(v){ return Lm + (Math.log(Math.max(lo, Math.min(hi, v))) - a) / (b - a) * (W - Lm - R); }
+  var y = 30, rows = list.map(function(it){ var r = { it:it, y:y, h:it.bands.length > 1 && overlap(it.bands) ? it.bands.length * 15 + 9 : 24 }; y += r.h; return r; });
+  function overlap(bs){ for (var i = 1; i < bs.length; i++) if (bs[i].lo < bs[i - 1].hi) return true; return false; }
+  var s = '<svg class="cov" viewBox="0 0 ' + W + ' ' + (y + 34) + '" role="group" aria-label="' + esc(L('Couverture spectrale des instruments de ', 'Spectral coverage of the instruments of ') + m.short) + '">' +
+    '<defs><linearGradient id="gvis" x1="0" x2="1"><stop offset="0" stop-color="#7a5cff"/><stop offset="0.25" stop-color="#3fa0ff"/><stop offset="0.5" stop-color="#5fe07a"/><stop offset="0.72" stop-color="#ffd85a"/><stop offset="1" stop-color="#ff5a4a"/></linearGradient></defs>';
+  if (lo < 0.75 && hi > 0.38){ s += '<rect x="' + X(0.38) + '" y="22" width="' + (X(0.75) - X(0.38)) + '" height="' + (y - 22) + '" fill="url(#gvis)" opacity="0.26"/><text class="cov-vis" x="' + ((X(0.38) + X(0.75)) / 2) + '" y="14" text-anchor="middle">' + L('visible', 'visible') + '</text>'; }
+  var last = -99; TICKS.forEach(function(v){ if (v < lo || v > hi) return; var x = X(v); if (x - last < 38) return; last = x;
+    s += '<line class="cov-grid" x1="' + x + '" y1="22" x2="' + x + '" y2="' + y + '"/><text class="cov-tick" x="' + x + '" y="' + (y + 15) + '" text-anchor="middle">' + wl(v).replace(/^0,|^0\./, en() ? '0.' : '0,') + '</text>'; });
+  s += '<line class="cov-axis" x1="' + Lm + '" y1="' + y + '" x2="' + (W - R) + '" y2="' + y + '"/><text class="cov-unit" x="' + (W - R) + '" y="' + (y + 30) + '" text-anchor="end">' + L('longueur d\'onde, échelle logarithmique', 'wavelength, logarithmic scale') + '</text>';
+  rows.forEach(function(r){
+    var it = r.it, st = overlap(it.bands);
+    s += '<g class="cov-row' + (it.id === sel ? ' sel' : '') + '"><a href="#' + m.id + '-donnees-' + it.id + '" aria-label="' + esc(it.name) + '"><rect x="0" y="' + r.y + '" width="' + W + '" height="' + r.h + '" fill="transparent"/>' +
+      '<text class="cov-lab" x="4" y="' + (r.y + r.h / 2 + 4) + '">' + esc(it.name) + '</text>';
+    it.bands.forEach(function(bd, i){ var x0 = X(bd.lo), w = Math.max(3, X(bd.hi) - x0), yy = r.y + 5 + (st ? i * 15 : 0);
+      s += '<rect x="' + x0.toFixed(1) + '" y="' + yy + '" width="' + w.toFixed(1) + '" height="13" rx="2" fill="' + color(it) + '"' + (sel && it.id !== sel ? ' opacity="0.35"' : '') + '><title>' + esc(it.name + ' ' + bd.l + ' : ' + wl(bd.lo) + ' – ' + wl(bd.hi)) + '</title></rect>'; });
+    s += '</a></g>';
+  });
+  return '<div class="svgwrap">' + s + '</svg></div>';
+}
+
+/* ---------- niveaux de traitement (CODMAC, normes du PDS) : classement des collections d'après leur suffixe (≈) ---------- */
+var LV = [
+  ['anc', /^(ancill|command|status\w*|fpga|microphonics|ratecounters|hdiagnostic\w*|[\w-]*eng|geom|usgeomv2|footprint|clutter|shsimu|valrep|raw-(calibration|command|status)|cal-\w+|shield-counter)$/],
+  ['raw', /edr|^raw|-raw|^(odf4|tnf4|ant4|ddor4|mpd4|sff4|wea4|tro4|ion4|ltf4|rsr4|meap\d|occ|hpge-ac)$/],
+  ['der', /mrdr|gdr|mdr|map|mos|dtm|dem|topo|photo|anagly|ddr|shadr|sharad3d|rtm|^(ghrm|gcp|pcp|rcp|prp|epf|ldr|mtrdr|ter|lmlp|sha|dap|virdap|pdr|ionosph|rmhe|rmmas|radar\w+|bdr\w*|shbdr|sd\w+|refdr\d|mdm4)$/],
+  ['cal', /rdr|cdr|spectra|counts|burst|radr|^$/]
+];
+var LVN = {
+  raw:[L('Brutes et éditées', 'Raw and edited'), 'CODMAC 1–2', L('Télémesure découpée par instrument, datée et localisée : l\'« Experiment Data Record » (EDR).', 'Telemetry split by instrument, time-tagged and located: the “Experiment Data Record” (EDR).')],
+  cal:[L('Étalonnées', 'Calibrated'), 'CODMAC 3', L('Valeurs ramenées à une grandeur physique (luminance par exemple), sans rééchantillonnage : RDR, et CDR chez certaines équipes.', 'Values brought to a physical quantity (radiance for instance), without resampling: RDR, and CDR for some teams.')],
+  der:[L('Rééchantillonnées et dérivées', 'Resampled and derived'), 'CODMAC 4–5', L('Données projetées ou transformées en résultats : cartes, mosaïques, modèles de terrain, enregistrements globaux (DDR, MRDR, GDR, MDR…).', 'Data projected or turned into results: maps, mosaics, terrain models, global records (DDR, MRDR, GDR, MDR…).')],
+  anc:[L('Auxiliaires', 'Ancillary'), 'CODMAC 6', L('Ce qu\'il faut pour étalonner et interpréter : état de l\'instrument, ingénierie, géométrie et pointage.', 'What is needed to calibrate and interpret: instrument state, engineering, geometry and pointing.')]
+};
+function level(sfx){ for (var i = 0; i < LV.length; i++) if (LV[i][1].test(sfx)) return LV[i][0]; return 'cal'; }
+
+/* ---------- briques ---------- */
+function table(rows, mk){
+  return '<div class="stable">' + rows.map(function(r){ return '<div class="srow"><div class="k">' + esc(r[0]) + '</div><div class="v">' + esc(OBS_NUM(r[1])) + (mk ? mk.mark(r[2]) : '') + '</div></div>'; }).join('') + '</div>';
+}
+var copyStore = [];
+function code(text){ copyStore.push(text); return '<div class="codewrap"><pre class="code" tabindex="0" aria-label="' + L('Code', 'Code') + '">' + esc(text) + '</pre><button class="copy" data-copy="' + (copyStore.length - 1) + '">' + L('Copier', 'Copy') + '</button></div>'; }
+function navItem(m, sec, cur, n, k, c){
+  var on = sec === cur, h = '#' + m.id + '-donnees' + (sec ? '-' + sec : '');
+  return '<a class="nav-i' + (on ? ' on' : '') + '" href="' + h + '"' + (on ? ' aria-current="page"' : '') + (c ? ' style="--c:' + c + '"' : '') + '><span class="n">' + esc(n) + '</span><span class="k">' + esc(k) + '</span></a>';
+}
+function get(m, id){ var a = INST_DATA[m.id].instruments; for (var i = 0; i < a.length; i++) if (a[i].id === id) return a[i]; return null; }
+function realInst(m){ var key = m.real && m.real.key, d = key && (window.DATA_FILES || {})[key]; if (!d) return null;
+  var n = String(d.instrument || '').toUpperCase(); return INST_DATA[m.id].instruments.filter(function(it){ return n.indexOf(it.name.toUpperCase()) >= 0; })[0] || null; }
+
+/* ---------- vue d'ensemble ---------- */
+function overview(m, X){
+  var d = INST_DATA[m.id], mk = Marks(m), s = '';
+  var total = (STAC_COLS[m.id] || []).reduce(function(a, c){ return a + c[3]; }, 0);
+  s += '<div class="inst-head"><div class="inst-h"><h2 class="inst-name">' + esc(L('Instruments de ', 'Instruments of ') + m.short) + '</h2><div class="inst-full">' + d.instruments.length + ' ' + L('instruments ou expériences. Cliquer une ligne du graphique ou une case pour ouvrir le détail.', 'instruments or investigations. Click a row of the chart or a card to open its page.') + '</div></div><p class="inst-sum">' + esc(d.summary) + '</p></div>';
+  s += '<div class="inst-cols"><div class="isec"><h3>' + L('Couverture spectrale', 'Spectral coverage') + '</h3>' + coverage(m, null) +
+    '<div class="cap">' + L('Plages reprises des pages d\'instruments, où chaque valeur renvoie à sa source. Les expériences de particules, de champs et de radioscience n\'ont pas de bande d\'observation : elles n\'apparaissent pas ici.', 'Ranges taken from the instrument pages, where each value cites its source. Particle, field and radio science investigations have no observing band and are not shown here.') + '</div></div>';
+  s += '<div class="isec"><h3>' + L('Données dans STAC-PLANET', 'Data in STAC-PLANET') + '</h3>' + table([
+      [L('Collections', 'Collections'), String((STAC_COLS[m.id] || []).length), 'stac'],
+      [L('Produits (items)', 'Products (items)'), big(total), 'stac']
+    ].concat(d.instruments.filter(function(it){ return cols(m, it).length; }).map(function(it){ var c = cols(m, it);
+      return [it.name, big(c.reduce(function(a, x){ return a + x[3]; }, 0)) + ' ' + L('produits', 'products') + ' · ' + c.length + ' ' + (c.length > 1 ? L('collections', 'collections') : L('collection', 'collection')), 'stac']; })), mk) +
+    '<div class="cap">' + L('Relevé du catalogue le 23 novembre 2026. Une même observation peut figurer dans plusieurs collections (brute, étalonnée, dérivée).', 'Catalogue surveyed on 23 November 2026. One observation can appear in several collections (raw, calibrated, derived).') + '</div></div>';
+  s += '<div class="isec wide"><h3>' + L('Instruments', 'Instruments') + '</h3><div class="icards">' + d.instruments.map(function(it){
+    return '<a class="icard" style="--c:' + color(it) + '" href="#' + m.id + '-donnees-' + it.id + '"><span class="ic-n">' + esc(it.name) + '</span><span class="ic-k">' + esc(kind(it)) + '</span><span class="ic-r">' + esc(range(it)) + '</span></a>';
+  }).join('') + '</div></div>';
+  if (!realInst(m)) s += '<div class="isec wide"><h3>' + L('Une donnée réelle', 'Real data') + '</h3>' + X.real(m) + '</div>';
+  s += '<div class="isec wide"><h3>' + L('Archives et documentation', 'Archives and documentation') + '</h3><div class="archs">' + d.archives.map(function(a){
+    return '<a class="arch" href="' + esc(a.url) + '" target="_blank" rel="noopener"><span class="a-l">' + esc(a.label) + '</span><span class="a-d">' + esc(a.desc) + '</span><span class="a-u">' + esc(host(a.url)) + '</span></a>';
+  }).join('') + '</div></div>';
+  return s + mk.list() + '</div>';
+}
+
+/* ---------- mission et traitements ---------- */
+function missionSec(m){
+  var M = MISSION[m.id], mk = Marks(m), s = '';
+  s += '<div class="inst-head"><div class="inst-h"><h2 class="inst-name">' + L('Mission et traitements', 'Mission and processing') + '</h2><div class="inst-full">' + esc(m.name) + '</div></div><p class="inst-sum">' + esc(M.intro) + '</p></div><div class="inst-cols">';
+  s += '<div class="isec"><h3>' + L('Déroulé', 'Timeline') + '</h3><ol class="ms-tl">' + M.phases.map(function(p){
+    return '<li><span class="ms-d">' + esc(p[0]) + '</span><div><strong>' + esc(p[1]) + '</strong>' + mk.mark(p[3]) + '<p>' + esc(OBS_NUM(p[2])) + '</p></div></li>'; }).join('') + '</ol></div>';
+  s += '<div class="isec"><h3>' + L('Exploitation', 'Operations') + '</h3>' + table(M.ops, mk) + '</div>';
+  /* chaîne : collections STAC-PLANET de la mission rangées par niveau */
+  var by = { raw:[], cal:[], der:[], anc:[] };
+  INST_DATA[m.id].instruments.forEach(function(it){ cols(m, it).forEach(function(c){ by[level(suffix(it, c))].push([it, c]); }); });
+  s += '<div class="isec wide"><h3>' + L('Chaîne de traitement', 'Processing chain') + '</h3><p class="ms-intro">' +
+    L('Les équipes d\'instrument transforment la télémesure en produits de plus en plus élaborés, archivés au Planetary Data System selon des niveaux normalisés', 'Instrument teams turn telemetry into more and more refined products, archived in the Planetary Data System along standard levels') + mk.mark('pds') +
+    L('. Voici les collections de la sonde dans STAC-PLANET, rangées par niveau', '. Here are the spacecraft\'s collections in STAC-PLANET, sorted by level') + mk.mark('stac') + '.</p><ol class="ms-chain">' +
+    ['raw', 'cal', 'der', 'anc'].map(function(k){ var a = by[k], n = a.reduce(function(t, x){ return t + x[1][3]; }, 0), ins = [];
+      a.forEach(function(x){ if (ins.indexOf(x[0].name) < 0) ins.push(x[0].name); });
+      return '<li><div class="ms-lv">' + LVN[k][1] + '</div><div class="ms-st"><strong>' + esc(LVN[k][0]) + '</strong><p>' + esc(LVN[k][2]) + '</p><p>' +
+        (a.length ? '≈ ' + a.length + ' ' + L('collections', 'collections') + ', ' + big(n) + ' ' + L('produits', 'products') + ' · ' + esc(ins.join(', ')) : L('aucune collection de ce niveau dans le catalogue', 'no collection at this level in the catalogue')) + '</p></div></li>';
+    }).join('') + '</ol><p class="ms-intro">' + L('≈ Rangement d\'après le suffixe du nom de chaque collection (edr, rdr, ddr, gdr…) : il peut se tromper pour quelques produits propres à une équipe.', '≈ Sorted from the suffix of each collection name (edr, rdr, ddr, gdr…): it may be wrong for a few team-specific products.') + '</p></div>';
+  return s + mk.list(M.checked) + '</div>';
+}
+
+/* ---------- trajectoire et orbite ---------- */
+var RADIUS = { 'Mars':3389.5, 'Lune':1737.4, 'Mercure':2439.7, 'Saturne':58232 };   /* rayons moyens, km (fiches planétaires de la NSSDCA) */
+var BCOL = { 'Mars':'#E07A4F', 'Lune':'#B8B8B8', 'Mercure':'#B9B2A8', 'Saturne':'#E6D08A' };
+var MON = ['', 'janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
+function date(s){ var p = s.split('-'); return en() ? new Date(Date.UTC(+p[0], +p[1] - 1, +p[2])).toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric', timeZone:'UTC' }) : (+p[2] === 1 ? '1er' : +p[2]) + ' ' + MON[+p[1]] + ' ' + p[0]; }
+function orbitPlot(m){
+  var so = (window.DATA_FILES || {}).solar, o = so && (so.orbits || []).filter(function(x){ return x.id === m.id; })[0];
+  if (!o || !o.samples.length) return '';
+  var today = new Date().toISOString().slice(0, 10), smp = o.samples.filter(function(x){ return x.t0 <= today; }).pop() || o.samples[0];
+  var xy = smp.xy, R = RADIUS[o.body] || 1000, mx = R;
+  for (var i = 0; i < xy.length; i += 2) mx = Math.max(mx, Math.abs(xy[i]), Math.abs(xy[i + 1]));
+  var W = 420, c = W / 2, k = (W / 2 - 16) / mx, d = '', dh = '', prev = null;
+  /* vue de dessus : un point sous l'écliptique (z < 0) qui se projette sur le disque est caché par le corps (tirets pâles) */
+  for (i = 0; i < xy.length; i += 2){ var hid = !!(smp.z && smp.z[i / 2] < 0 && Math.hypot(xy[i], xy[i + 1]) < R), pt = (c + xy[i] * k).toFixed(1) + ' ' + (c - xy[i + 1] * k).toFixed(1);
+    if (prev !== null){ if (hid) dh += (prev.h ? 'L' : 'M' + prev.p) + 'L' + pt; else d += (prev.h ? 'M' + prev.p : '') + 'L' + pt; } else d += 'M' + pt;
+    prev = { h:hid, p:pt }; }
+  d = d.replace(/^L/, 'M'); dh = dh.replace(/LL/g, 'L');
+  var mins = smp.step_min * (xy.length / 2 - 1), dur = mins >= 2880 ? num(mins / 1440, 0) + ' ' + L('jours', 'days') : mins >= 120 ? num(mins / 60, 1) + ' h' : mins + ' min';
+  var mk = Marks(m);
+  return '<figure class="traj"><svg viewBox="0 0 ' + W + ' ' + W + '" role="img" aria-label="' + esc(L('Orbite réelle de ', 'Real orbit of ') + m.short + L(' autour de ', ' around ') + OBS_T(o.body)) + '">' +
+    '<circle cx="' + c + '" cy="' + c + '" r="' + Math.max(2, R * k).toFixed(1) + '" fill="' + (BCOL[o.body] || '#999') + '" fill-opacity="0.85"/>' +
+    '<path d="' + d + '" class="orb-p"/>' + (dh ? '<path d="' + dh + '" class="orb-p" stroke-dasharray="3 4" opacity="0.45"/>' : '') + '<circle cx="' + (c + xy[0] * k).toFixed(1) + '" cy="' + (c - xy[1] * k).toFixed(1) + '" r="3.5" class="pt-s"/></svg><figcaption>' +
+    L('Orbite autour de ', 'Orbit around ') + esc(OBS_T(o.body)) + L(' à partir du ', ' from ') + esc(date(smp.t0)) + ', ' + L('sur ', 'over ') + dur + ' (' + (xy.length / 2) + ' ' + L('positions', 'positions') + '), ' +
+    L('vue du pôle nord de l\'écliptique, centrée sur ', 'seen from the north ecliptic pole, centred on ') + esc(OBS_T(o.body)) + L('. Le point marque le début ; en tirets, la partie cachée derrière le corps. Une orbite polaire vue de dessus paraît aplatie : c\'est la projection, pas une erreur. Source : JPL Horizons, objet ', '. The dot marks the start; dashed, the part hidden behind the body. A polar orbit seen from above looks flattened: that is the projection, not an error. Source: JPL Horizons, object ') +
+    esc(m.horizons) + mk.mark('hz') + L(', téléchargé le ', ', downloaded on ') + esc(so.fetched) + '. ' + L('Rayon du corps : ', 'Body radius: ') + big(Math.round(R)) + ' km (NSSDCA).</figcaption></figure>';
+}
+function orbitSec(m, X){
+  var mk = Marks(m), s = '<div class="inst-head"><div class="inst-h"><h2 class="inst-name">' + L('Trajectoire et orbite', 'Trajectory and orbit') + '</h2><div class="inst-full">' + esc(m.name) + '</div></div><p class="inst-sum">' +
+    L('Positions réelles calculées par le JPL (Horizons) : d\'abord le voyage depuis la Terre, puis l\'orbite autour du corps étudié.', 'Real positions computed by JPL (Horizons): first the journey from Earth, then the orbit around the body studied.') + '</p></div><div class="inst-cols">';
+  s += '<div class="isec"><h3>' + L('Croisière', 'Cruise') + '</h3>' + X.traj(m) + '</div>';
+  var op = orbitPlot(m), sec = (m.sections || []).filter(function(x){ return /^Orbite/.test(x.title); })[0];
+  s += '<div class="isec"><h3>' + L('Autour de ', 'Around ') + esc(OBS_T(m.targets[0])) + '</h3>' + (op || '<p class="note">' + L('Orbite pas encore téléchargée.', 'Orbit not downloaded yet.') + '</p>') +
+    (sec ? table(sec.rows.map(function(r){ return [OBS_T(r[0]), OBS_T(r[1]), r[2]]; }), mk) : '') + '</div>';
+  return s + mk.list() + '</div>';
+}
+
+/* ---------- un instrument ---------- */
+function stacCode(c){
+  return 'curl "' + STAC_API + '/search?collections=' + c + '&limit=1"\n\n# Python\nfrom pystac_client import Client\ncat = Client.open("' + STAC_API + '")\nitems = cat.search(collections=["' + c + '"], max_items=10).item_collection()\nfor it in items:\n    print(it.id, it.datetime, list(it.assets))';
+}
+function detail(m, it, X){
+  var mk = Marks(m), s = '', cs = cols(m, it);
+  s += '<div class="inst-head"><div class="inst-h"><h2 class="inst-name">' + esc(it.name) + '</h2><div class="inst-full">' + esc(it.full) + '</div><span class="kind">' + esc(kind(it)) + '</span></div><div>' +
+    '<p class="inst-use"><b>' + L('À quoi ça sert', 'What it is for') + '</b>' + esc(it.use) + '</p><p class="inst-sum">' + esc(OBS_NUM(it.summary)) + '</p>';
+  if (it.bands && it.bands.length) s += '<div class="inst-range">' + it.bands.map(function(b){ return '<span class="rng" style="--c:' + color(it) + '"><b>' + esc(b.l) + '</b> ' + span(b.lo, b.hi) + '</span>'; }).join('') + '</div>';
+  s += '</div></div><div class="inst-cols">';
+  s += '<div class="isec"><h3>' + L('Caractéristiques', 'Characteristics') + '</h3>' + table(it.specs, mk) + '</div>';
+  if (it.bands && it.bands.length) s += '<div class="isec"><h3>' + L('Place dans le spectre', 'Place in the spectrum') + '</h3>' + coverage(m, it.id) + '<div class="cap">' + L('Plages reprises des caractéristiques ci-dessus.', 'Ranges taken from the characteristics above.') + '</div></div>';
+  if (realInst(m) === it) s += '<div class="isec wide"><h3>' + L('Une donnée réelle', 'Real data') + '</h3>' + X.real(m) + '</div>';
+  s += '<div class="isec wide"><h3>' + L('Produits de données', 'Data products') + '</h3>';
+  if (cs.length){
+    s += '<div class="tablewrap"><table class="ctable"><thead><tr><th scope="col">' + L('Collection STAC-PLANET', 'STAC-PLANET collection') + '</th><th scope="col">' + L('Niveau ≈', 'Level ≈') + '</th><th scope="col">' + L('Type', 'Type') + '</th><th scope="col">' + L('Produits', 'Products') + '</th><th scope="col">' + L('Période', 'Period') + '</th></tr></thead><tbody>' +
+      cs.slice().sort(function(a, b){ return b[3] - a[3]; }).map(function(c){ var lv = LVN[level(suffix(it, c[0]))], p = c[4] ? c[4].split('/') : null;
+        return '<tr><td><code>' + esc(c[0]) + '</code></td><td>' + esc(lv[0]) + '</td><td>' + esc(OBS_T(c[2] || '')) + '</td><td class="n">' + big(c[3]) + '</td><td>' + (p ? esc(p[0].slice(0, 4) + '–' + p[1].slice(0, 4)) : '—') + '</td></tr>'; }).join('') +
+      '</tbody></table></div><div class="cap">' + L('Relevé du catalogue STAC-PLANET le 23 novembre 2026', 'STAC-PLANET catalogue surveyed on 23 November 2026') + mk.mark('stac') + L('. Le niveau est déduit du suffixe du nom (≈).', '. The level is inferred from the name suffix (≈).') + '</div>';
+  } else s += '<p class="note">' + L('Aucune collection de cet instrument dans STAC-PLANET au 23 novembre 2026 : ses données sont à chercher dans les archives ci-dessous.', 'No collection for this instrument in STAC-PLANET as of 23 November 2026: look for its data in the archives below.') + '</p>';
+  s += '</div>';
+  if (cs.length){ var top = cs.slice().sort(function(a, b){ return b[3] - a[3]; })[0][0];
+    s += '<div class="isec wide"><h3>' + L('Accéder aux données', 'Accessing the data') + '</h3><div class="ex-head"><span class="ex-title">' + L('Interroger STAC-PLANET (collection la plus fournie)', 'Query STAC-PLANET (largest collection)') + '</span></div>' + code(stacCode(top)) + '</div>'; }
+  var links = INST_DATA[m.id].archives.map(function(a){ return { l:a.label, u:a.url }; }).concat(it.docs || []);
+  s += mk.list(INST_DATA[m.id].checked || (MISSION[m.id] || {}).checked);
+  s += '<div class="isec wide"><h3>' + L('Archive et documentation', 'Archive and documentation') + '</h3><div class="lnks">' + links.map(function(l){ return '<a class="lnk" href="' + esc(l.u) + '" target="_blank" rel="noopener">' + esc(l.l) + '<em>' + esc(host(l.u)) + '</em></a>'; }).join('') + '</div></div>';
+  return s + '</div>';
+}
+
+function html(m, sec, X){
+  copyStore = [];
+  var d = INST_DATA[m.id]; if (!d) return '';
+  var it = sec && get(m, sec); if (sec && !it && sec !== 'mission' && sec !== 'orbite') sec = '';
+  var nav = navItem(m, '', sec || '', L('Vue d\'ensemble', 'Overview'), L('Spectre, instruments, archives', 'Spectrum, instruments, archives')) +
+    (MISSION[m.id] ? navItem(m, 'mission', sec, L('Mission et traitements', 'Mission and processing'), L('Déroulé, exploitation, chaîne de traitement', 'Timeline, operations, processing chain')) : '') +
+    navItem(m, 'orbite', sec, L('Trajectoire et orbite', 'Trajectory and orbit'), L('Croisière réelle, orbite autour du corps', 'Real cruise, orbit around the body')) +
+    d.instruments.map(function(x){ return navItem(m, x.id, sec, x.name, kind(x), color(x)); }).join('');
+  var main = it ? detail(m, it, X) : sec === 'mission' ? missionSec(m) : sec === 'orbite' ? orbitSec(m, X) : overview(m, X);
+  return '<div class="xp inst-body"><nav class="inst-nav" aria-label="' + esc(L('Sous-pages de ', 'Sub-pages of ') + m.short) + '">' + nav + '</nav><div class="inst-main" id="xp-main">' + main + '</div></div>';
+}
+document.addEventListener('click', function(e){
+  var b = e.target.closest && e.target.closest('[data-copy],[data-ref]'); if (!b) return;
+  if (b.hasAttribute('data-ref')){ e.preventDefault(); var t = document.getElementById('ref-' + b.getAttribute('data-ref')); if (t){ t.scrollIntoView({ block:'center' }); t.classList.add('hl'); setTimeout(function(){ t.classList.remove('hl'); }, 1500); } return; }
+  var txt = copyStore[+b.getAttribute('data-copy')];
+  try { navigator.clipboard.writeText(txt).then(function(){ b.textContent = L('Copié', 'Copied'); setTimeout(function(){ b.textContent = L('Copier', 'Copy'); }, 1500); }); } catch(x){}
+});
+return { html:html };
+})();
+
+/* =================================================================
    APPLICATION — en-tête, routage par ancre, pages.
    Squelette (étape 1 du dossier de lancement) : la vue 3D d'Observatories v1.0 (src/app.js là-bas)
    sera reprise avec la première mission (étape 4). Rien ici n'est propre à une mission : tout part de MISSIONS.
@@ -2158,7 +3137,7 @@ var VIEWS = [['missions', 'Missions'], ['accueil', 'Système solaire'], ['compar
 function renderHeader(route){
   /* onglets des sondes, comme les onglets d'observatoires d'Observatories : sur une page de mission, on passe d'une sonde à l'autre
      en restant sur le même type de page (vue 3D ou « Mission et données ») */
-  var cur = mission(route.replace(/-donnees$/, '')), dat = /-donnees$/.test(route);
+  var cur = mission(route.replace(/-donnees(-[\w-]+)?$/, '')), dat = /-donnees/.test(route);
   /* deux rangées, comme les domaines spectraux d'Observatories : les corps visés (filtrent), puis les sondes du corps choisi */
   function bodyOf(m){ return m.body ? m.body.name : m.targets[0]; }
   var bodies = []; MISSIONS.forEach(function(m){ if (bodies.indexOf(bodyOf(m)) < 0) bodies.push(bodyOf(m)); });
@@ -2168,7 +3147,7 @@ function renderHeader(route){
     var n = MISSIONS.filter(function(m){ return bodyOf(m) === b; }).length;
     return '<button class="dsel' + (b === bodyOf(cur) ? ' cur' : '') + '" data-body="' + esc(b) + '" aria-pressed="' + (b === sb) + '"><span class="dl">' + esc(T(b)) + '</span><span class="ds">' + esc(T(b)) + '</span><span class="dn">' + n + '</span></button>';
   }).join('') + '</div><div class="trow" role="tablist" aria-label="' + T('Sonde') + '">' + MISSIONS.filter(function(m){ return bodyOf(m) === sb; }).map(function(m){
-    return '<button class="tab" role="tab" data-go="' + m.id + (dat ? '-donnees' : '') + '" aria-selected="' + (m.id === cur.id) + '">' + esc(m.short || m.name) + '<small>' + esc(m.year || '') + '</small></button>';
+    return '<button class="tab" role="tab" data-go="' + m.id + (dat ? route.replace(/^\w+?(-donnees)/, '$1') : '') + '" aria-selected="' + (m.id === cur.id) + '">' + esc(m.short || m.name) + '<small>' + esc(m.year || '') + '</small></button>';
   }).join('') + '</div>' : '';
   $('views').innerHTML = '<div class="views">' + VIEWS.map(function(v){
     var on = route === v[0] || (v[0] === 'missions' && cur);
@@ -2187,14 +3166,6 @@ function renderHeader(route){
 function soon(title, what, step){
   return '<div class="sk"><h2>' + T(title) + '</h2><p class="lead">' + T(what) + '</p><p class="sk-state">' + T('En construction') + ' · ' + T(step) + '</p></div>';
 }
-function missionsPage(){
-  var h = '<div class="sk"><h2>' + T('Missions') + '</h2>';
-  if (!MISSIONS.length) return h + '<p class="lead">' + T('Aucune mission pour l\'instant : la liste sera choisie d\'après ce que la sonde de STAC-PLANET trouve dans le catalogue.') + '</p></div>';
-  h += '<ul class="sk-list">' + MISSIONS.map(function(m){
-    return '<li><a href="#' + m.id + '"><strong>' + esc(m.short || m.name) + '</strong> <span>' + esc(m.year || '') + ' · ' + esc((m.targets || []).join(', ')) + '</span></a></li>';
-  }).join('') + '</ul></div>';
-  return h;
-}
 function src(m, k){
   var r = k && m.refs && m.refs[k];
   return r ? ' <a class="src" href="' + esc(r.u) + '" rel="noopener" target="_blank" title="' + esc(r.t) + '">' + esc(r.p) + '</a>' : '';
@@ -2206,7 +3177,7 @@ function fiche(m){
       return '<tr><th scope="row">' + esc(r[0]) + '</th><td>' + esc(OBS_NUM(r[1])) + src(m, r[2]) + '</td></tr>';
     }).join('') + '</tbody></table>';
   });
-  return h + bodyCredit(m) + '<button class="cta" data-go="' + m.id + '-donnees">' + T('Mission et données') + '<small>' + T('Instruments, trajectoire réelle et données tirées des archives.') + '</small></button>';
+  return h + bodyCredit(m) + '<button class="cta" data-go="' + m.id + '-donnees">' + T('Mission et instruments') + '<small>' + T('Instruments, trajectoire réelle et données tirées des archives.') + '</small></button>';
 }
 function partsHtml(m, sel){
   return '<ul class="parts">' + m.parts.map(function(p){
@@ -2232,9 +3203,9 @@ function missionPage(m){
       '<button class="m-b" id="m-run" aria-pressed="' + !MS.run + '">' + T('Pause') + '</button></div>' +
     '<p class="m-hint">' + T('Glisser pour tourner, molette pour zoomer, cliquer une pièce pour l\'identifier') + '</p>' +
     '</section><aside class="m-panel"><h2 class="sr-only">' + esc(m.name) + '</h2>' +
-    '<div class="ptl" role="tablist" aria-label="' + T('Contenu du panneau') + '">' +
-      ['fiche', 'parts'].map(function(k){ return '<button class="ptab" role="tab" data-ptab="' + k + '" aria-selected="' + (MS.tab === k) + '">' + T(k === 'fiche' ? 'Fiche' : 'Pièces') + '</button>'; }).join('') +
-    '</div><div id="m-body">' + (MS.tab === 'fiche' ? fiche(m) : partsHtml(m, MS.part)) + '</div></aside></div>';
+    '<div class="ptl-row"><div class="ptl" role="tablist" aria-label="' + T('Contenu du panneau') + '">' +
+      ['fiche', 'parts'].map(function(k){ return '<button class="ptab" role="tab" data-ptab="' + k + '" aria-selected="' + (MS.tab === k) + '">' + T(k === 'fiche' ? 'Fiche' : 'Pièces') + (k === 'parts' ? ' <small>' + m.parts.length + '</small>' : '') + '</button>'; }).join('') +
+    '</div><a class="ptab go" href="#' + m.id + '-donnees">' + T('Mission et instruments') + '</a></div><div id="m-body">' + (MS.tab === 'fiche' ? fiche(m) : partsHtml(m, MS.part)) + '</div></aside></div>';
 }
 function mountMission(m){
   var msg = $('m-msg');
@@ -2252,7 +3223,7 @@ function mountMission(m){
   $('m-run').addEventListener('click', function(e){ MS.run = !MS.run; Viewer.run(MS.run); e.currentTarget.setAttribute('aria-pressed', String(!MS.run)); });
 }
 function renderPanel(m){
-  document.querySelectorAll('.m-panel .ptab').forEach(function(b){ b.setAttribute('aria-selected', String(b.getAttribute('data-ptab') === MS.tab)); });
+  document.querySelectorAll('.m-panel [data-ptab]').forEach(function(b){ b.setAttribute('aria-selected', String(b.getAttribute('data-ptab') === MS.tab)); });
   $('m-body').innerHTML = MS.tab === 'fiche' ? fiche(m) : partsHtml(m, MS.part);
 }
 
@@ -2302,29 +3273,22 @@ function realData(m){
     (d.stretch ? (en ? ', contrast stretched between the ' + d.stretch[0] + ' and ' + d.stretch[1] + ' percentiles' : ', contraste étiré entre les centiles ' + OBS_NUM(String(d.stretch[0]).replace('.', ',')) + ' et ' + OBS_NUM(String(d.stretch[1]).replace('.', ','))) : '') + '.<br>' +
     T('Archive') + ' : ' + T(d.archive) + ' · ' + T('collection') + ' <code>' + esc(d.collection) + '</code> · <a href="' + esc(d.href) + '" rel="noopener" target="_blank">' + T('aperçu d\'origine') + '</a> · ' + T('téléchargé le') + ' ' + esc(d.fetched) + '</figcaption></figure>';
 }
-function dataPage(m){
-  var inst = (m.sections || [])[3];   /* section « Instruments » de la fiche */
-  var h = '<div class="sk wide"><p class="crumb"><a href="#' + m.id + '">' + esc(m.short) + '</a></p><h2>' + T('Mission et données') + '</h2>';
-  h += '<h3>' + T('Trajectoire réelle') + '</h3>' + trajSvg(m);
-  h += '<h3>' + T('Une donnée réelle') + '</h3>' + realData(m);
-  if (inst) h += '<h3>' + esc(inst.title) + '</h3><table class="sk-table"><tbody>' + inst.rows.map(function(r){ return '<tr><th scope="row">' + esc(r[0]) + '</th><td>' + esc(OBS_NUM(r[1])) + src(m, r[2]) + '</td></tr>'; }).join('') + '</tbody></table>';
-  return h + '</div>';
-}
 var PAGES = {
-  missions: missionsPage,
   accueil: function(){ return SolarPage.html(); },
 };
 
 function currentRoute(){ var r = (location.hash || '').replace(/^#/, '').replace(/^(en|fr)-/, ''); return r; }
 function route(){
   var r = (location.hash || '').replace(/^#/, '').replace(/^(en|fr)-/, '') || 'accueil';
-  var dm = /^(\w+)-donnees$/.exec(r), m = mission(dm ? dm[1] : r);
+  if (r === 'missions'){ r = window.SSE_LAST || MISSIONS[0].id; history.replaceState(null, '', '#' + ((location.hash.match(/^#((?:en|fr)-)/) || [])[1] || '') + r); }   /* « Missions » ouvre la vue 3D de la dernière sonde vue */
+  var dm = /^(\w+)-donnees(?:-([\w-]+))?$/.exec(r), m = mission(dm ? dm[1] : r);
+  if (m) window.SSE_LAST = m.id;
   var xp = !m && Views.page(r);   /* Flotte, Comparer et leurs sous-pages */
   if (!m && !xp && !PAGES[r]) r = 'accueil';
-  renderHeader(m ? m.id + (dm ? '-donnees' : '') : Views.base(r));
-  $('page').innerHTML = m ? (dm ? dataPage(m) : missionPage(m)) : xp || PAGES[r]();
+  renderHeader(m ? m.id + (dm ? '-donnees' + (dm[2] && /^(mission|orbite)$/.test(dm[2]) ? '-' + dm[2] : '') : '') : Views.base(r));
+  $('page').innerHTML = m ? (dm ? MissionPage.html(m, dm[2] || '', { traj:trajSvg, real:realData }) : missionPage(m)) : xp || PAGES[r]();
   $('page').classList.toggle('is-mission', !!(m && !dm));
-  $('page').classList.toggle('is-xp', !!xp);
+  $('page').classList.toggle('is-xp', !!(xp || dm));
   $('page').classList.toggle('is-solar', !m && !xp && r === 'accueil');
   if (m && !dm) mountMission(m);
   if (!m && r === 'accueil') SolarPage.mount(); else SolarPage.stop();
