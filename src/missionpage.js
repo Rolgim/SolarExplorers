@@ -192,6 +192,14 @@ function orbitSec(m, X){
 function stacCode(c){
   return 'curl "' + STAC_API + '/search?collections=' + c + '&limit=1"\n\n# Python\nfrom pystac_client import Client\ncat = Client.open("' + STAC_API + '")\nitems = cat.search(collections=["' + c + '"], max_items=10).item_collection()\nfor it in items:\n    print(it.id, it.datetime, list(it.assets))';
 }
+/* pourquoi un instrument n'a pas encore d'illustration (manque signalé, règle 2) */
+function noData(m, it){
+  var cs = cols(m, it);
+  if (it.type === 'part') return L('Pas encore d\'illustration : cet instrument mesure des particules ou des champs, et ses produits sont des séries de mesures sans aperçu publié par l\'archive.', 'No illustration yet: this instrument measures particles or fields, and its products are measurement series with no preview published by the archive.');
+  if (it.type === 'radio') return L('Pas encore d\'illustration : la radioscience produit des suivis de fréquence et des modèles de gravité, sans aperçu publié par l\'archive.', 'No illustration yet: radio science produces frequency tracking and gravity models, with no preview published by the archive.');
+  if (cs.length) return L('Pas encore d\'illustration : les produits de cet instrument dans STAC-PLANET sont des tables ou des fichiers binaires, sans aperçu publié par l\'archive.', 'No illustration yet: this instrument\'s products in STAC-PLANET are tables or binary files, with no preview published by the archive.');
+  return L('Pas encore d\'illustration : cet instrument n\'a pas de collection dans STAC-PLANET, et aucune image publique sourcée n\'a été retenue.', 'No illustration yet: this instrument has no collection in STAC-PLANET, and no sourced public image has been selected.');
+}
 function detail(m, it, X){
   var mk = Marks(m), s = '', cs = cols(m, it);
   s += '<div class="inst-head"><div class="inst-h"><h2 class="inst-name">' + esc(it.name) + '</h2><div class="inst-full">' + esc(it.full) + '</div><span class="kind">' + esc(kind(it)) + '</span></div><div>' +
@@ -202,7 +210,12 @@ function detail(m, it, X){
   if (it.bands && it.bands.length) s += '<div class="isec"><h3>' + L('Place dans le spectre', 'Place in the spectrum') + '</h3>' + coverage(m, it.id) + '<div class="cap">' + L('Plages reprises des caractéristiques ci-dessus.', 'Ranges taken from the characteristics above.') + '</div></div>';
   s += Optics.section(m, it, mk, table);
   if (realInst(m) === it) s += '<div class="isec wide"><h3>' + L('Une donnée réelle', 'Real data') + '</h3>' + X.real(m) + '</div>';
-  if (it.real) s += '<div class="isec wide"><h3>' + L('Une donnée réelle', 'Real data') + '</h3>' + X.real(m, it.real) + '</div>';
+  var ik = 'i-' + m.id + '-' + it.id, figs = [];
+  if ((window.DATA_FILES || {})[ik] && realInst(m) !== it) figs.push(X.real(m, { key:ik, altRaw:L('Aperçu d\'un produit ', 'Preview of a product of ') + it.name }));
+  if (it.real) figs.push(X.real(m, it.real));
+  if ((window.DATA_FILES || {})['p-' + ik.slice(2)]) figs.push(X.real(m, { key:'p-' + ik.slice(2), altRaw:L('Image publiée par la NASA à partir des données de ', 'Image released by NASA from data of ') + it.name }));
+  if (figs.length) s += '<div class="isec wide"><h3>' + L('Une donnée réelle', 'Real data') + '</h3>' + figs.join('') + '</div>';
+  else if (realInst(m) !== it) s += '<div class="isec wide"><h3>' + L('Une donnée réelle', 'Real data') + '</h3><p class="note">' + esc(noData(m, it)) + '</p></div>';
   s += '<div class="isec wide"><h3>' + L('Produits de données', 'Data products') + '</h3>';
   if (cs.length){
     s += '<div class="tablewrap"><table class="ctable"><thead><tr><th scope="col">' + L('Collection STAC-PLANET', 'STAC-PLANET collection') + '</th><th scope="col">' + L('Niveau ≈', 'Level ≈') + '</th><th scope="col">' + L('Type', 'Type') + '</th><th scope="col">' + L('Produits', 'Products') + '</th><th scope="col">' + L('Période', 'Period') + '</th></tr></thead><tbody>' +

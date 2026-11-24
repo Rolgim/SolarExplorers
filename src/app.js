@@ -163,7 +163,7 @@ function realData(m, R){
                             : 'Carré central de la bande de ' + d.full_size[0] + ' × ' + d.full_size[1] + ' pixels (' + d.crop_px + ' pixels de côté), ramené à ' + out[0] + ' × ' + out[1])
                       : (en ? 'Whole preview published by the archive (' + d.full_size[0] + ' × ' + d.full_size[1] + ' pixels)' + (out[0] !== d.full_size[0] ? ', scaled to ' + out[0] + ' × ' + out[1] : '')
                             : 'Aperçu entier publié par l\'archive (' + d.full_size[0] + ' × ' + d.full_size[1] + ' pixels)' + (out[0] !== d.full_size[0] ? ', ramené à ' + out[0] + ' × ' + out[1] : ''));
-  return '<figure class="real"><img src="data/' + key + '.jpg" width="' + out[0] + '" height="' + out[1] + '" alt="' + T(R.alt) + ' (' + esc(d.product) + ')">' +
+  return '<figure class="real"><img src="data/' + key + '.jpg" width="' + out[0] + '" height="' + out[1] + '" alt="' + (R.altRaw ? esc(R.altRaw) : T(R.alt)) + ' (' + esc(d.product) + ')">' +
     '<figcaption><strong>' + esc(d.instrument) + ' · ' + esc(d.product) + '</strong><br>' + when(m, d) + how +
     (d.stretch ? (en ? ', contrast stretched between the ' + d.stretch[0] + ' and ' + d.stretch[1] + ' percentiles' : ', contraste étiré entre les centiles ' + OBS_NUM(String(d.stretch[0]).replace('.', ',')) + ' et ' + OBS_NUM(String(d.stretch[1]).replace('.', ','))) : '') + '.<br>' +
     T('Archive') + ' : ' + T(d.archive) + ' · ' + T('collection') + ' <code>' + esc(d.collection) + '</code> · <a href="' + esc(d.href) + '" rel="noopener" target="_blank">' + T('aperçu d\'origine') + '</a> · ' + T('téléchargé le') + ' ' + esc(d.fetched) + '</figcaption></figure>';
@@ -171,7 +171,7 @@ function realData(m, R){
 /* image de presse (bibliothèque d'images de la NASA) : déjà traitée par l'équipe, ce n'est pas un produit d'archive */
 function pressImage(m, R, d){
   var out = d.out_size, en = OBS_LANG === 'en';
-  return '<figure class="real"><img src="data/' + R.key + '.jpg" width="' + out[0] + '" height="' + out[1] + '" alt="' + esc(R.alt) + ' (' + esc(d.product) + ')">' +
+  return '<figure class="real"><img src="data/' + R.key + '.jpg" width="' + out[0] + '" height="' + out[1] + '" alt="' + esc(R.altRaw || R.alt) + ' (' + esc(d.product) + ')">' +
     '<figcaption><strong>' + esc(d.instrument) + ' · ' + esc(d.product) + ' · ' + (en ? '“' : '« ') + esc(d.title) + (en ? '”' : ' »') + '</strong><br>' +
     T('Image publiée le') + ' ' + esc(String(d.datetime).slice(0, 10)) + '. ' + esc(R.what || '') + ' ' +
     (en ? 'Whole image as published (' + d.full_size[0] + ' × ' + d.full_size[1] + ' pixels)' + (out[0] !== d.full_size[0] ? ', scaled to ' + out[0] + ' × ' + out[1] : '') + ', already processed by the team: a press image, not an archive product.'

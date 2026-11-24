@@ -57,6 +57,8 @@ def browse(mid, collection, instrument, archive, max_px=900, stretch=None, roles
         full = im.size
         if crop and im.height > crop * im.width:   # longue bande (spectromètre imageur à balayage) : on garde le milieu, signalé dans la légende
             c = crop * im.width; im = im.crop((0, (im.height - c) // 2, im.width, (im.height - c) // 2 + c))
+        elif crop and im.width > crop * im.height:   # bande couchée (radargramme) : même chose dans l'autre sens
+            c = crop * im.height; im = im.crop(((im.width - c) // 2, 0, (im.width - c) // 2 + c, im.height))
         im = im.convert("L") if im.mode in ("L", "LA", "I", "I;16", "P") and not im.getpalette() else im.convert("RGB")
         w, h = im.size; k = min(1.0, max_px / max(w, h)); out = im.resize((max(1, round(w * k)), max(1, round(h * k))), Image.LANCZOS) if k < 1 else im
         if stretch: out = ImageOps.autocontrast(out, cutoff=stretch)
@@ -84,6 +86,37 @@ def clem_uvvis():
         except RuntimeError as e: print(" ", e)
     raise RuntimeError("aucun aperçu Clementine assez grand")
 def mgn_sar(): browse("mgn", "ode-venus-mgn-rdrs-fmidr", "SAR", "PDS Geosciences Node (NASA), via le catalogue STAC-PLANET du PDSSP", roles=("thumbnail", "overview", "browse"))
+def press(name, nid, instrument):
+    """Image publiée par la NASA (bibliothèque images.nasa.gov) : utilisée quand l'archive ne publie pas d'aperçu, ou ne répond pas à GitHub Actions."""
+    r = S.get("https://images-api.nasa.gov/search", params={"nasa_id": nid}, timeout=120); r.raise_for_status()
+    d = r.json()["collection"]["items"][0]["data"][0]
+    a = S.get("https://images-api.nasa.gov/asset/" + nid, timeout=120); a.raise_for_status()
+    hrefs = [x["href"] for x in a.json()["collection"]["items"]]
+    href = (next((h for h in hrefs if "~medium" in h), None) or next((h for h in hrefs if "~orig" in h and re.search(r"\.jpe?g$", h, re.I)), None)
+            or next(h for h in hrefs if re.search(r"\.(jpe?g|png)$", h, re.I))).replace("http://", "https://")
+    im = Image.open(io.BytesIO(S.get(href, timeout=300).content)); im = im.convert("L") if im.mode in ("L", "I", "I;16") else im.convert("RGB"); full = im.size
+    k = min(1.0, 900 / max(full)); out = im.resize((round(full[0] * k), round(full[1] * k)), Image.LANCZOS) if k < 1 else im
+    out.save(os.path.join(DATA, name + ".jpg"), quality=86, optimize=True)
+    desc = re.sub(r"<[^>]+>", "", d.get("description", ""))
+    meta = {"archive": "NASA Image and Video Library (images.nasa.gov), reprise du Photojournal du JPL", "collection": None, "product": nid,
+            "title": d.get("title"), "datetime": d.get("date_created"), "credit": d.get("secondary_creator") or "NASA",
+            "description": desc[:1500], "href": href, "page": "https://images.nasa.gov/details/" + nid, "instrument": instrument,
+            "full_size": list(full), "out_size": list(out.size), "stretch": None, "press": True, "fetched": datetime.date.today().isoformat()}
+    json.dump(meta, open(os.path.join(DATA, name + ".json"), "w"), indent=1, ensure_ascii=False)
+    print(name, ":", nid, d.get("date_created"), full)
+
+# Images de presse retenues à la main (sonde tools/probe/probe_press.py, 24/11/2026) : la description NASA nomme l'instrument
+# et l'image montre ses données (pas de photo de matériel ni de vue d'artiste). Fichiers data/p-<mission>-<instrument>.*
+PRESS = {"mro:marci": "PIA22329", "mro:mcs": "PIA22737", "mro:rss": "PIA20277", "mex:marsis": "PIA09224",
+         "cassini:iss": "PIA14908", "cassini:vims": "PIA21923", "cassini:cirs": "PIA20020", "cassini:uvis": "PIA21899", "cassini:radar": "PIA21626",
+         "messenger:grns": "PIA19414", "messenger:xrs": "PIA19417", "messenger:mla": "PIA10183", "messenger:mascs": "PIA19418", "messenger:mag": "PIA11404",
+         "ody:grs": "PIA04253", "mgs:mola": "PIA00957"}
+def press_images():
+    for key, nid in PRESS.items():
+        m, i = key.split(":")
+        try: press("p-" + m + "-" + i, nid, NAMES.get(key, i.upper()))
+        except Exception as e: print("  ", key, nid, repr(e)[:200])
+
 def mro_hirise():
     """MRO, HiRISE : les serveurs de l'université d'Arizona refusent GitHub Actions (sonde du 23/11/2026). Voie de repli vérifiée le
     24/11/2026 (tools/probe/probe_hirise_routes.py) : la bibliothèque d'images de la NASA (images.nasa.gov), qui republie les images
@@ -117,15 +150,14 @@ def archive_of(href):
 # Clé « mission:instrument » -> collections essayées dans l'ordre ; options de browse() en plus. Fichiers data/i-<mission>-<instrument>.*
 INST_PREVIEWS = {
     "mro:hirise": (("ode-mars-mro-hirise-rdrv11", "ode-mars-mro-hirise-edr"), {"min_px": 300}),
-    "mro:crism": (("ode-mars-mro-crism-mtrdr", "ode-mars-mro-crism-trdr", "ode-mars-mro-crism-edr"), {"min_px": 200}),
-    "mro:sharad": (("ode-mars-mro-sharad-rdr",), {"crop": 2}),
+    "mro:crism": (("ode-mars-mro-crism-mtrdr", "ode-mars-mro-crism-trdr", "ode-mars-mro-crism-edr"), {"min_px": 200, "stretch": 0.5}),
+    "mro:sharad": (("ode-mars-mro-sharad-rdr",), {"crop": 3}),
     "mex:omega": (("ode-mars-mex-omega-ddrgm",), {}),
-    "mex:marsis": (("ode-mars-mex-marsis-radarch",), {"crop": 2}),
-    "mex:vmc": (("ode-mars-mex-vmc-edr",), {"min_px": 200}),
+    "mex:marsis": (("ode-mars-mex-marsis-radarch",), {"crop": 2, "stretch": 0.5}),
+    "mex:vmc": (("ode-mars-mex-vmc-edr",), {"min_px": 200, "stretch": 0.5}),
     "lro:lola": (("ode-moon-lro-lola-rdr4",), {}),
     "lro:diviner": (("ode-moon-lro-dlre-gdr-l2",), {}),
-    "lro:lamp": (("ode-moon-lro-lamp-edr",), {"min_px": 200}),
-    "lro:minirf": (("ode-moon-lro-mrflro-bsddr4",), {"crop": 3}),
+    "lro:minirf": (("ode-moon-lro-mrflro-moscdr", "ode-moon-lro-mrflro-mosddr", "ode-moon-lro-mrflro-bsddr4"), {"crop": 3, "min_side": 120}),
     "mgs:mola": (("ode-mars-mgs-mola-pedr", "ode-mars-mgs-mola-megdr", "ode-mars-mgs-mola-toponat"), {"skip_href": r"marsis"}),
     "mgs:tes": (("ode-mars-mgs-tes-timap",), {}),
     "clem:nir": (("ode-moon-clem-nir-mdim",), {"alt": (r"/small/", "/large/")}),
@@ -151,7 +183,10 @@ def inst_previews(only=None):
             try:
                 browse(m, c, NAMES.get(key, i.upper()), None, roles=None, name="i-" + m + "-" + i, skip=None, need_geom=False, **kw)
                 meta = json.load(open(os.path.join(DATA, "i-" + m + "-" + i + ".json")))
-                if sk and re.search(sk, meta["href"], re.I): print("  écarté (", sk, ")", meta["href"]); continue
+                if sk and re.search(sk, meta["href"], re.I):
+                    print("  écarté (", sk, ")", meta["href"])
+                    for ext in (".jpg", ".json"): os.remove(os.path.join(DATA, "i-" + m + "-" + i + ext))
+                    continue
                 meta["inst"] = key; json.dump(meta, open(os.path.join(DATA, "i-" + m + "-" + i + ".json"), "w"), indent=1, ensure_ascii=False)
                 done = True; break
             except Exception as e: print("  ", key, c, repr(e)[:200])
@@ -193,7 +228,7 @@ def body_textures():
     if bad: raise RuntimeError("textures non récupérées : " + ", ".join(bad))
 
 RECIPES = {"mro_ctx": mro_ctx, "mro_hirise": mro_hirise, "mex_hrsc": mex_hrsc, "lro_lroc": lro_lroc, "messenger_mdis": messenger_mdis, "cassini_vims": cassini_vims,
-           "ody_themis": ody_themis, "mgs_moc": mgs_moc, "tgo_cassis": tgo_cassis, "clem_uvvis": clem_uvvis, "mgn_sar": mgn_sar, "vo_vis": vo_vis, "sln_tc": sln_tc, "ch1_m3": ch1_m3, "kplo_shadowcam": kplo_shadowcam, "instruments": inst_previews, "textures": body_textures}
+           "ody_themis": ody_themis, "mgs_moc": mgs_moc, "tgo_cassis": tgo_cassis, "clem_uvvis": clem_uvvis, "mgn_sar": mgn_sar, "vo_vis": vo_vis, "sln_tc": sln_tc, "ch1_m3": ch1_m3, "kplo_shadowcam": kplo_shadowcam, "instruments": inst_previews, "presse": press_images, "textures": body_textures}
 if __name__ == "__main__":
     want = sys.argv[1:] or list(RECIPES)
     bad = 0
