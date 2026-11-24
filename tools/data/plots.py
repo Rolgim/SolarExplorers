@@ -18,6 +18,10 @@ S = None   # session requests, fournie par fetch_data.py
 INK, MID = "#14171A", "#3A4147"
 plt.rcParams.update({"font.family": "DejaVu Sans", "font.size": 10, "axes.edgecolor": MID, "axes.labelcolor": INK, "xtick.color": MID, "ytick.color": MID})
 
+def stac_link(collection, iid):
+    """Lien vers l'item STAC ; un identifiant qui contient « / » n'a pas d'adresse d'item valable (404, même encodé) : on passe par /search."""
+    if "/" in iid: return STAC + "/search?collections=" + quote(collection) + "&ids=" + quote(iid, safe="")
+    return STAC + "/collections/" + collection + "/items/" + quote(iid, safe="")
 def items(collection, n=60, when=None):
     q = {"collections": [collection], "limit": n, "sortby": [{"field": "properties.datetime", "direction": "desc"}]}
     if when: q["datetime"] = when
@@ -78,7 +82,7 @@ def save(name, fig, meta):
     print(name, ":", meta["product"], im.size)
 def base(f, collection, href, instrument, archive):
     return {"archive": archive + ", via le catalogue STAC-PLANET du PDSSP", "collection": collection, "product": f["id"], "datetime": f["properties"].get("datetime"),
-            "href": href, "stac": STAC + "/collections/" + collection + "/items/" + quote(f["id"], safe=""), "instrument": instrument}
+            "href": href, "stac": stac_link(collection, f["id"]), "instrument": instrument}
 
 def gravity_map(name, collection, instrument, archive, body, rx=r"anom", avoid=r"err|sig|unc"):
     """Carte d'anomalie de gravité (image PDS3, milligals), d'après un champ publié par l'équipe de radioscience."""

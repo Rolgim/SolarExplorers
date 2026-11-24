@@ -11,6 +11,10 @@ DATA = os.path.join(ROOT, "data")
 STAC = "https://stac.stacplanet.pdssp.eu"
 S = requests.Session(); S.headers["User-Agent"] = "explorateurs-data/1.0 (+https://github.com/Rolgim/SolarExplorers)"
 
+def stac_link(collection, iid):
+    """Lien vers l'item STAC ; un identifiant qui contient « / » n'a pas d'adresse d'item valable (404, même encodé) : on passe par /search."""
+    if "/" in iid: return STAC + "/search?collections=" + quote(collection) + "&ids=" + quote(iid, safe="")
+    return STAC + "/collections/" + collection + "/items/" + quote(iid, safe="")
 def stac_items(collection, n=10):
     r = S.post(STAC + "/search", json={"collections": [collection], "limit": n,
                "sortby": [{"field": "properties.datetime", "direction": "desc"}]}, timeout=120)
@@ -31,7 +35,7 @@ def mro_ctx():
         crop.save(os.path.join(DATA, "mro-ctx.jpg"), quality=84, optimize=True)
         p = f["properties"]
         meta = {"archive": "PDS Imaging Node (NASA), via le catalogue STAC-PLANET du PDSSP", "collection": f.get("collection"),
-                "product": f["id"], "datetime": p.get("datetime"), "href": ov[0]["href"], "stac": STAC + "/collections/" + f.get("collection", "") + "/items/" + quote(f["id"], safe=""),
+                "product": f["id"], "datetime": p.get("datetime"), "href": ov[0]["href"], "stac": stac_link(f.get("collection", ""), f["id"]),
                 "instrument": "CTX", "full_size": [w, h], "crop_px": s, "out_px": 900, "stretch": [0.5, 99.5],
                 "footprint": f.get("geometry"), "center": [p.get("proj:centroid")] if p.get("proj:centroid") else None,
                 "fetched": datetime.date.today().isoformat()}
@@ -67,7 +71,7 @@ def browse(mid, collection, instrument, archive, max_px=900, stretch=None, roles
         if archive is None: archive = archive_of(href)
         p = f["properties"]
         meta = {"archive": archive, "collection": f.get("collection"), "product": f["id"], "datetime": p.get("datetime"), "href": href,
-                "stac": STAC + "/collections/" + f.get("collection", "") + "/items/" + quote(f["id"], safe=""), "instrument": instrument,
+                "stac": stac_link(f.get("collection", ""), f["id"]), "instrument": instrument,
                 "full_size": list(full), "crop": list(im.size) if im.size != full else None, "out_size": list(out.size), "stretch": [stretch, 100 - stretch] if stretch else None,
                 "footprint": f.get("geometry"), "fetched": datetime.date.today().isoformat()}
         json.dump(meta, open(os.path.join(DATA, (name or mid + "-img") + ".json"), "w"), indent=1, ensure_ascii=False)
