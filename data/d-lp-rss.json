@@ -1,0 +1,18 @@
+{
+ "archive": "PDS Geosciences Node (NASA), via le catalogue STAC-PLANET du PDSSP",
+ "collection": "ode-moon-lp-rss-grajpl",
+ "product": "jbl070d1_ascii",
+ "datetime": "2011-12-12T13:18:29Z",
+ "href": "https://pds-geosciences.wustl.edu/lunar/lp-l-rss-5-gravity-v1/lp_1001/ascii/jbl070d1.dat",
+ "stac": "https://stac.stacplanet.pdssp.eu/collections/ode-moon-lp-rss-grajpl/items/jbl070d1_ascii",
+ "instrument": "RSS",
+ "unit": "mGal",
+ "how_fr": "Carte tracée par ce site à partir de la grille ASCII de l'archive : anomalie de Bouguer (gravité corrigée du relief) en milligals, d'après le suivi radio de Lunar Prospector ; échelle coupée au centile 99.",
+ "how_en": "Map drawn by this site from the archive's ASCII grid: Bouguer anomaly (gravity corrected for topography) in milligals, from Lunar Prospector radio tracking; scale clipped at the 99th percentile.",
+ "out_size": [
+  902,
+  484
+ ],
+ "plot": true,
+ "fetched": "2026-11-24"
+}

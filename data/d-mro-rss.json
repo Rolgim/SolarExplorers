@@ -1,0 +1,18 @@
+{
+ "archive": "PDS Geosciences Node (NASA), via le catalogue STAC-PLANET du PDSSP",
+ "collection": "ode-mars-mro-rss-rsdmap",
+ "product": "JGMRO_120D_ANOM_095.IMG",
+ "datetime": "2010-12-30T05:00:00Z",
+ "href": "https://pds-geosciences.wustl.edu/mro/mro-m-rss-5-sdp-v1/mrors_1xxx/data/rsdmap/jgmro_120d_anom_095.img",
+ "stac": "https://stac.stacplanet.pdssp.eu/collections/ode-mars-mro-rss-rsdmap/items/JGMRO_120D_ANOM_095.IMG",
+ "instrument": "Gravité (MRO)",
+ "unit": "mGal",
+ "how_fr": "Carte tracée par ce site à partir du fichier image de l'archive : anomalie de gravité en milligals (rouge : excès de masse, bleu : déficit), échelle de couleur coupée au centile 99. Champ de gravité de Mars calculé par le JPL avec le suivi radio de MRO.",
+ "how_en": "Map drawn by this site from the archive's image file: gravity anomaly in milligals (red: mass excess, blue: deficit), colour scale clipped at the 99th percentile. Mars gravity field computed by JPL from MRO radio tracking.",
+ "out_size": [
+  902,
+  506
+ ],
+ "plot": true,
+ "fetched": "2026-11-24"
+}

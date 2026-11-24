@@ -1,0 +1,19 @@
+{
+ "archive": "PDS Geosciences Node (NASA), via le catalogue STAC-PLANET du PDSSP",
+ "collection": "ode-moon-clem-lidar-topo",
+ "product": "r300_346",
+ "datetime": "1994-04-28T08:02:21.566000Z",
+ "href": "https://pds-geosciences.wustl.edu/lunar/clem1-l-lidar-3-topo-v1/cl_9xxx/data/r300_346.tab",
+ "stac": "https://stac.stacplanet.pdssp.eu/collections/ode-moon-clem-lidar-topo/items/r300_346",
+ "instrument": "LIDAR",
+ "ylab_en": "radius − 1,737.4 km (km)",
+ "column": "RADIUS OF LUNAR SPHEROID",
+ "how_fr": "Profil tracé par ce site à partir de la table de l'archive (colonne « RADIUS OF LUNAR SPHEROID ») : un point par tir laser valide, le long d'une révolution. Les valeurs hors de 1 700 à 1 760 km sont écartées comme échos parasites.",
+ "how_en": "Profile drawn by this site from the archive's table (column “RADIUS OF LUNAR SPHEROID”): one point per valid laser shot, along one revolution. Values outside 1,700 to 1,760 km are discarded as spurious echoes.",
+ "out_size": [
+  902,
+  396
+ ],
+ "plot": true,
+ "fetched": "2026-11-24"
+}

@@ -1,0 +1,18 @@
+{
+ "archive": "PDS Geosciences Node (NASA), via le catalogue STAC-PLANET du PDSSP",
+ "collection": "ode-moon-grail-lgrs-rsdmap",
+ "product": "jggrx_0900c_anom_l800",
+ "datetime": "2012-07-23T18:42:00Z",
+ "href": "https://pds-geosciences.wustl.edu/grail/grail-l-lgrs-5-rdr-v1/grail_1001/rsdmap/jggrx_0900c_anom_l800.img",
+ "stac": "https://stac.stacplanet.pdssp.eu/collections/ode-moon-grail-lgrs-rsdmap/items/jggrx_0900c_anom_l800",
+ "instrument": "LGRS",
+ "unit": "mGal",
+ "how_fr": "Carte tracée par ce site à partir du fichier image de l'archive : anomalie de gravité en milligals (rouge : excès de masse, bleu : déficit), échelle de couleur coupée au centile 99. Champ de gravité de la Lune calculé à partir des mesures de distance entre les deux sondes GRAIL.",
+ "how_en": "Map drawn by this site from the archive's image file: gravity anomaly in milligals (red: mass excess, blue: deficit), colour scale clipped at the 99th percentile. Lunar gravity field computed from the distance measurements between the two GRAIL spacecraft.",
+ "out_size": [
+  902,
+  506
+ ],
+ "plot": true,
+ "fetched": "2026-11-24"
+}

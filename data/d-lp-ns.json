@@ -1,0 +1,19 @@
+{
+ "archive": "PDS Geosciences Node (NASA), via le catalogue STAC-PLANET du PDSSP",
+ "collection": "ode-moon-lp-ns-rdr",
+ "product": "epitherm_neutron_low32sec",
+ "datetime": "1999-04-24T00:00:00Z",
+ "href": "https://pds-geosciences.wustl.edu/lunar/lp-l-grs-3-rdr-v1/lp_2xxx/ns/epitherm_neutron_low32sec.dat",
+ "stac": "https://stac.stacplanet.pdssp.eu/collections/ode-moon-lp-ns-rdr/items/epitherm_neutron_low32sec",
+ "instrument": "NS",
+ "xlab_en": "hours since start of file (32 s per point)",
+ "ylab_en": "epithermal neutrons / 32 s",
+ "how_fr": "Série tracée par ce site à partir du fichier binaire de l'archive : les 12 premières heures de comptage (442572 échantillons au total). Le comptage varie au fil de chaque orbite de 2 heures, selon la région survolée.",
+ "how_en": "Series drawn by this site from the archive's binary file: the first 12 hours of counts (442572 samples in all). The count varies along each 2-hour orbit, with the region overflown.",
+ "out_size": [
+  902,
+  396
+ ],
+ "plot": true,
+ "fetched": "2026-11-24"
+}
