@@ -19,7 +19,7 @@ var RSUN = 695700, AU = 149597870.7;
 var HZ = { '399':'Terre', '499':'Mars', '599':'Jupiter', '699':'Saturne', '799':'Uranus', '899':'Neptune', '999':'Pluton' };
 var SPEED = [[1/24, 'une heure par seconde'], [1, 'un jour par seconde'], [7, 'une semaine par seconde'], [30, 'un mois par seconde'], [365, 'un an par seconde']];
 var SCOL = ['#FF6B9A', '#4DD0E1', '#B39DDB', '#FFB74D', '#81C784'];   /* une couleur par sonde, dans l'ordre du registre (aucune agence mise en avant) */
-var DAY = 864e5, RMIN = 1e-5, RMAX = 60, BGAU = 6, BGMAX = 2e5;
+var DAY = 864e5, RMIN = 1e-5, RMAX = 60;
 var S = { t:null, speed:7, run:false, raf:0, last:0, focus:'', off:[0, 0], c:[0, 0], R:1.75, goal:null, dirty:true, auto:false, hits:[], ptr:{} };
 var D = null, T0 = 0, T1 = 0, TF = 0;
 function T(s){ return OBS_T(s); }
@@ -252,11 +252,6 @@ function render(){
   var plab = '';
   D.planets.forEach(function(p){ var q = pos[p.name]; if (!q) return; var x = X(q[0]), y = Y(q[1]), pr = Math.max(RAD[p.name] / AU / k, 4.5);
     if (Math.hypot(x - sx, y - sy) < 16 + sr || !vis(x, y, 40)) return; plab += label(x + pr * 0.7 + 5, y - pr * 0.7 - 4, T(p.name)); });
-  /* fond de ciel accroché au Système solaire : centré sur le Soleil, BGAU unités astronomiques de large, il se déplace et grandit avec la carte ;
-     il ne rétrécit pas sous la taille de la vue (au-delà de Mars, il reste à cette taille) ; au-delà de BGMAX pixels il n'en reste qu'une teinte */
-  var bw = Math.min(Math.max(BGAU / k, w, h / 0.625), BGMAX), bh = bw * 0.625, wrap = $('so-wrap');
-  wrap.style.backgroundSize = 'auto, ' + bw.toFixed(0) + 'px ' + bh.toFixed(0) + 'px';
-  wrap.style.backgroundPosition = '0 0, ' + (sx - bw / 2).toFixed(0) + 'px ' + (sy - bh / 2).toFixed(0) + 'px';
   svg.innerHTML = '<g>' + orb + '</g><g>' + body + '</g><g>' + top + '</g><g>' + probes + '</g><g class="so-labs">' + plab + '</g>' + scale(h, k);
   S.hits = hits;
   ui();
@@ -283,13 +278,10 @@ function ui(){
   $('so-cap').textContent = T('Vue de dessus du Système solaire au') + ' ' + fmt(t) + ', ' + T('centrée sur') + ' ' + fn + '. ' + cap.join(' ; ') + '.';
 }
 function note(){
-  var bg = (window.DATA_FILES || {})['solar-bg'] || {};
   $('so-note').innerHTML = esc(T('Positions : JPL Horizons, vecteurs héliocentriques projetés sur le plan de l\'écliptique J2000, téléchargés le') + ' ' + fmt(TF) + (T1 > TF + 1 ? ' ; ' + T('au-delà, prévision Horizons jusqu\'au') + ' ' + fmt(T1) : '') + '. ' +
     T('Distances à l\'échelle. Soleil, planètes et Lune à l\'échelle dès qu\'ils dépassent quelques pixels ; en deçà, et pour les autres satellites et les sondes, des points de taille fixe.') + ' ' +
     T('Satellites placés à partir des éléments orbitaux Horizons (tous les 180 jours, 30 pour les plus rapides), interpolés entre deux dates : position approchée (≈, quelques degrés sur l\'orbite au plus).') + ' ' +
-    T('Une sonde en orbite est marquée de loin par un anneau de sa couleur. En zoomant sur son corps, son orbite réelle apparaît (Horizons, centrée sur le corps, une fenêtre par an à partir du 15 janvier ; en tirets, la partie cachée derrière le corps) : entre deux fenêtres, la sonde y est placée en répétant ce tour (≈, la phase dérive). En lecture rapide, seule l\'orbite est tracée.') + ' ' +
-    T('Fond : le ciel vers le pôle sud de l\'écliptique, d\'après la carte du ciel de Gaia (reprojetée), accroché au Soleil : il suit la carte quand on la déplace ou qu\'on zoome ; décor, sans rapport d\'échelle avec les orbites.')) +
-    (bg.url ? ' <a class="src" href="' + esc(bg.url) + '" rel="noopener" target="_blank">ESA/Gaia/DPAC, A. Moitinho</a> <a class="src" href="' + esc(bg.licence_url) + '" rel="noopener" target="_blank">CC BY-SA 3.0 IGO</a>' : '') +
+    T('Une sonde en orbite est marquée de loin par un anneau de sa couleur. En zoomant sur son corps, son orbite réelle apparaît (Horizons, centrée sur le corps, une fenêtre par an à partir du 15 janvier ; en tirets, la partie cachée derrière le corps) : entre deux fenêtres, la sonde y est placée en répétant ce tour (≈, la phase dérive). En lecture rapide, seule l\'orbite est tracée.') ) +
     ' <a class="src" href="https://ssd.jpl.nasa.gov/horizons/" rel="noopener" target="_blank">JPL Horizons</a> <a class="src" href="https://nssdc.gsfc.nasa.gov/planetary/factsheet/" rel="noopener" target="_blank">NASA NSSDCA</a>';
 }
 
