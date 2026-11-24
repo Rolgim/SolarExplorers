@@ -99,14 +99,15 @@ def grail_lgrs(): gravity_map("d-grail-lgrs", "ode-moon-grail-lgrs-rsdmap", "LGR
 def sln_lmag():
     """Carte de l'anomalie magnétique lunaire à 30 km d'altitude (SELENE LMAG) : bande « F » (intensité totale), en nT."""
     c = "ode-moon-sln-lmag-mamap"; f = pick(c); lab = label(get(asset(f, r"\.lbl$")).decode("latin-1")); img_u = asset(f, r"\.img$")
-    a = pds3_image(lab, get(img_u)); F = a[3]
+    raw = get(img_u); lab["IMAGE.SAMPLE_TYPE"] = "MSB_UNSIGNED_INTEGER"   # octets lus sans signe : l'intensité F est positive, la lecture signée la replie au-delà de 2,54 nT
+    a = pds3_image(lab, raw); F = a[3]
     fig, ax = plt.subplots(figsize=(8.2, 4.4))
     im = ax.imshow(F, cmap="magma", extent=[0, 360, -89.5, 89.5], aspect="auto", vmin=0, vmax=np.nanpercentile(F, 99.5))
     ax.set_xlabel("longitude (°E)"); ax.set_ylabel("latitude (°)"); cb = fig.colorbar(im, ax=ax, fraction=0.04, pad=0.02); cb.set_label("nT")
     ax.set_title(f["id"] + " (F)", fontsize=9, color=MID); fig.tight_layout()
     save("d-sln-lmag", fig, dict(base(f, c, img_u, "LMAG", "JAXA DARTS (archive de SELENE)"), unit="nT",
-         how_fr="Carte tracée par ce site à partir du fichier image de l'archive (4e des 9 bandes : intensité totale F du champ magnétique d'origine crustale, à 30 km d'altitude, en nanoteslas).",
-         how_en="Map drawn by this site from the archive's image file (4th of 9 bands: total intensity F of the crustal magnetic field, at 30 km altitude, in nanotesla)."))
+         how_fr="Carte tracée par ce site à partir du fichier image de l'archive (4e des 9 bandes : intensité totale F du champ magnétique d'origine crustale, à 30 km d'altitude, en nanoteslas). Octets lus sans signe (l'étiquette dit « entier signé », mais une intensité est positive) ; en blanc : pas de valeur.",
+         how_en="Map drawn by this site from the archive's image file (4th of 9 bands: total intensity F of the crustal magnetic field, at 30 km altitude, in nanotesla). Bytes read as unsigned (the label says “signed integer”, but an intensity is positive); white: no value."))
 
 def lp_ns():
     """Lunar Prospector, spectromètre à neutrons : comptage des neutrons épithermiques, échantillons de 32 s (phase d'orbite basse)."""
@@ -114,11 +115,11 @@ def lp_ns():
     n = struct.unpack("<I", raw[:4])[0]; a = np.frombuffer(raw, dtype="<f4", count=n, offset=4)
     k = 1350   # 1 350 échantillons de 32 s = 12 heures
     fig, ax = plt.subplots(figsize=(8.2, 3.6)); t = np.arange(k) * 32 / 3600
-    ax.plot(t, a[:k], lw=0.8, color="#6B55C9"); ax.set_xlabel("heures depuis le début du fichier / hours since file start (32 s)"); ax.set_ylabel("neutrons épithermiques\nepithermal neutrons / 32 s")
+    ax.plot(t, a[:k], lw=0.6, color="#B9B0E8"); w = 10; ax.plot(t[w//2:k - w//2 + 1], np.convolve(a[:k], np.ones(w) / w, "valid"), lw=1.4, color="#6B55C9"); ax.set_xlabel("heures depuis le début du fichier / hours since file start (32 s)"); ax.set_ylabel("neutrons épithermiques\nepithermal neutrons / 32 s")
     ax.set_title(f["id"], fontsize=9, color=MID); fig.tight_layout()
     save("d-lp-ns", fig, dict(base(f, c, u, "NS", "PDS Geosciences Node (NASA)"), xlab_en="hours since start of file (32 s per point)", ylab_en="epithermal neutrons / 32 s",
-         how_fr="Série tracée par ce site à partir du fichier binaire de l'archive : les 12 premières heures de comptage (" + str(n) + " échantillons au total). Le comptage varie au fil de chaque orbite de 2 heures, selon la région survolée.",
-         how_en="Series drawn by this site from the archive's binary file: the first 12 hours of counts (" + str(n) + " samples in all). The count varies along each 2-hour orbit, with the region overflown."))
+         how_fr="Série tracée par ce site à partir du fichier binaire de l'archive : les 12 premières heures de comptage (" + str(n) + " échantillons au total). En trait foncé : moyenne glissante sur 10 points (5 min 20 s).",
+         how_en="Series drawn by this site from the archive's binary file: the first 12 hours of counts (" + str(n) + " samples in all). Dark line: running mean over 10 points (5 min 20 s)."))
 
 def ascii_table(lab, txt, key="TABLE"):
     """Colonnes d'une table ASCII PDS3 d'après START_BYTE et BYTES de chaque COLUMN."""
@@ -146,7 +147,7 @@ def clem_lidar():
     T, rows = ascii_table(lab, get(u).decode("latin-1"))
     print("  colonnes lidar :", list(T)[:40])
     lat = next(v for k, v in T.items() if "LATITUDE" in k)[0]; rev = next(v for k, v in T.items() if "REVOLUTION" in k)[0]
-    rk = next(k for k in T if "RADIUS" in k); rad = T[rk][0]
+    rk = "FIRST RADIUS INSIDE WINDOW" if "FIRST RADIUS INSIDE WINDOW" in T else next(k for k in T if "RADIUS" in k and "SPHEROID" not in k); rad = T[rk][0]
     ok = np.isfinite(rad) & (rad > 1.70e6) & (rad < 1.76e6)
     best = max(set(rev[ok]), key=lambda r: int(np.sum(ok & (rev == r))))
     sel = ok & (rev == best)
@@ -154,8 +155,8 @@ def clem_lidar():
     ax.plot(lat[sel], (rad[sel] - 1737400) / 1000, ".", ms=2.5, color="#0F8A7A")
     ax.set_xlabel("latitude (°)"); ax.set_ylabel("rayon / radius − 1737.4 km (km)"); ax.set_title(f"{f['id']}, rev. {int(best)} ({int(sel.sum())})", fontsize=9, color=MID); fig.tight_layout()
     save("d-clem-lidar", fig, dict(base(f, c, u, "LIDAR", "PDS Geosciences Node (NASA)"), ylab_en="radius − 1,737.4 km (km)", column=rk,
-         how_fr="Profil tracé par ce site à partir de la table de l'archive (colonne « " + rk + " ») : un point par tir laser valide, le long d'une révolution. Les valeurs hors de 1 700 à 1 760 km sont écartées comme échos parasites.",
-         how_en="Profile drawn by this site from the archive's table (column “" + rk + "”): one point per valid laser shot, along one revolution. Values outside 1,700 to 1,760 km are discarded as spurious echoes."))
+         how_fr="Profil tracé par ce site à partir de la table de l'archive (colonne « " + rk + " ») : un point par tir laser valide, le long d'une révolution. Les valeurs hors de 1 700 à 1 760 km sont écartées comme échos parasites ; l'étiquette prévient que le premier écho n'est pas toujours le bon.",
+         how_en="Profile drawn by this site from the archive's table (column “" + rk + "”): one point per valid laser shot, along one revolution. Values outside 1,700 to 1,760 km are discarded as spurious echoes; the label warns that the first echo is not always the right one."))
 
 def lp_rss():
     """Lunar Prospector : grille d'anomalies de Bouguer (JPL), 1° × 1°."""
@@ -165,7 +166,7 @@ def lp_rss():
     if a.size != 64800: raise RuntimeError("grille LP inattendue : %d valeurs" % a.size)
     g = a.reshape(180, 360); v = np.nanpercentile(np.abs(g), 99)
     fig, ax = plt.subplots(figsize=(8.2, 4.4))
-    im = ax.imshow(g, cmap="RdBu_r", vmin=-v, vmax=v, extent=[0, 360, -90, 90], aspect="auto", origin=os.environ.get("LP_ORIGIN", "upper"))
+    im = ax.imshow(g, cmap="RdBu_r", vmin=-v, vmax=v, extent=[-180, 180, -90, 90], aspect="auto", origin="upper")
     ax.set_xlabel("longitude (°E)"); ax.set_ylabel("latitude (°)"); cb = fig.colorbar(im, ax=ax, fraction=0.04, pad=0.02); cb.set_label("mGal")
     ax.set_title(f["id"], fontsize=9, color=MID); fig.tight_layout()
     save("d-lp-rss", fig, dict(base(f, c, u, "RSS", "PDS Geosciences Node (NASA)"), unit="mGal",
@@ -182,7 +183,7 @@ def sln_upi():
          how_fr="Image affichée par ce site à partir du fichier de l'archive (" + lab.get("DATA_SET_NAME", "") + "), contraste étiré entre les centiles 1 et 99,5.",
          how_en="Image displayed by this site from the archive's file (" + lab.get("DATA_SET_NAME", "") + "), contrast stretched between the 1st and 99.5th percentiles."))
 
-RECIPES = {"mro:rss": mro_rss, "grail:lgrs": grail_lgrs, "sln:lmag": sln_lmag, "lp:ns": lp_ns, "clem:lidar": clem_lidar, "lp:rss": lp_rss, "sln:upi": sln_upi}
+RECIPES = {"mro:rss": mro_rss, "grail:lgrs": grail_lgrs, "sln:lmag": sln_lmag, "lp:ns": lp_ns, "clem:lidar": clem_lidar, "lp:rss": lp_rss}   # sln:upi retiré : l'image TVIS la plus récente n'est que du bruit
 def run(session):
     global S; S = session; bad = []
     for k, fn in RECIPES.items():
