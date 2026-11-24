@@ -74,9 +74,9 @@ function missionPage(m){
   if (MS.mid !== m.id){ MS.part = null; MS.mid = m.id; }   /* la pièce choisie ne passe pas d'une sonde à l'autre */
   if (!m.file) MS.view = 'orbit';   /* sans maquette, la vue d'orbite montre mieux la sonde (un point) */
   return '<div class="mission"><section id="stage" class="m-stage" aria-label="' + T('Vue 3D de la sonde') + '">' +
-    '<div class="m-hud"><div class="m-name">' + esc(m.name) + '</div><div class="m-sub">' + esc(m.agency) + ' · ' + esc(m.targets.join(', ')) + '</div></div>' +
+    '<div class="m-hud"><div class="m-name">' + esc(m.name) + '</div><div class="m-sub">' + esc(m.agency) + ' · ' + esc(m.targets.join(', ')) + '</div>' +
+      (m.body ? '<p class="m-body-note" id="m-body-note" hidden>' + T(m.body.name) + (OBS_LANG === 'en' ? ': ' : ' : ') + T('orbite en schéma de principe (tailles, altitude, inclinaison et vitesse non respectées)') + (m.file ? '' : ' · ' + T('pas de maquette libre de droits : la sonde est un point bleu')) + '</p>' : '') + '</div>' +
     '<p class="m-msg" id="m-msg" hidden></p>' +
-    (m.body ? '<p class="m-body-note" id="m-body-note" hidden>' + T(m.body.name) + ' : ' + T('orbite en schéma de principe (tailles, altitude, inclinaison et vitesse non respectées)') + (m.file ? '' : ' · ' + T('pas de maquette libre de droits : la sonde est un point bleu')) + '</p>' : '') +
     '<div class="m-tools" role="toolbar" aria-label="' + T('Affichage') + '">' +
       (m.file ? '<label class="m-ex" title="' + T('Écarter les pièces') + '">' + ICO.ex + '<span class="lbl">' + T('Éclater') + '</span><input id="m-explode" type="range" min="0" max="100" value="' + Math.round(MS.explode*100) + '" aria-label="' + T('Écarter les pièces') + '"></label>' : '') +
       '<button class="m-b" id="m-reset" title="' + T('Recadrer') + '">' + ICO.reset + '<span class="lbl">' + T('Recadrer') + '</span></button>' +

@@ -40,6 +40,7 @@
 .m-hud{ position:absolute; left:var(--gl); top:16px; right:var(--gr); pointer-events:none; }
 .m-name{ font-weight:800; font-stretch:75%; font-size:clamp(24px, 3.4vw, 40px); line-height:1; text-shadow:0 2px 14px #000; }
 .m-sub{ color:#C9CED2; font-size:13px; margin-top:7px; text-shadow:0 1px 8px #000; }
+.m-body-note{ margin:5px 0 0; font-size:12px; color:#AEB5BA; text-shadow:0 1px 8px #000; max-width:520px; }
 .m-msg{ position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); margin:0; background:#14171A; color:#fff; padding:8px 12px; font-size:13px; max-width:80%; }
 .m-tools{ position:absolute; left:0; right:0; margin:0 auto; width:max-content; bottom:calc(14px + env(safe-area-inset-bottom, 0px)); display:flex; align-items:stretch; background:var(--paper); color:var(--ink); max-width:calc(100% - 24px); }
 .m-ex{ display:flex; align-items:center; gap:9px; padding:0 13px; height:38px; font-size:13px; font-weight:600; color:var(--ink); }
@@ -86,8 +87,6 @@ figure{ margin:0 0 10px; } figcaption{ font-size:12.5px; line-height:1.45; color
   .m-hud{ top:10px; }
   .m-panel{ width:auto; border-left:0; }
 }
-.m-body-note{ position:absolute; left:var(--gl); bottom:calc(96px + env(safe-area-inset-bottom, 0px)); margin:0; max-width:46%; text-align:left; font-size:12px; color:#E3E6E8; background:rgba(0,0,0,.72); padding:2px 8px; }
-@media (max-width: 720px){ .m-body-note{ bottom:54px; left:var(--gl); right:var(--gr); max-width:none; text-align:left; font-size:11px; } }
 
 /* ---------- accueil « Système solaire » : mise en page du « Ciel » d'Observatories (.home…, inst.css) ---------- */
 #page.is-solar{ padding:0; }
