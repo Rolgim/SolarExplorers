@@ -156,6 +156,7 @@ function realData(m, R){
   var key = R && R.key, d = key && (window.DATA_FILES || {})[key];
   if (!d) return '<p class="note">' + T(R && R.none || 'Aucune donnée réelle téléchargée pour l\'instant.') + '</p>';
   if (d.press) return pressImage(m, R, d);
+  if (d.plot) return plotFigure(m, R, d);
   var out = d.out_size || [d.out_px, d.out_px], en = OBS_LANG === 'en';
   var how = d.crop ? (en ? 'Middle part (' + d.crop[0] + ' × ' + d.crop[1] + ' pixels) of the ' + d.full_size[0] + ' × ' + d.full_size[1] + ' pixel strip published by the archive' + (out[0] !== d.crop[0] ? ', scaled to ' + out[0] + ' × ' + out[1] : '')
                             : 'Partie centrale (' + d.crop[0] + ' × ' + d.crop[1] + ' pixels) de la bande de ' + d.full_size[0] + ' × ' + d.full_size[1] + ' pixels publiée par l\'archive' + (out[0] !== d.crop[0] ? ', ramenée à ' + out[0] + ' × ' + out[1] : ''))
@@ -167,6 +168,13 @@ function realData(m, R){
     '<figcaption><strong>' + esc(d.instrument) + ' · ' + esc(d.product) + '</strong><br>' + when(m, d) + how +
     (d.stretch ? (en ? ', contrast stretched between the ' + d.stretch[0] + ' and ' + d.stretch[1] + ' percentiles' : ', contraste étiré entre les centiles ' + OBS_NUM(String(d.stretch[0]).replace('.', ',')) + ' et ' + OBS_NUM(String(d.stretch[1]).replace('.', ','))) : '') + '.<br>' +
     T('Archive') + ' : ' + T(d.archive) + ' · ' + T('collection') + ' <code>' + esc(d.collection) + '</code> · <a href="' + esc(d.href) + '" rel="noopener" target="_blank">' + T('aperçu d\'origine') + '</a> · ' + T('téléchargé le') + ' ' + esc(d.fetched) + '</figcaption></figure>';
+}
+/* tracé fait par ce site à partir d'un fichier de données de l'archive (tools/data/plots.py) */
+function plotFigure(m, R, d){
+  var out = d.out_size, en = OBS_LANG === 'en';
+  return '<figure class="real plot"><img src="data/' + R.key + '.jpg" width="' + out[0] + '" height="' + out[1] + '" alt="' + esc(R.altRaw || R.alt) + ' (' + esc(d.product) + ')">' +
+    '<figcaption><strong>' + esc(d.instrument) + ' · ' + esc(d.product) + '</strong><br>' + (d.datetime ? when(m, d) : '') + esc(en ? d.how_en : d.how_fr) + '<br>' +
+    T('Archive') + ' : ' + T(d.archive) + ' · ' + T('collection') + ' <code>' + esc(d.collection) + '</code> · <a href="' + esc(d.href) + '" rel="noopener" target="_blank">' + T('fichier de données') + '</a> · ' + T('téléchargé le') + ' ' + esc(d.fetched) + '</figcaption></figure>';
 }
 /* image de presse (bibliothèque d'images de la NASA) : déjà traitée par l'équipe, ce n'est pas un produit d'archive */
 function pressImage(m, R, d){

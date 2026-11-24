@@ -86,6 +86,9 @@ def clem_uvvis():
         except RuntimeError as e: print(" ", e)
     raise RuntimeError("aucun aperçu Clementine assez grand")
 def mgn_sar(): browse("mgn", "ode-venus-mgn-rdrs-fmidr", "SAR", "PDS Geosciences Node (NASA), via le catalogue STAC-PLANET du PDSSP", roles=("thumbnail", "overview", "browse"))
+def traces():
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))); import plots; plots.run(S)
+
 def press(name, nid, instrument):
     """Image publiée par la NASA (bibliothèque images.nasa.gov) : utilisée quand l'archive ne publie pas d'aperçu, ou ne répond pas à GitHub Actions."""
     r = S.get("https://images-api.nasa.gov/search", params={"nasa_id": nid}, timeout=120); r.raise_for_status()
@@ -228,7 +231,7 @@ def body_textures():
     if bad: raise RuntimeError("textures non récupérées : " + ", ".join(bad))
 
 RECIPES = {"mro_ctx": mro_ctx, "mro_hirise": mro_hirise, "mex_hrsc": mex_hrsc, "lro_lroc": lro_lroc, "messenger_mdis": messenger_mdis, "cassini_vims": cassini_vims,
-           "ody_themis": ody_themis, "mgs_moc": mgs_moc, "tgo_cassis": tgo_cassis, "clem_uvvis": clem_uvvis, "mgn_sar": mgn_sar, "vo_vis": vo_vis, "sln_tc": sln_tc, "ch1_m3": ch1_m3, "kplo_shadowcam": kplo_shadowcam, "instruments": inst_previews, "presse": press_images, "textures": body_textures}
+           "ody_themis": ody_themis, "mgs_moc": mgs_moc, "tgo_cassis": tgo_cassis, "clem_uvvis": clem_uvvis, "mgn_sar": mgn_sar, "vo_vis": vo_vis, "sln_tc": sln_tc, "ch1_m3": ch1_m3, "kplo_shadowcam": kplo_shadowcam, "instruments": inst_previews, "presse": press_images, "traces": traces, "textures": body_textures}
 if __name__ == "__main__":
     want = sys.argv[1:] or list(RECIPES)
     bad = 0
