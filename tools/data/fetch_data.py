@@ -38,12 +38,12 @@ def mro_ctx():
         print("mro_ctx :", f["id"], p.get("datetime"), w, "×", h); return
     raise RuntimeError("aucun aperçu CTX récupéré")
 
-def browse(mid, collection, instrument, archive, max_px=900, stretch=None, roles=("thumbnail",), skip=None, min_px=0, alt=None, crop=None, min_side=0):
+def browse(mid, collection, instrument, archive, max_px=900, stretch=None, roles=("thumbnail",), skip=None, min_px=0, alt=None, crop=None, min_side=0, name=None, need_geom=True):
     """Aperçu publié par l'archive (asset « thumbnail » JPEG ou PNG) de l'item le plus récent qui a une emprise,
     entier, ramené à max_px de côté au plus ; contraste étiré seulement si stretch est donné (signalé dans la légende)."""
     for f in stac_items(collection):
-        if not f.get("geometry") or (skip and re.search(skip, f["id"])): continue
-        th = [a for a in f["assets"].values() if set(roles) & set(a.get("roles") or []) and re.search(r"image/(jpeg|png)", a.get("type") or "")]
+        if (need_geom and not f.get("geometry")) or (skip and re.search(skip, f["id"])): continue
+        th = [a for a in f["assets"].values() if (roles is None or set(roles) & set(a.get("roles") or [])) and (re.search(r"image/(jpeg|png|gif)", a.get("type") or "") or (roles is None and re.search(r"\.(jpe?g|png|gif)$", a.get("href", ""), re.I)))]
         if not th: continue
         href = th[0]["href"]
         if alt:   # variante plus grande du même aperçu publiée par l'archive (ex. dossier « large » au lieu de « small »), essayée d'abord
@@ -60,13 +60,14 @@ def browse(mid, collection, instrument, archive, max_px=900, stretch=None, roles
         im = im.convert("L") if im.mode in ("L", "LA", "I", "I;16", "P") and not im.getpalette() else im.convert("RGB")
         w, h = im.size; k = min(1.0, max_px / max(w, h)); out = im.resize((max(1, round(w * k)), max(1, round(h * k))), Image.LANCZOS) if k < 1 else im
         if stretch: out = ImageOps.autocontrast(out, cutoff=stretch)
-        out.save(os.path.join(DATA, mid + "-img.jpg"), quality=84, optimize=True)
+        out.save(os.path.join(DATA, (name or mid + "-img") + ".jpg"), quality=84, optimize=True)
+        if archive is None: archive = archive_of(href)
         p = f["properties"]
         meta = {"archive": archive, "collection": f.get("collection"), "product": f["id"], "datetime": p.get("datetime"), "href": href,
                 "stac": STAC + "/collections/" + f.get("collection", "") + "/items/" + f["id"], "instrument": instrument,
                 "full_size": list(full), "crop": list(im.size) if im.size != full else None, "out_size": list(out.size), "stretch": [stretch, 100 - stretch] if stretch else None,
                 "footprint": f.get("geometry"), "fetched": datetime.date.today().isoformat()}
-        json.dump(meta, open(os.path.join(DATA, mid + "-img.json"), "w"), indent=1, ensure_ascii=False)
+        json.dump(meta, open(os.path.join(DATA, (name or mid + "-img") + ".json"), "w"), indent=1, ensure_ascii=False)
         print(mid, ":", f["id"], p.get("datetime"), w, "×", h); return
     raise RuntimeError("aucun aperçu récupéré pour " + collection)
 
@@ -105,6 +106,58 @@ def mro_hirise():
     json.dump(meta, open(os.path.join(DATA, "mro-hirise.json"), "w"), indent=1, ensure_ascii=False)
     print("mro_hirise :", nid, d.get("date_created"), full)
 
+HOSTS = {"pds-geosciences.wustl.edu": "PDS Geosciences Node (NASA)", "planetarydata.jpl.nasa.gov": "PDS Imaging Node (NASA)",
+         "data.darts.isas.jaxa.jp": "JAXA DARTS (archive de SELENE)", "pds-ppi.igpp.ucla.edu": "PDS Planetary Plasma Interactions Node (NASA)",
+         "static.mars.asu.edu": "Arizona State University (THEMIS)", "hirise.lpl.arizona.edu": "HiRISE (université d'Arizona)",
+         "pds.shadowcam.im-ldi.com": "PDS de ShadowCam (Arizona State University)", "pds.lroc.im-ldi.com": "PDS de LROC (Arizona State University)"}
+def archive_of(href):
+    h = re.sub(r"^https?://([^/]+)/.*$", r"\1", href); return HOSTS.get(h, h) + ", via le catalogue STAC-PLANET du PDSSP"
+
+# Aperçu publié par l'archive, instrument par instrument (relevé : tools/probe/probe_inst_previews.py, 24/11/2026).
+# Clé « mission:instrument » -> collections essayées dans l'ordre ; options de browse() en plus. Fichiers data/i-<mission>-<instrument>.*
+INST_PREVIEWS = {
+    "mro:hirise": (("ode-mars-mro-hirise-rdrv11", "ode-mars-mro-hirise-edr"), {"min_px": 300}),
+    "mro:crism": (("ode-mars-mro-crism-mtrdr", "ode-mars-mro-crism-trdr", "ode-mars-mro-crism-edr"), {"min_px": 200}),
+    "mro:sharad": (("ode-mars-mro-sharad-rdr",), {"crop": 2}),
+    "mex:omega": (("ode-mars-mex-omega-ddrgm",), {}),
+    "mex:marsis": (("ode-mars-mex-marsis-radarch",), {"crop": 2}),
+    "mex:vmc": (("ode-mars-mex-vmc-edr",), {"min_px": 200}),
+    "lro:lola": (("ode-moon-lro-lola-rdr4",), {}),
+    "lro:diviner": (("ode-moon-lro-dlre-gdr-l2",), {}),
+    "lro:lamp": (("ode-moon-lro-lamp-edr",), {"min_px": 200}),
+    "lro:minirf": (("ode-moon-lro-mrflro-bsddr4",), {"crop": 3}),
+    "mgs:mola": (("ode-mars-mgs-mola-pedr", "ode-mars-mgs-mola-megdr", "ode-mars-mgs-mola-toponat"), {"skip_href": r"marsis"}),
+    "mgs:tes": (("ode-mars-mgs-tes-timap",), {}),
+    "clem:nir": (("ode-moon-clem-nir-mdim",), {"alt": (r"/small/", "/large/")}),
+    "clem:hires": (("ode-moon-clem-hires-mdim",), {"alt": (r"/small/", "/large/")}),
+    "sln:mi": (("ode-moon-sln-mi-mi3c",), {"alt": (r"/small/", "/large/")}),
+    "sln:lalt": (("ode-moon-sln-lalt-topom",), {}),
+    "sln:lrs": (("ode-moon-sln-lrs-sar10c",), {"alt": (r"/small/", "/large/"), "crop": 2}),
+    "sln:grs": (("ode-moon-sln-grs-imap",), {"alt": (r"/small/", "/large/")}),
+    "sln:pace": (("ode-moon-sln-pace-etsum",), {}),
+    "sln:rsat": (("ode-moon-sln-rsat-vrad-grav",), {"alt": (r"/small/", "/large/")}),
+    "sln:hdtv": (("ode-moon-sln-hdtv-hdtvedr",), {}),
+    "ch1:minisar": (("ode-moon-ch1-orb-mrffr-moscdr",), {"crop": 2}),
+    "lp:mag": (("ode-moon-lp-mag-datal4",), {}),
+    "lp:er": (("ode-moon-lp-er-datal2",), {}),
+}
+NAMES = {o["m"] + ":" + o["id"]: o["name"] for o in json.load(open(os.path.join(ROOT, "tools", "probe", "instruments.json")))}
+def inst_previews(only=None):
+    bad = []
+    for key, (cols, kw) in INST_PREVIEWS.items():
+        if only and key not in only: continue
+        m, i = key.split(":"); kw = dict(kw); sk = kw.pop("skip_href", None); done = False
+        for c in cols:
+            try:
+                browse(m, c, NAMES.get(key, i.upper()), None, roles=None, name="i-" + m + "-" + i, skip=None, need_geom=False, **kw)
+                meta = json.load(open(os.path.join(DATA, "i-" + m + "-" + i + ".json")))
+                if sk and re.search(sk, meta["href"], re.I): print("  écarté (", sk, ")", meta["href"]); continue
+                meta["inst"] = key; json.dump(meta, open(os.path.join(DATA, "i-" + m + "-" + i + ".json"), "w"), indent=1, ensure_ascii=False)
+                done = True; break
+            except Exception as e: print("  ", key, c, repr(e)[:200])
+        if not done: bad.append(key)
+    if bad: print("instruments sans aperçu :", ", ".join(bad))
+
 def _try(mid, cols, inst, arch, **kw):
     for c in cols:
         try: return browse(mid, c, inst, arch, roles=("thumbnail", "overview", "browse"), min_px=200, **kw)
@@ -140,7 +193,7 @@ def body_textures():
     if bad: raise RuntimeError("textures non récupérées : " + ", ".join(bad))
 
 RECIPES = {"mro_ctx": mro_ctx, "mro_hirise": mro_hirise, "mex_hrsc": mex_hrsc, "lro_lroc": lro_lroc, "messenger_mdis": messenger_mdis, "cassini_vims": cassini_vims,
-           "ody_themis": ody_themis, "mgs_moc": mgs_moc, "tgo_cassis": tgo_cassis, "clem_uvvis": clem_uvvis, "mgn_sar": mgn_sar, "vo_vis": vo_vis, "sln_tc": sln_tc, "ch1_m3": ch1_m3, "kplo_shadowcam": kplo_shadowcam, "textures": body_textures}
+           "ody_themis": ody_themis, "mgs_moc": mgs_moc, "tgo_cassis": tgo_cassis, "clem_uvvis": clem_uvvis, "mgn_sar": mgn_sar, "vo_vis": vo_vis, "sln_tc": sln_tc, "ch1_m3": ch1_m3, "kplo_shadowcam": kplo_shadowcam, "instruments": inst_previews, "textures": body_textures}
 if __name__ == "__main__":
     want = sys.argv[1:] or list(RECIPES)
     bad = 0
