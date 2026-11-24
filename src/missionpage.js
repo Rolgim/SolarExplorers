@@ -200,7 +200,9 @@ function detail(m, it, X){
   s += '</div></div><div class="inst-cols">';
   s += '<div class="isec"><h3>' + L('Caractéristiques', 'Characteristics') + '</h3>' + table(it.specs, mk) + '</div>';
   if (it.bands && it.bands.length) s += '<div class="isec"><h3>' + L('Place dans le spectre', 'Place in the spectrum') + '</h3>' + coverage(m, it.id) + '<div class="cap">' + L('Plages reprises des caractéristiques ci-dessus.', 'Ranges taken from the characteristics above.') + '</div></div>';
+  s += Optics.section(m, it, mk, table);
   if (realInst(m) === it) s += '<div class="isec wide"><h3>' + L('Une donnée réelle', 'Real data') + '</h3>' + X.real(m) + '</div>';
+  if (it.real) s += '<div class="isec wide"><h3>' + L('Une donnée réelle', 'Real data') + '</h3>' + X.real(m, it.real) + '</div>';
   s += '<div class="isec wide"><h3>' + L('Produits de données', 'Data products') + '</h3>';
   if (cs.length){
     s += '<div class="tablewrap"><table class="ctable"><thead><tr><th scope="col">' + L('Collection STAC-PLANET', 'STAC-PLANET collection') + '</th><th scope="col">' + L('Niveau ≈', 'Level ≈') + '</th><th scope="col">' + L('Type', 'Type') + '</th><th scope="col">' + L('Produits', 'Products') + '</th><th scope="col">' + L('Période', 'Period') + '</th></tr></thead><tbody>' +

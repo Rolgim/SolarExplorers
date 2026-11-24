@@ -25,7 +25,7 @@ var INST_DATA = {
 mro:{
   summary:L('Six instruments scientifiques, plus deux enquêtes qui se servent de la sonde elle-même (gravité, haute atmosphère). Trois façons de travailler : surveillance globale (MARCI, MCS), relevés régionaux (CTX, SHARAD, CRISM en balayage), observations ciblées (HiRISE, CRISM, CTX).',
             'Six science instruments, along with two investigations that use the spacecraft itself (gravity, upper atmosphere). Three ways of working: global monitoring (MARCI, MCS), regional survey (CTX, SHARAD, CRISM survey), targeted observations (HiRISE, CRISM, CTX).'),
-  refs:{ e01:nssdcExp('2005-029A', '01', 'HiRISE'), e02:nssdcExp('2005-029A', '02', 'CRISM'), e04:nssdcExp('2005-029A', '04', 'CTX'), e06:nssdcExp('2005-029A', '06', 'MCS') },
+  refs:{ ctxd:{ t:'Context Camera (CTX), instrument description', p:'Malin Space Science Systems', u:'https://www.msss.com/mro/ctx/ctx_description.html' }, e01:nssdcExp('2005-029A', '01', 'HiRISE'), e02:nssdcExp('2005-029A', '02', 'CRISM'), e04:nssdcExp('2005-029A', '04', 'CTX'), e06:nssdcExp('2005-029A', '06', 'MCS') },
   archives:[STACP, PDS_GEO, { label:L('HiRISE (Université d\'Arizona)', 'HiRISE (University of Arizona)'), desc:L('Images et produits de l\'équipe HiRISE', 'Images and products from the HiRISE team'), url:'https://www.uahirise.org/' }],
   instruments:[
     { id:'hirise', name:'HiRISE', full:'High Resolution Imaging Science Experiment', type:'cam',
@@ -36,6 +36,9 @@ mro:{
         [L('Champ de vue', 'Field of view'), '1,14° × 0,18°', 'e01'], [L('Détecteurs', 'Detectors'), L('14 CCD de 2 048 pixels, 128 lignes d\'intégration (TDI)', '14 CCDs of 2,048 pixels, 128 integration (TDI) lines'), 'e01'],
         [L('Pixel au sol', 'Ground pixel'), L('30 cm depuis 300 km', '30 cm from 300 km'), 'e01'], [L('Fauchée', 'Swath'), L('6 km en rouge, 1,2 km en couleur', '6 km in red, 1.2 km in colour'), 'e01'],
         [L('Construction', 'Built by'), L('Ball Aerospace, pour l\'Université d\'Arizona (A. McEwen)', 'Ball Aerospace, for the University of Arizona (A. McEwen)'), 'kit']],
+      real:{ key:'mro-hirise', alt:L('Image HiRISE du rover Curiosity sur Mars', 'HiRISE image of the Curiosity rover on Mars'),
+        what:L('Prise le 28 février 2025 d\'après la légende de la NASA. Le petit point sombre en bas, vers le milieu, est le rover Curiosity en train de rouler, suivi de ses traces.', 'Taken on 28 February 2025 according to NASA\'s caption. The small dark dot near the bottom middle is the Curiosity rover while driving, followed by its tracks.'),
+        why:L('Pourquoi pas un produit d\'archive : les serveurs HiRISE de l\'université d\'Arizona refusent les connexions de GitHub Actions, d\'où le site télécharge ses données ; la bibliothèque d\'images de la NASA republie les images HiRISE du Photojournal.', 'Why not an archive product: the University of Arizona HiRISE servers refuse connections from GitHub Actions, where the site downloads its data; the NASA image library republishes HiRISE images from the Photojournal.') },
       stac:'ode-mars-mro-hirise-', docs:[{ l:'HiRISE', u:'https://www.uahirise.org/' }] },
     { id:'ctx', name:'CTX', full:'Context Camera', type:'cam',
       use:L('Donner le contexte des images HiRISE et CRISM, et cartographier la planète en noir et blanc à 6 m par pixel.', 'Give the context of HiRISE and CRISM images, and map the planet in black and white at 6 m per pixel.'),
@@ -137,7 +140,7 @@ mex:{
   ]},
 lro:{
   summary:L('Sept instruments pensés pour préparer le retour d\'humains sur la Lune : sites d\'atterrissage, éclairage des pôles, froid des cratères d\'ombre permanente, glace, radiations.', 'Seven instruments designed to prepare the return of humans to the Moon: landing sites, polar lighting, cold of permanently shadowed craters, ice, radiation.'),
-  refs:{ e01:nssdcExp('2009-031A', '01', 'LROC'), e04:nssdcExp('2009-031A', '04', 'LOLA'), e05:nssdcExp('2009-031A', '05', 'LEND') },
+  refs:{ lrs:{ t:'LROC, instrument specifications', p:'Arizona State University (LROC)', u:'https://lroc.im-ldi.com/about/specs' }, e01:nssdcExp('2009-031A', '01', 'LROC'), e04:nssdcExp('2009-031A', '04', 'LOLA'), e05:nssdcExp('2009-031A', '05', 'LEND') },
   archives:[STACP, PDS_GEO, { label:'LROC (Arizona State University)', desc:L('Images et produits de l\'équipe LROC', 'Images and products from the LROC team'), url:'https://www.lroc.asu.edu/' }],
   instruments:[
     { id:'lroc', name:'LROC', full:'Lunar Reconnaissance Orbiter Camera', type:'cam',
@@ -186,7 +189,7 @@ lro:{
   ]},
 cassini:{
   summary:L('Douze instruments sur l\'orbiteur : télédétection sur une palette (caméras, spectromètres), champs et particules sur une autre, plus le radar et la radioscience. Six autres sur la sonde Huygens, posée sur Titan.', 'Twelve instruments on the orbiter: remote sensing on one pallet (cameras, spectrometers), fields and particles on another, then the radar and radio science. Six more on the Huygens probe, landed on Titan.'),
-  refs:{ e02:nssdcExp('1997-061A', '02', 'Imaging Science Subsystem (ISS)'),
+  refs:{ issna:{ t:'Cassini ISS, narrow angle camera description', p:'PDS Rings Node', u:'https://pds-rings.seti.org/pds4/bundles/cassini_iss/cassini_iss_cruise/document/iss-na-camera-description.txt' }, issp:{ t:'Cassini ISS (inst-iss)', p:'PDS Atmospheres Node (NMSU)', u:'https://atmos.nmsu.edu/data_and_services/atmospheres_data/Cassini/inst-iss.html' }, e02:nssdcExp('1997-061A', '02', 'Imaging Science Subsystem (ISS)'),
     rtw:{ t:'Cassini RADAR, technical write-up', p:'NASA', u:'https://science.nasa.gov/mission/cassini/spacecraft/cassini-orbiter/radio-detection-and-ranging/radar-technical-write-up' },
     rpa:{ t:'Cassini RADAR (inst-radar)', p:'PDS Atmospheres Node (NMSU)', u:'https://atmos.nmsu.edu/data_and_services/atmospheres_data/Cassini/inst-radar.html' } },
   archives:[STACP, { label:'PDS Planetary Rings Node', desc:L('Images ISS et données des anneaux', 'ISS images and ring data'), url:'https://pds-rings.seti.org/cassini/' }, { label:L('VIMS (université de Nantes)', 'VIMS (University of Nantes)'), desc:L('Cubes VIMS de Titan repris par STAC-PLANET', 'VIMS Titan cubes used by STAC-PLANET'), url:'https://vims.univ-nantes.fr/' }],
@@ -240,7 +243,7 @@ cassini:{
   ]},
 messenger:{
   summary:L('Sept instruments miniaturisés, plus la radioscience, protégés du Soleil par un pare-soleil en céramique : MESSENGER a cartographié tout Mercure pour la première fois.', 'Seven miniaturised instruments and radio science, protected from the Sun by a ceramic sunshade: MESSENGER mapped all of Mercury for the first time.'),
-  refs:{ lk:{ t:L('MESSENGER Launch Press Kit (août 2004)', 'MESSENGER Launch Press Kit (August 2004)'), p:'NASA', u:'https://webarchive.library.unt.edu/eot2008/20081102145358/http://www.nasa.gov/pdf/168019main_MESSENGER_71504_PressKit.pdf' },
+  refs:{ mdisc:{ t:'MDIS NAC instrument description (MESSMDS_8001)', p:'NASA PDS', u:'https://pds.nasa.gov/data/pds3/releases/backup/2015/201503.mess13coMro/messMDS_8001_MDIS_NAC_INST.cat' }, lk:{ t:L('MESSENGER Launch Press Kit (août 2004)', 'MESSENGER Launch Press Kit (August 2004)'), p:'NASA', u:'https://webarchive.library.unt.edu/eot2008/20081102145358/http://www.nasa.gov/pdf/168019main_MESSENGER_71504_PressKit.pdf' },
          e01:nssdcExp('2004-030A', '01', 'MDIS'), e02:nssdcExp('2004-030A', '02', 'GRNS'), e03:nssdcExp('2004-030A', '03', 'XRS'), e06:nssdcExp('2004-030A', '06', 'EPPS') },
   archives:[STACP, PDS_GEO, { label:'MESSENGER (Johns Hopkins APL)', desc:L('Site de la mission', 'Mission website'), url:'https://messenger.jhuapl.edu/' }],
   instruments:[
@@ -347,7 +350,7 @@ mgs:{
   ]},
 tgo:{
   summary:L('Quatre instruments : deux ensembles de spectromètres pour la chimie de l\'atmosphère (ACS, NOMAD), une caméra couleur et stéréo (CaSSIS) et un détecteur de neutrons (FREND).', 'Four instruments: two spectrometer suites for atmospheric chemistry (ACS, NOMAD), a colour and stereo camera (CaSSIS) and a neutron detector (FREND).'),
-  refs:{},
+  refs:{ cop:{ t:'The CaSSIS imaging system: optical performance overview (SPIE 9904, 2016)', p:'Université de Berne (BORIS)', u:'https://boris.unibe.ch/96908' },},
   archives:[STACP, PDS_GEO, { label:'ESA Planetary Science Archive', desc:L('Archive des missions planétaires de l\'ESA', 'Archive of ESA\'s planetary missions'), url:'https://archives.esac.esa.int/psa/' }],
   instruments:[
     { id:'nomad', name:'NOMAD', full:'Nadir and Occultation for MArs Discovery', type:'spec',

@@ -54,7 +54,8 @@ pre.code{ margin:0; padding:14px 16px; background:#0B0D0F; color:#E4E7E9; overfl
 .filter-detail{ margin-top:10px; font-size:13px; min-height:20px; }
 .filter-detail b{ font-weight:800; background:var(--mark); color:var(--on-mark); padding:0 4px; }
 .svgwrap{ overflow-x:auto; }
-svg.cov, svg.mini, svg.optic{ width:100%; min-width:400px; height:auto; display:block; }
+svg.cov, svg.mini{ width:100%; min-width:400px; height:auto; display:block; }
+svg.optic{ width:100%; min-width:300px; height:auto; display:block; }
 ol.notes{ padding-left:20px; }
 .fov-leg li:not([data-inst]):not([data-jump]){ cursor:default; font-weight:400; }
 .cov-row{ cursor:pointer; }
@@ -266,3 +267,10 @@ svg.optic g.hl{ filter:drop-shadow(0 0 2px var(--mark)) drop-shadow(0 0 4px var(
   .home-side{ border-left:0; border-top:2px solid var(--ink); padding:14px var(--gr) 24px var(--gl); }
 }
 .inst-top[hidden] + .inst-body{ border-top:2px solid var(--ink); }
+/* trajet de la lumière : une figure par voie (petit champ, grand champ) */
+.opt-figs{ display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 460px), 1fr)); gap:16px; }
+.opt-fig svg.optic{ max-width:640px; }
+.opt-fig{ margin:0; }
+.opt-t{ font-weight:700; font-size:13px; margin:0 0 4px; }
+.opt-cols{ margin-top:12px; }
+.opt-cols h4{ margin:0 0 8px; }
