@@ -173,7 +173,7 @@ function realData(m, R){
 function plotFigure(m, R, d){
   var out = d.out_size, en = OBS_LANG === 'en';
   return '<figure class="real plot"><img src="data/' + R.key + '.jpg" width="' + out[0] + '" height="' + out[1] + '" alt="' + esc(R.altRaw || R.alt) + ' (' + esc(d.product) + ')">' +
-    '<figcaption><strong>' + esc(d.instrument) + ' · ' + esc(d.product) + '</strong><br>' + (d.datetime ? when(m, d) : '') + esc(en ? d.how_en : d.how_fr) + '<br>' +
+    '<figcaption><strong>' + esc(d.instrument) + ' · ' + esc(d.product) + '</strong><br>' + (d.datetime ? T('Date du produit dans le catalogue') + ' : ' + esc(String(d.datetime).slice(0, 10)) + '. ' : '') + esc(en ? d.how_en : d.how_fr) + '<br>' +
     T('Archive') + ' : ' + T(d.archive) + ' · ' + T('collection') + ' <code>' + esc(d.collection) + '</code> · <a href="' + esc(d.href) + '" rel="noopener" target="_blank">' + T('fichier de données') + '</a> · ' + T('téléchargé le') + ' ' + esc(d.fetched) + '</figcaption></figure>';
 }
 /* image de presse (bibliothèque d'images de la NASA) : déjà traitée par l'équipe, ce n'est pas un produit d'archive */

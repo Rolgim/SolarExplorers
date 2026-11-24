@@ -85,7 +85,7 @@ def clem_uvvis():
                            roles=("thumbnail", "overview", "browse"), min_px=300, alt=(r"/small/", "/large/"))
         except RuntimeError as e: print(" ", e)
     raise RuntimeError("aucun aperçu Clementine assez grand")
-def mgn_sar(): browse("mgn", "ode-venus-mgn-rdrs-fmidr", "SAR", "PDS Geosciences Node (NASA), via le catalogue STAC-PLANET du PDSSP", roles=("thumbnail", "overview", "browse"))
+def mgn_sar(): browse("mgn", "ode-venus-mgn-rdrs-fmidr", "RDRS (SAR)", "PDS Geosciences Node (NASA), via le catalogue STAC-PLANET du PDSSP", roles=("thumbnail", "overview", "browse"))
 def traces():
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))); import plots; plots.run(S)
 
