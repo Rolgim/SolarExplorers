@@ -1,0 +1,23 @@
+{
+ "archive": "NASA Image and Video Library (images.nasa.gov), reprise du Photojournal du JPL",
+ "collection": null,
+ "product": "PIA26553",
+ "title": "HiRISE Views Curiosity During a Drive",
+ "datetime": "2025-04-24T00:00:00Z",
+ "credit": "NASA/JPL-Caltech/University of Arizona",
+ "description": "NASA's Curiosity Mars rover appears as a dark speck in this view captured on Feb. 28, 2025, by the High-Resolution Imaging Science Experiment (HiRISE) camera aboard NASA's Mars Reconnaissance Orbiter. At the time this image was taken, Curiosity was driving. It's likely the first time HiRISE has captured the rover while it was in motion. Trailing Curiosity are the rover's tracks, which can linger on the Martian surface for months before being erased by the wind.  The tracks are evidence of multiple days of driving as Curiosity made its way to a region full of potential boxwork formations, believed to be the result of ancient groundwater in this region of Mount Sharp, a 3-mile-tall (5-kilometer-tall) mountain Curiosity has been ascending since 2014.  When HiRISE takes an image, the majority of the scene is in black-and-white, with a strip of color down the middle. While HiRISE has captured Curiosity in color before, this time the rover happened to fall within the black-and-white part of the image.  https://photojournal.jpl.nasa.gov/catalog/PIA26553",
+ "href": "https://images-assets.nasa.gov/image/PIA26553/PIA26553~medium.jpg",
+ "page": "https://images.nasa.gov/details/PIA26553",
+ "instrument": "HiRISE",
+ "full_size": [
+  1280,
+  742
+ ],
+ "out_size": [
+  900,
+  522
+ ],
+ "stretch": null,
+ "press": true,
+ "fetched": "2026-11-24"
+}
