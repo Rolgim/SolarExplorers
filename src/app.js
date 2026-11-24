@@ -44,9 +44,6 @@ function renderHeader(route){
 }
 
 /* ---------- pages ---------- */
-function soon(title, what, step){
-  return '<div class="sk"><h2>' + T(title) + '</h2><p class="lead">' + T(what) + '</p><p class="sk-state">' + T('En construction') + ' · ' + T(step) + '</p></div>';
-}
 function src(m, k){
   var r = k && m.refs && m.refs[k];
   return r ? ' <a class="src" href="' + esc(r.u) + '" rel="noopener" target="_blank" title="' + esc(r.t) + '">' + esc(r.p) + '</a>' : '';
@@ -173,7 +170,7 @@ function realData(m, R){
                       : (en ? 'Whole preview published by the archive (' + d.full_size[0] + ' × ' + d.full_size[1] + ' pixels)' + (out[0] !== d.full_size[0] ? ', scaled to ' + out[0] + ' × ' + out[1] : '')
                             : 'Aperçu entier publié par l\'archive (' + d.full_size[0] + ' × ' + d.full_size[1] + ' pixels)' + (out[0] !== d.full_size[0] ? ', ramené à ' + out[0] + ' × ' + out[1] : ''));
   return '<figure class="real"><img src="data/' + key + '.jpg" width="' + out[0] + '" height="' + out[1] + '" alt="' + (R.altRaw ? esc(R.altRaw) : T(R.alt)) + ' (' + esc(d.product) + ')">' +
-    '<figcaption><strong>' + esc(d.instrument) + ' · ' + esc(d.product) + '</strong><br>' + when(m, d) + how +
+    '<figcaption><strong>' + esc(T(d.instrument)) + ' · ' + esc(d.product) + '</strong><br>' + when(m, d) + how +
     (d.stretch ? (en ? ', contrast stretched between the ' + d.stretch[0] + ' and ' + d.stretch[1] + ' percentiles' : ', contraste étiré entre les centiles ' + OBS_NUM(String(d.stretch[0]).replace('.', ',')) + ' et ' + OBS_NUM(String(d.stretch[1]).replace('.', ','))) : '') + '.<br>' +
     T('Archive') + ' : ' + T(d.archive) + ' · ' + T('collection') + ' <code>' + esc(d.collection) + '</code> · <a href="' + esc(d.href) + '" rel="noopener" target="_blank">' + T('aperçu d\'origine') + '</a> · ' + T('téléchargé le') + ' ' + esc(d.fetched) + licLine(d) + '</figcaption></figure>';
 }
@@ -181,14 +178,14 @@ function realData(m, R){
 function plotFigure(m, R, d){
   var out = d.out_size, en = OBS_LANG === 'en';
   return '<figure class="real plot"><img src="data/' + R.key + '.jpg" width="' + out[0] + '" height="' + out[1] + '" alt="' + esc(R.altRaw || R.alt) + ' (' + esc(d.product) + ')">' +
-    '<figcaption><strong>' + esc(d.instrument) + ' · ' + esc(d.product) + '</strong><br>' + (d.datetime ? T('Date du produit dans le catalogue') + ' : ' + esc(String(d.datetime).slice(0, 10)) + '. ' : '') + esc(en ? d.how_en : d.how_fr) + '<br>' +
+    '<figcaption><strong>' + esc(T(d.instrument)) + ' · ' + esc(d.product) + '</strong><br>' + (d.datetime ? T('Date du produit dans le catalogue') + ' : ' + esc(String(d.datetime).slice(0, 10)) + '. ' : '') + esc(en ? d.how_en : d.how_fr) + '<br>' +
     T('Archive') + ' : ' + T(d.archive) + ' · ' + T('collection') + ' <code>' + esc(d.collection) + '</code> · <a href="' + esc(d.href) + '" rel="noopener" target="_blank">' + T('fichier de données') + '</a> · ' + T('téléchargé le') + ' ' + esc(d.fetched) + licLine(d) + '</figcaption></figure>';
 }
 /* image de presse (bibliothèque d'images de la NASA) : déjà traitée par l'équipe, ce n'est pas un produit d'archive */
 function pressImage(m, R, d){
   var out = d.out_size, en = OBS_LANG === 'en';
   return '<figure class="real"><img src="data/' + R.key + '.jpg" width="' + out[0] + '" height="' + out[1] + '" alt="' + esc(R.altRaw || R.alt) + ' (' + esc(d.product) + ')">' +
-    '<figcaption><strong>' + esc(d.instrument) + ' · ' + esc(d.product) + ' · ' + (en ? '“' : '« ') + esc(d.title) + (en ? '”' : ' »') + '</strong><br>' +
+    '<figcaption><strong>' + esc(T(d.instrument)) + ' · ' + esc(d.product) + ' · ' + (en ? '“' : '« ') + esc(d.title) + (en ? '”' : ' »') + '</strong><br>' +
     (d.datetime ? T('Image publiée le') + ' ' + esc(String(d.datetime).slice(0, 10)) + '. ' : '') + esc(R.what || '') + ' ' +
     (en ? 'Whole image as published (' + d.full_size[0] + ' × ' + d.full_size[1] + ' pixels)' + (out[0] !== d.full_size[0] ? ', scaled to ' + out[0] + ' × ' + out[1] : '') + ', already processed by the team: a press image, not an archive product.'
         : 'Image entière telle que publiée (' + d.full_size[0] + ' × ' + d.full_size[1] + ' pixels)' + (out[0] !== d.full_size[0] ? ', ramenée à ' + out[0] + ' × ' + out[1] : '') + ', déjà traitée par l\'équipe : image de presse, pas un produit d\'archive.') + '<br>' +

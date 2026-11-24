@@ -177,7 +177,7 @@ var Optics = (function(){
       rows:[[L('NAC : combinaison', 'NAC: design'), L('Ritchey-Chrétien hors d\'axe, f/22', 'off-axis Ritchey-Chretien, f/22'), 'mdisc'], [L('NAC : ouverture', 'NAC: aperture'), '25 mm', 'mdisc'], [L('NAC : focale', 'NAC: focal length'), '550 mm', 'mdisc'],
         [L('WAC : combinaison', 'WAC: design'), L('objectif à quatre lentilles (Dogmar)', 'four-element lens (Dogmar)'), 'mdisc'], [L('WAC : focale', 'WAC: focal length'), '78 mm', 'mdisc'], [L('Détecteur', 'Detector'), L('CCD TH7888A, 1 024 × 1 024 pixels de 14 µm', 'TH7888A CCD, 1,024 × 1,024 pixels of 14 µm'), 'mdisc']] },
     'tgo:cassis':{ figs:[{ kind:'refl', tma:true, D:'135 mm', f:'880 mm', det:L('Si-PIN 2k × 2k', 'Si-PIN 2k × 2k') }],
-      rows:[[L('Combinaison', 'Design'), L('anastigmat à trois miroirs, plus un miroir de renvoi courbe ; f/6,5', 'three-mirror anastigmat, plus a curved fold mirror; f/6.5'), 'cop'], [L('Pupille d\'entrée', 'Entrance pupil'), '135 mm', 'cop'], [L('Focale', 'Focal length'), L('880 mm (valeur de conception)', '880 mm (design value)'), 'cop'],
+      rows:[[L('Combinaison', 'Design'), L('anastigmat à trois miroirs, plus un miroir de renvoi courbe ; f/6,5', 'three-mirror anastigmat and a curved fold mirror; f/6.5'), 'cop'], [L('Pupille d\'entrée', 'Entrance pupil'), '135 mm', 'cop'], [L('Focale', 'Focal length'), L('880 mm (valeur de conception)', '880 mm (design value)'), 'cop'],
         [L('Détecteur', 'Detector'), L('matrice hybride Si-PIN de 2k × 2k, pixels de 10 µm', 'hybrid Si-PIN array of 2k × 2k, 10 µm pixels'), 'cop']] }
   }; }
   var GAMMA = /^(grns|grs|ns|gs)$/, FTS = /^(cirs|pfs)$/, SOUNDER = /^(sharad|marsis|lrs)$/;

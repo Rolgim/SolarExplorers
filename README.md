@@ -22,7 +22,7 @@ Pour le lancer en local : `node build.js`, puis `python3 -m http.server` et ouvr
 | `data/` | données réelles, produites par les scripts de `tools/data/` ; ne pas modifier à la main |
 | `tools/probe/` | sondes qui montrent ce qu'expose une archive, sans rien écrire sur `main` (voir son `README.md`) |
 | `tools/models/` | conversion, allègement et redécoupage des maquettes ; procédure d'ajout d'une mission dans son `README.md` |
-| `tools/smoke.js`, `tools/a11y.js`, `tools/i18n-scan.js` | tests dans un vrai navigateur (Playwright) : parcours du site et registre ; accessibilité WCAG 2.1 A et AA (axe-core) ; textes non traduits |
+| `tools/smoke.js`, `tools/a11y.js`, `tools/i18n-scan.js` | tests dans un vrai navigateur (Playwright) : parcours du site et registre ; accessibilité WCAG 2.1 A et AA (axe-core) ; textes non traduits ; les trois parcourent les 172 pages listées par `tools/pages.js` (dont chaque page d'instrument) |
 | `tools/shot.js`, `tools/serve.js` | captures d'écran ; serveur local commun aux tests |
 | `SPECS.md` | spécifications : règles, périmètre, étapes |
 

@@ -39,7 +39,7 @@ function Marks(m){
   var refs = refsOf(m), nums = {}, n = 0;
   return {
     mark:function(keys){ var ks = [].concat(keys || []).filter(function(x){ return refs[x]; }); if (!ks.length) return '';
-      return '<sup class="ref">' + ks.map(function(x){ if (!nums[x]) nums[x] = ++n; return '<a href="#" data-ref="' + nums[x] + '" aria-label="' + esc(L('source ', 'source ') + nums[x]) + '">' + nums[x] + '</a>'; }).join(',') + '</sup>'; },
+      return '<sup class="ref">' + ks.map(function(x){ if (!nums[x]) nums[x] = ++n; return '<a href="#ref-' + nums[x] + '" data-ref="' + nums[x] + '" aria-label="' + esc(L('source ', 'source ') + nums[x]) + '">' + nums[x] + '</a>'; }).join(',') + '</sup>'; },
     list:function(checked){
       var keys = Object.keys(nums).sort(function(a, b){ return nums[a] - nums[b]; }); if (!keys.length) return '';
       var c = (checked || '').split('-');

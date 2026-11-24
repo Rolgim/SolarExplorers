@@ -4,7 +4,7 @@
  "product": "S23/00798",
  "datetime": "2006-10-15T23:53:57.795000Z",
  "href": "https://planetarydata.jpl.nasa.gov/img/data/mgs-m-moc-na_wa-2-sdp-l0-v1.0/mgsc_1578/extras/browse/s23007/s2300798.imq.jpg",
- "stac": "https://stac.stacplanet.pdssp.eu/collections/ode-mars-mgs-moc-na-wa-nasdp/items/S23/00798",
+ "stac": "https://stac.stacplanet.pdssp.eu/collections/ode-mars-mgs-moc-na-wa-nasdp/items/S23%2F00798",
  "instrument": "MOC NA",
  "full_size": [
   250,

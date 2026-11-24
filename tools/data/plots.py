@@ -4,6 +4,7 @@ Chaque recette lit un vrai fichier de données (trouvé par STAC-PLANET), le dé
 une carte, un profil ou une série. Le tracé est fait ici : la légende le dit, avec le fichier source (règles 2 et 3).
 Sortie : data/d-<mission>-<instrument>.jpg et .json. Appelé par fetch_data.py (recette « traces »)."""
 import io, os, re, json, datetime, struct
+from urllib.parse import quote
 import numpy as np
 import matplotlib
 matplotlib.use("Agg")
@@ -77,7 +78,7 @@ def save(name, fig, meta):
     print(name, ":", meta["product"], im.size)
 def base(f, collection, href, instrument, archive):
     return {"archive": archive + ", via le catalogue STAC-PLANET du PDSSP", "collection": collection, "product": f["id"], "datetime": f["properties"].get("datetime"),
-            "href": href, "stac": STAC + "/collections/" + collection + "/items/" + f["id"], "instrument": instrument}
+            "href": href, "stac": STAC + "/collections/" + collection + "/items/" + quote(f["id"], safe=""), "instrument": instrument}
 
 def gravity_map(name, collection, instrument, archive, body, rx=r"anom", avoid=r"err|sig|unc"):
     """Carte d'anomalie de gravité (image PDS3, milligals), d'après un champ publié par l'équipe de radioscience."""

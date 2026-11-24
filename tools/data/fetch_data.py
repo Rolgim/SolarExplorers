@@ -3,6 +3,7 @@
 en tire un aperçu léger dans data/, et écrit à côté une fiche JSON (archive, collection, identifiant, date, URL) (règle 3).
 Usage : python tools/data/fetch_data.py [recette …]   (sans argument : toutes)."""
 import io, json, os, re, sys, datetime, requests
+from urllib.parse import quote
 from PIL import Image, ImageOps
 Image.MAX_IMAGE_PIXELS = 400_000_000          # les bandes CTX font 5 056 × 26 624 pixels
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..")
@@ -30,7 +31,7 @@ def mro_ctx():
         crop.save(os.path.join(DATA, "mro-ctx.jpg"), quality=84, optimize=True)
         p = f["properties"]
         meta = {"archive": "PDS Imaging Node (NASA), via le catalogue STAC-PLANET du PDSSP", "collection": f.get("collection"),
-                "product": f["id"], "datetime": p.get("datetime"), "href": ov[0]["href"], "stac": STAC + "/collections/" + f.get("collection", "") + "/items/" + f["id"],
+                "product": f["id"], "datetime": p.get("datetime"), "href": ov[0]["href"], "stac": STAC + "/collections/" + f.get("collection", "") + "/items/" + quote(f["id"], safe=""),
                 "instrument": "CTX", "full_size": [w, h], "crop_px": s, "out_px": 900, "stretch": [0.5, 99.5],
                 "footprint": f.get("geometry"), "center": [p.get("proj:centroid")] if p.get("proj:centroid") else None,
                 "fetched": datetime.date.today().isoformat()}
@@ -66,7 +67,7 @@ def browse(mid, collection, instrument, archive, max_px=900, stretch=None, roles
         if archive is None: archive = archive_of(href)
         p = f["properties"]
         meta = {"archive": archive, "collection": f.get("collection"), "product": f["id"], "datetime": p.get("datetime"), "href": href,
-                "stac": STAC + "/collections/" + f.get("collection", "") + "/items/" + f["id"], "instrument": instrument,
+                "stac": STAC + "/collections/" + f.get("collection", "") + "/items/" + quote(f["id"], safe=""), "instrument": instrument,
                 "full_size": list(full), "crop": list(im.size) if im.size != full else None, "out_size": list(out.size), "stretch": [stretch, 100 - stretch] if stretch else None,
                 "footprint": f.get("geometry"), "fetched": datetime.date.today().isoformat()}
         json.dump(meta, open(os.path.join(DATA, (name or mid + "-img") + ".json"), "w"), indent=1, ensure_ascii=False)
@@ -157,25 +158,9 @@ def commons_images():
 
 def mro_hirise():
     """MRO, HiRISE : les serveurs de l'université d'Arizona refusent GitHub Actions (sonde du 23/11/2026). Voie de repli vérifiée le
-    24/11/2026 (tools/probe/probe_hirise_routes.py) : la bibliothèque d'images de la NASA (images.nasa.gov), qui republie les images
-    HiRISE diffusées par le Photojournal du JPL. Image publiée entière (déjà traitée par l'équipe : c'est une image de presse, pas un produit PDS)."""
-    nid = "PIA26553"   # « HiRISE Views Curiosity During a Drive »
-    r = S.get("https://images-api.nasa.gov/search", params={"nasa_id": nid}, timeout=120); r.raise_for_status()
-    it = r.json()["collection"]["items"][0]; d = it["data"][0]
-    a = S.get("https://images-api.nasa.gov/asset/" + nid, timeout=120); a.raise_for_status()
-    hrefs = [x["href"] for x in a.json()["collection"]["items"]]
-    href = next((h for h in hrefs if "~medium" in h), None) or next(h for h in hrefs if re.search(r"\.jpe?g$", h, re.I))
-    href = href.replace("http://", "https://")
-    im = Image.open(io.BytesIO(S.get(href, timeout=300).content)).convert("L"); full = im.size
-    k = min(1.0, 900 / max(full)); out = im.resize((round(full[0] * k), round(full[1] * k)), Image.LANCZOS) if k < 1 else im
-    out.save(os.path.join(DATA, "mro-hirise.jpg"), quality=86, optimize=True)
-    desc = re.sub(r"<[^>]+>", "", d.get("description", ""))
-    meta = {"archive": "NASA Image and Video Library (images.nasa.gov), reprise du Photojournal du JPL", "collection": None, "product": nid,
-            "title": d.get("title"), "datetime": d.get("date_created"), "credit": d.get("secondary_creator") or "NASA/JPL-Caltech/University of Arizona",
-            "description": desc[:1200], "href": href, "page": "https://images.nasa.gov/details/" + nid, "instrument": "HiRISE",
-            "full_size": list(full), "out_size": list(out.size), "stretch": None, "press": True, "fetched": datetime.date.today().isoformat()}
-    json.dump(meta, open(os.path.join(DATA, "mro-hirise.json"), "w"), indent=1, ensure_ascii=False)
-    print("mro_hirise :", nid, d.get("date_created"), full)
+    24/11/2026 (tools/probe/probe_hirise_routes.py) : la bibliothèque d'images de la NASA, qui republie les images HiRISE du Photojournal.
+    Image publiée entière (déjà traitée par l'équipe : c'est une image de presse, pas un produit PDS)."""
+    press("mro-hirise", "PIA26553", "HiRISE")   # « HiRISE Views Curiosity During a Drive »
 
 HOSTS = {"pds-geosciences.wustl.edu": "PDS Geosciences Node (NASA)", "planetarydata.jpl.nasa.gov": "PDS Imaging Node (NASA)",
          "data.darts.isas.jaxa.jp": "JAXA DARTS (archive de SELENE)", "pds-ppi.igpp.ucla.edu": "PDS Planetary Plasma Interactions Node (NASA)",

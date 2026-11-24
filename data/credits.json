@@ -726,7 +726,7 @@
    "title": "S23/00798",
    "instrument": "MOC NA",
    "source": "https://planetarydata.jpl.nasa.gov/img/data/mgs-m-moc-na_wa-2-sdp-l0-v1.0/mgsc_1578/extras/browse/s23007/s2300798.imq.jpg",
-   "page": "https://stac.stacplanet.pdssp.eu/collections/ode-mars-mgs-moc-na-wa-nasdp/items/S23/00798",
+   "page": "https://stac.stacplanet.pdssp.eu/collections/ode-mars-mgs-moc-na-wa-nasdp/items/S23%2F00798",
    "archive": "PDS Imaging Node (NASA), via le catalogue STAC-PLANET du PDSSP",
    "license": "Domaine public (données et images de la NASA, non protégées par le droit d'auteur) ; citer le PDS",
    "license_url": "https://pds-geosciences.wustl.edu/jplcopyright.html",

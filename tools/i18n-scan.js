@@ -5,7 +5,7 @@
 const { chromium } = require('playwright');
 const fs = require('fs'), path = require('path'), serve = require('./serve');
 const ROOT = path.join(__dirname, '..'), PORT = 8126, srv = serve(PORT);
-const IDS = [...fs.readFileSync(path.join(ROOT, 'src', 'data-missions.js'), 'utf8').matchAll(/^    id:'(\w+)'/gm)].map(m => m[1]);
+const { IDS, ALL } = require('./pages');
 const FRENCH = /[àâçéèêëîïôùûœ«»]|\b(le|la|les|des|du|de|et|un|une|par|sur|dans|pour|au|aux|est|sont|avec|sans|vers|depuis|chaque|voir|plus)\b/i;
 (async () => {
   const b = await chromium.launch();
@@ -13,7 +13,7 @@ const FRENCH = /[àâçéèêëîïôùûœ«»]|\b(le|la|les|des|du|de|et|un|un
   await pg.addInitScript(() => { window.__i18nMiss = {}; try { localStorage.setItem('sse-lang', 'en'); } catch (e) {} });
   await serve.offline(pg, PORT);
   const miss = {};
-  for (const h of ['accueil', 'missions', 'comparer', 'flotte', 'flotte-qui', 'comparer-voyage', 'comparer-masse', 'comparer-vehicules', 'comparer-orbites', 'comparer-instruments', ...IDS, ...IDS.map(i => i + '-donnees'), ...IDS.map(i => i + '-donnees-mission'), ...IDS.map(i => i + '-donnees-orbite'), 'mro-donnees-ctx', 'mex-donnees-marsis', 'lro-donnees-lola', 'cassini-donnees-iss', 'messenger-donnees-mdis']) {
+  for (const h of ALL) {
     await pg.goto('http://localhost:' + PORT + '/index.html#en-' + h); await pg.waitForTimeout(300);
     Object.assign(miss, await pg.evaluate(() => window.__i18nMiss));
     for (const t of await pg.evaluate(() => { const w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT), o = []; let n; while ((n = w.nextNode())) { const s = n.nodeValue.trim(); if (s && n.parentElement.offsetParent !== null) o.push(s); } return o; }))

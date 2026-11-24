@@ -5,9 +5,9 @@
    pas de défilement horizontal sur téléphone. */
 const { chromium } = require('playwright');
 const fs = require('fs'), path = require('path'), serve = require('./serve');
-const ROOT = path.join(__dirname, '..'), PORT = 8124, srv = serve(PORT);
-const IDS = [...fs.readFileSync(path.join(ROOT, 'src', 'data-missions.js'), 'utf8').matchAll(/^    id:'(\w+)'/gm)].map(m => m[1]);
-const PAGES = ['accueil', 'missions', 'comparer', 'flotte', 'flotte-qui', 'comparer-voyage', 'comparer-masse', 'comparer-vehicules', 'comparer-orbites', 'comparer-instruments', ...IDS, ...IDS.map(i => i + '-donnees'), ...IDS.map(i => i + '-donnees-mission'), ...IDS.map(i => i + '-donnees-orbite'), 'mro-donnees-ctx', 'mex-donnees-marsis', 'lro-donnees-lola', 'cassini-donnees-iss', 'messenger-donnees-mdis'];
+const PORT = 8124, srv = serve(PORT);
+const { IDS, ALL } = require('./pages');
+const PAGES = ALL;   // toutes les pages, y compris chaque page d'instrument
 const errors = [];
 const fail = m => { errors.push(m); console.log('ÉCHEC', m); };
 
@@ -44,6 +44,12 @@ const overflow = async (pg, where) => { const [sw, iw] = await pg.evaluate(() =>
       if (!h2) fail('page #' + p + ' (' + lang + ') : pas de titre');
       const pressed = await pg.locator('.vbtn[aria-pressed="true"]').count();
       if (pressed !== 1) fail('page #' + p + ' : ' + pressed + ' vue(s) d\'ensemble active(s) au lieu d\'une');
+      if (!dark) for (const e of await pg.evaluate(() => {
+        const o = [];
+        document.querySelectorAll('#page img').forEach(i => { if (!i.getAttribute('alt')) o.push('image sans texte de remplacement : ' + i.getAttribute('src')); else if (i.complete && !i.naturalWidth) o.push('image introuvable : ' + i.getAttribute('src')); });
+        document.querySelectorAll('#page a[href]').forEach(a => { const h = a.getAttribute('href'); if (!h || h === '#' || /undefined|null/.test(h)) o.push('lien vide : « ' + a.textContent.trim().slice(0, 40) + ' »'); });
+        document.querySelectorAll('#page [data-go]').forEach(a => { if (!a.getAttribute('data-go')) o.push('bouton sans destination'); });
+        return o; })) fail('page #' + p + ' (' + lang + ') : ' + e);
     }
     // ---- règle 6 : les boutons de vue d'ensemble ne bougent pas d'une page à l'autre
     const pos = [];
