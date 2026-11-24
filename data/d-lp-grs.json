@@ -9,8 +9,8 @@
  "xlab_en": "channel",
  "ylab_en": "counts",
  "column": "ACCEPTED SPECTRUM",
- "how_fr": "Spectre tracé par ce site à partir du fichier binaire de l'archive (colonne « ACCEPTED SPECTRUM ») : somme des 633 spectres du fichier (une journée, 32 s chacun), 512 canaux, échelle logarithmique. Les canaux ne sont pas convertis en énergie : l'étalonnage n'est pas dans le fichier. Chaque pic correspond à un élément (fer, potassium, thorium, hydrogène…).",
- "how_en": "Spectrum drawn by this site from the archive's binary file (column “ACCEPTED SPECTRUM”): sum of the file's 633 spectra (one day, 32 s each), 512 channels, log scale. Channels are not converted to energy: the calibration is not in the file. Each peak belongs to an element (iron, potassium, thorium, hydrogen…).",
+ "how_fr": "Spectre tracé par ce site à partir du fichier binaire de l'archive (colonne « ACCEPTED SPECTRUM ») : somme des 633 spectres du fichier (une journée, 32 s chacun), 512 canaux, échelle logarithmique. Les canaux ne sont pas convertis en énergie par ce site. Les pics sont des raies émises par des éléments du sol (fer, potassium, thorium, hydrogène…) ou par la sonde elle-même.",
+ "how_en": "Spectrum drawn by this site from the archive's binary file (column “ACCEPTED SPECTRUM”): sum of the file's 633 spectra (one day, 32 s each), 512 channels, log scale. Channels are not converted to energy by this site. Peaks are lines emitted by elements in the ground (iron, potassium, thorium, hydrogen…) or by the spacecraft itself.",
  "out_size": [
   902,
   418

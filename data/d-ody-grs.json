@@ -1,16 +1,16 @@
 {
  "archive": "PDS Geosciences Node (NASA), via le catalogue STAC-PLANET du PDSSP",
  "collection": "ode-mars-ody-grs-cgs",
- "product": "CGS_20090907_22_24",
- "datetime": "2009-09-07T22:59:56.212000Z",
- "href": "https://pds-geosciences.wustl.edu/ody/ody-m-grs-4-cgs-v1/odgc1_xxxx/2009/20090907/cgs_20090907_22_24.dat",
- "stac": "https://stac.stacplanet.pdssp.eu/collections/ode-mars-ody-grs-cgs/items/CGS_20090907_22_24",
+ "product": "CGS_20030630_22_24",
+ "datetime": "2003-06-30T23:00:17.320000Z",
+ "href": "https://pds-geosciences.wustl.edu/ody/ody-m-grs-4-cgs-v1/odgc1_xxxx/2003/20030630/cgs_20030630_22_24.dat",
+ "stac": "https://stac.stacplanet.pdssp.eu/collections/ode-mars-ody-grs-cgs/items/CGS_20030630_22_24",
  "instrument": "GRS",
  "xlab_en": "channel",
  "ylab_en": "counts",
  "column": "CORRECTED_SPECTRUM",
- "how_fr": "Spectre tracé par ce site à partir du fichier binaire de l'archive (colonne « CORRECTED_SPECTRUM ») : somme des 365 spectres du fichier (environ 2 h de mesures), 16384 canaux, échelle logarithmique. Les canaux ne sont pas convertis en énergie : l'étalonnage n'est pas dans le fichier. Chaque pic correspond à un élément (fer, potassium, thorium, hydrogène…).",
- "how_en": "Spectrum drawn by this site from the archive's binary file (column “CORRECTED_SPECTRUM”): sum of the file's 365 spectra (about 2 h of measurements), 16384 channels, log scale. Channels are not converted to energy: the calibration is not in the file. Each peak belongs to an element (iron, potassium, thorium, hydrogen…).",
+ "how_fr": "Spectre tracé par ce site à partir du fichier binaire de l'archive (colonne « CORRECTED_SPECTRUM ») : somme des 365 spectres du fichier (environ 2 h de mesures ; canaux regroupés par 16), 1024 canaux, échelle logarithmique. Les canaux ne sont pas convertis en énergie par ce site. Les pics sont des raies émises par des éléments du sol (fer, potassium, thorium, hydrogène…) ou par la sonde elle-même.",
+ "how_en": "Spectrum drawn by this site from the archive's binary file (column “CORRECTED_SPECTRUM”): sum of the file's 365 spectra (about 2 h of measurements; channels grouped by 16), 1024 channels, log scale. Channels are not converted to energy by this site. Peaks are lines emitted by elements in the ground (iron, potassium, thorium, hydrogen…) or by the spacecraft itself.",
  "out_size": [
   902,
   418
