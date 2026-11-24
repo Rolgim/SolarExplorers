@@ -41,13 +41,16 @@
 .m-name{ font-weight:800; font-stretch:75%; font-size:clamp(24px, 3.4vw, 40px); line-height:1; text-shadow:0 2px 14px #000; }
 .m-sub{ color:#C9CED2; font-size:13px; margin-top:7px; text-shadow:0 1px 8px #000; }
 .m-msg{ position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); margin:0; background:#14171A; color:#fff; padding:8px 12px; font-size:13px; max-width:80%; }
-.m-tools{ position:absolute; left:var(--gl); right:var(--gr); width:max-content; max-width:calc(100% - var(--gl) - var(--gr)); box-sizing:border-box; bottom:44px; display:flex; flex-wrap:wrap; gap:8px 10px; align-items:center; background:rgba(0,0,0,.72); padding:5px 8px; }
-.m-ex{ display:flex; gap:8px; align-items:center; font-size:13px; font-weight:600; }
-.m-ex input{ accent-color:#fff; }
-.m-b{ border:1px solid #98A1A7; background:#14171A; color:#fff; font:600 13px var(--f); padding:5px 10px; cursor:pointer; white-space:nowrap; }
-.m-b[aria-pressed="true"]{ background:#fff; color:#14171A; border-color:#fff; }
+.m-tools{ position:absolute; left:0; right:0; margin:0 auto; width:max-content; bottom:calc(14px + env(safe-area-inset-bottom, 0px)); display:flex; align-items:stretch; background:var(--paper); color:var(--ink); max-width:calc(100% - 24px); }
+.m-ex{ display:flex; align-items:center; gap:9px; padding:0 13px; height:38px; font-size:13px; font-weight:600; color:var(--ink); }
+.m-ex input{ width:120px; accent-color:var(--ink); }
+.m-tools svg{ width:16px; height:16px; flex:none; }
+.m-b{ display:flex; align-items:center; gap:7px; height:38px; padding:0 13px; border:0; border-left:1px solid var(--rule); background:transparent; color:var(--ink); font:600 13px var(--f); cursor:pointer; white-space:nowrap; }
+.m-b:hover{ background:var(--sheet); }
+.m-b[aria-pressed="true"]{ background:var(--mark); color:var(--on-mark); }
+.m-b:first-child{ border-left:0; }
 .m-b:focus-visible, .m-ex input:focus-visible{ outline:2px solid #fff; outline-offset:3px; }
-.m-hint{ position:absolute; left:var(--gl); bottom:12px; margin:0; font-size:12px; color:#E3E6E8; background:rgba(0,0,0,.72); padding:2px 8px; }
+.m-hint{ position:absolute; left:0; right:0; margin:0 auto !important; width:max-content; bottom:calc(66px + env(safe-area-inset-bottom, 0px)); white-space:nowrap; max-width:92%; overflow:hidden; text-overflow:ellipsis; pointer-events:none; margin:0; font-size:12px; color:#E3E6E8; background:rgba(0,0,0,.72); padding:2px 8px; }
 .m-panel{ width:min(400px, 42vw); flex:none; overflow-y:auto; background:var(--sheet); padding:14px 18px 32px; border-left:1px solid var(--rule); }
 .m-panel .ptl-row{ display:flex; align-items:stretch; gap:4px; border-bottom:1px solid var(--rule); margin-bottom:12px; }
 .m-panel .ptl{ display:flex; gap:4px; }
@@ -75,11 +78,16 @@ figure{ margin:0 0 10px; } figcaption{ font-size:12.5px; line-height:1.45; color
 @media (max-width: 720px){
   #page.is-mission{ overflow-y:auto; display:block; }
   .mission{ flex-direction:column; }
-  #stage.m-stage{ flex:none; height:56vh; min-height:320px; }
+  #stage.m-stage{ flex:none; height:46vh; min-height:300px; }
+  .m-hint{ display:none; }
+  .m-tools .lbl{ display:none; }
+  .m-b{ padding:0 11px; } .m-ex input{ width:84px; }
+  .m-tools{ bottom:8px; }
+  .m-hud{ top:10px; }
   .m-panel{ width:auto; border-left:0; }
 }
-.m-body-note{ position:absolute; right:var(--gr); bottom:12px; margin:0; max-width:46%; text-align:right; font-size:12px; color:#E3E6E8; background:rgba(0,0,0,.72); padding:2px 8px; }
-@media (max-width: 720px){ .m-body-note{ top:74px; bottom:auto; left:var(--gl); max-width:none; text-align:left; } }
+.m-body-note{ position:absolute; left:var(--gl); bottom:calc(96px + env(safe-area-inset-bottom, 0px)); margin:0; max-width:46%; text-align:left; font-size:12px; color:#E3E6E8; background:rgba(0,0,0,.72); padding:2px 8px; }
+@media (max-width: 720px){ .m-body-note{ bottom:54px; left:var(--gl); right:var(--gr); max-width:none; text-align:left; font-size:11px; } }
 
 /* ---------- accueil « Système solaire » : mise en page du « Ciel » d'Observatories (.home…, inst.css) ---------- */
 #page.is-solar{ padding:0; }

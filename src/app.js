@@ -78,16 +78,20 @@ function missionPage(m){
     '<p class="m-msg" id="m-msg" hidden></p>' +
     (m.body ? '<p class="m-body-note" id="m-body-note" hidden>' + T(m.body.name) + ' : ' + T('orbite en schéma de principe (tailles, altitude, inclinaison et vitesse non respectées)') + (m.file ? '' : ' · ' + T('pas de maquette libre de droits : la sonde est un point bleu')) + '</p>' : '') +
     '<div class="m-tools" role="toolbar" aria-label="' + T('Affichage') + '">' +
-      (m.file ? '<label class="m-ex"><span>' + T('Éclater') + '</span><input id="m-explode" type="range" min="0" max="100" value="' + Math.round(MS.explode*100) + '" aria-label="' + T('Écarter les pièces') + '"></label>' : '') +
-      '<button class="m-b" id="m-reset">' + T('Recadrer') + '</button>' +
-      (m.body ? '<button class="m-b" id="m-view" aria-pressed="' + (MS.view === 'orbit') + '">' + T('Vue d\'orbite') + '</button>' : '') +
-      '<button class="m-b" id="m-run" aria-pressed="' + !MS.run + '">' + T('Pause') + '</button></div>' +
+      (m.file ? '<label class="m-ex" title="' + T('Écarter les pièces') + '">' + ICO.ex + '<span class="lbl">' + T('Éclater') + '</span><input id="m-explode" type="range" min="0" max="100" value="' + Math.round(MS.explode*100) + '" aria-label="' + T('Écarter les pièces') + '"></label>' : '') +
+      '<button class="m-b" id="m-reset" title="' + T('Recadrer') + '">' + ICO.reset + '<span class="lbl">' + T('Recadrer') + '</span></button>' +
+      (m.body ? '<button class="m-b" id="m-view" aria-pressed="' + (MS.view === 'orbit') + '" title="' + T('Vue d\'orbite') + '">' + ICO.orbit + '<span class="lbl">' + T('Vue d\'orbite') + '</span></button>' : '') +
+      '<button class="m-b" id="m-run" aria-pressed="' + !MS.run + '" title="' + T('Pause') + '">' + ICO.pause + '<span class="lbl">' + T('Pause') + '</span></button></div>' +
     '<p class="m-hint">' + T(m.file ? 'Glisser pour tourner, molette pour zoomer, cliquer une pièce pour l\'identifier' : 'Glisser pour tourner, molette pour zoomer') + '</p>' +
     '</section><aside class="m-panel"><h2 class="sr-only">' + esc(m.name) + '</h2>' +
     '<div class="ptl-row"><div class="ptl" role="tablist" aria-label="' + T('Contenu du panneau') + '">' +
       ['fiche', 'parts'].map(function(k){ return '<button class="ptab" role="tab" data-ptab="' + k + '" aria-selected="' + (MS.tab === k) + '">' + T(k === 'fiche' ? 'Fiche' : 'Pièces') + (k === 'parts' ? ' <small>' + m.parts.length + '</small>' : '') + '</button>'; }).join('') +
     '</div><a class="ptab go" href="#' + m.id + '-donnees">' + T('Mission et instruments') + '</a></div><div id="m-body">' + (MS.tab === 'fiche' ? fiche(m) : partsHtml(m, MS.part)) + '</div></aside></div>';
 }
+/* icônes de la barre d'outils de la vue 3D (mêmes traits que celles d'Observatories) */
+var ICO = (function(){ function i(d){ return '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true" focusable="false">' + d + '</svg>'; }
+  return { ex:i('<rect x="5.5" y="5.5" width="5" height="5"/><path d="M8 3.6V1M8 15v-2.6M3.6 8H1M15 8h-2.6"/>'), reset:i('<path d="M1.5 5.5v-4h4M14.5 5.5v-4h-4M1.5 10.5v4h4M14.5 10.5v4h-4"/>'),
+    orbit:i('<ellipse cx="8" cy="8" rx="6.5" ry="3.2"/><circle cx="8" cy="8" r="2"/><circle cx="13.6" cy="6.4" r="1" fill="currentColor"/>'), pause:i('<path d="M5.5 3.5v9M10.5 3.5v9"/>') }; })();
 function mountMission(m){
   var msg = $('m-msg');
   if (!Viewer.available()){ msg.hidden = false; msg.textContent = T('La vue 3D demande WebGL, indisponible ici. La fiche reste lisible à droite.'); return; }
