@@ -1,0 +1,48 @@
+{
+ "archive": "PDS Geosciences Node (NASA), via le catalogue STAC-PLANET du PDSSP",
+ "collection": "ode-moon-lro-dlre-gdr-l2",
+ "product": "dgdr_jd_avg_cyl_20160926d_001_img",
+ "datetime": "2016-10-10T06:00:00Z",
+ "href": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/browse/gdr_l2/2016/cylindrical/jpg/dgdr_jd_avg_cyl_20160926d_001_jpg.jpg",
+ "stac": "https://stac.stacplanet.pdssp.eu/collections/ode-moon-lro-dlre-gdr-l2/items/dgdr_jd_avg_cyl_20160926d_001_img",
+ "instrument": "Diviner",
+ "full_size": [
+  1623,
+  993
+ ],
+ "crop": null,
+ "out_size": [
+  900,
+  551
+ ],
+ "stretch": null,
+ "footprint": {
+  "type": "Polygon",
+  "coordinates": [
+   [
+    [
+     180.0,
+     -90.0
+    ],
+    [
+     180.0,
+     90.0
+    ],
+    [
+     -180.0,
+     90.0
+    ],
+    [
+     -180.0,
+     -90.0
+    ],
+    [
+     180.0,
+     -90.0
+    ]
+   ]
+  ]
+ },
+ "fetched": "2026-11-24",
+ "inst": "lro:diviner"
+}

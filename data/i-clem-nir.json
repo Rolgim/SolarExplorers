@@ -1,0 +1,56 @@
+{
+ "archive": "PDS Geosciences Node (NASA), via le catalogue STAC-PLANET du PDSSP",
+ "collection": "ode-moon-clem-nir-mdim",
+ "product": "NI87S330",
+ "datetime": "2007-06-19T18:01:55Z",
+ "href": "https://pds-geosciences.wustl.edu/geocopy/imaging/clem1-l-n-5-dim-nir-v1.0/cl_5078/browse/ratio/large/ni87s330.jpg",
+ "stac": "https://stac.stacplanet.pdssp.eu/collections/ode-moon-clem-nir-mdim/items/NI87S330",
+ "instrument": "NIR",
+ "full_size": [
+  953,
+  910
+ ],
+ "crop": null,
+ "out_size": [
+  900,
+  859
+ ],
+ "stretch": null,
+ "footprint": {
+  "type": "Polygon",
+  "coordinates": [
+   [
+    [
+     -60.0,
+     -84.0
+    ],
+    [
+     -60.0,
+     -90.0
+    ],
+    [
+     0.0,
+     -90.0
+    ],
+    [
+     0.1262,
+     -90.0
+    ],
+    [
+     0.1262,
+     -84.0
+    ],
+    [
+     0.0,
+     -84.0
+    ],
+    [
+     -60.0,
+     -84.0
+    ]
+   ]
+  ]
+ },
+ "fetched": "2026-11-24",
+ "inst": "clem:nir"
+}

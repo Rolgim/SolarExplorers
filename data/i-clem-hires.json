@@ -1,0 +1,48 @@
+{
+ "archive": "PDS Geosciences Node (NASA), via le catalogue STAC-PLANET du PDSSP",
+ "collection": "ode-moon-clem-hires-mdim",
+ "product": "G78NN029",
+ "datetime": "1998-09-24T00:00:00Z",
+ "href": "https://pds-geosciences.wustl.edu/geocopy/imaging/clem1-l-h-5-dim-hires-v1.0/cl_6019/q1/browse/g78nn029.jpg",
+ "stac": "https://stac.stacplanet.pdssp.eu/collections/ode-moon-clem-hires-mdim/items/G78NN029",
+ "instrument": "HIRES",
+ "full_size": [
+  450,
+  450
+ ],
+ "crop": null,
+ "out_size": [
+  450,
+  450
+ ],
+ "stretch": null,
+ "footprint": {
+  "type": "Polygon",
+  "coordinates": [
+   [
+    [
+     21.8045,
+     77.0758
+    ],
+    [
+     36.8663,
+     77.0758
+    ],
+    [
+     36.8663,
+     80.0691
+    ],
+    [
+     21.8045,
+     80.0691
+    ],
+    [
+     21.8045,
+     77.0758
+    ]
+   ]
+  ]
+ },
+ "fetched": "2026-11-24",
+ "inst": "clem:hires"
+}

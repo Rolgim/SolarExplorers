@@ -1,0 +1,48 @@
+{
+ "archive": "JAXA DARTS (archive de SELENE), via le catalogue STAC-PLANET du PDSSP",
+ "collection": "ode-moon-sln-mi-mi3c",
+ "product": "MIA_3C5_03_03929S259E2809SC",
+ "datetime": "2015-02-10T07:08:01Z",
+ "href": "https://data.darts.isas.jaxa.jp/pub/pds3/sln-l-mi-4-level3c5-v3.0/lon280/browse/large/MIA_3C5_03_03929S259E2809SC.jpg",
+ "stac": "https://stac.stacplanet.pdssp.eu/collections/ode-moon-sln-mi-mi3c/items/MIA_3C5_03_03929S259E2809SC",
+ "instrument": "MI",
+ "full_size": [
+  512,
+  420
+ ],
+ "crop": null,
+ "out_size": [
+  512,
+  420
+ ],
+ "stretch": null,
+ "footprint": {
+  "type": "Polygon",
+  "coordinates": [
+   [
+    [
+     -79.4595,
+     -26.146
+    ],
+    [
+     -78.7578,
+     -26.146
+    ],
+    [
+     -78.7578,
+     -25.5698
+    ],
+    [
+     -79.4595,
+     -25.5698
+    ],
+    [
+     -79.4595,
+     -26.146
+    ]
+   ]
+  ]
+ },
+ "fetched": "2026-11-24",
+ "inst": "sln:mi"
+}

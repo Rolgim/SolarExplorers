@@ -1,0 +1,48 @@
+{
+ "archive": "JAXA DARTS (archive de SELENE), via le catalogue STAC-PLANET du PDSSP",
+ "collection": "ode-moon-sln-hdtv-hdtvedr",
+ "product": "SH_20090604T171500_WM8_1069",
+ "datetime": "2009-06-04T17:19:45Z",
+ "href": "https://data.darts.isas.jaxa.jp/pub/pds3/sln-l_e-hdtv-2-edr-v1.0/browse/large/200906/sh_20090604T171500_wm8/sh_20090604T171500_wm8_1069_bl.jpg",
+ "stac": "https://stac.stacplanet.pdssp.eu/collections/ode-moon-sln-hdtv-hdtvedr/items/SH_20090604T171500_WM8_1069",
+ "instrument": "HDTV",
+ "full_size": [
+  1920,
+  1200
+ ],
+ "crop": null,
+ "out_size": [
+  900,
+  562
+ ],
+ "stretch": null,
+ "footprint": {
+  "type": "Polygon",
+  "coordinates": [
+   [
+    [
+     -12.44,
+     25.64
+    ],
+    [
+     -27.15,
+     25.92
+    ],
+    [
+     -21.74,
+     14.29
+    ],
+    [
+     -18.3,
+     14.21
+    ],
+    [
+     -12.44,
+     25.64
+    ]
+   ]
+  ]
+ },
+ "fetched": "2026-11-24",
+ "inst": "sln:hdtv"
+}

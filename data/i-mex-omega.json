@@ -1,0 +1,48 @@
+{
+ "archive": "PDS Geosciences Node (NASA), via le catalogue STAC-PLANET du PDSSP",
+ "collection": "ode-mars-mex-omega-ddrgm",
+ "product": "ALBEDO_R1080_EQU_MAP",
+ "datetime": "2007-04-30T06:46:10Z",
+ "href": "https://pds-geosciences.wustl.edu/mex/mex-m-omega-5-ddr-global-maps-v1/mexomg_2000/browse/albedo/albedo_r1080_equ_map.png",
+ "stac": "https://stac.stacplanet.pdssp.eu/collections/ode-mars-mex-omega-ddrgm/items/ALBEDO_R1080_EQU_MAP",
+ "instrument": "OMEGA",
+ "full_size": [
+  2880,
+  1440
+ ],
+ "crop": null,
+ "out_size": [
+  900,
+  450
+ ],
+ "stretch": null,
+ "footprint": {
+  "type": "Polygon",
+  "coordinates": [
+   [
+    [
+     180.0,
+     -90.0
+    ],
+    [
+     180.0,
+     90.0
+    ],
+    [
+     -180.0,
+     90.0
+    ],
+    [
+     -180.0,
+     -90.0
+    ],
+    [
+     180.0,
+     -90.0
+    ]
+   ]
+  ]
+ },
+ "fetched": "2026-11-24",
+ "inst": "mex:omega"
+}

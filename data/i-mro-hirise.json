@@ -1,0 +1,48 @@
+{
+ "archive": "HiRISE (université d'Arizona), via le catalogue STAC-PLANET du PDSSP",
+ "collection": "ode-mars-mro-hirise-rdrv11",
+ "product": "ESP_088799_2535_RED",
+ "datetime": "2025-07-06T14:16:56.111000Z",
+ "href": "https://hirise.lpl.arizona.edu/PDS/EXTRAS/RDR/ESP/ORB_088700_088799/ESP_088799_2535/ESP_088799_2535_MIRB.abrowse.jpg",
+ "stac": "https://stac.stacplanet.pdssp.eu/collections/ode-mars-mro-hirise-rdrv11/items/ESP_088799_2535_RED",
+ "instrument": "HiRISE",
+ "full_size": [
+  2048,
+  1119
+ ],
+ "crop": null,
+ "out_size": [
+  900,
+  492
+ ],
+ "stretch": null,
+ "footprint": {
+  "type": "Polygon",
+  "coordinates": [
+   [
+    [
+     74.6259,
+     73.4056
+    ],
+    [
+     74.4721,
+     73.6686
+    ],
+    [
+     74.1337,
+     73.6523
+    ],
+    [
+     74.2927,
+     73.3896
+    ],
+    [
+     74.6259,
+     73.4056
+    ]
+   ]
+  ]
+ },
+ "fetched": "2026-11-24",
+ "inst": "mro:hirise"
+}

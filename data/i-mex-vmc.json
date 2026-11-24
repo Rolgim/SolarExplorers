@@ -1,0 +1,22 @@
+{
+ "archive": "PDS Geosciences Node (NASA), via le catalogue STAC-PLANET du PDSSP",
+ "collection": "ode-mars-mex-vmc-edr",
+ "product": "MEXVMC_2503120007",
+ "datetime": "2025-06-29T14:08:51Z",
+ "href": "https://pds-geosciences.wustl.edu/mex/mex-m-vmc-2-edr-ext9-v1/mexvmc_l2_0009/browse/2025/202506/20250629_1401_1435/vmc_se_250629_140851_007.png",
+ "stac": "https://stac.stacplanet.pdssp.eu/collections/ode-mars-mex-vmc-edr/items/MEXVMC_2503120007",
+ "instrument": "VMC",
+ "full_size": [
+  640,
+  480
+ ],
+ "crop": null,
+ "out_size": [
+  640,
+  480
+ ],
+ "stretch": null,
+ "footprint": null,
+ "fetched": "2026-11-24",
+ "inst": "mex:vmc"
+}

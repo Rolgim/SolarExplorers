@@ -1,0 +1,48 @@
+{
+ "archive": "PDS Geosciences Node (NASA), via le catalogue STAC-PLANET du PDSSP",
+ "collection": "ode-moon-ch1-orb-mrffr-moscdr",
+ "product": "fsb_xxxxx_3cp_pju_90s000_v1",
+ "datetime": "2009-02-25T19:59:23.369000Z",
+ "href": "https://pds-geosciences.wustl.edu/lunar/ch1-orb-l-mrffr-1-pdr-v1/ch1mrf_0xxx/extras/quikview/mosaics/fsb_xxxxx_3cp_pju_90s000_v1.jpg",
+ "stac": "https://stac.stacplanet.pdssp.eu/collections/ode-moon-ch1-orb-mrffr-moscdr/items/fsb_xxxxx_3cp_pju_90s000_v1",
+ "instrument": "Mini-SAR",
+ "full_size": [
+  2027,
+  2027
+ ],
+ "crop": null,
+ "out_size": [
+  900,
+  900
+ ],
+ "stretch": null,
+ "footprint": {
+  "type": "Polygon",
+  "coordinates": [
+   [
+    [
+     -180.0,
+     -90.0
+    ],
+    [
+     180.0,
+     -90.0
+    ],
+    [
+     180.0,
+     -80.0
+    ],
+    [
+     -180.0,
+     -80.0
+    ],
+    [
+     -180.0,
+     -90.0
+    ]
+   ]
+  ]
+ },
+ "fetched": "2026-11-24",
+ "inst": "ch1:minisar"
+}

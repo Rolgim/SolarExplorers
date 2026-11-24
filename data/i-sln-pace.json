@@ -1,0 +1,22 @@
+{
+ "archive": "JAXA DARTS (archive de SELENE), via le catalogue STAC-PLANET du PDSSP",
+ "collection": "ode-moon-sln-pace-etsum",
+ "product": "PACE_ET1_20081031_V001",
+ "datetime": "2008-10-31T11:59:59.500000Z",
+ "href": "https://data.darts.isas.jaxa.jp/pub/pds3/sln-l-pace-5-et-summary-v1.0/20081031/data/PACE_ET1_20081031_V001.png",
+ "stac": "https://stac.stacplanet.pdssp.eu/collections/ode-moon-sln-pace-etsum/items/PACE_ET1_20081031_V001",
+ "instrument": "PACE",
+ "full_size": [
+  865,
+  690
+ ],
+ "crop": null,
+ "out_size": [
+  865,
+  690
+ ],
+ "stretch": null,
+ "footprint": null,
+ "fetched": "2026-11-24",
+ "inst": "sln:pace"
+}

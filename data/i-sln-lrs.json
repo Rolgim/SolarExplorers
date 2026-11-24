@@ -1,0 +1,50 @@
+{
+ "archive": "JAXA DARTS (archive de SELENE), via le catalogue STAC-PLANET du PDSSP",
+ "collection": "ode-moon-sln-lrs-sar10c",
+ "product": "LRS_SAR10KM_C_70N_086867E",
+ "datetime": "2008-09-10T03:28:35.500000Z",
+ "href": "https://data.darts.isas.jaxa.jp/pub/pds3/sln-l-lrs-5-sndr-ss-sar10-complex-v1.0/20080910/browse/large/LRS_SAR10KM_C_70N_086867E.jpg",
+ "stac": "https://stac.stacplanet.pdssp.eu/collections/ode-moon-sln-lrs-sar10c/items/LRS_SAR10KM_C_70N_086867E",
+ "instrument": "LRS",
+ "full_size": [
+  512,
+  384
+ ],
+ "crop": null,
+ "out_size": [
+  512,
+  384
+ ],
+ "stretch": null,
+ "footprint": {
+  "type": "LineString",
+  "coordinates": [
+   [
+    86.868,
+    70.001
+   ],
+   [
+    86.9293,
+    71.0008
+   ],
+   [
+    86.9971,
+    72.0006
+   ],
+   [
+    87.0727,
+    73.0003
+   ],
+   [
+    87.1574,
+    74.0
+   ],
+   [
+    87.196,
+    74.419
+   ]
+  ]
+ },
+ "fetched": "2026-11-24",
+ "inst": "sln:lrs"
+}

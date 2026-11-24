@@ -1,0 +1,22 @@
+{
+ "archive": "PDS Planetary Plasma Interactions Node (NASA), via le catalogue STAC-PLANET du PDSSP",
+ "collection": "ode-moon-lp-er-datal2",
+ "product": "er_340ev_199906",
+ "datetime": "1999-06-27T16:06:50Z",
+ "href": "https://pds-ppi.igpp.ucla.edu/data/lp-er-derived//browse/L2_340.GIF",
+ "stac": "https://stac.stacplanet.pdssp.eu/collections/ode-moon-lp-er-datal2/items/er_340ev_199906",
+ "instrument": "ER",
+ "full_size": [
+  960,
+  750
+ ],
+ "crop": null,
+ "out_size": [
+  900,
+  703
+ ],
+ "stretch": null,
+ "footprint": null,
+ "fetched": "2026-11-24",
+ "inst": "lp:er"
+}

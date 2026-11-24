@@ -1,0 +1,22 @@
+{
+ "archive": "PDS Geosciences Node (NASA), via le catalogue STAC-PLANET du PDSSP",
+ "collection": "ode-moon-lro-lola-rdr4",
+ "product": "lolardr_260830012_dat",
+ "datetime": "2026-03-24T01:10:44.854000Z",
+ "href": "https://pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/BROWSE/lola_rdr/lro_es_163/lolardr_260830012_edt.png",
+ "stac": "https://stac.stacplanet.pdssp.eu/collections/ode-moon-lro-lola-rdr4/items/lolardr_260830012_dat",
+ "instrument": "LOLA",
+ "full_size": [
+  2200,
+  1700
+ ],
+ "crop": null,
+ "out_size": [
+  900,
+  695
+ ],
+ "stretch": null,
+ "footprint": null,
+ "fetched": "2026-11-24",
+ "inst": "lro:lola"
+}

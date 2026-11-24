@@ -1,0 +1,88 @@
+{
+ "archive": "PDS Geosciences Node (NASA), via le catalogue STAC-PLANET du PDSSP",
+ "collection": "ode-mars-mro-crism-mtrdr",
+ "product": "frt000251c0_07_if165j_mtr3",
+ "datetime": "2012-05-21T07:49:28.889000Z",
+ "href": "https://pds-geosciences.wustl.edu/mro/mro-m-crism-5-rdr-mptargeted-v1/mrocr_4001/browse/2012/2012_142/frt000251c0/frt000251c0_07_brcarj_mtr3.png",
+ "stac": "https://stac.stacplanet.pdssp.eu/collections/ode-mars-mro-crism-mtrdr/items/frt000251c0_07_if165j_mtr3",
+ "instrument": "CRISM",
+ "full_size": [
+  778,
+  702
+ ],
+ "crop": null,
+ "out_size": [
+  778,
+  702
+ ],
+ "stretch": null,
+ "footprint": {
+  "type": "Polygon",
+  "coordinates": [
+   [
+    [
+     77.0204,
+     16.9738
+    ],
+    [
+     77.0023,
+     17.0285
+    ],
+    [
+     76.996,
+     17.0597
+    ],
+    [
+     76.9991,
+     17.0942
+    ],
+    [
+     77.0107,
+     17.1552
+    ],
+    [
+     76.9525,
+     17.149
+    ],
+    [
+     76.8938,
+     17.1434
+    ],
+    [
+     76.8348,
+     17.1395
+    ],
+    [
+     76.7758,
+     17.1366
+    ],
+    [
+     76.8061,
+     17.0381
+    ],
+    [
+     76.8065,
+     17.0027
+    ],
+    [
+     76.8012,
+     16.9421
+    ],
+    [
+     76.9104,
+     16.9607
+    ],
+    [
+     76.9654,
+     16.9665
+    ],
+    [
+     77.0204,
+     16.9738
+    ]
+   ]
+  ]
+ },
+ "fetched": "2026-11-24",
+ "inst": "mro:crism"
+}

@@ -1,0 +1,74 @@
+{
+ "archive": "JAXA DARTS (archive de SELENE), via le catalogue STAC-PLANET du PDSSP",
+ "collection": "ode-moon-sln-rsat-vrad-grav",
+ "product": "SGM90D_MAP",
+ "datetime": "2022-01-05T17:00:41.799000Z",
+ "href": "https://data.darts.isas.jaxa.jp/pub/pds3/sln-l-rise-5-grav-map-v1.0/browse/large/SGM90d_map.jpg",
+ "stac": "https://stac.stacplanet.pdssp.eu/collections/ode-moon-sln-rsat-vrad-grav/items/SGM90D_MAP",
+ "instrument": "RSAT/VRAD",
+ "full_size": [
+  512,
+  256
+ ],
+ "crop": null,
+ "out_size": [
+  512,
+  256
+ ],
+ "stretch": null,
+ "footprint": {
+  "type": "MultiPolygon",
+  "coordinates": [
+   [
+    [
+     [
+      180.0,
+      -90.0
+     ],
+     [
+      180.0,
+      90.0
+     ],
+     [
+      0.0,
+      90.0
+     ],
+     [
+      0.0,
+      -90.0
+     ],
+     [
+      180.0,
+      -90.0
+     ]
+    ]
+   ],
+   [
+    [
+     [
+      -0.25,
+      -90.0
+     ],
+     [
+      -0.25,
+      90.0
+     ],
+     [
+      -180.0,
+      90.0
+     ],
+     [
+      -180.0,
+      -90.0
+     ],
+     [
+      -0.25,
+      -90.0
+     ]
+    ]
+   ]
+  ]
+ },
+ "fetched": "2026-11-24",
+ "inst": "sln:rsat"
+}

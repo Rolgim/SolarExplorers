@@ -1,0 +1,48 @@
+{
+ "archive": "JAXA DARTS (archive de SELENE), via le catalogue STAC-PLANET du PDSSP",
+ "collection": "ode-moon-sln-grs-imap",
+ "product": "GRS_IMAP_U_071214_081216",
+ "datetime": "2022-01-05T14:29:48.023000Z",
+ "href": "https://data.darts.isas.jaxa.jp/pub/pds3/sln-l-grs-5-gamma-ray-map-v1.0/browse/large/GRS_IMAP_U_071214_081216.jpg",
+ "stac": "https://stac.stacplanet.pdssp.eu/collections/ode-moon-sln-grs-imap/items/GRS_IMAP_U_071214_081216",
+ "instrument": "GRS",
+ "full_size": [
+  360,
+  180
+ ],
+ "crop": null,
+ "out_size": [
+  360,
+  180
+ ],
+ "stretch": null,
+ "footprint": {
+  "type": "Polygon",
+  "coordinates": [
+   [
+    [
+     180.0,
+     -90.0
+    ],
+    [
+     180.0,
+     90.0
+    ],
+    [
+     -180.0,
+     90.0
+    ],
+    [
+     -180.0,
+     -90.0
+    ],
+    [
+     180.0,
+     -90.0
+    ]
+   ]
+  ]
+ },
+ "fetched": "2026-11-24",
+ "inst": "sln:grs"
+}

@@ -1,0 +1,48 @@
+{
+ "archive": "PDS Geosciences Node (NASA), via le catalogue STAC-PLANET du PDSSP",
+ "collection": "ode-mars-mgs-tes-timap",
+ "product": "GLOBAL_TI_DAY_2007",
+ "datetime": "2007-01-30T00:00:00Z",
+ "href": "https://pds-geosciences.wustl.edu/mgs/mgs-m-tes-5-timap-v1/mgst_9001/browse/dbmap2007.jpg",
+ "stac": "https://stac.stacplanet.pdssp.eu/collections/ode-mars-mgs-tes-timap/items/GLOBAL_TI_DAY_2007",
+ "instrument": "TES",
+ "full_size": [
+  3000,
+  2250
+ ],
+ "crop": null,
+ "out_size": [
+  900,
+  675
+ ],
+ "stretch": null,
+ "footprint": {
+  "type": "Polygon",
+  "coordinates": [
+   [
+    [
+     180.0,
+     -90.0
+    ],
+    [
+     180.0,
+     90.0
+    ],
+    [
+     -180.0,
+     90.0
+    ],
+    [
+     -180.0,
+     -90.0
+    ],
+    [
+     180.0,
+     -90.0
+    ]
+   ]
+  ]
+ },
+ "fetched": "2026-11-24",
+ "inst": "mgs:tes"
+}

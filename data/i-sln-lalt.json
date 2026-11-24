@@ -1,0 +1,74 @@
+{
+ "archive": "JAXA DARTS (archive de SELENE), via le catalogue STAC-PLANET du PDSSP",
+ "collection": "ode-moon-sln-lalt-topom",
+ "product": "LALT_GT_SP_IMG",
+ "datetime": "2022-02-10T14:38:31.567000Z",
+ "href": "https://data.darts.isas.jaxa.jp/pub/pds3/sln-l-lalt-5-topo-gt-sp-img-v2.0/browse/large/LALT_GT_SP_IMG.jpg",
+ "stac": "https://stac.stacplanet.pdssp.eu/collections/ode-moon-sln-lalt-topom/items/LALT_GT_SP_IMG",
+ "instrument": "LALT",
+ "full_size": [
+  150,
+  150
+ ],
+ "crop": null,
+ "out_size": [
+  150,
+  150
+ ],
+ "stretch": null,
+ "footprint": {
+  "type": "MultiPolygon",
+  "coordinates": [
+   [
+    [
+     [
+      0.0156,
+      -89.9961
+     ],
+     [
+      180.0,
+      -89.9961
+     ],
+     [
+      180.0,
+      -79.0039
+     ],
+     [
+      0.0156,
+      -79.0039
+     ],
+     [
+      0.0156,
+      -89.9961
+     ]
+    ]
+   ],
+   [
+    [
+     [
+      -180.0,
+      -79.0039
+     ],
+     [
+      -180.0,
+      -89.9961
+     ],
+     [
+      -0.0156,
+      -89.9961
+     ],
+     [
+      -0.0156,
+      -79.0039
+     ],
+     [
+      -180.0,
+      -79.0039
+     ]
+    ]
+   ]
+  ]
+ },
+ "fetched": "2026-11-24",
+ "inst": "sln:lalt"
+}
