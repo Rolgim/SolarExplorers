@@ -164,7 +164,7 @@ def main():
            "| Images de l'ESA sur Wikimedia Commons | CC BY-SA 3.0 IGO, licence relue dans les métadonnées de Commons au téléchargement | " + ESA_IGO + " |",
            "| Textures Solar System Scope | CC BY 4.0 | https://www.solarsystemscope.com/textures/ |",
            "| Maquettes NASA 3D Resources et Eyes on the Solar System | Usage libre (règles d'usage des médias de la NASA) | " + NASA_MEDIA + " |",
-           "| Maquettes ESA SCIFLEET | à confirmer : site sans licence lisible (application sans texte, relevé du 24/11/2026) | https://scifleet.esa.int/ |", ""]
+           "| Maquettes ESA SCIFLEET | à confirmer : aucune licence publiée sur SCIFLEET ; les conditions générales du site de l'ESA (https://www.esa.int/terms-and-conditions, relues le 24/11/2026) demandent un accord écrit pour redistribuer ou modifier ; demande à l'ESA en cours | https://scifleet.esa.int/ |", ""]
     for kind in ("aperçu d'archive", "tracé", "image de presse", "image Commons", "texture", "trajectoire", "maquette 3D", "police", "bibliothèque", "schémas", "code"):
         sel = [r for r in rows if r["kind"] == kind]
         if not sel: continue

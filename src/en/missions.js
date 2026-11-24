@@ -37,7 +37,7 @@ var EN_MISSIONS = {
     agency:'ESA',
     desc:"Launched in 2003, Mars Express is Europe's first spacecraft to Mars. From an elongated, nearly polar orbit, its HRSC camera maps the planet in colour and in 3D, OMEGA charts its mineralogy and the MARSIS radar probes the subsurface. Its Beagle 2 lander never made contact.",
     refs:{ sc:'Mars Express: The spacecraft', eng:'Mars Express: Engineering, Table of Facts', hz:'JPL Horizons, object -41 (Mars Express), object header', stac:'STAC-PLANET, ode-mars-mex-* collections (probe of 23 November 2026)' },
-    model:{ license:'ESA SCIFLEET, free download; no written reuse licence found on the site (to be confirmed with ESA)' },
+    model:{ license:'ESA SCIFLEET, free download; no licence published on SCIFLEET, and the general terms of ESA\'s website require written permission to redistribute or adapt: to be confirmed with ESA (request under way)' },
     parts:{
       hga:{ name:'High-gain antenna', desc:'Fixed dish on one face of the bus, for links with Earth.', facts:['Diameter: 1.6 m'] },
       solar:{ name:'Solar arrays', desc:'Two steerable arrays, folded at launch and deployed shortly after.', facts:['Area: 11.42 m²', 'More than 500 W when Mars is farthest from the Sun'] },
@@ -220,7 +220,7 @@ var EN_MISSIONS = {
     agency:'ESA and Roscosmos (ACS and FREND instruments led by IKI, Moscow)',
     desc:"Launched in 2016 with the Schiaparelli lander, which crashed, the European and Russian Trace Gas Orbiter searches the atmosphere of Mars for gases present in tiny amounts, including methane. Its CaSSIS camera photographs the surface in colour and in 3D, and it relays radio traffic for rovers on Mars.",
     refs:{ naif:'Spacecraft frame, SPICE kernel em16_tgo_v24.tf', hz:'JPL Horizons, object -143 (ExoMars TGO), object header', stac:'STAC-PLANET, ode-mars-em16tgo-* collections (probe of 23 November 2026)', fs:'ExoMars Factsheet (October 2016)' },
-    model:{ license:'ESA SCIFLEET, free download; no written reuse licence found on the site (to be confirmed with ESA)' },
+    model:{ license:'ESA SCIFLEET, free download; no licence published on SCIFLEET, and the general terms of ESA\'s website require written permission to redistribute or adapt: to be confirmed with ESA (request under way)' },
     parts:{
       hga:{ name:'High-gain antenna', desc:'Dish pointed by a two-axis gimbal, for links with Earth.', facts:['Diameter: 2.2 m'] },
       solar:{ name:'Solar arrays', desc:'Two steerable wings on either side of the bus.', facts:['17.5 m tip to tip', 'Power: ≈ 2,000 W'] },
@@ -248,7 +248,7 @@ var EN_MISSIONS = {
     agency:'ESA', targets:['Venus'],
     desc:"Europe's first spacecraft to Venus, Venus Express was built on the Mars Express platform with instruments inherited from Mars Express and Rosetta. From 2006 to 2014 it studied the planet's thick atmosphere, its clouds, its winds that circle the planet in a few days and its upper atmosphere swept by the solar wind.",
     refs:{ frame:'Spacecraft frame, SPICE kernel VEX_V11.TF', hz:'JPL Horizons, object -248 (Venus Express), object header', stac:'STAC-PLANET, ode-venus-vex-* collections (probe of 23 November 2026)' },
-    model:{ license:'ESA SCIFLEET, free download; no written reuse licence found on the site (to be confirmed with ESA)' },
+    model:{ license:'ESA SCIFLEET, free download; no licence published on SCIFLEET, and the general terms of ESA\'s website require written permission to redistribute or adapt: to be confirmed with ESA (request under way)' },
     parts:{
       hga:{ name:'Large antenna', desc:'Fixed dish on one face of the bus; a second, smaller antenna on top was used close to the Sun.', facts:['Pointed 5° from the spacecraft X axis'] },
       solar:{ name:'Solar arrays', desc:'Two steerable arrays on either side of the bus.', facts:['Area: 5.7 m²', '1,100 W in Venus orbit'] },

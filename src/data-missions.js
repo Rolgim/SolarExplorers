@@ -88,7 +88,7 @@ var MISSIONS = [
     ],
     horizons:'-41', stac:'ode-mars-mex-',
     file:'models/mex.glb', bytes:0, unit:0.008466,   /* antenne grand gain : 189 unités pour 1,6 m */
-    model:{ src:'ESA SCIFLEET, « Mars Express »', license:'ESA SCIFLEET, téléchargement libre ; aucune licence de réutilisation écrite trouvée sur le site (à confirmer auprès de l\'ESA)', u:'https://scifleet.esa.int/' },
+    model:{ src:'ESA SCIFLEET, « Mars Express »', license:'ESA SCIFLEET, téléchargement libre ; aucune licence publiée sur SCIFLEET, et les conditions générales du site de l\'ESA réservent la redistribution et les œuvres dérivées à un accord écrit : à confirmer auprès de l\'ESA (demande en cours)', u:'https://scifleet.esa.int/' },
     body:{ name:'Mars', tex:'mars', nadir:[0, 1, 0] },   /* pont supérieur : HRSC, OMEGA et l'ancien emplacement de Beagle 2 */
     view:{ az:0.7, el:0.3, dist:1.5, r:5.5 }, sun:[0.5, 0.8, 0.4],
     real:{ key:'mex-img', alt:"Aperçu d'une image HRSC de la surface de Mars" },
@@ -420,7 +420,7 @@ var MISSIONS = [
     ],
     horizons:'-143', stac:'ode-mars-em16tgo-',
     file:'models/tgo.glb', bytes:0, unit:0.0254,   /* ≈ 2,5 cm par unité : panneaux de 688 unités de bout en bout pour 17,5 m annoncés */
-    model:{ src:'ESA SCIFLEET, « trace_gas_orbiter »', license:'ESA SCIFLEET, téléchargement libre ; aucune licence de réutilisation écrite trouvée sur le site (à confirmer auprès de l\'ESA)', u:'https://scifleet.esa.int/' },
+    model:{ src:'ESA SCIFLEET, « trace_gas_orbiter »', license:'ESA SCIFLEET, téléchargement libre ; aucune licence publiée sur SCIFLEET, et les conditions générales du site de l\'ESA réservent la redistribution et les œuvres dérivées à un accord écrit : à confirmer auprès de l\'ESA (demande en cours)', u:'https://scifleet.esa.int/' },
     body:{ name:'Mars', tex:'mars', nadir:[-1, 0, 0] },   /* NAIF em16_tgo_v24.tf : -Y sonde vers Mars (pont scientifique), moteur et anneau du lanceur côté -X sonde (-Y maquette), antenne sur la face +Y sonde (+X maquette) */
     view:{ az:0.8, el:0.3, dist:1.5, r:9.5 }, sun:[0.4, 0.8, 0.4],
     real:{ key:'tgo-img', alt:"Aperçu d'une image CaSSIS de la surface de Mars", none:'Les aperçus CaSSIS de l\'archive de l\'ESA ne sont pas accessibles sans compte (réponse 401) : pas encore de donnée réelle.' },
@@ -471,7 +471,7 @@ var MISSIONS = [
     ],
     horizons:'-248', stac:'ode-venus-vex-',
     file:'models/vex.glb', bytes:0, unit:0.025,   /* ≈ 2,5 cm par unité, estimé sur le module (1,7 m pour ≈ 70 unités) */
-    model:{ src:'ESA SCIFLEET, « venus_express »', license:'ESA SCIFLEET, téléchargement libre ; aucune licence de réutilisation écrite trouvée sur le site (à confirmer auprès de l\'ESA)', u:'https://scifleet.esa.int/' },
+    model:{ src:'ESA SCIFLEET, « venus_express »', license:'ESA SCIFLEET, téléchargement libre ; aucune licence publiée sur SCIFLEET, et les conditions générales du site de l\'ESA réservent la redistribution et les œuvres dérivées à un accord écrit : à confirmer auprès de l\'ESA (demande en cours)', u:'https://scifleet.esa.int/' },
     body:{ name:'Vénus', tex:'venus', nadir:[0, 1, 0] },   /* ESA VEX_V11.TF : +Z sonde vers Vénus (+Y maquette), moteur sur -Z sonde (-Y maquette), grande antenne HGA1 sur +X sonde (-Z maquette), panneaux sur ±Y sonde (±X maquette) */
     view:{ az:0.8, el:0.3, dist:1.5, r:4.5 }, sun:[0.4, 0.8, 0.4],
     real:{ key:'vex-img', alt:'Donnée de Venus Express', none:'Les collections de Venus Express dans STAC-PLANET sont des spectres (VIRTIS) et des séries de mesures (MAG), sans aperçu image : pas de donnée réelle à montrer ici.' },
