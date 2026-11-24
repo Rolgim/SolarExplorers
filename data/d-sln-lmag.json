@@ -7,8 +7,11 @@
  "stac": "https://stac.stacplanet.pdssp.eu/collections/ode-moon-sln-lmag-mamap/items/MA_MAPOP_001",
  "instrument": "LMAG",
  "unit": "nT",
- "how_fr": "Carte tracée par ce site à partir du fichier image de l'archive (4e des 9 bandes : intensité totale F du champ magnétique d'origine crustale, à 30 km d'altitude, en nanoteslas). Octets lus sans signe (l'étiquette dit « entier signé », mais une intensité est positive) ; en blanc : pas de valeur.",
- "how_en": "Map drawn by this site from the archive's image file (4th of 9 bands: total intensity F of the crustal magnetic field, at 30 km altitude, in nanotesla). Bytes read as unsigned (the label says “signed integer”, but an intensity is positive); white: no value.",
+ "saturated": 38,
+ "valid": 58396,
+ "doc": "https://data.darts.isas.jaxa.jp/pub/pds3/sln-l-lmag-5-ma-grid-v1.0/document/LMAG_Format_en_V01.pdf",
+ "how_fr": "Carte tracée par ce site à partir du fichier image de l'archive, lu comme le dit son étiquette (octets signés × 0,02 nT) : 3e des 9 bandes, composante Z (verticale, d'après le document de format LMAG de la JAXA) du champ magnétique d'origine crustale à 30 km d'altitude. Codée sur un octet, la valeur ne dépasse pas ±2,54 nT : 0,1 % des cases sont à cette limite, les anomalies les plus fortes y sont donc écrêtées. En blanc : pas de valeur.",
+ "how_en": "Map drawn by this site from the archive's image file, read as its label says (signed bytes × 0.02 nT): 3rd of 9 bands, Z component (vertical, according to JAXA's LMAG format document) of the crustal magnetic field at 30 km altitude. Stored in one byte, a value cannot exceed ±2.54 nT: 0.1 % of cells sit at that limit, so the strongest anomalies are clipped there. White: no value.",
  "out_size": [
   902,
   484

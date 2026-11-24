@@ -1,0 +1,25 @@
+{
+ "archive": "PDS Geosciences Node (NASA), via le catalogue STAC-PLANET du PDSSP",
+ "collection": "ode-mars-ody-grs-cgs",
+ "product": "CGS_20090907_22_24",
+ "datetime": "2009-09-07T22:59:56.212000Z",
+ "href": "https://pds-geosciences.wustl.edu/ody/ody-m-grs-4-cgs-v1/odgc1_xxxx/2009/20090907/cgs_20090907_22_24.dat",
+ "stac": "https://stac.stacplanet.pdssp.eu/collections/ode-mars-ody-grs-cgs/items/CGS_20090907_22_24",
+ "instrument": "GRS",
+ "xlab_en": "channel",
+ "ylab_en": "counts",
+ "column": "CORRECTED_SPECTRUM",
+ "how_fr": "Spectre tracé par ce site à partir du fichier binaire de l'archive (colonne « CORRECTED_SPECTRUM ») : somme des 365 spectres du fichier (environ 2 h de mesures), 16384 canaux, échelle logarithmique. Les canaux ne sont pas convertis en énergie : l'étalonnage n'est pas dans le fichier. Chaque pic correspond à un élément (fer, potassium, thorium, hydrogène…).",
+ "how_en": "Spectrum drawn by this site from the archive's binary file (column “CORRECTED_SPECTRUM”): sum of the file's 365 spectra (about 2 h of measurements), 16384 channels, log scale. Channels are not converted to energy: the calibration is not in the file. Each peak belongs to an element (iron, potassium, thorium, hydrogen…).",
+ "out_size": [
+  902,
+  418
+ ],
+ "plot": true,
+ "fetched": "2026-11-24",
+ "license_fr": "Domaine public (données et images de la NASA, non protégées par le droit d'auteur) ; citer le PDS",
+ "license_en": "Public domain (NASA data and images, not copyrighted); cite the PDS",
+ "license_url": "https://pds-geosciences.wustl.edu/jplcopyright.html",
+ "credit_line": "NASA/JPL-Caltech/Arizona State University / NASA Planetary Data System",
+ "status": "ok"
+}

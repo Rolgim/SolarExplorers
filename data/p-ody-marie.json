@@ -1,0 +1,28 @@
+{
+ "archive": "NASA Image and Video Library (images.nasa.gov), reprise du Photojournal du JPL",
+ "collection": null,
+ "product": "PIA03480",
+ "title": "Estimated Radiation Dosage on Mars",
+ "datetime": "2002-03-01T19:20:05Z",
+ "credit": "NASA/Jet Propulsion Laboratory/JSC",
+ "description": "This global map of Mars, based on data from NASA Mars Odyssey, shows the estimated radiation dosages from cosmic rays reaching the surface, a serious health concern for any future human exploration of the planet.",
+ "href": "https://images-assets.nasa.gov/image/PIA03480/PIA03480~medium.jpg",
+ "page": "https://images.nasa.gov/details/PIA03480",
+ "instrument": "MARIE",
+ "full_size": [
+  1280,
+  1024
+ ],
+ "out_size": [
+  900,
+  720
+ ],
+ "stretch": null,
+ "press": true,
+ "fetched": "2026-11-24",
+ "license_fr": "Domaine public (données et images de la NASA, non protégées par le droit d'auteur) ; sans logo de la NASA",
+ "license_en": "Public domain (NASA data and images, not copyrighted); no NASA logo",
+ "license_url": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
+ "credit_line": "NASA/Jet Propulsion Laboratory/JSC",
+ "status": "ok"
+}

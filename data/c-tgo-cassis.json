@@ -1,0 +1,32 @@
+{
+ "archive": "Wikimedia Commons",
+ "collection": null,
+ "product": "North polar dunes on Mars ESA19702704.png",
+ "title": "North polar dunes on Mars ESA19702704",
+ "datetime": null,
+ "credit": "ESA/Roscosmos/CaSSIS",
+ "source": "North polar dunes on Mars",
+ "description": "This captivating image was taken in the north polar region of Mars by the ESA/Roscosmos ExoMars Trace Gas Orbiter’s CaSSIS camera.Dunes come in various characteristic shapes on Mars just as on Earth, providing clues about the prevailing wind direction. Monitoring them over time also gives us a natural laboratory to study how dunes evolve, and how sediments in general are transported around the planet.During winter in the polar regions, a thin layer of carbon dioxide ice covers the surface and then sublimates – turns directly from ice into vapour – with the first light of spring. In the dune fields, this springtime defrosting occurs from the bottom up, trapping gas between the ice and the sand. As the ice cracks, this gas is released violently and carries sand with it, forming the dark patches and streaks observed in this CaSSIS image.The image also captures ‘barchan’ dunes – the crescent or U-shaped dunes seen in the right of the image – as they join and merge into barchanoid ridges. The curved tips of the barchan dunes point downwind. The transition from barchan to barchanoid dunes tells us that secondary winds also play a role in shaping the dune field.The image is centred at 74.46ºN/348.3ºE. The image was taken on 25 May 2019.New images and results from the ESA/Roscosmos ExoMars Trace Gas Orbiter’s suite of scientific instruments will be discussed this week at the joint meeting of the European Planetary Science Congress and the Division of Planetary Sciences in Geneva, Swi",
+ "href": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/70/North_polar_dunes_on_Mars_ESA19702704.png/1280px-North_polar_dunes_on_Mars_ESA19702704.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+ "page": "https://commons.wikimedia.org/wiki/File:North_polar_dunes_on_Mars_ESA19702704.png",
+ "instrument": "CaSSIS",
+ "license": "CC BY-SA 3.0 IGO",
+ "license_url": "https://creativecommons.org/licenses/by-sa/3.0/igo/deed.en",
+ "attribution": "ESA/Roscosmos/CaSSIS, CC BY-SA IGO 3.0",
+ "full_size": [
+  1400,
+  900
+ ],
+ "out_size": [
+  900,
+  579
+ ],
+ "stretch": null,
+ "press": true,
+ "commons": true,
+ "fetched": "2026-11-24",
+ "license_fr": "CC BY-SA 3.0 IGO (partage dans les mêmes conditions)",
+ "license_en": "CC BY-SA 3.0 IGO (share-alike)",
+ "credit_line": "ESA/Roscosmos/CaSSIS, CC BY-SA IGO 3.0",
+ "status": "ok"
+}

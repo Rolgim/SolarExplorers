@@ -1,0 +1,32 @@
+{
+ "archive": "Wikimedia Commons",
+ "collection": null,
+ "product": "GRAIL MoonKAM NASA mission 01.jpg",
+ "title": "GRAIL MoonKAM NASA mission 01",
+ "datetime": null,
+ "credit": "NASA",
+ "source": "Grail MoonKAM Gallery: http://images.moonkam.ucsd.edu/v/MK12_03/",
+ "description": "Foto de la superficie lunar tomada por la sonda Ebb",
+ "href": "https://upload.wikimedia.org/wikipedia/commons/7/74/GRAIL_MoonKAM_NASA_mission_01.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+ "page": "https://commons.wikimedia.org/wiki/File:GRAIL_MoonKAM_NASA_mission_01.jpg",
+ "instrument": "MoonKAM",
+ "license": "Domaine public",
+ "license_url": "https://commons.wikimedia.org/wiki/File:GRAIL_MoonKAM_NASA_mission_01.jpg",
+ "attribution": null,
+ "full_size": [
+  640,
+  432
+ ],
+ "out_size": [
+  640,
+  432
+ ],
+ "stretch": null,
+ "press": true,
+ "commons": true,
+ "fetched": "2026-11-24",
+ "license_fr": "Domaine public (données et images de la NASA, non protégées par le droit d'auteur)",
+ "license_en": "Public domain (NASA data and images, not copyrighted)",
+ "credit_line": "NASA",
+ "status": "ok"
+}

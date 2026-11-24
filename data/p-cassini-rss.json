@@ -1,0 +1,28 @@
+{
+ "archive": "NASA Image and Video Library (images.nasa.gov), reprise du Photojournal du JPL",
+ "collection": null,
+ "product": "PIA07872",
+ "title": "Small Particles in Saturn Rings",
+ "datetime": "2005-05-23T16:45:00Z",
+ "credit": "NASA/JPL",
+ "description": "Small Particles in Saturn Rings",
+ "href": "https://images-assets.nasa.gov/image/PIA07872/PIA07872~medium.jpg",
+ "page": "https://images.nasa.gov/details/PIA07872",
+ "instrument": "RSS",
+ "full_size": [
+  1280,
+  960
+ ],
+ "out_size": [
+  900,
+  675
+ ],
+ "stretch": null,
+ "press": true,
+ "fetched": "2026-11-24",
+ "license_fr": "Domaine public (données et images de la NASA, non protégées par le droit d'auteur) ; sans logo de la NASA",
+ "license_en": "Public domain (NASA data and images, not copyrighted); no NASA logo",
+ "license_url": "https://www.jpl.nasa.gov/jpl-image-use-policy/",
+ "credit_line": "NASA/JPL",
+ "status": "ok"
+}

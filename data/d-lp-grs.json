@@ -1,0 +1,25 @@
+{
+ "archive": "PDS Geosciences Node (NASA), via le catalogue STAC-PLANET du PDSSP",
+ "collection": "ode-moon-lp-grs-rdr",
+ "product": "1999_209_grs",
+ "datetime": "1999-07-28T11:59:59Z",
+ "href": "https://pds-geosciences.wustl.edu/lunar/lp-l-grs-3-rdr-v1/lp_2xxx/grs/1999_209_grs.dat",
+ "stac": "https://stac.stacplanet.pdssp.eu/collections/ode-moon-lp-grs-rdr/items/1999_209_grs",
+ "instrument": "GRS",
+ "xlab_en": "channel",
+ "ylab_en": "counts",
+ "column": "ACCEPTED SPECTRUM",
+ "how_fr": "Spectre tracé par ce site à partir du fichier binaire de l'archive (colonne « ACCEPTED SPECTRUM ») : somme des 633 spectres du fichier (une journée, 32 s chacun), 512 canaux, échelle logarithmique. Les canaux ne sont pas convertis en énergie : l'étalonnage n'est pas dans le fichier. Chaque pic correspond à un élément (fer, potassium, thorium, hydrogène…).",
+ "how_en": "Spectrum drawn by this site from the archive's binary file (column “ACCEPTED SPECTRUM”): sum of the file's 633 spectra (one day, 32 s each), 512 channels, log scale. Channels are not converted to energy: the calibration is not in the file. Each peak belongs to an element (iron, potassium, thorium, hydrogen…).",
+ "out_size": [
+  902,
+  418
+ ],
+ "plot": true,
+ "fetched": "2026-11-24",
+ "license_fr": "Domaine public (données et images de la NASA, non protégées par le droit d'auteur) ; citer le PDS",
+ "license_en": "Public domain (NASA data and images, not copyrighted); cite the PDS",
+ "license_url": "https://pds-geosciences.wustl.edu/jplcopyright.html",
+ "credit_line": "NASA (Lunar Prospector) / NASA Planetary Data System",
+ "status": "ok"
+}
