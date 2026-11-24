@@ -514,7 +514,7 @@
    "page": "https://stac.stacplanet.pdssp.eu/collections/ode-moon-sln-hdtv-hdtvedr/items/SH_20090604T171500_WM8_1069",
    "archive": "JAXA DARTS (archive de SELENE), via le catalogue STAC-PLANET du PDSSP",
    "license": "© JAXA/NHK : usage non commercial avec ce crédit ; usage commercial interdit sans accord",
-   "license_url": "https://www.kaguya.jaxa.jp/en/",
+   "license_url": "https://darts.isas.jaxa.jp/planet/project/selene/hdtv/",
    "credit": "JAXA/NHK",
    "fetched": "2026-11-24",
    "transform": "réduit de 1920 × 1200 à 900 × 562 px, enregistré en JPEG",

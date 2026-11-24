@@ -153,11 +153,11 @@ function when(m, d){
 }
 /* licence et crédit de l'image, écrits dans data/*.json par tools/data/credits.py ; registre complet : CREDITS.md */
 var CREDITS_URL = 'https://github.com/Rolgim/SolarExplorers/blob/main/CREDITS.md';
-function licLine(d){
+function licLine(d, noCredit){
   if (!d.license_fr) return '';
   var en = OBS_LANG === 'en', l = en ? d.license_en : d.license_fr;
   return '<br>' + T('Licence') + (en ? ': ' : ' : ') + (d.license_url ? '<a href="' + esc(d.license_url) + '" rel="noopener" target="_blank">' + esc(l) + '</a>' : esc(l)) +
-    (d.credit_line ? ' · ' + T('Crédit') + (en ? ': ' : ' : ') + esc(d.credit_line) : '') + ' · <a href="' + CREDITS_URL + '" rel="noopener" target="_blank">' + T('registre des crédits') + '</a>';
+    (d.credit_line && !noCredit ? ' · ' + T('Crédit') + (en ? ': ' : ' : ') + esc(d.credit_line) : '') + ' · <a href="' + CREDITS_URL + '" rel="noopener" target="_blank">' + T('registre des crédits') + '</a>';
 }
 function realData(m, R){
   R = R || m.real;
@@ -192,7 +192,7 @@ function pressImage(m, R, d){
     (d.datetime ? T('Image publiée le') + ' ' + esc(String(d.datetime).slice(0, 10)) + '. ' : '') + esc(R.what || '') + ' ' +
     (en ? 'Whole image as published (' + d.full_size[0] + ' × ' + d.full_size[1] + ' pixels)' + (out[0] !== d.full_size[0] ? ', scaled to ' + out[0] + ' × ' + out[1] : '') + ', already processed by the team: a press image, not an archive product.'
         : 'Image entière telle que publiée (' + d.full_size[0] + ' × ' + d.full_size[1] + ' pixels)' + (out[0] !== d.full_size[0] ? ', ramenée à ' + out[0] + ' × ' + out[1] : '') + ', déjà traitée par l\'équipe : image de presse, pas un produit d\'archive.') + '<br>' +
-    T('Crédit') + (en ? ': ' : ' : ') + esc(d.credit) + ' · ' + T(d.archive) + ' · <a href="' + esc(d.page) + '" rel="noopener" target="_blank">' + T('page de l\'image') + '</a> · ' + T('téléchargé le') + ' ' + esc(d.fetched) + licLine(d) +
+    T('Crédit') + (en ? ': ' : ' : ') + esc(d.credit) + ' · ' + T(d.archive) + ' · <a href="' + esc(d.page) + '" rel="noopener" target="_blank">' + T('page de l\'image') + '</a> · ' + T('téléchargé le') + ' ' + esc(d.fetched) + licLine(d, true) +
     (R.why ? '<br><span class="note">' + esc(R.why) + '</span>' : '') + '</figcaption></figure>';
 }
 var PAGES = {

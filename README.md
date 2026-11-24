@@ -38,3 +38,7 @@ Après une modification dans `src/`, relancer `node build.js` et commiter `index
 Le workflow « Données réelles » (recettes STAC du PDSSP, PDS, PSA ; trajectoires JPL Horizons) arrivera avec la première mission.
 
 Pour lancer les tests en local : `npm install --no-save playwright@1.56.0 axe-core@4.10.2`, `npx playwright install chromium`, puis `node tools/smoke.js`, `node tools/a11y.js` et `node tools/i18n-scan.js`.
+
+## Crédits et licences
+
+Tout ce que le site montre sans l'avoir créé (images, tracés de données, textures, trajectoires, maquettes 3D, polices, bibliothèques) est listé dans [CREDITS.md](CREDITS.md), avec sa source, sa licence, son crédit, sa date de téléchargement et les transformations faites. Ce registre est généré par `tools/data/credits.py` ; la licence de chaque image est aussi affichée sous l'image.

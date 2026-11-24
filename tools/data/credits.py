@@ -46,7 +46,7 @@ def rule(name, d):
         return (PD[0] + " ; sans logo de la NASA", PD[1] + "; no NASA logo", u, d.get("credit") or "NASA", "ok")
     if name == "i-sln-hdtv":
         return ("© JAXA/NHK : usage non commercial avec ce crédit ; usage commercial interdit sans accord", "© JAXA/NHK: non-commercial use with this credit; no commercial use without permission",
-                "https://www.kaguya.jaxa.jp/en/", "JAXA/NHK", "usage restreint")
+                "https://darts.isas.jaxa.jp/planet/project/selene/hdtv/", "JAXA/NHK", "usage restreint")
     if "JAXA" in arch or "SELENE" in arch:
         return ("Données ouvertes de l'ISAS/JAXA (politique de données de l'ISAS) : citer « ISAS/JAXA » et signaler les modifications", "ISAS/JAXA open data (ISAS data policy): credit “ISAS/JAXA” and state changes", ISAS, "ISAS/JAXA", "ok")
     if name in MEX or (m == "mex" and not d.get("press")):
@@ -133,7 +133,7 @@ def main():
            "| HiRISE (université d'Arizona) | Domaine public, crédit NASA/JPL-Caltech/University of Arizona | " + HIRISE + " |",
            "| Bibliothèque d'images de la NASA, Photojournal du JPL | Domaine public, sans logo de la NASA | " + NASA_MEDIA + " ; " + JPL_POLICY + " |",
            "| JAXA DARTS (SELENE/Kaguya) | Données ouvertes, crédit ISAS/JAXA, modifications signalées | " + ISAS + " |",
-           "| Caméra HDTV de Kaguya | © JAXA/NHK, usage non commercial | https://www.kaguya.jaxa.jp/en/ |",
+           "| Caméra HDTV de Kaguya | © JAXA/NHK, usage non commercial | https://darts.isas.jaxa.jp/planet/project/selene/hdtv/ |",
            "| Images HRSC de Mars Express | CC BY-SA 3.0 IGO, ESA/DLR/FU Berlin | " + HRSC + " |",
            "| Autres données de Mars Express (OMEGA, MARSIS, VMC), copies au PDS | à confirmer ; traitées comme CC BY-SA 3.0 IGO | " + ESA_IGO + " |",
            "| Images de l'ESA sur Wikimedia Commons | CC BY-SA 3.0 IGO, licence relue dans les métadonnées de Commons au téléchargement | " + ESA_IGO + " |",
