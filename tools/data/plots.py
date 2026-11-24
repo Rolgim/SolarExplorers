@@ -17,8 +17,10 @@ S = None   # session requests, fournie par fetch_data.py
 INK, MID = "#14171A", "#3A4147"
 plt.rcParams.update({"font.family": "DejaVu Sans", "font.size": 10, "axes.edgecolor": MID, "axes.labelcolor": INK, "xtick.color": MID, "ytick.color": MID})
 
-def items(collection, n=60):
-    r = S.post(STAC + "/search", json={"collections": [collection], "limit": n, "sortby": [{"field": "properties.datetime", "direction": "desc"}]}, timeout=120)
+def items(collection, n=60, when=None):
+    q = {"collections": [collection], "limit": n, "sortby": [{"field": "properties.datetime", "direction": "desc"}]}
+    if when: q["datetime"] = when
+    r = S.post(STAC + "/search", json=q, timeout=120)
     r.raise_for_status(); return r.json().get("features", [])
 def pick(collection, rx=None, avoid=None):
     for f in items(collection):
@@ -212,8 +214,8 @@ def gamma_plot(name, f, c, u, inst, arch, spec, rows, dur_fr, dur_en, col):
     ax.semilogy(ch[tot > 0], tot[tot > 0], lw=0.7, color="#B0462F")
     ax.set_xlabel("canal / channel"); ax.set_ylabel("coups / counts"); ax.set_title(f["id"] + " (" + str(rows) + ")", fontsize=9, color=MID); fig.tight_layout()
     save(name, fig, dict(base(f, c, u, inst, arch), xlab_en="channel", ylab_en="counts", column=col,
-         how_fr="Spectre tracé par ce site à partir du fichier binaire de l'archive (colonne « " + col + " ») : somme des " + str(rows) + " spectres du fichier (" + dur_fr + "), " + str(tot.size) + " canaux, échelle logarithmique. Les canaux ne sont pas convertis en énergie : l'étalonnage n'est pas dans le fichier. Chaque pic correspond à un élément (fer, potassium, thorium, hydrogène…).",
-         how_en="Spectrum drawn by this site from the archive's binary file (column “" + col + "”): sum of the file's " + str(rows) + " spectra (" + dur_en + "), " + str(tot.size) + " channels, log scale. Channels are not converted to energy: the calibration is not in the file. Each peak belongs to an element (iron, potassium, thorium, hydrogen…)."))
+         how_fr="Spectre tracé par ce site à partir du fichier binaire de l'archive (colonne « " + col + " ») : somme des " + str(rows) + " spectres du fichier (" + dur_fr + "), " + str(tot.size) + " canaux, échelle logarithmique. Les canaux ne sont pas convertis en énergie par ce site. Les pics sont des raies émises par des éléments du sol (fer, potassium, thorium, hydrogène…) ou par la sonde elle-même.",
+         how_en="Spectrum drawn by this site from the archive's binary file (column “" + col + "”): sum of the file's " + str(rows) + " spectra (" + dur_en + "), " + str(tot.size) + " channels, log scale. Channels are not converted to energy by this site. Peaks are lines emitted by elements in the ground (iron, potassium, thorium, hydrogen…) or by the spacecraft itself."))
 
 def lp_grs():
     """Lunar Prospector, spectromètre gamma : une journée de spectres (512 canaux, échantillons de 32 s)."""
@@ -223,13 +225,19 @@ def lp_grs():
     gamma_plot("d-lp-grs", f, c, u, "GRS", "PDS Geosciences Node (NASA)", column(get(u), rows, rb, col), rows, "une journée, 32 s chacun", "one day, 32 s each", col["NAME"])
 
 def ody_grs():
-    """Mars Odyssey, spectromètre gamma : spectres corrigés d'un fichier de 2 h (colonnes décrites dans un fichier .FMT à part)."""
-    c = "ode-mars-ody-grs-cgs"; f = pick(c); lab = label(get(asset(f, r"\.lbl$")).decode("latin-1")); u = asset(f, r"\.dat$")
-    fmt = get(asset(f, r"\.fmt$")).decode("latin-1"); cols = columns(fmt)
-    print("  colonnes GRS Odyssey :", [(x.get("NAME"), x.get("ITEMS"), x.get("DATA_TYPE")) for x in cols][:60])
-    col = max((x for x in cols if int(x.get("ITEMS", 1)) >= 256), key=lambda x: (("SPECTRUM" in x["NAME"] or "SPECTRA" in x["NAME"]) and "GAMMA" in x["NAME"], int(x.get("ITEMS", 1))))
-    rows, rb = int(lab["TIME_SERIES.ROWS"]), int(lab["TIME_SERIES.ROW_BYTES"])
-    gamma_plot("d-ody-grs", f, c, u, "GRS", "PDS Geosciences Node (NASA)", column(get(u), rows, rb, col), rows, "environ 2 h de mesures", "about 2 h of measurements", col["NAME"])
+    """Mars Odyssey, spectromètre gamma : spectres corrigés d'un fichier de 2 h (colonnes décrites dans un fichier .FMT à part).
+    Les fichiers récents sont presque vides (sonde du 24/11/2026 : 28 cases non nulles sur 6 millions en 2009) : on prend un fichier
+    de 2003, en pleine mission scientifique, et on vérifie qu'il contient des coups."""
+    c = "ode-mars-ody-grs-cgs"
+    for f in items(c, 12, "2003-06-01T00:00:00Z/2003-06-30T23:59:59Z"):
+        lab = label(get(asset(f, r"\.lbl$")).decode("latin-1")); u = asset(f, r"\.dat$")
+        cols = columns(get(asset(f, r"\.fmt$")).decode("latin-1")); col = next(x for x in cols if x["NAME"] == "CORRECTED_SPECTRUM")
+        rows, rb = int(lab["TIME_SERIES.ROWS"]), int(lab["TIME_SERIES.ROW_BYTES"]); spec = column(get(u), rows, rb, col)
+        print("  ", f["id"], "somme", float(np.nansum(spec)))
+        if np.nansum(spec) < 1e4: continue
+        spec = spec.reshape(rows, -1, 16).sum(axis=2)   # canaux regroupés par 16 : 1 024 points
+        return gamma_plot("d-ody-grs", f, c, u, "GRS", "PDS Geosciences Node (NASA)", spec, rows, "environ 2 h de mesures ; canaux regroupés par 16", "about 2 h of measurements; channels grouped by 16", col["NAME"])
+    raise RuntimeError("aucun fichier GRS Odyssey avec des coups")
 
 RECIPES = {"mro:rss": mro_rss, "grail:lgrs": grail_lgrs, "sln:lmag": sln_lmag, "lp:ns": lp_ns, "clem:lidar": clem_lidar, "lp:rss": lp_rss, "lp:grs": lp_grs, "ody:grs": ody_grs}   # sln:upi retiré : l'image TVIS la plus récente n'est que du bruit
 def run(session):
