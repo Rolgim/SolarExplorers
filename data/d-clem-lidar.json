@@ -7,9 +7,9 @@
  "stac": "https://stac.stacplanet.pdssp.eu/collections/ode-moon-clem-lidar-topo/items/r300_346",
  "instrument": "LIDAR",
  "ylab_en": "radius − 1,737.4 km (km)",
- "column": "RADIUS OF LUNAR SPHEROID",
- "how_fr": "Profil tracé par ce site à partir de la table de l'archive (colonne « RADIUS OF LUNAR SPHEROID ») : un point par tir laser valide, le long d'une révolution. Les valeurs hors de 1 700 à 1 760 km sont écartées comme échos parasites.",
- "how_en": "Profile drawn by this site from the archive's table (column “RADIUS OF LUNAR SPHEROID”): one point per valid laser shot, along one revolution. Values outside 1,700 to 1,760 km are discarded as spurious echoes.",
+ "column": "FIRST RADIUS INSIDE WINDOW",
+ "how_fr": "Profil tracé par ce site à partir de la table de l'archive (colonne « FIRST RADIUS INSIDE WINDOW ») : un point par tir laser valide, le long d'une révolution. Les valeurs hors de 1 700 à 1 760 km sont écartées comme échos parasites ; l'étiquette prévient que le premier écho n'est pas toujours le bon.",
+ "how_en": "Profile drawn by this site from the archive's table (column “FIRST RADIUS INSIDE WINDOW”): one point per valid laser shot, along one revolution. Values outside 1,700 to 1,760 km are discarded as spurious echoes; the label warns that the first echo is not always the right one.",
  "out_size": [
   902,
   396

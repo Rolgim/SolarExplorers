@@ -7,8 +7,8 @@
  "stac": "https://stac.stacplanet.pdssp.eu/collections/ode-moon-sln-lmag-mamap/items/MA_MAPOP_001",
  "instrument": "LMAG",
  "unit": "nT",
- "how_fr": "Carte tracée par ce site à partir du fichier image de l'archive (4e des 9 bandes : intensité totale F du champ magnétique d'origine crustale, à 30 km d'altitude, en nanoteslas).",
- "how_en": "Map drawn by this site from the archive's image file (4th of 9 bands: total intensity F of the crustal magnetic field, at 30 km altitude, in nanotesla).",
+ "how_fr": "Carte tracée par ce site à partir du fichier image de l'archive (4e des 9 bandes : intensité totale F du champ magnétique d'origine crustale, à 30 km d'altitude, en nanoteslas). Octets lus sans signe (l'étiquette dit « entier signé », mais une intensité est positive) ; en blanc : pas de valeur.",
+ "how_en": "Map drawn by this site from the archive's image file (4th of 9 bands: total intensity F of the crustal magnetic field, at 30 km altitude, in nanotesla). Bytes read as unsigned (the label says “signed integer”, but an intensity is positive); white: no value.",
  "out_size": [
   902,
   484
