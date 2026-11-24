@@ -15,5 +15,10 @@
   396
  ],
  "plot": true,
- "fetched": "2026-11-24"
+ "fetched": "2026-11-24",
+ "license_fr": "Domaine public (données et images de la NASA, non protégées par le droit d'auteur) ; citer le PDS",
+ "license_en": "Public domain (NASA data and images, not copyrighted); cite the PDS",
+ "license_url": "https://pds-geosciences.wustl.edu/jplcopyright.html",
+ "credit_line": "NASA (Lunar Prospector) / NASA Planetary Data System",
+ "status": "ok"
 }

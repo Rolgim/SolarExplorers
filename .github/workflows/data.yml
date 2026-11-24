@@ -23,6 +23,8 @@ jobs:
       - run: pip install --quiet requests pillow numpy matplotlib
       - run: python tools/data/fetch_data.py ${{ github.event.inputs.recettes }}
       - run: python tools/data/fetch_orbits.py
+      - name: Registre des crédits et licences (CREDITS.md, data/credits.json, licence dans chaque data/*.json)
+        run: python tools/data/credits.py
       - uses: actions/setup-node@v4
         with: { node-version: 22 }
       - name: Reconstruire le site avec les nouvelles données
@@ -31,7 +33,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data index.html
+          git add data index.html CREDITS.md
           git diff --cached --quiet && echo "Rien de nouveau" && exit 0
           git commit -m "Données réelles : mise à jour"
           git pull --rebase origin main

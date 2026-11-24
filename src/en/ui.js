@@ -71,6 +71,8 @@ var EN_UI = {
   "PDS de ShadowCam (Arizona State University), via le catalogue STAC-PLANET du PDSSP":"ShadowCam PDS (Arizona State University), via the PDSSP STAC-PLANET catalogue",
   "Crédit":"Credit",
   "page de l'image":"image page",
+  "registre des crédits":"credits register",
+  "Wikimedia Commons":"Wikimedia Commons",
   "NASA Image and Video Library (images.nasa.gov), reprise du Photojournal du JPL":"NASA Image and Video Library (images.nasa.gov), republished from JPL's Photojournal",
   "Archive":"Archive",
   "collection":"collection",

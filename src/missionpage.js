@@ -216,6 +216,7 @@ function detail(m, it, X){
   if ((window.DATA_FILES || {})['d-' + ik.slice(2)]) figs.push(X.real(m, { key:'d-' + ik.slice(2), altRaw:L('Tracé des données de ', 'Plot of data from ') + it.name }));
   if (it.real) figs.push(X.real(m, it.real));
   if ((window.DATA_FILES || {})['p-' + ik.slice(2)]) figs.push(X.real(m, { key:'p-' + ik.slice(2), altRaw:L('Image publiée par la NASA à partir des données de ', 'Image released by NASA from data of ') + it.name }));
+  if ((window.DATA_FILES || {})['c-' + ik.slice(2)]) figs.push(X.real(m, { key:'c-' + ik.slice(2), altRaw:L('Image publiée à partir des données de ', 'Image released from data of ') + it.name }));
   if (figs.length) s += '<div class="isec wide"><h3>' + L('Une donnée réelle', 'Real data') + '</h3>' + figs.join('') + '</div>';
   else if (realInst(m) !== it) s += '<div class="isec wide"><h3>' + L('Une donnée réelle', 'Real data') + '</h3><p class="note">' + esc(noData(m, it)) + '</p></div>';
   s += '<div class="isec wide"><h3>' + L('Produits de données', 'Data products') + '</h3>';

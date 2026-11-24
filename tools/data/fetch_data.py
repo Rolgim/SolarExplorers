@@ -113,12 +113,47 @@ def press(name, nid, instrument):
 PRESS = {"mro:marci": "PIA22329", "mro:mcs": "PIA22737", "mro:rss": "PIA20277", "mex:marsis": "PIA09224",
          "cassini:iss": "PIA14908", "cassini:vims": "PIA21923", "cassini:cirs": "PIA20020", "cassini:uvis": "PIA21899", "cassini:radar": "PIA21626",
          "messenger:grns": "PIA19414", "messenger:xrs": "PIA19417", "messenger:mla": "PIA10183", "messenger:mascs": "PIA19418", "messenger:mag": "PIA11404",
-         "ody:grs": "PIA04253", "mgs:mola": "PIA00957"}
+         "ody:grs": "PIA04253", "mgs:mola": "PIA00957", "ody:marie": "PIA03480", "cassini:rss": "PIA07872"}
 def press_images():
     for key, nid in PRESS.items():
         m, i = key.split(":")
         try: press("p-" + m + "-" + i, nid, NAMES.get(key, i.upper()))
         except Exception as e: print("  ", key, nid, repr(e)[:200])
+
+# Images trouvées sur Wikimedia Commons (sonde tools/probe/probe_commons.py, 24/11/2026), retenues à la main : l'image montre des données
+# de l'instrument (pas de photo de matériel, pas de vue d'artiste) et sa licence permet la réutilisation (domaine public ou CC BY-SA 3.0 IGO
+# de l'ESA). La licence, l'auteur et la source sont relus dans les métadonnées de Commons au moment du téléchargement, puis écrits à côté
+# de l'image ; une licence absente de la liste ci-dessous fait échouer la recette. Fichiers data/c-<mission>-<instrument>.*
+COMMONS = {"tgo:cassis": "File:North polar dunes on Mars ESA19702704.png",
+           "kplo:shadowcam": "File:ShadowCam-Shackleton-Crater-768x465.png",
+           "lp:grs": "File:Lunar Thorium concentrations.jpg",
+           "lro:lend": "File:LEND Looks for Water at the South Pole.jpg",
+           "grail:moonkam": "File:GRAIL MoonKAM NASA mission 01.jpg"}
+OK_LIC = {"public domain": "Domaine public", "pd": "Domaine public", "cc by-sa 3.0 igo": "CC BY-SA 3.0 IGO", "cc-by-sa-3.0-igo": "CC BY-SA 3.0 IGO"}
+def strip(h): return re.sub(r"\s+", " ", re.sub(r"<[^>]+>", "", h or "")).strip()
+def commons(name, title, instrument):
+    r = S.get("https://commons.wikimedia.org/w/api.php", params={"action": "query", "titles": title, "prop": "imageinfo", "iiprop": "url|extmetadata|size",
+              "iiurlwidth": 1200, "format": "json"}, timeout=120); r.raise_for_status()
+    p = next(iter(r.json()["query"]["pages"].values())); ii = p["imageinfo"][0]; md = ii.get("extmetadata", {})
+    g = lambda k: strip(md.get(k, {}).get("value"))
+    lic = g("LicenseShortName"); key = lic.lower()
+    if key not in OK_LIC: raise RuntimeError("licence non retenue : " + lic)
+    href = ii.get("thumburl") or ii["url"]
+    im = Image.open(io.BytesIO(S.get(href, timeout=300).content)); im = im.convert("RGB"); full = [ii.get("width"), ii.get("height")]
+    k = min(1.0, 900 / max(im.size)); out = im.resize((round(im.size[0] * k), round(im.size[1] * k)), Image.LANCZOS) if k < 1 else im
+    out.save(os.path.join(DATA, name + ".jpg"), quality=86, optimize=True)
+    meta = {"archive": "Wikimedia Commons", "collection": None, "product": title.replace("File:", ""), "title": g("ObjectName") or title.replace("File:", ""),
+            "datetime": (re.search(r"\d{4}-\d{2}-\d{2}", g("DateTimeOriginal") or "") or [None])[0], "credit": g("Artist") or g("Credit"), "source": g("Credit"),
+            "description": g("ImageDescription")[:1500], "href": href, "page": ii.get("descriptionurl"), "instrument": instrument,
+            "license": OK_LIC[key], "license_url": g("LicenseUrl") or None, "attribution": g("Attribution") or None,
+            "full_size": full, "out_size": list(out.size), "stretch": None, "press": True, "commons": True, "fetched": datetime.date.today().isoformat()}
+    json.dump(meta, open(os.path.join(DATA, name + ".json"), "w"), indent=1, ensure_ascii=False)
+    print(name, ":", title, lic, full)
+def commons_images():
+    for key, title in COMMONS.items():
+        m, i = key.split(":")
+        try: commons("c-" + m + "-" + i, title, NAMES.get(key, i.upper()))
+        except Exception as e: print("  ", key, title, repr(e)[:200])
 
 def mro_hirise():
     """MRO, HiRISE : les serveurs de l'université d'Arizona refusent GitHub Actions (sonde du 23/11/2026). Voie de repli vérifiée le
@@ -231,7 +266,7 @@ def body_textures():
     if bad: raise RuntimeError("textures non récupérées : " + ", ".join(bad))
 
 RECIPES = {"mro_ctx": mro_ctx, "mro_hirise": mro_hirise, "mex_hrsc": mex_hrsc, "lro_lroc": lro_lroc, "messenger_mdis": messenger_mdis, "cassini_vims": cassini_vims,
-           "ody_themis": ody_themis, "mgs_moc": mgs_moc, "tgo_cassis": tgo_cassis, "clem_uvvis": clem_uvvis, "mgn_sar": mgn_sar, "vo_vis": vo_vis, "sln_tc": sln_tc, "ch1_m3": ch1_m3, "kplo_shadowcam": kplo_shadowcam, "instruments": inst_previews, "presse": press_images, "traces": traces, "textures": body_textures}
+           "ody_themis": ody_themis, "mgs_moc": mgs_moc, "tgo_cassis": tgo_cassis, "clem_uvvis": clem_uvvis, "mgn_sar": mgn_sar, "vo_vis": vo_vis, "sln_tc": sln_tc, "ch1_m3": ch1_m3, "kplo_shadowcam": kplo_shadowcam, "instruments": inst_previews, "presse": press_images, "commons": commons_images, "traces": traces, "textures": body_textures}
 if __name__ == "__main__":
     want = sys.argv[1:] or list(RECIPES)
     bad = 0

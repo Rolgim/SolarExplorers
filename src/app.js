@@ -65,7 +65,7 @@ function partsHtml(m, sel){
     var on = p.key === sel;
     return '<li class="part' + (on ? ' on' : '') + '"><button data-part="' + p.key + '" aria-expanded="' + on + '">' + esc(p.name) + '</button>' +
       (on ? '<div class="part-body"><p>' + esc(p.desc) + '</p>' + (p.facts.length ? '<ul>' + p.facts.map(function(f){ return '<li>' + esc(OBS_NUM(f[0])) + src(m, f[1]) + '</li>'; }).join('') + '</ul>' : '') + '</div>' : '') + '</li>';
-  }).join('') + '</ul>' + (m.file ? '<p class="note">' + T('Maquette') + ' : ' + esc(m.model.src) + ' · ' + T('Licence') + ' : ' + esc(m.model.license) + '</p>'
+  }).join('') + '</ul>' + (m.file ? '<p class="note">' + T('Maquette') + ' : ' + esc(m.model.src) + ' · ' + T('Licence') + ' : ' + esc(m.model.license) + ' · <a href="' + CREDITS_URL + '" rel="noopener" target="_blank">' + T('registre des crédits') + '</a></p>'
     : '<p class="note">' + T('Pas de maquette 3D libre de droits pour cette sonde : elle est figurée par un point bleu sur son orbite.') + '</p>') + bodyCredit(m);
 }
 function bodyCredit(m){
@@ -151,6 +151,14 @@ function when(m, d){
   return end && day > end.date ? T('Date du produit dans le catalogue') + ' : ' + esc(day) + ' (' + T('après la fin de la mission : ce n\'est pas la date de prise de vue') + '). '
     : T('Prise le') + ' ' + esc(day) + '. ';
 }
+/* licence et crédit de l'image, écrits dans data/*.json par tools/data/credits.py ; registre complet : CREDITS.md */
+var CREDITS_URL = 'https://github.com/Rolgim/SolarExplorers/blob/main/CREDITS.md';
+function licLine(d){
+  if (!d.license_fr) return '';
+  var en = OBS_LANG === 'en', l = en ? d.license_en : d.license_fr;
+  return '<br>' + T('Licence') + (en ? ': ' : ' : ') + (d.license_url ? '<a href="' + esc(d.license_url) + '" rel="noopener" target="_blank">' + esc(l) + '</a>' : esc(l)) +
+    (d.credit_line ? ' · ' + T('Crédit') + (en ? ': ' : ' : ') + esc(d.credit_line) : '') + ' · <a href="' + CREDITS_URL + '" rel="noopener" target="_blank">' + T('registre des crédits') + '</a>';
+}
 function realData(m, R){
   R = R || m.real;
   var key = R && R.key, d = key && (window.DATA_FILES || {})[key];
@@ -167,24 +175,24 @@ function realData(m, R){
   return '<figure class="real"><img src="data/' + key + '.jpg" width="' + out[0] + '" height="' + out[1] + '" alt="' + (R.altRaw ? esc(R.altRaw) : T(R.alt)) + ' (' + esc(d.product) + ')">' +
     '<figcaption><strong>' + esc(d.instrument) + ' · ' + esc(d.product) + '</strong><br>' + when(m, d) + how +
     (d.stretch ? (en ? ', contrast stretched between the ' + d.stretch[0] + ' and ' + d.stretch[1] + ' percentiles' : ', contraste étiré entre les centiles ' + OBS_NUM(String(d.stretch[0]).replace('.', ',')) + ' et ' + OBS_NUM(String(d.stretch[1]).replace('.', ','))) : '') + '.<br>' +
-    T('Archive') + ' : ' + T(d.archive) + ' · ' + T('collection') + ' <code>' + esc(d.collection) + '</code> · <a href="' + esc(d.href) + '" rel="noopener" target="_blank">' + T('aperçu d\'origine') + '</a> · ' + T('téléchargé le') + ' ' + esc(d.fetched) + '</figcaption></figure>';
+    T('Archive') + ' : ' + T(d.archive) + ' · ' + T('collection') + ' <code>' + esc(d.collection) + '</code> · <a href="' + esc(d.href) + '" rel="noopener" target="_blank">' + T('aperçu d\'origine') + '</a> · ' + T('téléchargé le') + ' ' + esc(d.fetched) + licLine(d) + '</figcaption></figure>';
 }
 /* tracé fait par ce site à partir d'un fichier de données de l'archive (tools/data/plots.py) */
 function plotFigure(m, R, d){
   var out = d.out_size, en = OBS_LANG === 'en';
   return '<figure class="real plot"><img src="data/' + R.key + '.jpg" width="' + out[0] + '" height="' + out[1] + '" alt="' + esc(R.altRaw || R.alt) + ' (' + esc(d.product) + ')">' +
     '<figcaption><strong>' + esc(d.instrument) + ' · ' + esc(d.product) + '</strong><br>' + (d.datetime ? T('Date du produit dans le catalogue') + ' : ' + esc(String(d.datetime).slice(0, 10)) + '. ' : '') + esc(en ? d.how_en : d.how_fr) + '<br>' +
-    T('Archive') + ' : ' + T(d.archive) + ' · ' + T('collection') + ' <code>' + esc(d.collection) + '</code> · <a href="' + esc(d.href) + '" rel="noopener" target="_blank">' + T('fichier de données') + '</a> · ' + T('téléchargé le') + ' ' + esc(d.fetched) + '</figcaption></figure>';
+    T('Archive') + ' : ' + T(d.archive) + ' · ' + T('collection') + ' <code>' + esc(d.collection) + '</code> · <a href="' + esc(d.href) + '" rel="noopener" target="_blank">' + T('fichier de données') + '</a> · ' + T('téléchargé le') + ' ' + esc(d.fetched) + licLine(d) + '</figcaption></figure>';
 }
 /* image de presse (bibliothèque d'images de la NASA) : déjà traitée par l'équipe, ce n'est pas un produit d'archive */
 function pressImage(m, R, d){
   var out = d.out_size, en = OBS_LANG === 'en';
   return '<figure class="real"><img src="data/' + R.key + '.jpg" width="' + out[0] + '" height="' + out[1] + '" alt="' + esc(R.altRaw || R.alt) + ' (' + esc(d.product) + ')">' +
     '<figcaption><strong>' + esc(d.instrument) + ' · ' + esc(d.product) + ' · ' + (en ? '“' : '« ') + esc(d.title) + (en ? '”' : ' »') + '</strong><br>' +
-    T('Image publiée le') + ' ' + esc(String(d.datetime).slice(0, 10)) + '. ' + esc(R.what || '') + ' ' +
+    (d.datetime ? T('Image publiée le') + ' ' + esc(String(d.datetime).slice(0, 10)) + '. ' : '') + esc(R.what || '') + ' ' +
     (en ? 'Whole image as published (' + d.full_size[0] + ' × ' + d.full_size[1] + ' pixels)' + (out[0] !== d.full_size[0] ? ', scaled to ' + out[0] + ' × ' + out[1] : '') + ', already processed by the team: a press image, not an archive product.'
         : 'Image entière telle que publiée (' + d.full_size[0] + ' × ' + d.full_size[1] + ' pixels)' + (out[0] !== d.full_size[0] ? ', ramenée à ' + out[0] + ' × ' + out[1] : '') + ', déjà traitée par l\'équipe : image de presse, pas un produit d\'archive.') + '<br>' +
-    T('Crédit') + (en ? ': ' : ' : ') + esc(d.credit) + ' · ' + T(d.archive) + ' · <a href="' + esc(d.page) + '" rel="noopener" target="_blank">' + T('page de l\'image') + '</a> · ' + T('téléchargé le') + ' ' + esc(d.fetched) +
+    T('Crédit') + (en ? ': ' : ' : ') + esc(d.credit) + ' · ' + T(d.archive) + ' · <a href="' + esc(d.page) + '" rel="noopener" target="_blank">' + T('page de l\'image') + '</a> · ' + T('téléchargé le') + ' ' + esc(d.fetched) + licLine(d) +
     (R.why ? '<br><span class="note">' + esc(R.why) + '</span>' : '') + '</figcaption></figure>';
 }
 var PAGES = {

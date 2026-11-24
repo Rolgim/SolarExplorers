@@ -97,17 +97,20 @@ def mro_rss(): gravity_map("d-mro-rss", "ode-mars-mro-rss-rsdmap", "Gravité (MR
 def grail_lgrs(): gravity_map("d-grail-lgrs", "ode-moon-grail-lgrs-rsdmap", "LGRS", "PDS Geosciences Node (NASA)", ("Champ de gravité de la Lune calculé à partir des mesures de distance entre les deux sondes GRAIL.", "Lunar gravity field computed from the distance measurements between the two GRAIL spacecraft."))
 
 def sln_lmag():
-    """Carte de l'anomalie magnétique lunaire à 30 km d'altitude (SELENE LMAG) : bande « F » (intensité totale), en nT."""
+    """Carte de l'anomalie magnétique lunaire à 30 km d'altitude (SELENE LMAG), lue exactement comme le dit l'étiquette :
+    octets signés (MSB_INTEGER, 8 bits) × 0,02 nT, 9 bandes « X, Y, Z, F, leurs écarts types, nombre de données ».
+    On trace la 3e bande (Z), signée par nature. L'ancienne version traçait F en lisant les octets sans signe, contre l'étiquette."""
     c = "ode-moon-sln-lmag-mamap"; f = pick(c); lab = label(get(asset(f, r"\.lbl$")).decode("latin-1")); img_u = asset(f, r"\.img$")
-    raw = get(img_u); lab["IMAGE.SAMPLE_TYPE"] = "MSB_UNSIGNED_INTEGER"   # octets lus sans signe : l'intensité F est positive, la lecture signée la replie au-delà de 2,54 nT
-    a = pds3_image(lab, raw); F = a[3]
+    raw = get(img_u); a = pds3_image(lab, raw); Z = a[2]
+    k = 0.02 * 127; sat = int(np.sum(np.abs(Z) >= k - 1e-9)); n = int(np.sum(np.isfinite(Z)))
     fig, ax = plt.subplots(figsize=(8.2, 4.4))
-    im = ax.imshow(F, cmap="magma", extent=[0, 360, -89.5, 89.5], aspect="auto", vmin=0, vmax=np.nanpercentile(F, 99.5))
+    im = ax.imshow(Z, cmap="RdBu_r", extent=[0, 360, -89.5, 89.5], aspect="auto", vmin=-2.56, vmax=2.56)
     ax.set_xlabel("longitude (°E)"); ax.set_ylabel("latitude (°)"); cb = fig.colorbar(im, ax=ax, fraction=0.04, pad=0.02); cb.set_label("nT")
-    ax.set_title(f["id"] + " (F)", fontsize=9, color=MID); fig.tight_layout()
-    save("d-sln-lmag", fig, dict(base(f, c, img_u, "LMAG", "JAXA DARTS (archive de SELENE)"), unit="nT",
-         how_fr="Carte tracée par ce site à partir du fichier image de l'archive (4e des 9 bandes : intensité totale F du champ magnétique d'origine crustale, à 30 km d'altitude, en nanoteslas). Octets lus sans signe (l'étiquette dit « entier signé », mais une intensité est positive) ; en blanc : pas de valeur.",
-         how_en="Map drawn by this site from the archive's image file (4th of 9 bands: total intensity F of the crustal magnetic field, at 30 km altitude, in nanotesla). Bytes read as unsigned (the label says “signed integer”, but an intensity is positive); white: no value."))
+    ax.set_title(f["id"] + " (Z)", fontsize=9, color=MID); fig.tight_layout()
+    pct = (100.0 * sat / n) if n else 0
+    save("d-sln-lmag", fig, dict(base(f, c, img_u, "LMAG", "JAXA DARTS (archive de SELENE)"), unit="nT", saturated=sat, valid=n, doc="https://data.darts.isas.jaxa.jp/pub/pds3/sln-l-lmag-5-ma-grid-v1.0/document/LMAG_Format_en_V01.pdf",
+         how_fr="Carte tracée par ce site à partir du fichier image de l'archive, lu comme le dit son étiquette (octets signés × 0,02 nT) : 3e des 9 bandes, composante Z (verticale, d'après le document de format LMAG de la JAXA) du champ magnétique d'origine crustale à 30 km d'altitude. Codée sur un octet, la valeur ne dépasse pas ±2,54 nT : " + ("%.1f" % pct).replace(".", ",") + " % des cases sont à cette limite, les anomalies les plus fortes y sont donc écrêtées. En blanc : pas de valeur.",
+         how_en="Map drawn by this site from the archive's image file, read as its label says (signed bytes × 0.02 nT): 3rd of 9 bands, Z component (vertical, according to JAXA's LMAG format document) of the crustal magnetic field at 30 km altitude. Stored in one byte, a value cannot exceed ±2.54 nT: " + ("%.1f" % pct) + " % of cells sit at that limit, so the strongest anomalies are clipped there. White: no value."))
 
 def lp_ns():
     """Lunar Prospector, spectromètre à neutrons : comptage des neutrons épithermiques, échantillons de 32 s (phase d'orbite basse)."""
@@ -183,7 +186,52 @@ def sln_upi():
          how_fr="Image affichée par ce site à partir du fichier de l'archive (" + lab.get("DATA_SET_NAME", "") + "), contraste étiré entre les centiles 1 et 99,5.",
          how_en="Image displayed by this site from the archive's file (" + lab.get("DATA_SET_NAME", "") + "), contrast stretched between the 1st and 99.5th percentiles."))
 
-RECIPES = {"mro:rss": mro_rss, "grail:lgrs": grail_lgrs, "sln:lmag": sln_lmag, "lp:ns": lp_ns, "clem:lidar": clem_lidar, "lp:rss": lp_rss}   # sln:upi retiré : l'image TVIS la plus récente n'est que du bruit
+def columns(text):
+    """Colonnes d'une table binaire PDS3 (étiquette ou fichier .FMT) : nom, octet de départ, type, nombre d'éléments."""
+    cols, cur = [], None
+    for line in re.sub(r"/\*.*?\*/", "", text, flags=re.S).splitlines():
+        m = re.match(r"\s*([A-Z_]+)\s*=\s*(.*?)\s*$", line)
+        if not m: continue
+        k, v = m.group(1), m.group(2).strip('"')
+        if k == "OBJECT" and v == "COLUMN": cur = {}
+        elif k == "END_OBJECT" and v == "COLUMN" and cur is not None: cols.append(cur); cur = None
+        elif cur is not None and k in ("NAME", "START_BYTE", "BYTES", "ITEMS", "ITEM_BYTES", "DATA_TYPE", "UNIT"): cur[k] = v
+    return cols
+def column(raw, rows, row_bytes, col, off=0):
+    """Une colonne d'une table binaire -> tableau numpy [ligne, élément]."""
+    t = col["DATA_TYPE"]; n = int(col.get("ITEMS", 1)); b = int(col.get("ITEM_BYTES", int(col["BYTES"]) // n))
+    end = "<" if t.startswith(("PC", "LSB", "VAX")) else ">"
+    kind = "f" if "REAL" in t else ("u" if "UNSIGNED" in t else "i")
+    dt = np.dtype(end + kind + str(b)); s = int(col["START_BYTE"]) - 1
+    a = np.frombuffer(raw, dtype=np.uint8, count=rows * row_bytes, offset=off).reshape(rows, row_bytes)[:, s:s + n * b]
+    return np.ascontiguousarray(a).view(dt).reshape(rows, n).astype(float)
+
+def gamma_plot(name, f, c, u, inst, arch, spec, rows, dur_fr, dur_en, col):
+    tot = np.nansum(spec, axis=0); ch = np.arange(tot.size)
+    fig, ax = plt.subplots(figsize=(8.2, 3.8))
+    ax.semilogy(ch[tot > 0], tot[tot > 0], lw=0.7, color="#B0462F")
+    ax.set_xlabel("canal / channel"); ax.set_ylabel("coups / counts"); ax.set_title(f["id"] + " (" + str(rows) + ")", fontsize=9, color=MID); fig.tight_layout()
+    save(name, fig, dict(base(f, c, u, inst, arch), xlab_en="channel", ylab_en="counts", column=col,
+         how_fr="Spectre tracé par ce site à partir du fichier binaire de l'archive (colonne « " + col + " ») : somme des " + str(rows) + " spectres du fichier (" + dur_fr + "), " + str(tot.size) + " canaux, échelle logarithmique. Les canaux ne sont pas convertis en énergie : l'étalonnage n'est pas dans le fichier. Chaque pic correspond à un élément (fer, potassium, thorium, hydrogène…).",
+         how_en="Spectrum drawn by this site from the archive's binary file (column “" + col + "”): sum of the file's " + str(rows) + " spectra (" + dur_en + "), " + str(tot.size) + " channels, log scale. Channels are not converted to energy: the calibration is not in the file. Each peak belongs to an element (iron, potassium, thorium, hydrogen…)."))
+
+def lp_grs():
+    """Lunar Prospector, spectromètre gamma : une journée de spectres (512 canaux, échantillons de 32 s)."""
+    c = "ode-moon-lp-grs-rdr"; f = pick(c); lt = get(asset(f, r"\.lbl$")).decode("latin-1"); lab = label(lt); u = asset(f, r"\.dat$")
+    cols = columns(lt); col = next(x for x in cols if x["NAME"] == "ACCEPTED SPECTRUM")
+    rows, rb = int(lab["TABLE.ROWS"]), int(lab["TABLE.ROW_BYTES"])
+    gamma_plot("d-lp-grs", f, c, u, "GRS", "PDS Geosciences Node (NASA)", column(get(u), rows, rb, col), rows, "une journée, 32 s chacun", "one day, 32 s each", col["NAME"])
+
+def ody_grs():
+    """Mars Odyssey, spectromètre gamma : spectres corrigés d'un fichier de 2 h (colonnes décrites dans un fichier .FMT à part)."""
+    c = "ode-mars-ody-grs-cgs"; f = pick(c); lab = label(get(asset(f, r"\.lbl$")).decode("latin-1")); u = asset(f, r"\.dat$")
+    fmt = get(asset(f, r"\.fmt$")).decode("latin-1"); cols = columns(fmt)
+    print("  colonnes GRS Odyssey :", [(x.get("NAME"), x.get("ITEMS"), x.get("DATA_TYPE")) for x in cols][:60])
+    col = max((x for x in cols if int(x.get("ITEMS", 1)) >= 256), key=lambda x: (("SPECTRUM" in x["NAME"] or "SPECTRA" in x["NAME"]) and "GAMMA" in x["NAME"], int(x.get("ITEMS", 1))))
+    rows, rb = int(lab["TIME_SERIES.ROWS"]), int(lab["TIME_SERIES.ROW_BYTES"])
+    gamma_plot("d-ody-grs", f, c, u, "GRS", "PDS Geosciences Node (NASA)", column(get(u), rows, rb, col), rows, "environ 2 h de mesures", "about 2 h of measurements", col["NAME"])
+
+RECIPES = {"mro:rss": mro_rss, "grail:lgrs": grail_lgrs, "sln:lmag": sln_lmag, "lp:ns": lp_ns, "clem:lidar": clem_lidar, "lp:rss": lp_rss, "lp:grs": lp_grs, "ody:grs": ody_grs}   # sln:upi retiré : l'image TVIS la plus récente n'est que du bruit
 def run(session):
     global S; S = session; bad = []
     for k, fn in RECIPES.items():

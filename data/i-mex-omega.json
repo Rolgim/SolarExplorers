@@ -44,5 +44,10 @@
   ]
  },
  "fetched": "2026-11-24",
- "inst": "mex:omega"
+ "inst": "mex:omega",
+ "license_fr": "Données d'archive de l'ESA (copie au PDS de la NASA) ; aucune licence écrite sur le produit : traitée comme CC BY-SA 3.0 IGO, la licence des images de l'ESA",
+ "license_en": "ESA archive data (copy at NASA's PDS); no licence written on the product: treated as CC BY-SA 3.0 IGO, ESA's image licence",
+ "license_url": "https://www.esa.int/Services/Creative_Commons_Attribution-ShareAlike_3.0_IGO_CC_BY-SA_3.0_IGO_licence",
+ "credit_line": "ESA/CNES/IAS (OMEGA)",
+ "status": "à confirmer"
 }

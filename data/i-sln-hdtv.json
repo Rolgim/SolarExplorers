@@ -44,5 +44,10 @@
   ]
  },
  "fetched": "2026-11-24",
- "inst": "sln:hdtv"
+ "inst": "sln:hdtv",
+ "license_fr": "© JAXA/NHK : usage non commercial avec ce crédit ; usage commercial interdit sans accord",
+ "license_en": "© JAXA/NHK: non-commercial use with this credit; no commercial use without permission",
+ "license_url": "https://www.kaguya.jaxa.jp/en/",
+ "credit_line": "JAXA/NHK",
+ "status": "usage restreint"
 }
