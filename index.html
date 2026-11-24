@@ -4684,15 +4684,22 @@ var Optics = (function(){
     xray: function(){ return DRAW.gamma({ what:L('rayons X', 'X-rays'), src:L('rayons X du Soleil', 'X-rays from the Sun'), det:L('détecteur', 'detector') }); },
     /* altimètre laser */
     alt: function(o){
-      var W = 560, H = 230, yg = 200, s = '';
-      s += '<rect x="150" y="20" width="250" height="38" rx="4" fill="none" stroke="'+SOFT+'" stroke-dasharray="4 3"/>' + T(275, 14, L('sonde', 'spacecraft'), 'middle');
-      s += '<rect x="170" y="28" width="56" height="22" rx="3" fill="rgba(219,90,20,0.15)" stroke="'+RAY+'"/>' + T(198, 74, L('laser', 'laser'), 'middle', true);
-      s += mirror(330, 40, 14, 1, 0) + Ln(360, 32, 360, 48, DET, 5) + T(345, 74, L('télescope et détecteur', 'telescope and detector'), 'middle', true);
-      s += P([[198, 50], [250, yg-2]], RAY, 1.6) + arrow(232, 136, 74, RAY) + P([[250, yg-2], [330, 54]], RAY, 1.2, '5 3') + arrow(300, 110, -66, RAY);
-      s += Pa('M20 '+yg+' Q160 '+(yg-14)+' 250 '+(yg-2)+' T540 '+yg, GND, 3);
-      s += T(420, 120, L('temps aller-retour', 'round-trip time'), 'start', true) + T(420, 136, L('→ distance → relief', '→ distance → topography'), 'start');
+      var W = 560, H = 240, yg = 206, fx = 275, s = '';
+      /* flèche posée sur le segment, à la fraction t, dans le sens du trajet */
+      function on(x1, y1, x2, y2, t, c){ return arrow(x1 + (x2-x1)*t, y1 + (y2-y1)*t, Math.atan2(y2-y1, x2-x1)*180/Math.PI, c); }
+      s += '<rect x="150" y="20" width="250" height="40" rx="4" fill="none" stroke="'+SOFT+'" stroke-dasharray="4 3"/>' + T(275, 14, L('sonde', 'spacecraft'), 'middle');
+      s += '<rect x="206" y="30" width="44" height="22" rx="3" fill="rgba(219,90,20,0.15)" stroke="'+RAY+'"/>' + T(196, 80, L('laser', 'laser'), 'end', true);
+      s += '<rect x="300" y="26" width="40" height="28" rx="3" fill="rgba(61,107,224,0.10)" stroke="'+DET+'"/>' + Ln(300, 54, 340, 54, INK, 3) + T(352, 80, L('télescope récepteur', 'receiving telescope'), 'start', true);
+      /* lumière renvoyée dans toutes les directions par le sol : le télescope n'en capte qu'une petite partie */
+      [[150, 150], [190, 112], [370, 112], [410, 150]].forEach(function(e){ s += Ln(fx, yg-4, e[0], e[1], SOFT, 1, '3 4'); });
+      s += T(430, 168, L('lumière diffusée', 'scattered light'), 'start');
+      s += Ln(228, 52, fx-3, yg-4, RAY, 1.8) + on(228, 52, fx-3, yg-4, 0.55, RAY);
+      s += Ln(fx+3, yg-4, 320, 54, RAY, 1.3, '6 3') + on(fx+3, yg-4, 320, 54, 0.5, RAY);
+      s += Pa('M20 '+yg+' Q160 '+(yg-12)+' '+fx+' '+(yg-4)+' T540 '+yg, GND, 3) + '<ellipse cx="'+fx+'" cy="'+(yg-4)+'" rx="9" ry="3" fill="'+RAY+'" opacity="0.5"/>';
+      s += Ln(30, 126, 56, 126, RAY, 1.8) + T(62, 130, L('aller : impulsion', 'out: pulse'), 'start') + Ln(30, 142, 56, 142, RAY, 1.3, '6 3') + T(62, 146, L('retour : écho', 'back: echo'), 'start');
+      s += T(430, 110, L('temps aller-retour', 'round-trip time'), 'start', true) + T(430, 126, L('→ distance → relief', '→ distance → topography'), 'start');
       if (o.lam) s += T(120, 120, o.lam, 'end');
-      return svg(W, H, s, L('Schéma de principe d\'un altimètre laser', 'Principle sketch of a laser altimeter'));
+      return svg(W, H, s, L('Schéma de principe d\'un altimètre laser : l\'impulsion part vers le sol, la tache éclairée renvoie de la lumière dans toutes les directions et le télescope en capte l\'écho', 'Principle sketch of a laser altimeter: the pulse goes down to the ground, the lit spot scatters light in all directions and the telescope catches the echo'));
     },
     /* radar sondeur (antenne dipôle, vise sous la sonde) ou radar imageur (visée de côté) */
     radar: function(o){
