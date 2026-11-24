@@ -83,6 +83,28 @@ def clem_uvvis():
         except RuntimeError as e: print(" ", e)
     raise RuntimeError("aucun aperçu Clementine assez grand")
 def mgn_sar(): browse("mgn", "ode-venus-mgn-rdrs-fmidr", "SAR", "PDS Geosciences Node (NASA), via le catalogue STAC-PLANET du PDSSP", roles=("thumbnail", "overview", "browse"))
+def mro_hirise():
+    """MRO, HiRISE : les serveurs de l'université d'Arizona refusent GitHub Actions (sonde du 23/11/2026). Voie de repli vérifiée le
+    24/11/2026 (tools/probe/probe_hirise_routes.py) : la bibliothèque d'images de la NASA (images.nasa.gov), qui republie les images
+    HiRISE diffusées par le Photojournal du JPL. Image publiée entière (déjà traitée par l'équipe : c'est une image de presse, pas un produit PDS)."""
+    nid = "PIA26553"   # « HiRISE Views Curiosity During a Drive »
+    r = S.get("https://images-api.nasa.gov/search", params={"nasa_id": nid}, timeout=120); r.raise_for_status()
+    it = r.json()["collection"]["items"][0]; d = it["data"][0]
+    a = S.get("https://images-api.nasa.gov/asset/" + nid, timeout=120); a.raise_for_status()
+    hrefs = [x["href"] for x in a.json()["collection"]["items"]]
+    href = next((h for h in hrefs if "~medium" in h), None) or next(h for h in hrefs if re.search(r"\.jpe?g$", h, re.I))
+    href = href.replace("http://", "https://")
+    im = Image.open(io.BytesIO(S.get(href, timeout=300).content)).convert("L"); full = im.size
+    k = min(1.0, 900 / max(full)); out = im.resize((round(full[0] * k), round(full[1] * k)), Image.LANCZOS) if k < 1 else im
+    out.save(os.path.join(DATA, "mro-hirise.jpg"), quality=86, optimize=True)
+    desc = re.sub(r"<[^>]+>", "", d.get("description", ""))
+    meta = {"archive": "NASA Image and Video Library (images.nasa.gov), reprise du Photojournal du JPL", "collection": None, "product": nid,
+            "title": d.get("title"), "datetime": d.get("date_created"), "credit": d.get("secondary_creator") or "NASA/JPL-Caltech/University of Arizona",
+            "description": desc[:1200], "href": href, "page": "https://images.nasa.gov/details/" + nid, "instrument": "HiRISE",
+            "full_size": list(full), "out_size": list(out.size), "stretch": None, "press": True, "fetched": datetime.date.today().isoformat()}
+    json.dump(meta, open(os.path.join(DATA, "mro-hirise.json"), "w"), indent=1, ensure_ascii=False)
+    print("mro_hirise :", nid, d.get("date_created"), full)
+
 def _try(mid, cols, inst, arch, **kw):
     for c in cols:
         try: return browse(mid, c, inst, arch, roles=("thumbnail", "overview", "browse"), min_px=200, **kw)
@@ -91,7 +113,8 @@ def _try(mid, cols, inst, arch, **kw):
 def vo_vis(): _try("vo", ("ode-mars-vo-visab-mdim", "ode-mars-vo-visab-mdimc", "ode-mars-vo-visab-edr"), "VIS", "PDS Geosciences Node (NASA), via le catalogue STAC-PLANET du PDSSP")
 def sln_tc(): _try("sln", ("ode-moon-sln-tc-tcwl2b", "ode-moon-sln-tc-tcsl2b", "ode-moon-sln-tc-tcort"), "TC", "JAXA (SELENE Data Archive) / PDS Geosciences Node, via le catalogue STAC-PLANET du PDSSP", crop=3)
 def ch1_m3(): _try("ch1", ("ode-moon-ch1-orb-m3-refimg", "ode-moon-ch1-orb-m3-caliv3"), "M3", "PDS Imaging Node (NASA), via le catalogue STAC-PLANET du PDSSP", crop=3)
-def kplo_shadowcam(): _try("kplo", ("ode-moon-kplo-shadowcam-cmos", "ode-moon-kplo-shadowcam-umos", "ode-moon-kplo-shadowcam-cal"),   # pas « dtm » : ses aperçus sont des graphiques d'erreur, pas des images "ShadowCam", "PDS de ShadowCam (Arizona State University), via le catalogue STAC-PLANET du PDSSP", stretch=0.5, min_side=200, crop=3)
+# kplo : pas « dtm » : ses aperçus sont des graphiques d'erreur, pas des images
+def kplo_shadowcam(): _try("kplo", ("ode-moon-kplo-shadowcam-cmos", "ode-moon-kplo-shadowcam-umos", "ode-moon-kplo-shadowcam-cal"), "ShadowCam", "PDS de ShadowCam (Arizona State University), via le catalogue STAC-PLANET du PDSSP", stretch=0.5, min_side=200, crop=3)
 def cassini_vims(): browse("cassini", "vim-cassini-vims-ir", "VIMS", "Université de Nantes (aperçus VIMS), via le catalogue STAC-PLANET du PDSSP")
 
 # fonds des corps (vue 3D : le corps observé sous la sonde) : textures globales sous licence ouverte, créditées à côté de l'image (règle 8)
@@ -116,7 +139,7 @@ def body_textures():
         print("texture", k, im.size)
     if bad: raise RuntimeError("textures non récupérées : " + ", ".join(bad))
 
-RECIPES = {"mro_ctx": mro_ctx, "mex_hrsc": mex_hrsc, "lro_lroc": lro_lroc, "messenger_mdis": messenger_mdis, "cassini_vims": cassini_vims,
+RECIPES = {"mro_ctx": mro_ctx, "mro_hirise": mro_hirise, "mex_hrsc": mex_hrsc, "lro_lroc": lro_lroc, "messenger_mdis": messenger_mdis, "cassini_vims": cassini_vims,
            "ody_themis": ody_themis, "mgs_moc": mgs_moc, "tgo_cassis": tgo_cassis, "clem_uvvis": clem_uvvis, "mgn_sar": mgn_sar, "vo_vis": vo_vis, "sln_tc": sln_tc, "ch1_m3": ch1_m3, "kplo_shadowcam": kplo_shadowcam, "textures": body_textures}
 if __name__ == "__main__":
     want = sys.argv[1:] or list(RECIPES)
