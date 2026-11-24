@@ -1,0 +1,23 @@
+{
+ "archive": "NASA Image and Video Library (images.nasa.gov), reprise du Photojournal du JPL",
+ "collection": null,
+ "product": "PIA11404",
+ "title": "Magnetometer Results from MESSENGER Second Mercury Encounter",
+ "datetime": "2008-10-29T18:28:11Z",
+ "credit": "NASA/Johns Hopkins University Applied Physics Laboratory/Carnegie Institution of Washington",
+ "description": "Magnetometer Results from MESSENGER Second Mercury Encounter",
+ "href": "https://images-assets.nasa.gov/image/PIA11404/PIA11404~orig.jpg",
+ "page": "https://images.nasa.gov/details/PIA11404",
+ "instrument": "MAG",
+ "full_size": [
+  720,
+  978
+ ],
+ "out_size": [
+  663,
+  900
+ ],
+ "stretch": null,
+ "press": true,
+ "fetched": "2026-11-24"
+}

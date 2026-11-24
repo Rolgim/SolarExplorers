@@ -1,0 +1,23 @@
+{
+ "archive": "NASA Image and Video Library (images.nasa.gov), reprise du Photojournal du JPL",
+ "collection": null,
+ "product": "PIA09224",
+ "title": "Thickness of Mars South Polar Layered Deposits",
+ "datetime": "2007-03-15T17:55:03Z",
+ "credit": "NASA/JPL/ASI/ESA/Univ. of Rome/MOLA Science Team/USGS",
+ "description": "This map shows the thickness of the south polar layered deposits of Mars, an ice-rich geologic unit that was probed by the Mars Advanced Radar for Subsurface and Ionospheric Sounding MARSIS",
+ "href": "https://images-assets.nasa.gov/image/PIA09224/PIA09224~medium.jpg",
+ "page": "https://images.nasa.gov/details/PIA09224",
+ "instrument": "MARSIS",
+ "full_size": [
+  1185,
+  1280
+ ],
+ "out_size": [
+  833,
+  900
+ ],
+ "stretch": null,
+ "press": true,
+ "fetched": "2026-11-24"
+}

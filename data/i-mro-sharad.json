@@ -10,10 +10,13 @@
   10023,
   1225
  ],
- "crop": null,
+ "crop": [
+  3675,
+  1225
+ ],
  "out_size": [
   900,
-  110
+  300
  ],
  "stretch": null,
  "footprint": {

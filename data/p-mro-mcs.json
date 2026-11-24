@@ -1,0 +1,23 @@
+{
+ "archive": "NASA Image and Video Library (images.nasa.gov), reprise du Photojournal du JPL",
+ "collection": null,
+ "product": "PIA22737",
+ "title": "Mars Climate Sounder Studies 2018 Dust Storm",
+ "datetime": "2018-10-30T00:00:00Z",
+ "credit": "NASA/JPL-Caltech",
+ "description": "This image is from an animation that shows the evolution of the 2018 Mars global dust storm from late May to September. The animation shows the optical depth tau -- a measure of how much light is being blocked by atmospheric dust as measured by the Mars Climate Sounder instrument onboard NASA's Mars Reconnaissance Orbiter.  NASA's Opportunity rover is marked with a red dot. The dust is mapped to two opposite hemispheres of Mars, giving a view of the full globe. Certain features of the Martian terrain, including Olympus Mons, the three volcanoes in the equatorial region, and Vallis Marineris, are also visible.  The data shows the daily global column of dust, illustrating how the dust behaves over the course of the storm. The storm has a complex growth affecting most of Mars over the first month. It then remains near the peak for three weeks. Finally, the storm starts a multi-month decay back to regular weather.  A color scale in the lower right-hand corner of the animation explains the colors in relation to approximate tau values. A tau of three indicates that only about 5 percent of the sunlight entering the atmosphere directly reaches the surface.  Animation is available at https://photojournal.jpl.nasa.gov/catalog/PIA22737",
+ "href": "https://images-assets.nasa.gov/image/PIA22737/PIA22737~orig.jpg",
+ "page": "https://images.nasa.gov/details/PIA22737",
+ "instrument": "MCS",
+ "full_size": [
+  1833,
+  1073
+ ],
+ "out_size": [
+  900,
+  527
+ ],
+ "stretch": null,
+ "press": true,
+ "fetched": "2026-11-24"
+}

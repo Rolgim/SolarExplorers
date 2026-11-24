@@ -1,19 +1,19 @@
 {
  "archive": "PDS Geosciences Node (NASA), via le catalogue STAC-PLANET du PDSSP",
- "collection": "ode-moon-lro-mrflro-bsddr4",
- "product": "lxt_2026058030231_cpr_14n304",
- "datetime": "2026-02-27T03:07:31.810000Z",
- "href": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_minirf_bistatic/browse/2026_058_2/lxt_2026058030231_cpr_14n304_browse_v1.jpg",
- "stac": "https://stac.stacplanet.pdssp.eu/collections/ode-moon-lro-mrflro-bsddr4/items/lxt_2026058030231_cpr_14n304",
+ "collection": "ode-moon-lro-mrflro-moscdr",
+ "product": "LSZ_06899_3CP_PHU_90N000_E_V1",
+ "datetime": "2010-05-07T18:15:19.576000Z",
+ "href": "https://pds-geosciences.wustl.edu/lro/lro-l-mrflro-4-cdr-v1/lromrf_0005/extras/quikview/mosaics/lsz_06899_3cp_phu_90n000_e_v1.jpg",
+ "stac": "https://stac.stacplanet.pdssp.eu/collections/ode-moon-lro-mrflro-moscdr/items/LSZ_06899_3CP_PHU_90N000_E_V1",
  "instrument": "Mini-RF",
  "full_size": [
-  9518,
-  242
+  750,
+  750
  ],
  "crop": null,
  "out_size": [
-  900,
-  23
+  750,
+  750
  ],
  "stretch": null,
  "footprint": {
@@ -21,24 +21,24 @@
   "coordinates": [
    [
     [
-     -54.2205,
-     -2.0704
+     -180.0,
+     70.0
     ],
     [
-     -54.2205,
-     29.1644
+     180.0,
+     70.0
     ],
     [
-     -59.2599,
-     29.1644
+     180.0,
+     90.0
     ],
     [
-     -59.2599,
-     -2.0704
+     -180.0,
+     90.0
     ],
     [
-     -54.2205,
-     -2.0704
+     -180.0,
+     70.0
     ]
    ]
   ]

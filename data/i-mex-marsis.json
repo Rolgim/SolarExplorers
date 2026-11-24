@@ -18,7 +18,10 @@
   438,
   876
  ],
- "stretch": null,
+ "stretch": [
+  0.5,
+  99.5
+ ],
  "footprint": {
   "type": "LineString",
   "coordinates": [

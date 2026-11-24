@@ -1,0 +1,23 @@
+{
+ "archive": "NASA Image and Video Library (images.nasa.gov), reprise du Photojournal du JPL",
+ "collection": null,
+ "product": "PIA04253",
+ "title": "Map of Martian Iron at Mid-Latitudes",
+ "datetime": "2003-03-13T18:56:15Z",
+ "credit": "NASA/JPL/University of Arizona",
+ "description": "This gamma ray spectrometer map from NASA Mars Odyssey of the mid-latitude region of Mars is based on gamma-rays from the element iron, one of the most abundant elements on Mars and Earth. It is responsible for the red color on the surface of Mars.",
+ "href": "https://images-assets.nasa.gov/image/PIA04253/PIA04253~orig.jpg",
+ "page": "https://images.nasa.gov/details/PIA04253",
+ "instrument": "GRS",
+ "full_size": [
+  2068,
+  1009
+ ],
+ "out_size": [
+  900,
+  439
+ ],
+ "stretch": null,
+ "press": true,
+ "fetched": "2026-11-24"
+}

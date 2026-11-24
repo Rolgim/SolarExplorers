@@ -1,0 +1,23 @@
+{
+ "archive": "NASA Image and Video Library (images.nasa.gov), reprise du Photojournal du JPL",
+ "collection": null,
+ "product": "PIA19417",
+ "title": "Showing Some Chemistry",
+ "datetime": "2015-04-16T17:54:11Z",
+ "credit": "NASA/Johns Hopkins University Applied Physics Laboratory/Carnegie Institution of Washington",
+ "description": "During NASA MESSENGER four-year orbital mission, the spacecraft X-Ray Spectrometer XRS instrument mapped out the chemical composition of Mercury and discovered striking regions of chemical diversity. These maps of magnesium/silicon (left) and aluminium/silicon (right) use red colors to indicate high values and blue colors for low values. In the maps shown here, the Caloris basin can be identified as a region with low Mg/Si and high Ca/Si on the upper left of each map. An extensive region with high Mg/Si is also clearly visible in the maps but is not correlated with any visible impact basin.  Instrument: X-Ray Spectrometer (XRS) and Mercury Dual Imaging System (MDIS) Left Image: Map of Mg/Si Right Image: Map of Al/Si  http://photojournal.jpl.nasa.gov/catalog/PIA19417",
+ "href": "https://images-assets.nasa.gov/image/PIA19417/PIA19417~medium.jpg",
+ "page": "https://images.nasa.gov/details/PIA19417",
+ "instrument": "XRS",
+ "full_size": [
+  1280,
+  960
+ ],
+ "out_size": [
+  900,
+  675
+ ],
+ "stretch": null,
+ "press": true,
+ "fetched": "2026-11-24"
+}

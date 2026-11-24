@@ -1,0 +1,23 @@
+{
+ "archive": "NASA Image and Video Library (images.nasa.gov), reprise du Photojournal du JPL",
+ "collection": null,
+ "product": "PIA21626",
+ "title": "Cassini's Final Titan Radar Swath",
+ "datetime": "2017-08-11T00:00:00Z",
+ "credit": "NASA/JPL-Caltech/Space Science Institute",
+ "description": "During its final targeted flyby of Titan on April 22, 2017, Cassini's radar mapper got the mission's last close look at the moon's surface.  On this 127th targeted pass by Titan (unintuitively named \"T-126\"), the radar was used to take two images of the surface, shown at left and right. Both images are about 200 miles (300 kilometers) in width, from top to bottom. Objects appear bright when they are tilted toward the spacecraft or have rough surfaces; smooth areas appear dark.  At left are the same bright, hilly terrains and darker plains that Cassini imaged during its first radar pass of Titan, in 2004. Scientists do not see obvious evidence of changes in this terrain over the 13 years since the original observation.  At right, the radar looked once more for Titan's mysterious \"magic island\" (PIA20021) in a portion of one of the large hydrocarbon seas, Ligeia Mare. No \"island\" feature was observed during this pass. Scientists continue to work on what the transient feature might have been, with waves and bubbles being two possibilities.  In between the two parts of its imaging observation, the radar instrument switched to altimetry mode, in order to make a first-ever (and last-ever) measurement of the depths of some of the lakes that dot the north polar region. For the measurements, the spacecraft pointed its antenna straight down at the surface and the radar measured the time delay between echoes from the lakes' surface and bottom.  A graph is available at https://photojourn",
+ "href": "https://images-assets.nasa.gov/image/PIA21626/PIA21626~medium.jpg",
+ "page": "https://images.nasa.gov/details/PIA21626",
+ "instrument": "RADAR",
+ "full_size": [
+  1280,
+  226
+ ],
+ "out_size": [
+  900,
+  159
+ ],
+ "stretch": null,
+ "press": true,
+ "fetched": "2026-11-24"
+}

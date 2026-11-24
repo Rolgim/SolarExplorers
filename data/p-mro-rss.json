@@ -1,0 +1,23 @@
+{
+ "archive": "NASA Image and Video Library (images.nasa.gov), reprise du Photojournal du JPL",
+ "collection": null,
+ "product": "PIA20277",
+ "title": "Using Gravity and Topography to Map Mars' Crustal Thickness",
+ "datetime": "2016-03-21T00:00:00Z",
+ "credit": "NASA/GSFC/Scientific Visualization Studio",
+ "description": "Newly detailed mapping of local variations in Mars' gravitational pull on orbiters (center), combined with topographical mapping of the planet's mountains and valleys (left) yields the best-yet mapping of Mars' crustal thickness (right).      These three views of global mapping are centered at 90 degrees west longitude, showing portions of the planet that include tall volcanoes on the left and the deep Valles Marineris canyon system just right of center. Additional views of these global maps are available at http://svs.gsfc.nasa.gov/goto?4436.      The new map of Mars' gravity (center) results from analysis of the planet's gravitational effects on orbiters passing over each location on the globe. The data come from many years of using NASA's Deep Space Network to track positions and velocities of NASA's Mars Global Surveyor, Mars Odyssey and Mars Reconnaissance Orbiter.      If Mars were a perfectly smooth sphere of uniform density, the gravity experienced by the spacecraft would be exactly the same everywhere. But like other rocky bodies in the solar system, including Earth, Mars has both a bumpy surface and a lumpy interior. As the spacecraft fly in their orbits, they experience slight variations in gravity caused by both of these irregularities, variations which show up as small changes in the velocity and altitude of the three spacecraft.      The \"free-air\" gravity map presents the results without any adjustment for the known bumpiness of Mars' surface. Local gravitation",
+ "href": "https://images-assets.nasa.gov/image/PIA20277/PIA20277~medium.jpg",
+ "page": "https://images.nasa.gov/details/PIA20277",
+ "instrument": "Gravité",
+ "full_size": [
+  1280,
+  600
+ ],
+ "out_size": [
+  900,
+  422
+ ],
+ "stretch": null,
+ "press": true,
+ "fetched": "2026-11-24"
+}

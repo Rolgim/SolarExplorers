@@ -1,0 +1,23 @@
+{
+ "archive": "NASA Image and Video Library (images.nasa.gov), reprise du Photojournal du JPL",
+ "collection": null,
+ "product": "PIA19418",
+ "title": "Mercury Sodium Tail",
+ "datetime": "2015-04-16T17:55:11Z",
+ "credit": "NASA/Johns Hopkins University Applied Physics Laboratory/Carnegie Institution of Washington",
+ "description": "This image from NASA MESSENGER spacecraft is stitched together from thousands of observations made over the past 4 years by the MASCS/UVVS instrument, which measures sunlight scattered off of Mercury tenuous atmosphere. Scattered sunlight gives the sodium a bright orange glow. This scattering process also gives sodium atoms a push - this \"radiation pressure\" is strong enough, during parts of Mercury's year, to strip the atmosphere and give Mercury a long glowing tail. Someone standing on Mercury's nightside at the right time of year would see a faint orange similar to a city sky illuminated by sodium lamps!  Instrument: Mercury Atmospheric and Surface Composition Spectrometer (MASCS)/Ultraviolet and Visible Spectrometer (UVVS)  http://photojournal.jpl.nasa.gov/catalog/PIA19418",
+ "href": "https://images-assets.nasa.gov/image/PIA19418/PIA19418~medium.jpg",
+ "page": "https://images.nasa.gov/details/PIA19418",
+ "instrument": "MASCS",
+ "full_size": [
+  1280,
+  966
+ ],
+ "out_size": [
+  900,
+  679
+ ],
+ "stretch": null,
+ "press": true,
+ "fetched": "2026-11-24"
+}

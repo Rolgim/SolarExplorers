@@ -1,0 +1,23 @@
+{
+ "archive": "NASA Image and Video Library (images.nasa.gov), reprise du Photojournal du JPL",
+ "collection": null,
+ "product": "PIA00957",
+ "title": "MGS Mars Orbiter Laser MOLA Surface Topography of Northern Hemisphere",
+ "datetime": "1997-10-13T19:15:00Z",
+ "credit": "NASA/JPL/GSFC",
+ "description": "MGS Mars Orbiter Laser MOLA Surface Topography of Northern Hemisphere",
+ "href": "https://images-assets.nasa.gov/image/PIA00957/PIA00957~medium.jpg",
+ "page": "https://images.nasa.gov/details/PIA00957",
+ "instrument": "MOLA",
+ "full_size": [
+  989,
+  1280
+ ],
+ "out_size": [
+  695,
+  900
+ ],
+ "stretch": null,
+ "press": true,
+ "fetched": "2026-11-24"
+}

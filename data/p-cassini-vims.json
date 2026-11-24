@@ -1,0 +1,23 @@
+{
+ "archive": "NASA Image and Video Library (images.nasa.gov), reprise du Photojournal du JPL",
+ "collection": null,
+ "product": "PIA21923",
+ "title": "Seeing Titan with Infrared Eyes",
+ "datetime": "2018-07-18T00:00:00Z",
+ "credit": "NASA/JPL-Caltech/University of Nantes/University of Arizona",
+ "description": "These six infrared images of Saturn's moon Titan represent some of the clearest, most seamless-looking global views of the icy moon's surface produced so far. The views were created using 13 years of data acquired by the Visual and Infrared Mapping Spectrometer (VIMS) instrument on board NASA's Cassini spacecraft. The images are the result of a focused effort to smoothly combine data from the multitude of different observations VIMS made under a wide variety of lighting and viewing conditions over the course of Cassini's mission.  Previous VIMS maps of Titan (for example, PIA02145) display great variation in imaging resolution and lighting conditions, resulting in obvious seams between different areas of the surface. With the seams now gone, this new collection of images is by far the best representation of how the globe of Titan might appear to the casual observer if it weren't for the moon's hazy atmosphere, and it likely will not be superseded for some time to come.  Observing the surface of Titan in the visible region of the spectrum is difficult, due to the globe enshrouding haze that envelops the moon. This is primarily because small particles called aerosols in Titan's upper atmosphere strongly scatter visible light. But Titan's surface can be more readily imaged in a few infrared \"windows\" -- infrared wavelengths where scattering and absorption is much weaker. This is where the VIMS instrument excelled, parting the haze to obtain clear images of Titan's surface. (For ",
+ "href": "https://images-assets.nasa.gov/image/PIA21923/PIA21923~medium.jpg",
+ "page": "https://images.nasa.gov/details/PIA21923",
+ "instrument": "VIMS",
+ "full_size": [
+  1280,
+  866
+ ],
+ "out_size": [
+  900,
+  609
+ ],
+ "stretch": null,
+ "press": true,
+ "fetched": "2026-11-24"
+}

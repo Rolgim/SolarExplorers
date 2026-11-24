@@ -15,7 +15,10 @@
   778,
   702
  ],
- "stretch": null,
+ "stretch": [
+  0.5,
+  99.5
+ ],
  "footprint": {
   "type": "Polygon",
   "coordinates": [

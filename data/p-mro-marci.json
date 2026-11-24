@@ -1,0 +1,23 @@
+{
+ "archive": "NASA Image and Video Library (images.nasa.gov), reprise du Photojournal du JPL",
+ "collection": null,
+ "product": "PIA22329",
+ "title": "Dust Storm Covers Opportunity",
+ "datetime": "2018-06-10T00:00:00Z",
+ "credit": "NASA/JPL-Caltech/MSSS",
+ "description": "This global map of Mars shows a growing dust storm as of June 6, 2018. The map was produced by the Mars Color Imager (MARCI) camera on NASA's Mars Reconnaissance Orbiter spacecraft. The blue dot shows the approximate location of Opportunity.  The storm was first detected on June 1. The MARCI camera has been used to monitor the storm ever since.  Full dust storms like this one are not surprising, but are infrequent. They can crop up suddenly but last weeks, even months. During southern summer, sunlight warms dust particles, lifting them higher into the atmosphere and creating more wind. That wind kicks up yet more dust, creating a feedback loop that NASA scientists still seek to understand.  https://photojournal.jpl.nasa.gov/catalog/PIA22329",
+ "href": "https://images-assets.nasa.gov/image/PIA22329/PIA22329~medium.jpg",
+ "page": "https://images.nasa.gov/details/PIA22329",
+ "instrument": "MARCI",
+ "full_size": [
+  1280,
+  640
+ ],
+ "out_size": [
+  900,
+  450
+ ],
+ "stretch": null,
+ "press": true,
+ "fetched": "2026-11-24"
+}

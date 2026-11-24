@@ -1,0 +1,23 @@
+{
+ "archive": "NASA Image and Video Library (images.nasa.gov), reprise du Photojournal du JPL",
+ "collection": null,
+ "product": "PIA10183",
+ "title": "First Results from the Mercury Laser Altimeter",
+ "datetime": "2008-01-19T19:00:36Z",
+ "credit": "NASA/Goddard Space Flight Center/Johns Hopkins University Applied Physics Laboratory/Carnegie Institution of Washington",
+ "description": "On January 14, 2008, NASA MESSENGER spacecraft Mercury Laser Altimeter MLA became the first instrument to measure the distance between a spacecraft and the surface of Mercury.",
+ "href": "https://images-assets.nasa.gov/image/PIA10183/PIA10183~orig.jpg",
+ "page": "https://images.nasa.gov/details/PIA10183",
+ "instrument": "MLA",
+ "full_size": [
+  666,
+  126
+ ],
+ "out_size": [
+  666,
+  126
+ ],
+ "stretch": null,
+ "press": true,
+ "fetched": "2026-11-24"
+}

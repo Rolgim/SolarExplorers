@@ -1,0 +1,23 @@
+{
+ "archive": "NASA Image and Video Library (images.nasa.gov), reprise du Photojournal du JPL",
+ "collection": null,
+ "product": "PIA19414",
+ "title": "Mapping Potassium",
+ "datetime": "2015-04-16T17:51:11Z",
+ "credit": "NASA/Johns Hopkins University Applied Physics Laboratory/Carnegie Institution of Washington",
+ "description": "During the first year of NASA MESSENGER orbital mission, the spacecraft GRS instrument measured the elemental composition of Mercury surface materials. mong the most important discoveries from the GRS was the observation of higher abundances of the moderately volatile elements potassium, sodium, and chlorine than expected from previous scientific models and theories. Particularly high concentrations of these elements were observed at high northern latitudes, as illustrated in this potassium abundance map, which provides a view of the surface centered at 60° N latitude and 120° E longitude. This map was the first elemental map ever made of Mercury's surface and is to-date the only map to report absolute elemental concentrations, in comparison to element ratios.  Prior to MESSENGER's arrival at Mercury, scientists expected that the planet would be depleted in moderately volatile elements, as is the case for our Moon. The unexpectedly high abundances observed with the GRS have forced a reevaluation of our understanding of the formation and evolution of Mercury. In addition, the K map provided the first evidence for distinct geochemical terranes on Mercury, as the high-potassium region was later found to also be distinct in its low Mg/Si, Ca/Si, S/Si, and high Na/Si and Cl/Si abundances.  Instrument: Gamma-Ray Spectrometer (GRS)  http://photojournal.jpl.nasa.gov/catalog/PIA19414",
+ "href": "https://images-assets.nasa.gov/image/PIA19414/PIA19414~orig.jpg",
+ "page": "https://images.nasa.gov/details/PIA19414",
+ "instrument": "GRNS",
+ "full_size": [
+  1069,
+  1076
+ ],
+ "out_size": [
+  894,
+  900
+ ],
+ "stretch": null,
+ "press": true,
+ "fetched": "2026-11-24"
+}

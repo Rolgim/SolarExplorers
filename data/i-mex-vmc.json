@@ -15,7 +15,10 @@
   640,
   480
  ],
- "stretch": null,
+ "stretch": [
+  0.5,
+  99.5
+ ],
  "footprint": null,
  "fetched": "2026-11-24",
  "inst": "mex:vmc"

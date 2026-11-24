@@ -1,0 +1,23 @@
+{
+ "archive": "NASA Image and Video Library (images.nasa.gov), reprise du Photojournal du JPL",
+ "collection": null,
+ "product": "PIA20020",
+ "title": "Titan Temperature Lag Maps",
+ "datetime": "2016-02-18T23:00:27Z",
+ "credit": "NASA/JPL-Caltech/GSFC",
+ "description": "This sequence of maps shows varying surface temperatures on Saturn moon Titan at two-year intervals, from 2004 to 2016. The measurements were made by the Composite Infrared Spectrometer CIRS instrument on NASA Cassini spacecraft.  The maps show thermal infrared radiation (heat) coming from Titan's surface at a wavelength of 19 microns, a spectral window at which the moon's otherwise opaque atmosphere is mostly transparent. Temperatures have been averaged around the globe from east to west (longitudinally) to emphasize the seasonal variation across latitudes (from north to south). Black regions in the maps are areas for which there was no data.  Titan's surface temperature changes slowly over the course of the Saturn system's long seasons, which each last seven and a half years. As on Earth, the amount of sunlight received at each latitude varies as the sun's illumination moves northward or southward over the course of the 30-year-long Saturnian year.  When Cassini arrived at Saturn in 2004, Titan's southern hemisphere was in late summer and was therefore the warmest region. Shortly after the 2009 equinox, in 2010, temperatures were symmetrical across the northern and southern hemispheres, mimicking the distribution observed by Voyager 1 in 1980 (one Titan year earlier). Temperatures subsequently cooled in the south and rose in the north, as southern winter approached.  While the overall trend in the temperature shift is clearly evident in these maps, there is narrow banding i",
+ "href": "https://images-assets.nasa.gov/image/PIA20020/PIA20020~orig.jpg",
+ "page": "https://images.nasa.gov/details/PIA20020",
+ "instrument": "CIRS",
+ "full_size": [
+  1216,
+  810
+ ],
+ "out_size": [
+  900,
+  600
+ ],
+ "stretch": null,
+ "press": true,
+ "fetched": "2026-11-24"
+}
