@@ -393,12 +393,12 @@
    "source": "https://pds-geosciences.wustl.edu/mex/urn-nasa-pds-mex_marsis_optim/radargram_image/231xx/o_23171/o_23171_chapman_no-wind_b.png",
    "page": "https://stac.stacplanet.pdssp.eu/collections/ode-mars-mex-marsis-radarch/items/o_23171_chapman_no-wind_f",
    "archive": "PDS Geosciences Node (NASA), via le catalogue STAC-PLANET du PDSSP",
-   "license": "Données d'archive de l'ESA (copie au PDS de la NASA) ; aucune licence écrite sur le produit : traitée comme CC BY-SA 3.0 IGO, la licence des images de l'ESA",
-   "license_url": "https://www.esa.int/Services/Creative_Commons_Attribution-ShareAlike_3.0_IGO_CC_BY-SA_3.0_IGO_licence",
-   "credit": "ESA/ASI/NASA/University of Rome (MARSIS)",
+   "license": "CC BY-NC 3.0 IGO (données des archives scientifiques de l'ESA, ici leur copie au PDS de la NASA) : usage non commercial, avec le crédit de l'équipe",
+   "license_url": "https://www.cosmos.esa.int/web/esdc/terms-and-conditions",
+   "credit": "ESA, R. Orosei, A. Cicchetti, J. Plaut (MARSIS)",
    "fetched": "2026-11-24",
    "transform": "recadré (partie centrale 438 × 876 px), contraste étiré (centiles 0.5–99.5), enregistré en JPEG",
-   "status": "à confirmer"
+   "status": "ok (site non commercial)"
   },
   {
    "kind": "aperçu d'archive",
@@ -408,12 +408,12 @@
    "source": "https://pds-geosciences.wustl.edu/mex/mex-m-omega-5-ddr-global-maps-v1/mexomg_2000/browse/albedo/albedo_r1080_equ_map.png",
    "page": "https://stac.stacplanet.pdssp.eu/collections/ode-mars-mex-omega-ddrgm/items/ALBEDO_R1080_EQU_MAP",
    "archive": "PDS Geosciences Node (NASA), via le catalogue STAC-PLANET du PDSSP",
-   "license": "Données d'archive de l'ESA (copie au PDS de la NASA) ; aucune licence écrite sur le produit : traitée comme CC BY-SA 3.0 IGO, la licence des images de l'ESA",
-   "license_url": "https://www.esa.int/Services/Creative_Commons_Attribution-ShareAlike_3.0_IGO_CC_BY-SA_3.0_IGO_licence",
-   "credit": "ESA/CNES/IAS (OMEGA)",
+   "license": "CC BY-NC 3.0 IGO (données des archives scientifiques de l'ESA, ici leur copie au PDS de la NASA) : usage non commercial, avec le crédit de l'équipe",
+   "license_url": "https://www.cosmos.esa.int/web/esdc/terms-and-conditions",
+   "credit": "ESA, J. Carter (OMEGA)",
    "fetched": "2026-11-24",
    "transform": "réduit de 2880 × 1440 à 900 × 450 px, enregistré en JPEG",
-   "status": "à confirmer"
+   "status": "ok (site non commercial)"
   },
   {
    "kind": "aperçu d'archive",
@@ -423,12 +423,12 @@
    "source": "https://pds-geosciences.wustl.edu/mex/mex-m-vmc-2-edr-ext9-v1/mexvmc_l2_0009/browse/2025/202506/20250629_1401_1435/vmc_se_250629_140851_007.png",
    "page": "https://stac.stacplanet.pdssp.eu/collections/ode-mars-mex-vmc-edr/items/MEXVMC_2503120007",
    "archive": "PDS Geosciences Node (NASA), via le catalogue STAC-PLANET du PDSSP",
-   "license": "Données d'archive de l'ESA (copie au PDS de la NASA) ; aucune licence écrite sur le produit : traitée comme CC BY-SA 3.0 IGO, la licence des images de l'ESA",
-   "license_url": "https://www.esa.int/Services/Creative_Commons_Attribution-ShareAlike_3.0_IGO_CC_BY-SA_3.0_IGO_licence",
-   "credit": "ESA (VMC)",
+   "license": "CC BY-NC 3.0 IGO (données des archives scientifiques de l'ESA, ici leur copie au PDS de la NASA) : usage non commercial, avec le crédit de l'équipe",
+   "license_url": "https://www.cosmos.esa.int/web/esdc/terms-and-conditions",
+   "credit": "ESA, A. Sanchez-Lavega (VMC)",
    "fetched": "2026-11-24",
    "transform": "contraste étiré (centiles 0.5–99.5), enregistré en JPEG",
-   "status": "à confirmer"
+   "status": "ok (site non commercial)"
   },
   {
    "kind": "aperçu d'archive",

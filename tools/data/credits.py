@@ -30,8 +30,10 @@ MCREDIT = {"mro": "NASA/JPL-Caltech", "lro": "NASA/GSFC/Arizona State University
            "ch1": "ISRO/NASA/JPL-Caltech", "lp": "NASA (Lunar Prospector)", "grail": "NASA/JPL-Caltech/MIT", "kplo": "NASA/KARI/Arizona State University",
            "sln": "ISAS/JAXA", "mex": "ESA", "tgo": "ESA/Roscosmos", "vex": "ESA"}
 # Instruments européens de Mars Express dont les données sont recopiées au PDS de la NASA : crédit de l'équipe
-MEX = {"mex-img": ("ESA/DLR/FU Berlin", "hrsc"), "i-mex-omega": ("ESA/CNES/IAS (OMEGA)", None), "i-mex-marsis": ("ESA/ASI/NASA/University of Rome (MARSIS)", None),
-       "i-mex-vmc": ("ESA (VMC)", None)}
+# crédits imposés par les conditions des archives scientifiques de l'ESA (ESDC, table « Credit Line », relue le 24/11/2026)
+MEX = {"mex-img": ("ESA/DLR/FU Berlin", "hrsc"), "i-mex-omega": ("ESA, J. Carter (OMEGA)", None), "i-mex-marsis": ("ESA, R. Orosei, A. Cicchetti, J. Plaut (MARSIS)", None),
+       "i-mex-vmc": ("ESA, A. Sanchez-Lavega (VMC)", None)}
+ESDC = "https://www.cosmos.esa.int/web/esdc/terms-and-conditions"   # « Data hosted in the ESA Space Science Archives are distributed under the CC BY-NC 3.0 IGO licence »
 
 def rule(name, d):
     """-> (licence fr, licence en, url de la règle, crédit, statut). Statut : « ok », « à confirmer », « ok (site non commercial) »."""
@@ -53,8 +55,8 @@ def rule(name, d):
         cr, k = MEX.get(name, ("ESA", None)); cr = MEX.get(name.replace("d-", "i-"), (cr, k))[0]
         if k == "hrsc":
             return ("CC BY-SA 3.0 IGO (images HRSC, ESA/DLR/FU Berlin)", "CC BY-SA 3.0 IGO (HRSC images, ESA/DLR/FU Berlin)", HRSC, cr, "ok")
-        return ("Données d'archive de l'ESA (copie au PDS de la NASA) ; aucune licence écrite sur le produit : traitée comme CC BY-SA 3.0 IGO, la licence des images de l'ESA",
-                "ESA archive data (copy at NASA's PDS); no licence written on the product: treated as CC BY-SA 3.0 IGO, ESA's image licence", ESA_IGO, cr, "à confirmer")
+        return ("CC BY-NC 3.0 IGO (données des archives scientifiques de l'ESA, ici leur copie au PDS de la NASA) : usage non commercial, avec le crédit de l'équipe",
+                "CC BY-NC 3.0 IGO (ESA Space Science Archives data, here their copy at NASA's PDS): non-commercial use, with the team credit", ESDC, cr, "ok (site non commercial)")
     if "Plasma" in arch:
         return (PD[0] + " ; citer le PDS (politique de citation du nœud PPI)", PD[1] + "; cite the PDS (PPI node citation policy)", PDS_PPI, MCREDIT.get(m, "NASA") + " / NASA Planetary Data System", "ok")
     if "HiRISE" in arch:
@@ -158,7 +160,7 @@ def main():
            "| JAXA DARTS (SELENE/Kaguya) | Données ouvertes, crédit ISAS/JAXA, modifications signalées | " + ISAS + " |",
            "| Caméra HDTV de Kaguya | © JAXA/NHK, usage non commercial | https://darts.isas.jaxa.jp/planet/project/selene/hdtv/ |",
            "| Images HRSC de Mars Express | CC BY-SA 3.0 IGO, ESA/DLR/FU Berlin | " + HRSC + " |",
-           "| Autres données de Mars Express (OMEGA, MARSIS, VMC), copies au PDS | à confirmer ; traitées comme CC BY-SA 3.0 IGO | " + ESA_IGO + " |",
+           "| Autres données de Mars Express (OMEGA, MARSIS, VMC), copies au PDS | CC BY-NC 3.0 IGO, conditions des archives scientifiques de l'ESA, avec le crédit de chaque équipe | " + ESDC + " |",
            "| Images de l'ESA sur Wikimedia Commons | CC BY-SA 3.0 IGO, licence relue dans les métadonnées de Commons au téléchargement | " + ESA_IGO + " |",
            "| Textures Solar System Scope | CC BY 4.0 | https://www.solarsystemscope.com/textures/ |",
            "| Maquettes NASA 3D Resources et Eyes on the Solar System | Usage libre (règles d'usage des médias de la NASA) | " + NASA_MEDIA + " |",
