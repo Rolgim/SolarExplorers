@@ -41,4 +41,4 @@ Pour lancer les tests en local : `npm install --no-save playwright@1.56.0 axe-co
 
 ## Crédits et licences
 
-Tout ce que le site montre sans l'avoir créé (images, tracés de données, textures, trajectoires, maquettes 3D, polices, bibliothèques) est listé dans [CREDITS.md](CREDITS.md), avec sa source, sa licence, son crédit, sa date de téléchargement et les transformations faites. Ce registre est généré par `tools/data/credits.py` ; la licence de chaque image est aussi affichée sous l'image.
+Le code du dépôt est sous licence [Apache 2.0](LICENSE) (voir aussi [NOTICE](NOTICE)). Cette licence ne couvre pas les médias. Tout ce que le site montre sans l'avoir créé (images, tracés de données, textures, trajectoires, maquettes 3D, polices, bibliothèques) est listé dans [CREDITS.md](CREDITS.md), avec sa source, sa licence, son crédit, sa date de téléchargement et les transformations faites. Ce registre est généré par `tools/data/credits.py` ; la licence de chaque image est aussi affichée sous l'image.
