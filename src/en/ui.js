@@ -1,5 +1,6 @@
 /* Textes d'interface en anglais : clé = texte français tel qu'il est écrit dans le code ou dans body.html. */
 var EN_UI = {
+  'Mise à jour automatique en retard : cette donnée date de {n} jours.':'Automatic update overdue: this data is {n} days old.',
   "Page d'accueil des trois sites":"Home page of the three sites",
   'orbite en schéma de principe (tailles, altitude, inclinaison et vitesse non respectées)':'schematic orbit (sizes, altitude, inclination and speed not to scale)',
   'Vue d\'orbite':'Orbit view', 'Pause':'Pause', 'Sonde':'Spacecraft',

@@ -3456,6 +3456,7 @@ var EN_MISSIONS = {
 
 /* Textes d'interface en anglais : clé = texte français tel qu'il est écrit dans le code ou dans body.html. */
 var EN_UI = {
+  'Mise à jour automatique en retard : cette donnée date de {n} jours.':'Automatic update overdue: this data is {n} days old.',
   "Page d'accueil des trois sites":"Home page of the three sites",
   'orbite en schéma de principe (tailles, altitude, inclinaison et vitesse non respectées)':'schematic orbit (sizes, altitude, inclination and speed not to scale)',
   'Vue d\'orbite':'Orbit view', 'Pause':'Pause', 'Sonde':'Spacecraft',
@@ -3734,6 +3735,23 @@ var OBS_T = function(s){ return s; }, OBS_I18N = { static:function(){} };
     document.querySelectorAll('[aria-label],[title]').forEach(function(el){ ['aria-label','title'].forEach(function(a){ var v = el.getAttribute(a); if (v) el.setAttribute(a, OBS_T(v)); }); });
     var h = document.querySelector('.home-link'); if (h) h.textContent = OBS_T(h.textContent);
   };
+})();
+
+/* Données vivantes (socle) : une donnée mise à jour automatiquement affiche sa date ; si la mise à jour prend du retard,
+   la page le dit au lieu de présenter la donnée comme actuelle.
+   LIVE.age(date)            âge en jours (date ISO « 2026-11-25 » ou « 2026-11-25T08:23Z »), null si illisible
+   LIVE.warn(date, maxJours)  '' si la donnée a moins de maxJours, sinon un avertissement en ligne (<strong>, traduit par OBS_T),
+                              à placer en tête de la note qui donne la date de la donnée */
+var LIVE = (function(){
+  function age(s){
+    var t = Date.parse(/^\d{4}-\d\d-\d\d$/.test(s || '') ? s + 'T00:00:00Z' : String(s || '').replace(/Z?$/, 'Z').replace(/(T\d\d:\d\d)Z$/, '$1:00Z'));
+    return isNaN(t) ? null : (Date.now() - t) / 864e5;
+  }
+  function warn(s, max){
+    var a = age(s); if (a == null || a <= max) return '';
+    return '<strong class="live-old">' + OBS_T('Mise à jour automatique en retard : cette donnée date de {n} jours.').replace('{n}', Math.floor(a)) + '</strong> ';
+  }
+  return { age:age, warn:warn };
 })();
 
 /* =================================================================
@@ -4197,7 +4215,7 @@ function ui(){
   $('so-cap').textContent = T('Vue de dessus du Système solaire au') + ' ' + fmt(t) + ', ' + T('centrée sur') + ' ' + fn + '. ' + cap.join(' ; ') + '.';
 }
 function note(){
-  $('so-note').innerHTML = esc(T('Positions : JPL Horizons, vecteurs héliocentriques projetés sur le plan de l\'écliptique J2000, téléchargés le') + ' ' + fmt(TF) + (T1 > TF + 1 ? ' ; ' + T('au-delà, prévision Horizons jusqu\'au') + ' ' + fmt(T1) : '') + '. ' +
+  $('so-note').innerHTML = LIVE.warn(D.fetched, 14) + esc(T('Positions : JPL Horizons, vecteurs héliocentriques projetés sur le plan de l\'écliptique J2000, téléchargés le') + ' ' + fmt(TF) + (T1 > TF + 1 ? ' ; ' + T('au-delà, prévision Horizons jusqu\'au') + ' ' + fmt(T1) : '') + '. ' +
     T('Distances à l\'échelle. Soleil, planètes et Lune à l\'échelle dès qu\'ils dépassent quelques pixels ; en deçà, et pour les autres satellites et les sondes, des points de taille fixe.') + ' ' +
     T('Satellites placés à partir des éléments orbitaux Horizons (tous les 180 jours, 30 pour les plus rapides), interpolés entre deux dates : position approchée (≈, quelques degrés sur l\'orbite au plus).') + ' ' +
     T('Une sonde en orbite est marquée de loin par un anneau de sa couleur. En zoomant sur son corps, son orbite réelle apparaît (Horizons, centrée sur le corps, une fenêtre par an à partir du 15 janvier ; en tirets, la partie cachée derrière le corps) : entre deux fenêtres, la sonde y est placée en répétant ce tour (≈, la phase dérive). En lecture rapide, seule l\'orbite est tracée.') ) +

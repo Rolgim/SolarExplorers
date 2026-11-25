@@ -278,7 +278,7 @@ function ui(){
   $('so-cap').textContent = T('Vue de dessus du Système solaire au') + ' ' + fmt(t) + ', ' + T('centrée sur') + ' ' + fn + '. ' + cap.join(' ; ') + '.';
 }
 function note(){
-  $('so-note').innerHTML = esc(T('Positions : JPL Horizons, vecteurs héliocentriques projetés sur le plan de l\'écliptique J2000, téléchargés le') + ' ' + fmt(TF) + (T1 > TF + 1 ? ' ; ' + T('au-delà, prévision Horizons jusqu\'au') + ' ' + fmt(T1) : '') + '. ' +
+  $('so-note').innerHTML = LIVE.warn(D.fetched, 14) + esc(T('Positions : JPL Horizons, vecteurs héliocentriques projetés sur le plan de l\'écliptique J2000, téléchargés le') + ' ' + fmt(TF) + (T1 > TF + 1 ? ' ; ' + T('au-delà, prévision Horizons jusqu\'au') + ' ' + fmt(T1) : '') + '. ' +
     T('Distances à l\'échelle. Soleil, planètes et Lune à l\'échelle dès qu\'ils dépassent quelques pixels ; en deçà, et pour les autres satellites et les sondes, des points de taille fixe.') + ' ' +
     T('Satellites placés à partir des éléments orbitaux Horizons (tous les 180 jours, 30 pour les plus rapides), interpolés entre deux dates : position approchée (≈, quelques degrés sur l\'orbite au plus).') + ' ' +
     T('Une sonde en orbite est marquée de loin par un anneau de sa couleur. En zoomant sur son corps, son orbite réelle apparaît (Horizons, centrée sur le corps, une fenêtre par an à partir du 15 janvier ; en tirets, la partie cachée derrière le corps) : entre deux fenêtres, la sonde y est placée en répétant ce tour (≈, la phase dérive). En lecture rapide, seule l\'orbite est tracée.') ) +

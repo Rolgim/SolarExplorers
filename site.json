@@ -31,6 +31,7 @@
     "en/missions.js",
     "en/ui.js",
     "socle:i18n.js",
+    "socle:live.js",
     "socle:viewer.js",
     "solar.js",
     "views.js",
