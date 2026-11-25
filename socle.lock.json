@@ -1,12 +1,13 @@
 {
   "source": "https://github.com/Rolgim/rolgim.github.io",
   "path": "socle",
-  "commit": "a26aa55959fbcc5dd51943ab6887f86936810e3a",
+  "commit": "eb3e1e1f19c07c12c1b87ab6b7736ab626d29e68",
   "files": {
-    "README.md": "4aaa148b6f1bb6aba736107ae2ac2d2a7326061ba5f6235c923ffdbdb98d3394",
+    "README.md": "784a7930499ffd59c73273b70021db9311da1a501a34efd3ec44b06dbffec8ef",
     "build.js": "1941d124e6deeca695e0b5aa75dc2aa3a907f218c0fa240fc95de9114c2162a3",
     "check.js": "8cfe7bf723a1e86ec5b4cd9b568bf4e93e68ec35d00c15b542ae2acedaee8921",
     "data/check_links.py": "fa661d565a04a067c5cc33903eafb2abd581ae3e34e296e16f8ff6e6481a0d18",
+    "data/credits_lib.py": "4f67edcce3c52f9a516613dadf8f4a485001dfe41f60203f7d86673f3485b5d8",
     "models/cls_view.js": "64cbe48162bc71f3c4b45af58d681aed1ee94e49831b6c370bdb1bfe4125538b",
     "models/dump.js": "6c9d50f13bb3e20716a9abab3f084186279913bebd6b7f18d12ac34cd830afb0",
     "models/islands.js": "7b5e36cc95911845b49df972ce9fb1d17a11515847300e49d7ed30567b100d0f",
