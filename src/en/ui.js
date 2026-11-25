@@ -1,5 +1,9 @@
 /* Textes d'interface en anglais : clé = texte français tel qu'il est écrit dans le code ou dans body.html. */
 var EN_UI = {
+  'Vue 3D':'3D view', 'Vue de dessus':'Top view', 'Vue en 3D du Système solaire au':'3D view of the Solar System on',
+  'Vue 3D : mêmes positions, avec la hauteur au-dessus du plan de l\'écliptique donnée par Horizons ; glisser ou flèches du clavier pour tourner, molette ou + et − pour zoomer.':'3D view: same positions, with the height above the ecliptic plane given by Horizons; drag or use the arrow keys to rotate, wheel or + and − to zoom.',
+  'Vue 3D : hauteurs au-dessus de l\'écliptique pas encore téléchargées, tous les corps sont posés sur l\'écliptique (≈) ; glisser ou flèches du clavier pour tourner, molette ou + et − pour zoomer.':'3D view: heights above the ecliptic not downloaded yet, all bodies are placed on the ecliptic (≈); drag or use the arrow keys to rotate, wheel or + and − to zoom.',
+  'Mise à jour automatique en retard : cette donnée date de {n} jours.':'Automatic update overdue: this data is {n} days old.',
   "Page d'accueil des trois sites":"Home page of the three sites",
   'orbite en schéma de principe (tailles, altitude, inclinaison et vitesse non respectées)':'schematic orbit (sizes, altitude, inclination and speed not to scale)',
   'Vue d\'orbite':'Orbit view', 'Pause':'Pause', 'Sonde':'Spacecraft',

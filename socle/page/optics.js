@@ -2,7 +2,7 @@
    TRAJET DE LA LUMIÈRE (ou du signal) dans chaque instrument.
    Schémas de principe paramétriques, d'après le module optique d'Observatories v1.0 : formes, tailles et distances NE sont PAS
    à l'échelle (règle 2), ce que dit la légende de chaque figure. Les seules valeurs chiffrées affichées viennent d'OPTICS
-   ci-dessous, chacune avec sa source (clés de INST_DATA[mission].refs ou des refs de la mission, règle 1).
+   du site (OPTICS_SITE.data, src/optics-data.js de chaque site), chacune avec sa source (clés de INST_DATA[mission].refs ou des refs de la mission, règle 1).
    Couleurs neutres : ramenées aux jetons du thème par les règles « svg [fill=…] » de style.css.
 ================================================================= */
 var Optics = (function(){
@@ -99,7 +99,7 @@ var Optics = (function(){
       var W = 560, H = 240, yg = 206, fx = 275, s = '';
       /* flèche posée sur le segment, à la fraction t, dans le sens du trajet */
       function on(x1, y1, x2, y2, t, c){ return arrow(x1 + (x2-x1)*t, y1 + (y2-y1)*t, Math.atan2(y2-y1, x2-x1)*180/Math.PI, c); }
-      s += '<rect x="150" y="20" width="250" height="40" rx="4" fill="none" stroke="'+SOFT+'" stroke-dasharray="4 3"/>' + T(275, 14, L('sonde', 'spacecraft'), 'middle');
+      s += '<rect x="150" y="20" width="250" height="40" rx="4" fill="none" stroke="'+SOFT+'" stroke-dasharray="4 3"/>' + T(275, 14, OPTICS_SITE.craft(), 'middle');
       s += '<rect x="206" y="30" width="44" height="22" rx="3" fill="rgba(219,90,20,0.15)" stroke="'+RAY+'"/>' + T(196, 80, L('laser', 'laser'), 'end', true);
       s += '<rect x="300" y="26" width="40" height="28" rx="3" fill="rgba(61,107,224,0.10)" stroke="'+DET+'"/>' + Ln(300, 54, 340, 54, INK, 3) + T(352, 80, L('télescope récepteur', 'receiving telescope'), 'start', true);
       /* lumière renvoyée dans toutes les directions par le sol : le télescope n'en capte qu'une petite partie */
@@ -136,7 +136,7 @@ var Optics = (function(){
     radio: function(){
       var W = 560, H = 210, s = '';
       s += '<circle cx="420" cy="150" r="52" fill="none" stroke="'+GND+'" stroke-width="3"/>' + T(420, 154, L('corps étudié', 'body studied'), 'middle');
-      s += '<rect x="408" y="48" width="24" height="16" rx="2" fill="none" stroke="'+INK+'" stroke-width="2"/>' + T(440, 44, L('sonde', 'spacecraft'), null, true);
+      s += '<rect x="408" y="48" width="24" height="16" rx="2" fill="none" stroke="'+INK+'" stroke-width="2"/>' + T(440, 44, OPTICS_SITE.craft(), null, true);
       s += Pa('M58 160 Q80 192 102 160', INK, 3) + Ln(80, 176, 80, 194, INK, 2) + T(80, 204, L('antenne sur Terre', 'antenna on Earth'), 'middle', true);
       s += P([[96, 164], [404, 60]], RAY, 1.2, '6 4') + arrow(400, 61, -18, RAY) + arrow(100, 163, 162, RAY);
       s += T(250, 92, L('signal radio aller et retour', 'two-way radio signal'), 'middle', true) + T(250, 108, L('décalage Doppler → vitesse → gravité', 'Doppler shift → speed → gravity'), 'middle');
@@ -156,34 +156,16 @@ var Optics = (function(){
     xray:[L('Les rayons X du Soleil frappent le sol, dont les atomes réémettent des rayons X à des énergies propres à chaque élément (fluorescence).', 'X-rays from the Sun strike the ground, whose atoms re-emit X-rays at energies specific to each element (fluorescence).'), L('Un collimateur limite le champ de vue ; aucune lentille ne focalise ces rayons.', 'A collimator limits the field of view; no lens focuses these rays.'), L('Le détecteur mesure l\'énergie de chaque photon X ; le spectre donne la composition du sol.', 'The detector measures the energy of each X-ray photon; the spectrum gives the composition of the ground.')],
     alt:[L('Le laser envoie une impulsion très brève vers le sol.', 'The laser sends a very short pulse towards the ground.'), L('Une petite partie de la lumière revient vers un télescope récepteur.', 'A small part of the light comes back to a receiving telescope.'), L('Le temps aller-retour donne la distance, donc l\'altitude du sol sous la sonde.', 'The round-trip time gives the distance, hence the height of the ground below the spacecraft.')],
     radar:[L('L\'antenne émet une impulsion radio.', 'The antenna emits a radio pulse.'), L('L\'onde traverse les nuages, et à basse fréquence une partie entre dans le sol.', 'The wave crosses clouds, and at low frequency part of it enters the ground.'), L('Les échos reviennent à l\'antenne ; leur retard et leur force donnent l\'image, le relief ou les couches du sous-sol.', 'The echoes return to the antenna; their delay and strength give the image, the relief or the subsurface layers.')],
-    radio:[L('Une antenne sur Terre envoie un signal radio de fréquence très stable.', 'An antenna on Earth sends a radio signal of very stable frequency.'), L('La sonde le renvoie ; son mouvement décale la fréquence (effet Doppler).', 'The spacecraft sends it back; its motion shifts the frequency (Doppler effect).'), L('Les variations de vitesse révèlent le champ de gravité, ou l\'atmosphère traversée par le signal.', 'Speed changes reveal the gravity field, or the atmosphere crossed by the signal.')]
+    radio:[L('Une antenne sur Terre envoie un signal radio de fréquence très stable.', 'An antenna on Earth sends a radio signal of very stable frequency.'), OPTICS_SITE.echo(), L('Les variations de vitesse révèlent le champ de gravité, ou l\'atmosphère traversée par le signal.', 'Speed changes reveal the gravity field, or the atmosphere crossed by the signal.')]
   }[k]; }
 
   /* ---------- données sourcées des caméras principales ----------
      figs : un dessin par voie (petit champ, grand champ) ; rows : combinaison optique, [libellé, valeur, clé de source] */
-  function OPTICS(){ return {
-    'mro:hirise':{ figs:[{ kind:'refl', tma:true, D:'50 cm', f:L('12 m', '12 m'), det:L('14 CCD', '14 CCDs') }],
-      rows:[[L('Combinaison', 'Design'), L('Cassegrain à trois miroirs, f/24', 'three-mirror Cassegrain, f/24'), 'e01'], [L('Miroir primaire', 'Primary mirror'), '50 cm', 'kit'], [L('Focale', 'Focal length'), '12 m', 'e01'], [L('Détecteurs', 'Detectors'), L('14 CCD de 2 048 pixels', '14 CCDs of 2,048 pixels'), 'e01']] },
-    'mro:ctx':{ figs:[{ kind:'refl', corr:true, f:'350 mm', det:L('barrette CCD', 'CCD line') }],
-      rows:[[L('Combinaison', 'Design'), L('Cassegrain catadioptrique (type Maksutov)', 'catadioptric Cassegrain (Maksutov type)'), 'ctxd'], [L('Focale', 'Focal length'), '350 mm', 'ctxd'], [L('Détecteur', 'Detector'), L('barrette CCD de 5 064 pixels', '5,064-pixel CCD line array'), 'ctxd']] },
-    'lro:lroc':{ figs:[{ kind:'refl', title:'NAC', D:'195 mm', f:'700 mm', det:'KLI-5001G' }, { kind:'refr', title:'WAC', f:'6 mm', filt:true, det:'KAI-1001' }],
-      rows:[[L('NAC : combinaison', 'NAC: design'), L('Ritchey-Chrétien, f/3,59', 'Ritchey-Chretien, f/3.59'), 'lrs'], [L('NAC : miroir primaire', 'NAC: primary mirror'), '195 mm', 'lrs'], [L('NAC : focale', 'NAC: focal length'), '700 mm', 'lrs'],
-        [L('NAC : détecteur', 'NAC: detector'), L('Kodak KLI-5001G, 1 × 5 064 pixels', 'Kodak KLI-5001G, 1 × 5,064 pixels'), 'lrs'], [L('WAC : optique', 'WAC: optics'), L('f/5,05 (visible), f/5,65 (UV)', 'f/5.05 (visible), f/5.65 (UV)'), 'lrs'],
-        [L('WAC : focale', 'WAC: focal length'), L('6,0 mm (visible), 4,7 mm (UV)', '6.0 mm (visible), 4.7 mm (UV)'), 'lrs'], [L('WAC : détecteur', 'WAC: detector'), L('Kodak KAI-1001, 1 024 × 1 024 pixels', 'Kodak KAI-1001, 1,024 × 1,024 pixels'), 'lrs']] },
-    'cassini:iss':{ figs:[{ kind:'refl', title:L('Petit champ (NAC)', 'Narrow angle (NAC)'), f:L('2 m', '2 m'), det:L('CCD 1 024²', 'CCD 1,024²') }, { kind:'refr', title:L('Grand champ (WAC)', 'Wide angle (WAC)'), f:'200 mm', filt:true, det:L('CCD 1 024²', 'CCD 1,024²') }],
-      rows:[[L('NAC : combinaison', 'NAC: design'), L('Ritchey-Chrétien, f/10,5', 'Ritchey-Chretien, f/10.5'), 'issna'], [L('NAC : focale', 'NAC: focal length'), L('2 002,70 mm', '2,002.70 mm'), 'issna'],
-        [L('Détecteurs', 'Detectors'), L('CCD de 1 024 × 1 024 pixels de 12 µm', 'CCD of 1,024 × 1,024 pixels, 12 µm'), 'issna'], [L('WAC : combinaison', 'WAC: design'), L('lunette (réfracteur), f/3,5', 'refractor, f/3.5'), 'issp'], [L('WAC : focale', 'WAC: focal length'), L('200,77 mm', '200.77 mm'), 'issp']] },
-    'messenger:mdis':{ figs:[{ kind:'refl', title:L('Petit champ (NAC)', 'Narrow angle (NAC)'), D:'25 mm', f:'550 mm', det:'TH7888A' }, { kind:'refr', title:L('Grand champ (WAC)', 'Wide angle (WAC)'), f:'78 mm', filt:true, det:'TH7888A', lens:L('objectif à 4 lentilles', '4-element lens') }],
-      rows:[[L('NAC : combinaison', 'NAC: design'), L('Ritchey-Chrétien hors d\'axe, f/22', 'off-axis Ritchey-Chretien, f/22'), 'mdisc'], [L('NAC : ouverture', 'NAC: aperture'), '25 mm', 'mdisc'], [L('NAC : focale', 'NAC: focal length'), '550 mm', 'mdisc'],
-        [L('WAC : combinaison', 'WAC: design'), L('objectif à quatre lentilles (Dogmar)', 'four-element lens (Dogmar)'), 'mdisc'], [L('WAC : focale', 'WAC: focal length'), '78 mm', 'mdisc'], [L('Détecteur', 'Detector'), L('CCD TH7888A, 1 024 × 1 024 pixels de 14 µm', 'TH7888A CCD, 1,024 × 1,024 pixels of 14 µm'), 'mdisc']] },
-    'tgo:cassis':{ figs:[{ kind:'refl', tma:true, D:'135 mm', f:'880 mm', det:L('Si-PIN 2k × 2k', 'Si-PIN 2k × 2k') }],
-      rows:[[L('Combinaison', 'Design'), L('anastigmat à trois miroirs, plus un miroir de renvoi courbe ; f/6,5', 'three-mirror anastigmat and a curved fold mirror; f/6.5'), 'cop'], [L('Pupille d\'entrée', 'Entrance pupil'), '135 mm', 'cop'], [L('Focale', 'Focal length'), L('880 mm (valeur de conception)', '880 mm (design value)'), 'cop'],
-        [L('Détecteur', 'Detector'), L('matrice hybride Si-PIN de 2k × 2k, pixels de 10 µm', 'hybrid Si-PIN array of 2k × 2k, 10 µm pixels'), 'cop']] }
-  }; }
+  function OPTICS(){ return OPTICS_SITE.data(); }
   var GAMMA = /^(grns|grs|ns|gs)$/, FTS = /^(cirs|pfs)$/, SOUNDER = /^(sharad|marsis|lrs)$/;
   function kindOf(it){
     if (it.type === 'spec') return it.id === 'xrs' ? 'xray' : GAMMA.test(it.id) ? 'gamma' : FTS.test(it.id) ? 'fts' : 'spec';
-    return { cam:'cam', rad:'rad', alt:'alt', radar:'radar', radio:'radio' }[it.type] || null;
+    return OPTICS_SITE.types[it.type] || null;
   }
 
   /* section « Trajet de la lumière » de la page d'un instrument */

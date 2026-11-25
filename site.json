@@ -1,0 +1,44 @@
+{
+  "name": "SolarExplorers",
+  "langKey": "sse-lang",
+  "mark": "#2F6FE4",
+  "mark3d": "0x3D7BFF",
+  "title": "Solar System Explorers",
+  "artifactTitle": "Explorateurs du Système solaire",
+  "description": "Planetary probes in 3D, with sourced facts, instruments, trajectories and real archive data. In English and French.",
+  "fonts": "<link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500&display=swap\">",
+  "css": [
+    "socle:style.css",
+    "socle:inst.css",
+    "site.css"
+  ],
+  "registry": {
+    "file": "data-missions.js",
+    "check": "var MISSIONS = \\["
+  },
+  "scripts": [
+    "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js",
+    "https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"
+  ],
+  "js": [
+    "socle:lang.js",
+    "@data",
+    "@registry",
+    "data-fleet.js",
+    "data-stac.js",
+    "data-inst.js",
+    "data-mission.js",
+    "en/missions.js",
+    "en/ui.js",
+    "socle:i18n.js",
+    "socle:live.js",
+    "socle:viewer.js",
+    "solar.js",
+    "views.js",
+    "optics-data.js",
+    "socle:optics.js",
+    "socle:missionkit.js",
+    "missionpage.js",
+    "app.js"
+  ]
+}

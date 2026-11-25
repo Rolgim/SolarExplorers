@@ -6,10 +6,12 @@ images et tracés de data/, textures, trajectoires, maquettes 3D, polices et bib
 - Écrit la licence dans chaque data/*.json (champs license_fr, license_en, license_url, credit_line, status) pour que le site l'affiche
   sous l'image, puis écrit data/credits.json et CREDITS.md (le registre lisible).
 Lancé par le workflow « Données réelles » après les téléchargements ; peut se relancer seul : python tools/data/credits.py"""
-import os, re, json, glob, datetime
+import os, re, sys, json, glob
 
 ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
 DATA = os.path.join(ROOT, "data")
+sys.path.insert(0, os.path.join(ROOT, "socle", "data"))   # parties communes du registre (socle/data/credits_lib.py)
+from credits_lib import transform, dep, fonts_row, own_code_row, socle_row, write_register
 
 NASA_MEDIA = "https://www.nasa.gov/nasa-brand-center/images-and-media/"
 JPL_POLICY = "https://www.jpl.nasa.gov/jpl-image-use-policy/"
@@ -65,18 +67,6 @@ def rule(name, d):
         return (PD[0] + " ; citer le PDS", PD[1] + "; cite the PDS", PDS_GEO, MCREDIT.get(m, "NASA") + " / NASA Planetary Data System", "ok")
     return ("inconnue", "unknown", None, None, "à confirmer")
 
-def transform(d):
-    """Ce que le site a fait au fichier d'origine (en français), d'après les champs écrits au téléchargement."""
-    if d.get("plot"): return "tracé par ce site (matplotlib) à partir du fichier de données : " + (d.get("how_fr") or "")[:220]
-    t = []
-    if d.get("crop"): t.append("recadré (partie centrale %d × %d px)" % tuple(d["crop"][:2]))
-    if d.get("crop_px"): t.append("carré central de %d px" % d["crop_px"])
-    fs, os_ = d.get("full_size"), d.get("out_size")
-    if fs and os_ and list(fs)[:1] != list(os_)[:1]: t.append("réduit de %s × %s à %s × %s px" % (fs[0], fs[1], os_[0], os_[1]))
-    if d.get("stretch"): t.append("contraste étiré (centiles %s–%s)" % tuple(d["stretch"][:2]))
-    t.append("enregistré en JPEG")
-    return ", ".join(t)
-
 def main():
     rows = []
     for f in sorted(glob.glob(os.path.join(DATA, "*.json"))):
@@ -113,20 +103,14 @@ def main():
                          license_url=(u if st != "ok" else NASA_MEDIA), credit=("ESA" if st != "ok" else ("NASA/JPL-Caltech" if "Eyes" in s else "NASA")),
                          fetched=None, transform="convertie en glTF binaire, redécoupée en pièces, géométrie quantifiée (voir tools/models/README.md)", status=st))
     rows += [
-        dict(kind="police", file="Google Fonts", title="Archivo ; IBM Plex Mono", source="https://fonts.google.com/", page="https://fonts.google.com/", license="SIL Open Font License 1.1",
-             license_url="https://openfontlicense.org/", credit="Omnibus-Type (Archivo) ; IBM (Plex)", fetched=None, transform="aucune (chargées depuis Google Fonts)", status="ok"),
+        fonts_row(),
         dict(kind="schémas", file="src/optics.js, src/app.js (SVG)", title="Trajets de la lumière, orbites, bandes spectrales", source=None, page=None,
              license="créés pour ce site", license_url=None, credit="Explorateurs du Système solaire", fetched=None, transform="schémas de principe dessinés à partir des références citées sous chaque schéma", status="ok")]
     # Code : celui du dépôt, celui repris d'Observatories, et les dépendances (versions relevées le 24/11/2026)
-    lic = os.path.join(ROOT, "LICENSE")
-    own = ("Apache-2.0 (code seulement : les médias gardent leur licence, voir NOTICE)" if "Apache License" in open(lic, encoding="utf-8").read(400) else "voir LICENSE") if os.path.exists(lic) else "aucune licence déclarée (tous droits réservés)"
-    def dep(name, use, license, url, served=False):
-        return dict(kind="code", file=name, title=use, source=url, page=url, license=license, license_url=url, credit=None, fetched=None,
-                    transform="servi aux visiteurs tel quel" if served else "outil de préparation ou de test, pas distribué avec le site", status="ok")
     rows += [
-        dict(kind="code", file="src/, build.js, tools/", title="Code du site (Explorateurs du Système solaire)", source="https://github.com/Rolgim/SolarExplorers", page=None,
-             license=own, license_url=("https://github.com/Rolgim/SolarExplorers/blob/main/LICENSE" if os.path.exists(lic) else None), credit="Rolgim", fetched=None, transform="—", status="ok" if os.path.exists(lic) else "à confirmer"),
-        dict(kind="code", file="build.js, src/app.js, src/viewer.js, src/i18n.js, tools/models/, tools/smoke.js, tools/a11y.js", title="Architecture reprise d'Observatories v1.0 (même auteur)",
+        own_code_row(ROOT, "Explorateurs du Système solaire", "Rolgim/SolarExplorers"),
+        socle_row(),
+        dict(kind="code", file="build.js, src/app.js, socle/, tools/models/, tools/smoke.js", title="Architecture reprise d'Observatories v1.0 (même auteur)",
              source="https://github.com/Rolgim/Observatories/tree/v1.0", page=None, license="code du même auteur, réutilisé par lui (Observatories n'a pas de licence déclarée)",
              license_url=None, credit="Rolgim", fetched=None, transform="adapté aux sondes planétaires", status="ok"),
         dep("three.js r128 (cdnjs)", "rendu 3D dans le navigateur", "MIT", "https://github.com/mrdoob/three.js/blob/r128/LICENSE", True),
@@ -142,19 +126,8 @@ def main():
         dep("NumPy", "lecture des fichiers binaires", "BSD-3-Clause", "https://github.com/numpy/numpy/blob/main/LICENSE.txt"),
         dep("Matplotlib", "tracés des données", "Matplotlib License (type PSF)", "https://github.com/matplotlib/matplotlib/blob/main/LICENSE/LICENSE"),
         dep("PyYAML, pypdf", "sondes (tools/probe)", "MIT ; BSD-3-Clause", "https://github.com/py-pdf/pypdf/blob/main/LICENSE")]
-    today = datetime.date.today().isoformat()
-    json.dump({"generated": today, "items": rows}, open(os.path.join(DATA, "credits.json"), "w", encoding="utf-8"), indent=1, ensure_ascii=False)
-
-    def cell(x): return (str(x) if x else "—").replace("|", "\\|").replace("\n", " ")
-    def link(t, u): return "[" + cell(t) + "](" + u + ")" if u else cell(t)
-    out = ["# Crédits et licences", "",
-           "Registre de tout ce que le site affiche et qui ne vient pas de lui : images, tracés de données, textures, trajectoires, maquettes 3D, polices et bibliothèques.",
-           "Il est **généré** par `tools/data/credits.py` à partir des métadonnées écrites au téléchargement (`data/*.json`) et de `src/data-missions.js` : ne pas le modifier à la main.",
-           "La licence de chaque image est aussi affichée sous l'image, sur le site.", "",
-           "Généré le " + today + ". Statuts : **ok** (licence vérifiée sur la page citée), **à confirmer** (aucune licence écrite trouvée : voir la colonne licence), **ok (site non commercial)** (licence limitée à l'usage non commercial, ce qui est le cas de ce site).", "",
-           "## Règles appliquées, par source", "",
-           "| Source | Licence retenue | Page qui l'énonce |", "|---|---|---|",
-           "| Archives du PDS de la NASA (Geosciences, Imaging, PPI, LROC, ShadowCam, THEMIS) | Domaine public ; citer le PDS et l'équipe | " + PDS_GEO + " ; " + PDS_PPI + " |",
+    write_register(ROOT, rows, "images, tracés de données, textures, trajectoires, maquettes 3D, polices et bibliothèques",
+        ["| Archives du PDS de la NASA (Geosciences, Imaging, PPI, LROC, ShadowCam, THEMIS) | Domaine public ; citer le PDS et l'équipe | " + PDS_GEO + " ; " + PDS_PPI + " |",
            "| HiRISE (université d'Arizona) | Domaine public, crédit NASA/JPL-Caltech/University of Arizona | " + HIRISE + " |",
            "| Bibliothèque d'images de la NASA, Photojournal du JPL | Domaine public, sans logo de la NASA | " + NASA_MEDIA + " ; " + JPL_POLICY + " |",
            "| JAXA DARTS (SELENE/Kaguya) | Données ouvertes, crédit ISAS/JAXA, modifications signalées | " + ISAS + " |",
@@ -164,19 +137,7 @@ def main():
            "| Images de l'ESA sur Wikimedia Commons | CC BY-SA 3.0 IGO, licence relue dans les métadonnées de Commons au téléchargement | " + ESA_IGO + " |",
            "| Textures Solar System Scope | CC BY 4.0 | https://www.solarsystemscope.com/textures/ |",
            "| Maquettes NASA 3D Resources et Eyes on the Solar System | Usage libre (règles d'usage des médias de la NASA) | " + NASA_MEDIA + " |",
-           "| Maquettes ESA SCIFLEET | à confirmer : aucune licence publiée sur SCIFLEET ; les conditions générales du site de l'ESA (https://www.esa.int/terms-and-conditions, relues le 24/11/2026) demandent un accord écrit pour redistribuer ou modifier ; demande à l'ESA en cours | https://scifleet.esa.int/ |", ""]
-    for kind in ("aperçu d'archive", "tracé", "image de presse", "image Commons", "texture", "trajectoire", "maquette 3D", "police", "bibliothèque", "schémas", "code"):
-        sel = [r for r in rows if r["kind"] == kind]
-        if not sel: continue
-        out += ["## " + kind[0].upper() + kind[1:] + " (" + str(len(sel)) + ")", "",
-                "| Fichier | Titre / produit | Crédit | Licence | Statut | Source | Téléchargé le | Transformations |", "|---|---|---|---|---|---|---|---|"]
-        for r in sel:
-            out.append("| `" + cell(r["file"]) + "` | " + cell(r.get("title")) + (" (" + cell(r.get("instrument")) + ")" if r.get("instrument") else "") + " | " + cell(r.get("credit")) + " | " +
-                       link(r.get("license"), r.get("license_url")) + " | " + cell(r.get("status")) + " | " + link("fichier", r.get("source")) + (" · " + link("page", r.get("page")) if r.get("page") and r.get("page") != r.get("source") else "") +
-                       " | " + cell(r.get("fetched")) + " | " + cell(r.get("transform")) + " |")
-        out.append("")
-    open(os.path.join(ROOT, "CREDITS.md"), "w", encoding="utf-8").write("\n".join(out))
-    bad = [r["file"] for r in rows if not r["status"].startswith("ok")]
-    print("crédits :", len(rows), "entrées ;", len(bad), "à confirmer ou restreintes :", ", ".join(bad))
+           "| Maquettes ESA SCIFLEET | à confirmer : aucune licence publiée sur SCIFLEET ; les conditions générales du site de l'ESA (https://www.esa.int/terms-and-conditions, relues le 24/11/2026) demandent un accord écrit pour redistribuer ou modifier ; demande à l'ESA en cours | https://scifleet.esa.int/ |"],
+        ("aperçu d'archive", "tracé", "image de presse", "image Commons", "texture", "trajectoire", "maquette 3D", "police", "bibliothèque", "schémas", "code"))
 
 if __name__ == "__main__": main()

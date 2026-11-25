@@ -162,3 +162,10 @@ sup.ref a{ text-decoration:none; }
 .so-orb.hid{ stroke-dasharray:3 4; stroke-opacity:.5; }
 /* barre de séparation entre l'en-tête et le contenu, comme la rangée du haut des pages Flotte et Comparer d'Observatories */
 #top{ border-bottom:2px solid var(--ink); }
+/* vue 3D du Système solaire (src/solar.js, three.js) */
+.so-gl{ display:block; width:100%; height:100%; touch-action:none; cursor:grab; }
+.so-gl:focus-visible{ outline:2px solid var(--mark); outline-offset:-3px; }
+.so-labs3{ position:absolute; inset:0; pointer-events:none; overflow:hidden; }
+.so-labs3 span{ position:absolute; white-space:nowrap; font-family:var(--f); font-size:12px; font-weight:600; color:#E3E6E8; text-shadow:0 0 3px #05070A, 0 0 3px #05070A, 0 0 2px #05070A; }
+.so-labs3 span.so-ml{ font-weight:400; color:#C9D2DA; }
+.so-sky .home-zoom button[aria-pressed="true"]{ background:var(--mark); color:var(--on-mark); }
