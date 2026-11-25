@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-24",
+ "generated": "2026-11-25",
  "items": [
   {
    "kind": "image Commons",
@@ -12,7 +12,7 @@
    "license": "Domaine public (données et images de la NASA, non protégées par le droit d'auteur)",
    "license_url": "https://commons.wikimedia.org/wiki/File:GRAIL_MoonKAM_NASA_mission_01.jpg",
    "credit": "NASA",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "enregistré en JPEG",
    "status": "ok"
   },
@@ -27,7 +27,7 @@
    "license": "Domaine public (données et images de la NASA, non protégées par le droit d'auteur)",
    "license_url": "https://commons.wikimedia.org/wiki/File:ShadowCam-Shackleton-Crater-768x465.png",
    "credit": "NASA/KARI/ASU",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "enregistré en JPEG",
    "status": "ok"
   },
@@ -42,7 +42,7 @@
    "license": "Domaine public (données et images de la NASA, non protégées par le droit d'auteur)",
    "license_url": "https://commons.wikimedia.org/wiki/File:Lunar_Thorium_concentrations.jpg",
    "credit": "NASA",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "réduit de 2100 × 1100 à 900 × 471 px, enregistré en JPEG",
    "status": "ok"
   },
@@ -57,7 +57,7 @@
    "license": "Domaine public (données et images de la NASA, non protégées par le droit d'auteur)",
    "license_url": "https://commons.wikimedia.org/wiki/File:LEND_Looks_for_Water_at_the_South_Pole.jpg",
    "credit": "Ernie Wright, NASA’s Scientific Visualization Studio",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "réduit de 4200 × 4400 à 859 × 900 px, enregistré en JPEG",
    "status": "ok"
   },
@@ -72,7 +72,7 @@
    "license": "CC BY-SA 3.0 IGO (partage dans les mêmes conditions)",
    "license_url": "https://creativecommons.org/licenses/by-sa/3.0/igo/deed.en",
    "credit": "ESA/Roscosmos/CaSSIS, CC BY-SA IGO 3.0",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "réduit de 1400 × 900 à 900 × 579 px, enregistré en JPEG",
    "status": "ok"
   },
@@ -85,7 +85,7 @@
    "license": "Données publiques du JPL (NASA), sans restriction d'usage",
    "license_url": "https://ssd.jpl.nasa.gov/",
    "credit": "NASA/JPL-Caltech, JPL Horizons",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "positions échantillonnées, réduites en coordonnées écliptiques",
    "status": "ok"
   },
@@ -100,7 +100,7 @@
    "license": "Domaine public (données et images de la NASA, non protégées par le droit d'auteur) ; citer le PDS",
    "license_url": "https://pds-geosciences.wustl.edu/jplcopyright.html",
    "credit": "ISRO/NASA/JPL-Caltech / NASA Planetary Data System",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "recadré (partie centrale 304 × 912 px), réduit de 304 × 16140 à 300 × 900 px, enregistré en JPEG",
    "status": "ok"
   },
@@ -115,7 +115,7 @@
    "license": "Domaine public (données et images de la NASA, non protégées par le droit d'auteur) ; citer le PDS",
    "license_url": "https://pds-geosciences.wustl.edu/jplcopyright.html",
    "credit": "NASA/BMDO (Clementine) / NASA Planetary Data System",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "réduit de 953 × 910 à 900 × 859 px, enregistré en JPEG",
    "status": "ok"
   },
@@ -128,7 +128,7 @@
    "license": "Données publiques du JPL (NASA), sans restriction d'usage",
    "license_url": "https://ssd.jpl.nasa.gov/",
    "credit": "NASA/JPL-Caltech, JPL Horizons",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "positions échantillonnées, réduites en coordonnées écliptiques",
    "status": "ok"
   },
@@ -143,7 +143,7 @@
    "license": "Domaine public (données et images de la NASA, non protégées par le droit d'auteur) ; citer le PDS",
    "license_url": "https://pds-geosciences.wustl.edu/jplcopyright.html",
    "credit": "NASA/BMDO (Clementine) / NASA Planetary Data System",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "tracé par ce site (matplotlib) à partir du fichier de données : Profil tracé par ce site à partir de la table de l'archive (colonne « FIRST RADIUS INSIDE WINDOW ») : un point par tir laser valide, le long d'une révolution. Les valeurs hors de 1 700 à 1 760 km sont écartées comme écho",
    "status": "ok"
   },
@@ -158,7 +158,7 @@
    "license": "Domaine public (données et images de la NASA, non protégées par le droit d'auteur) ; citer le PDS",
    "license_url": "https://pds-geosciences.wustl.edu/jplcopyright.html",
    "credit": "NASA/JPL-Caltech/MIT / NASA Planetary Data System",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "tracé par ce site (matplotlib) à partir du fichier de données : Carte tracée par ce site à partir du fichier image de l'archive : anomalie de gravité en milligals (rouge : excès de masse, bleu : déficit), échelle de couleur coupée au centile 99. Champ de gravité de la Lune calculé à ",
    "status": "ok"
   },
@@ -173,7 +173,7 @@
    "license": "Domaine public (données et images de la NASA, non protégées par le droit d'auteur) ; citer le PDS",
    "license_url": "https://pds-geosciences.wustl.edu/jplcopyright.html",
    "credit": "NASA (Lunar Prospector) / NASA Planetary Data System",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "tracé par ce site (matplotlib) à partir du fichier de données : Spectre tracé par ce site à partir du fichier binaire de l'archive (colonne « ACCEPTED SPECTRUM ») : somme des 633 spectres du fichier (une journée, 32 s chacun), 512 canaux, échelle logarithmique. Les canaux ne sont pas",
    "status": "ok"
   },
@@ -188,7 +188,7 @@
    "license": "Domaine public (données et images de la NASA, non protégées par le droit d'auteur) ; citer le PDS",
    "license_url": "https://pds-geosciences.wustl.edu/jplcopyright.html",
    "credit": "NASA (Lunar Prospector) / NASA Planetary Data System",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "tracé par ce site (matplotlib) à partir du fichier de données : Série tracée par ce site à partir du fichier binaire de l'archive : les 12 premières heures de comptage (442572 échantillons au total). En trait foncé : moyenne glissante sur 10 points (5 min 20 s).",
    "status": "ok"
   },
@@ -203,7 +203,7 @@
    "license": "Domaine public (données et images de la NASA, non protégées par le droit d'auteur) ; citer le PDS",
    "license_url": "https://pds-geosciences.wustl.edu/jplcopyright.html",
    "credit": "NASA (Lunar Prospector) / NASA Planetary Data System",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "tracé par ce site (matplotlib) à partir du fichier de données : Carte tracée par ce site à partir de la grille ASCII de l'archive : anomalie de Bouguer (gravité corrigée du relief) en milligals, d'après le suivi radio de Lunar Prospector ; échelle coupée au centile 99.",
    "status": "ok"
   },
@@ -218,7 +218,7 @@
    "license": "Domaine public (données et images de la NASA, non protégées par le droit d'auteur) ; citer le PDS",
    "license_url": "https://pds-geosciences.wustl.edu/jplcopyright.html",
    "credit": "NASA/JPL-Caltech / NASA Planetary Data System",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "tracé par ce site (matplotlib) à partir du fichier de données : Carte tracée par ce site à partir du fichier image de l'archive : anomalie de gravité en milligals (rouge : excès de masse, bleu : déficit), échelle de couleur coupée au centile 99. Champ de gravité de Mars calculé par l",
    "status": "ok"
   },
@@ -233,7 +233,7 @@
    "license": "Domaine public (données et images de la NASA, non protégées par le droit d'auteur) ; citer le PDS",
    "license_url": "https://pds-geosciences.wustl.edu/jplcopyright.html",
    "credit": "NASA/JPL-Caltech/Arizona State University / NASA Planetary Data System",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "tracé par ce site (matplotlib) à partir du fichier de données : Spectre tracé par ce site à partir du fichier binaire de l'archive (colonne « CORRECTED_SPECTRUM ») : somme des 365 spectres du fichier (environ 2 h de mesures ; canaux regroupés par 16), 1024 canaux, échelle logarithmiq",
    "status": "ok"
   },
@@ -248,7 +248,7 @@
    "license": "Données ouvertes de l'ISAS/JAXA (politique de données de l'ISAS) : citer « ISAS/JAXA » et signaler les modifications",
    "license_url": "https://www.isas.jaxa.jp/en/researchers/data-policy/",
    "credit": "ISAS/JAXA",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "tracé par ce site (matplotlib) à partir du fichier de données : Carte tracée par ce site à partir du fichier image de l'archive, lu comme le dit son étiquette (octets signés × 0,02 nT) : 3e des 9 bandes, composante Z (verticale, d'après le document de format LMAG de la JAXA) du champ",
    "status": "ok"
   },
@@ -261,7 +261,7 @@
    "license": "Données publiques du JPL (NASA), sans restriction d'usage",
    "license_url": "https://ssd.jpl.nasa.gov/",
    "credit": "NASA/JPL-Caltech, JPL Horizons",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "positions échantillonnées, réduites en coordonnées écliptiques",
    "status": "ok"
   },
@@ -276,7 +276,7 @@
    "license": "Domaine public (données et images de la NASA, non protégées par le droit d'auteur) ; citer le PDS",
    "license_url": "https://pds-geosciences.wustl.edu/jplcopyright.html",
    "credit": "ISRO/NASA/JPL-Caltech / NASA Planetary Data System",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "réduit de 2027 × 2027 à 900 × 900 px, enregistré en JPEG",
    "status": "ok"
   },
@@ -291,7 +291,7 @@
    "license": "Domaine public (données et images de la NASA, non protégées par le droit d'auteur) ; citer le PDS",
    "license_url": "https://pds-geosciences.wustl.edu/jplcopyright.html",
    "credit": "NASA/BMDO (Clementine) / NASA Planetary Data System",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "enregistré en JPEG",
    "status": "ok"
   },
@@ -306,7 +306,7 @@
    "license": "Domaine public (données et images de la NASA, non protégées par le droit d'auteur) ; citer le PDS",
    "license_url": "https://pds-geosciences.wustl.edu/jplcopyright.html",
    "credit": "NASA/BMDO (Clementine) / NASA Planetary Data System",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "réduit de 953 × 910 à 900 × 859 px, enregistré en JPEG",
    "status": "ok"
   },
@@ -321,7 +321,7 @@
    "license": "Domaine public (données et images de la NASA, non protégées par le droit d'auteur) ; citer le PDS (politique de citation du nœud PPI)",
    "license_url": "https://pds-ppi.igpp.ucla.edu/citation_policy.jsp",
    "credit": "NASA (Lunar Prospector) / NASA Planetary Data System",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "réduit de 960 × 750 à 900 × 703 px, enregistré en JPEG",
    "status": "ok"
   },
@@ -336,7 +336,7 @@
    "license": "Domaine public (données et images de la NASA, non protégées par le droit d'auteur) ; citer le PDS (politique de citation du nœud PPI)",
    "license_url": "https://pds-ppi.igpp.ucla.edu/citation_policy.jsp",
    "credit": "NASA (Lunar Prospector) / NASA Planetary Data System",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "réduit de 2684 × 2753 à 877 × 900 px, enregistré en JPEG",
    "status": "ok"
   },
@@ -351,7 +351,7 @@
    "license": "Domaine public (données et images de la NASA, non protégées par le droit d'auteur) ; citer le PDS",
    "license_url": "https://pds-geosciences.wustl.edu/jplcopyright.html",
    "credit": "NASA/GSFC/Arizona State University / NASA Planetary Data System",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "réduit de 1623 × 993 à 900 × 551 px, enregistré en JPEG",
    "status": "ok"
   },
@@ -366,7 +366,7 @@
    "license": "Domaine public (données et images de la NASA, non protégées par le droit d'auteur) ; citer le PDS",
    "license_url": "https://pds-geosciences.wustl.edu/jplcopyright.html",
    "credit": "NASA/GSFC/Arizona State University / NASA Planetary Data System",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "réduit de 2200 × 1700 à 900 × 695 px, enregistré en JPEG",
    "status": "ok"
   },
@@ -381,7 +381,7 @@
    "license": "Domaine public (données et images de la NASA, non protégées par le droit d'auteur) ; citer le PDS",
    "license_url": "https://pds-geosciences.wustl.edu/jplcopyright.html",
    "credit": "NASA/GSFC/Arizona State University / NASA Planetary Data System",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "enregistré en JPEG",
    "status": "ok"
   },
@@ -396,7 +396,7 @@
    "license": "CC BY-NC 3.0 IGO (données des archives scientifiques de l'ESA, ici leur copie au PDS de la NASA) : usage non commercial, avec le crédit de l'équipe",
    "license_url": "https://www.cosmos.esa.int/web/esdc/terms-and-conditions",
    "credit": "ESA, R. Orosei, A. Cicchetti, J. Plaut (MARSIS)",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "recadré (partie centrale 438 × 876 px), contraste étiré (centiles 0.5–99.5), enregistré en JPEG",
    "status": "ok (site non commercial)"
   },
@@ -411,7 +411,7 @@
    "license": "CC BY-NC 3.0 IGO (données des archives scientifiques de l'ESA, ici leur copie au PDS de la NASA) : usage non commercial, avec le crédit de l'équipe",
    "license_url": "https://www.cosmos.esa.int/web/esdc/terms-and-conditions",
    "credit": "ESA, J. Carter (OMEGA)",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "réduit de 2880 × 1440 à 900 × 450 px, enregistré en JPEG",
    "status": "ok (site non commercial)"
   },
@@ -426,7 +426,7 @@
    "license": "CC BY-NC 3.0 IGO (données des archives scientifiques de l'ESA, ici leur copie au PDS de la NASA) : usage non commercial, avec le crédit de l'équipe",
    "license_url": "https://www.cosmos.esa.int/web/esdc/terms-and-conditions",
    "credit": "ESA, A. Sanchez-Lavega (VMC)",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "contraste étiré (centiles 0.5–99.5), enregistré en JPEG",
    "status": "ok (site non commercial)"
   },
@@ -441,7 +441,7 @@
    "license": "Domaine public (données et images de la NASA, non protégées par le droit d'auteur) ; citer le PDS",
    "license_url": "https://pds-geosciences.wustl.edu/jplcopyright.html",
    "credit": "NASA/JPL-Caltech/MSSS / NASA Planetary Data System",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "réduit de 3000 × 2250 à 900 × 675 px, enregistré en JPEG",
    "status": "ok"
   },
@@ -456,7 +456,7 @@
    "license": "Domaine public (données et images de la NASA, non protégées par le droit d'auteur) ; citer le PDS",
    "license_url": "https://pds-geosciences.wustl.edu/jplcopyright.html",
    "credit": "NASA/JPL-Caltech / NASA Planetary Data System",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "contraste étiré (centiles 0.5–99.5), enregistré en JPEG",
    "status": "ok"
   },
@@ -471,7 +471,7 @@
    "license": "Domaine public (données et images de la NASA, non protégées par le droit d'auteur)",
    "license_url": "https://hirise.lpl.arizona.edu/media/usage.php",
    "credit": "NASA/JPL-Caltech/University of Arizona",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "réduit de 2048 × 1119 à 900 × 492 px, enregistré en JPEG",
    "status": "ok"
   },
@@ -486,7 +486,7 @@
    "license": "Domaine public (données et images de la NASA, non protégées par le droit d'auteur) ; citer le PDS",
    "license_url": "https://pds-geosciences.wustl.edu/jplcopyright.html",
    "credit": "NASA/JPL-Caltech / NASA Planetary Data System",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "recadré (partie centrale 3675 × 1225 px), réduit de 10023 × 1225 à 900 × 300 px, enregistré en JPEG",
    "status": "ok"
   },
@@ -501,7 +501,7 @@
    "license": "Données ouvertes de l'ISAS/JAXA (politique de données de l'ISAS) : citer « ISAS/JAXA » et signaler les modifications",
    "license_url": "https://www.isas.jaxa.jp/en/researchers/data-policy/",
    "credit": "ISAS/JAXA",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "enregistré en JPEG",
    "status": "ok"
   },
@@ -516,7 +516,7 @@
    "license": "© JAXA/NHK : usage non commercial avec ce crédit ; usage commercial interdit sans accord",
    "license_url": "https://darts.isas.jaxa.jp/planet/project/selene/hdtv/",
    "credit": "JAXA/NHK",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "réduit de 1920 × 1200 à 900 × 562 px, enregistré en JPEG",
    "status": "ok (site non commercial)"
   },
@@ -531,7 +531,7 @@
    "license": "Données ouvertes de l'ISAS/JAXA (politique de données de l'ISAS) : citer « ISAS/JAXA » et signaler les modifications",
    "license_url": "https://www.isas.jaxa.jp/en/researchers/data-policy/",
    "credit": "ISAS/JAXA",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "enregistré en JPEG",
    "status": "ok"
   },
@@ -546,7 +546,7 @@
    "license": "Données ouvertes de l'ISAS/JAXA (politique de données de l'ISAS) : citer « ISAS/JAXA » et signaler les modifications",
    "license_url": "https://www.isas.jaxa.jp/en/researchers/data-policy/",
    "credit": "ISAS/JAXA",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "enregistré en JPEG",
    "status": "ok"
   },
@@ -561,7 +561,7 @@
    "license": "Données ouvertes de l'ISAS/JAXA (politique de données de l'ISAS) : citer « ISAS/JAXA » et signaler les modifications",
    "license_url": "https://www.isas.jaxa.jp/en/researchers/data-policy/",
    "credit": "ISAS/JAXA",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "enregistré en JPEG",
    "status": "ok"
   },
@@ -576,7 +576,7 @@
    "license": "Données ouvertes de l'ISAS/JAXA (politique de données de l'ISAS) : citer « ISAS/JAXA » et signaler les modifications",
    "license_url": "https://www.isas.jaxa.jp/en/researchers/data-policy/",
    "credit": "ISAS/JAXA",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "enregistré en JPEG",
    "status": "ok"
   },
@@ -591,7 +591,7 @@
    "license": "Données ouvertes de l'ISAS/JAXA (politique de données de l'ISAS) : citer « ISAS/JAXA » et signaler les modifications",
    "license_url": "https://www.isas.jaxa.jp/en/researchers/data-policy/",
    "credit": "ISAS/JAXA",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "enregistré en JPEG",
    "status": "ok"
   },
@@ -604,7 +604,7 @@
    "license": "Données publiques du JPL (NASA), sans restriction d'usage",
    "license_url": "https://ssd.jpl.nasa.gov/",
    "credit": "NASA/JPL-Caltech, JPL Horizons",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "positions échantillonnées, réduites en coordonnées écliptiques",
    "status": "ok"
   },
@@ -617,7 +617,7 @@
    "license": "Données publiques du JPL (NASA), sans restriction d'usage",
    "license_url": "https://ssd.jpl.nasa.gov/",
    "credit": "NASA/JPL-Caltech, JPL Horizons",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "positions échantillonnées, réduites en coordonnées écliptiques",
    "status": "ok"
   },
@@ -632,7 +632,7 @@
    "license": "Domaine public (données et images de la NASA, non protégées par le droit d'auteur) ; citer le PDS",
    "license_url": "https://pds-geosciences.wustl.edu/jplcopyright.html",
    "credit": "NASA/GSFC/Arizona State University / NASA Planetary Data System",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "réduit de 906 × 1709 à 477 × 900 px, enregistré en JPEG",
    "status": "ok"
   },
@@ -645,7 +645,7 @@
    "license": "Données publiques du JPL (NASA), sans restriction d'usage",
    "license_url": "https://ssd.jpl.nasa.gov/",
    "credit": "NASA/JPL-Caltech, JPL Horizons",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "positions échantillonnées, réduites en coordonnées écliptiques",
    "status": "ok"
   },
@@ -660,7 +660,7 @@
    "license": "Domaine public (données et images de la NASA, non protégées par le droit d'auteur) ; citer le PDS",
    "license_url": "https://pds-geosciences.wustl.edu/jplcopyright.html",
    "credit": "NASA/Johns Hopkins University Applied Physics Laboratory/Carnegie Institution of Washington / NASA Planetary Data System",
-   "fetched": "2026-11-23",
+   "fetched": "2026-11-25",
    "transform": "réduit de 2831 × 4418 à 577 × 900 px, enregistré en JPEG",
    "status": "ok"
   },
@@ -673,7 +673,7 @@
    "license": "Données publiques du JPL (NASA), sans restriction d'usage",
    "license_url": "https://ssd.jpl.nasa.gov/",
    "credit": "NASA/JPL-Caltech, JPL Horizons",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "positions échantillonnées, réduites en coordonnées écliptiques",
    "status": "ok"
   },
@@ -688,7 +688,7 @@
    "license": "CC BY-SA 3.0 IGO (images HRSC, ESA/DLR/FU Berlin)",
    "license_url": "https://www.dlr.de/en/blog/archive/2014/simpler-usage-rights-as-of-today-mars-express-hrsc-images-licensed-under-creative-commons-licence",
    "credit": "ESA/DLR/FU Berlin",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "réduit de 323 × 2376 à 122 × 900 px, enregistré en JPEG",
    "status": "ok"
   },
@@ -701,7 +701,7 @@
    "license": "Données publiques du JPL (NASA), sans restriction d'usage",
    "license_url": "https://ssd.jpl.nasa.gov/",
    "credit": "NASA/JPL-Caltech, JPL Horizons",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "positions échantillonnées, réduites en coordonnées écliptiques",
    "status": "ok"
   },
@@ -716,7 +716,7 @@
    "license": "Domaine public (données et images de la NASA, non protégées par le droit d'auteur) ; citer le PDS",
    "license_url": "https://pds-geosciences.wustl.edu/jplcopyright.html",
    "credit": "NASA/JPL-Caltech / NASA Planetary Data System",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "réduit de 4096 × 3584 à 900 × 788 px, enregistré en JPEG",
    "status": "ok"
   },
@@ -731,7 +731,7 @@
    "license": "Domaine public (données et images de la NASA, non protégées par le droit d'auteur) ; citer le PDS",
    "license_url": "https://pds-geosciences.wustl.edu/jplcopyright.html",
    "credit": "NASA/JPL-Caltech/MSSS / NASA Planetary Data System",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "enregistré en JPEG",
    "status": "ok"
   },
@@ -746,7 +746,7 @@
    "license": "Domaine public (données et images de la NASA, non protégées par le droit d'auteur) ; citer le PDS",
    "license_url": "https://pds-geosciences.wustl.edu/jplcopyright.html",
    "credit": "NASA/JPL-Caltech / NASA Planetary Data System",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "carré central de 5056 px, contraste étiré (centiles 0.5–99.5), enregistré en JPEG",
    "status": "ok"
   },
@@ -761,7 +761,7 @@
    "license": "Domaine public (données et images de la NASA, non protégées par le droit d'auteur) ; sans logo de la NASA",
    "license_url": "https://hirise.lpl.arizona.edu/media/usage.php",
    "credit": "NASA/JPL-Caltech/University of Arizona",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "réduit de 1280 × 742 à 900 × 522 px, enregistré en JPEG",
    "status": "ok"
   },
@@ -774,7 +774,7 @@
    "license": "Données publiques du JPL (NASA), sans restriction d'usage",
    "license_url": "https://ssd.jpl.nasa.gov/",
    "credit": "NASA/JPL-Caltech, JPL Horizons",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "positions échantillonnées, réduites en coordonnées écliptiques",
    "status": "ok"
   },
@@ -789,7 +789,7 @@
    "license": "Domaine public (données et images de la NASA, non protégées par le droit d'auteur) ; citer le PDS",
    "license_url": "https://pds-geosciences.wustl.edu/jplcopyright.html",
    "credit": "NASA/JPL-Caltech/Arizona State University / NASA Planetary Data System",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "réduit de 602 × 2703 à 200 × 900 px, contraste étiré (centiles 0.5–99.5), enregistré en JPEG",
    "status": "ok"
   },
@@ -802,7 +802,7 @@
    "license": "Données publiques du JPL (NASA), sans restriction d'usage",
    "license_url": "https://ssd.jpl.nasa.gov/",
    "credit": "NASA/JPL-Caltech, JPL Horizons",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "positions échantillonnées, réduites en coordonnées écliptiques",
    "status": "ok"
   },
@@ -817,7 +817,7 @@
    "license": "Domaine public (données et images de la NASA, non protégées par le droit d'auteur) ; sans logo de la NASA",
    "license_url": "https://www.jpl.nasa.gov/jpl-image-use-policy/",
    "credit": "NASA/JPL-Caltech/GSFC",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "réduit de 1216 × 810 à 900 × 600 px, enregistré en JPEG",
    "status": "ok"
   },
@@ -832,7 +832,7 @@
    "license": "Domaine public (données et images de la NASA, non protégées par le droit d'auteur) ; sans logo de la NASA",
    "license_url": "https://www.jpl.nasa.gov/jpl-image-use-policy/",
    "credit": "NASA/JPL-Caltech/Space Science Institute",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "réduit de 1280 × 711 à 900 × 500 px, enregistré en JPEG",
    "status": "ok"
   },
@@ -847,7 +847,7 @@
    "license": "Domaine public (données et images de la NASA, non protégées par le droit d'auteur) ; sans logo de la NASA",
    "license_url": "https://www.jpl.nasa.gov/jpl-image-use-policy/",
    "credit": "NASA/JPL-Caltech/Space Science Institute",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "réduit de 1280 × 226 à 900 × 159 px, enregistré en JPEG",
    "status": "ok"
   },
@@ -862,7 +862,7 @@
    "license": "Domaine public (données et images de la NASA, non protégées par le droit d'auteur) ; sans logo de la NASA",
    "license_url": "https://www.jpl.nasa.gov/jpl-image-use-policy/",
    "credit": "NASA/JPL",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "réduit de 1280 × 960 à 900 × 675 px, enregistré en JPEG",
    "status": "ok"
   },
@@ -877,7 +877,7 @@
    "license": "Domaine public (données et images de la NASA, non protégées par le droit d'auteur) ; sans logo de la NASA",
    "license_url": "https://www.jpl.nasa.gov/jpl-image-use-policy/",
    "credit": "NASA/JPL-Caltech/University of Colorado/ University of Liege-LPAP",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "enregistré en JPEG",
    "status": "ok"
   },
@@ -892,7 +892,7 @@
    "license": "Domaine public (données et images de la NASA, non protégées par le droit d'auteur) ; sans logo de la NASA",
    "license_url": "https://www.jpl.nasa.gov/jpl-image-use-policy/",
    "credit": "NASA/JPL-Caltech/University of Nantes/University of Arizona",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "réduit de 1280 × 866 à 900 × 609 px, enregistré en JPEG",
    "status": "ok"
   },
@@ -907,7 +907,7 @@
    "license": "Domaine public (données et images de la NASA, non protégées par le droit d'auteur) ; sans logo de la NASA",
    "license_url": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
    "credit": "NASA/Johns Hopkins University Applied Physics Laboratory/Carnegie Institution of Washington",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "réduit de 1069 × 1076 à 894 × 900 px, enregistré en JPEG",
    "status": "ok"
   },
@@ -922,7 +922,7 @@
    "license": "Domaine public (données et images de la NASA, non protégées par le droit d'auteur) ; sans logo de la NASA",
    "license_url": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
    "credit": "NASA/Johns Hopkins University Applied Physics Laboratory/Carnegie Institution of Washington",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "réduit de 720 × 978 à 663 × 900 px, enregistré en JPEG",
    "status": "ok"
   },
@@ -937,7 +937,7 @@
    "license": "Domaine public (données et images de la NASA, non protégées par le droit d'auteur) ; sans logo de la NASA",
    "license_url": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
    "credit": "NASA/Johns Hopkins University Applied Physics Laboratory/Carnegie Institution of Washington",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "réduit de 1280 × 966 à 900 × 679 px, enregistré en JPEG",
    "status": "ok"
   },
@@ -952,7 +952,7 @@
    "license": "Domaine public (données et images de la NASA, non protégées par le droit d'auteur) ; sans logo de la NASA",
    "license_url": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
    "credit": "NASA/Goddard Space Flight Center/Johns Hopkins University Applied Physics Laboratory/Carnegie Institution of Washington",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "enregistré en JPEG",
    "status": "ok"
   },
@@ -967,7 +967,7 @@
    "license": "Domaine public (données et images de la NASA, non protégées par le droit d'auteur) ; sans logo de la NASA",
    "license_url": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
    "credit": "NASA/Johns Hopkins University Applied Physics Laboratory/Carnegie Institution of Washington",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "réduit de 1280 × 960 à 900 × 675 px, enregistré en JPEG",
    "status": "ok"
   },
@@ -982,7 +982,7 @@
    "license": "Domaine public (données et images de la NASA, non protégées par le droit d'auteur) ; sans logo de la NASA",
    "license_url": "https://www.jpl.nasa.gov/jpl-image-use-policy/",
    "credit": "NASA/JPL/ASI/ESA/Univ. of Rome/MOLA Science Team/USGS",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "réduit de 1185 × 1280 à 833 × 900 px, enregistré en JPEG",
    "status": "ok"
   },
@@ -997,7 +997,7 @@
    "license": "Domaine public (données et images de la NASA, non protégées par le droit d'auteur) ; sans logo de la NASA",
    "license_url": "https://www.jpl.nasa.gov/jpl-image-use-policy/",
    "credit": "NASA/JPL/GSFC",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "réduit de 989 × 1280 à 695 × 900 px, enregistré en JPEG",
    "status": "ok"
   },
@@ -1012,7 +1012,7 @@
    "license": "Domaine public (données et images de la NASA, non protégées par le droit d'auteur) ; sans logo de la NASA",
    "license_url": "https://www.jpl.nasa.gov/jpl-image-use-policy/",
    "credit": "NASA/JPL-Caltech/MSSS",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "réduit de 1280 × 640 à 900 × 450 px, enregistré en JPEG",
    "status": "ok"
   },
@@ -1027,7 +1027,7 @@
    "license": "Domaine public (données et images de la NASA, non protégées par le droit d'auteur) ; sans logo de la NASA",
    "license_url": "https://www.jpl.nasa.gov/jpl-image-use-policy/",
    "credit": "NASA/JPL-Caltech",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "réduit de 1833 × 1073 à 900 × 527 px, enregistré en JPEG",
    "status": "ok"
   },
@@ -1042,7 +1042,7 @@
    "license": "Domaine public (données et images de la NASA, non protégées par le droit d'auteur) ; sans logo de la NASA",
    "license_url": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
    "credit": "NASA/GSFC/Scientific Visualization Studio",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "réduit de 1280 × 600 à 900 × 422 px, enregistré en JPEG",
    "status": "ok"
   },
@@ -1057,7 +1057,7 @@
    "license": "Domaine public (données et images de la NASA, non protégées par le droit d'auteur) ; sans logo de la NASA",
    "license_url": "https://www.jpl.nasa.gov/jpl-image-use-policy/",
    "credit": "NASA/JPL/University of Arizona",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "réduit de 2068 × 1009 à 900 × 439 px, enregistré en JPEG",
    "status": "ok"
   },
@@ -1072,7 +1072,7 @@
    "license": "Domaine public (données et images de la NASA, non protégées par le droit d'auteur) ; sans logo de la NASA",
    "license_url": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
    "credit": "NASA/Jet Propulsion Laboratory/JSC",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "réduit de 1280 × 1024 à 900 × 720 px, enregistré en JPEG",
    "status": "ok"
   },
@@ -1087,7 +1087,7 @@
    "license": "Données ouvertes de l'ISAS/JAXA (politique de données de l'ISAS) : citer « ISAS/JAXA » et signaler les modifications",
    "license_url": "https://www.isas.jaxa.jp/en/researchers/data-policy/",
    "credit": "ISAS/JAXA",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "enregistré en JPEG",
    "status": "ok"
   },
@@ -1100,7 +1100,7 @@
    "license": "Données publiques du JPL (NASA), sans restriction d'usage",
    "license_url": "https://ssd.jpl.nasa.gov/",
    "credit": "NASA/JPL-Caltech, JPL Horizons",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "positions échantillonnées, réduites en coordonnées écliptiques",
    "status": "ok"
   },
@@ -1113,7 +1113,7 @@
    "license": "CC BY 4.0",
    "license_url": "https://creativecommons.org/licenses/by/4.0/",
    "credit": "Solar System Scope (solarsystemscope.com)",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "réduite pour le web, enregistrée en JPEG",
    "status": "ok"
   },
@@ -1126,7 +1126,7 @@
    "license": "CC BY 4.0",
    "license_url": "https://creativecommons.org/licenses/by/4.0/",
    "credit": "Solar System Scope (solarsystemscope.com)",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "réduite pour le web, enregistrée en JPEG",
    "status": "ok"
   },
@@ -1139,7 +1139,7 @@
    "license": "CC BY 4.0",
    "license_url": "https://creativecommons.org/licenses/by/4.0/",
    "credit": "Solar System Scope (solarsystemscope.com)",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "réduite pour le web, enregistrée en JPEG",
    "status": "ok"
   },
@@ -1152,7 +1152,7 @@
    "license": "CC BY 4.0",
    "license_url": "https://creativecommons.org/licenses/by/4.0/",
    "credit": "Solar System Scope (solarsystemscope.com)",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "réduite pour le web, enregistrée en JPEG",
    "status": "ok"
   },
@@ -1165,7 +1165,7 @@
    "license": "CC BY 4.0",
    "license_url": "https://creativecommons.org/licenses/by/4.0/",
    "credit": "Solar System Scope (solarsystemscope.com)",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "réduite pour le web, enregistrée en JPEG",
    "status": "ok"
   },
@@ -1178,7 +1178,7 @@
    "license": "CC BY 4.0",
    "license_url": "https://creativecommons.org/licenses/by/4.0/",
    "credit": "Solar System Scope (solarsystemscope.com)",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "réduite pour le web, enregistrée en JPEG",
    "status": "ok"
   },
@@ -1191,7 +1191,7 @@
    "license": "Données publiques du JPL (NASA), sans restriction d'usage",
    "license_url": "https://ssd.jpl.nasa.gov/",
    "credit": "NASA/JPL-Caltech, JPL Horizons",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "positions échantillonnées, réduites en coordonnées écliptiques",
    "status": "ok"
   },
@@ -1204,7 +1204,7 @@
    "license": "Données publiques du JPL (NASA), sans restriction d'usage",
    "license_url": "https://ssd.jpl.nasa.gov/",
    "credit": "NASA/JPL-Caltech, JPL Horizons",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "positions échantillonnées, réduites en coordonnées écliptiques",
    "status": "ok"
   },
@@ -1219,7 +1219,7 @@
    "license": "Domaine public (données et images de la NASA, non protégées par le droit d'auteur) ; citer le PDS",
    "license_url": "https://pds-geosciences.wustl.edu/jplcopyright.html",
    "credit": "NASA/JPL-Caltech (Viking) / NASA Planetary Data System",
-   "fetched": "2026-11-24",
+   "fetched": "2026-11-25",
    "transform": "enregistré en JPEG",
    "status": "ok"
   },
@@ -1446,7 +1446,20 @@
   },
   {
    "kind": "code",
-   "file": "build.js, src/app.js, src/viewer.js, src/i18n.js, tools/models/, tools/smoke.js, tools/a11y.js",
+   "file": "socle/",
+   "title": "Socle commun de la série (construction, langue, visionneuse 3D, styles, outils)",
+   "source": "https://github.com/Rolgim/rolgim.github.io/tree/main/socle",
+   "page": null,
+   "license": "Apache-2.0 (code du même auteur)",
+   "license_url": "https://github.com/Rolgim/rolgim.github.io/blob/main/LICENSE",
+   "credit": "Rolgim",
+   "fetched": null,
+   "transform": "copié tel quel (socle.lock.json)",
+   "status": "ok"
+  },
+  {
+   "kind": "code",
+   "file": "build.js, src/app.js, socle/, tools/models/, tools/smoke.js",
    "title": "Architecture reprise d'Observatories v1.0 (même auteur)",
    "source": "https://github.com/Rolgim/Observatories/tree/v1.0",
    "page": null,
