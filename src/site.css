@@ -26,10 +26,6 @@
   #tabs .tab{ margin-top:0; padding-top:7px; padding-bottom:7px; }
   #tabs .tab:first-child{ border-left:0; }
 }
-@media (max-width: 720px){
-  #top{ flex-wrap:wrap; gap:0 12px; }
-  #views{ order:3; margin-left:0; width:100%; overflow-x:auto; padding-bottom:8px; }
-}
 
 /* ---------- page d'une mission : vue 3D + panneau ---------- */
 #page.is-mission{ padding:0; overflow:hidden; display:flex; }
@@ -85,6 +81,13 @@ figure{ margin:0 0 10px; } figcaption{ font-size:12.5px; line-height:1.45; color
   .m-b{ padding:0 11px; } .m-ex input{ width:84px; }
   .m-tools{ bottom:8px; }
   .m-hud{ top:10px; }
+  /* téléphone : onglets du panneau en cases pleine largeur, comme Observatories */
+  .m-panel{ padding-top:0; }
+  .m-panel .ptl-row{ gap:0; margin:0 -18px 12px; border-top:1px solid var(--rule); border-bottom:1px solid var(--rule-2); }
+  .m-panel .ptl{ gap:0; flex:2; }
+  .m-panel .ptab{ flex:1; border-bottom:0; border-right:1px solid var(--rule); padding:11px 8px 10px; font-size:13px; text-align:center; justify-content:center; }
+  .m-panel .ptab[aria-selected="true"]{ background:var(--mark); color:var(--on-mark); }
+  .m-panel .ptab.go{ flex:1.4; margin-left:0; border-right:0; }
   .m-panel{ width:auto; border-left:0; }
 }
 
