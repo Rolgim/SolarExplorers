@@ -600,6 +600,13 @@ sup.ref a{ text-decoration:none; }
 .so-orb.hid{ stroke-dasharray:3 4; stroke-opacity:.5; }
 /* barre de séparation entre l'en-tête et le contenu, comme la rangée du haut des pages Flotte et Comparer d'Observatories */
 #top{ border-bottom:2px solid var(--ink); }
+/* vue 3D du Système solaire (src/solar.js, three.js) */
+.so-gl{ display:block; width:100%; height:100%; touch-action:none; cursor:grab; }
+.so-gl:focus-visible{ outline:2px solid var(--mark); outline-offset:-3px; }
+.so-labs3{ position:absolute; inset:0; pointer-events:none; overflow:hidden; }
+.so-labs3 span{ position:absolute; white-space:nowrap; font-family:var(--f); font-size:12px; font-weight:600; color:#E3E6E8; text-shadow:0 0 3px #05070A, 0 0 3px #05070A, 0 0 2px #05070A; }
+.so-labs3 span.so-ml{ font-weight:400; color:#C9D2DA; }
+.so-sky .home-zoom button[aria-pressed="true"]{ background:var(--mark); color:var(--on-mark); }
 
 </style>
 </head>
@@ -3456,6 +3463,9 @@ var EN_MISSIONS = {
 
 /* Textes d'interface en anglais : clé = texte français tel qu'il est écrit dans le code ou dans body.html. */
 var EN_UI = {
+  'Vue 3D':'3D view', 'Vue de dessus':'Top view', 'Vue en 3D du Système solaire au':'3D view of the Solar System on',
+  'Vue 3D : mêmes positions, avec la hauteur au-dessus du plan de l\'écliptique donnée par Horizons ; glisser ou flèches du clavier pour tourner, molette ou + et − pour zoomer.':'3D view: same positions, with the height above the ecliptic plane given by Horizons; drag or use the arrow keys to rotate, wheel or + and − to zoom.',
+  'Vue 3D : hauteurs au-dessus de l\'écliptique pas encore téléchargées, tous les corps sont posés sur l\'écliptique (≈) ; glisser ou flèches du clavier pour tourner, molette ou + et − pour zoomer.':'3D view: heights above the ecliptic not downloaded yet, all bodies are placed on the ecliptic (≈); drag or use the arrow keys to rotate, wheel or + and − to zoom.',
   'Mise à jour automatique en retard : cette donnée date de {n} jours.':'Automatic update overdue: this data is {n} days old.',
   "Page d'accueil des trois sites":"Home page of the three sites",
   'orbite en schéma de principe (tailles, altitude, inclinaison et vitesse non respectées)':'schematic orbit (sizes, altitude, inclination and speed not to scale)',
@@ -4069,7 +4079,8 @@ function html(){
         '<svg id="so-svg" role="img" aria-labelledby="so-cap"></svg>' +
         '<div class="home-zoom" role="group" aria-label="' + esc(T('Cadrage')) + '">' +
           '<button id="so-zin" aria-label="' + esc(T('Zoomer')) + '" title="' + esc(T('Zoomer')) + '">+</button><button id="so-zout" aria-label="' + esc(T('Dézoomer')) + '" title="' + esc(T('Dézoomer')) + '">−</button>' +
-          '<button data-sz="in">' + esc(T('Planètes intérieures')) + '</button><button data-sz="all">' + esc(T('Système entier')) + '</button></div>' +
+          '<button data-sz="in">' + esc(T('Planètes intérieures')) + '</button><button data-sz="all">' + esc(T('Système entier')) + '</button>' +
+          '<button id="so-3d" aria-pressed="false">' + esc(T('Vue 3D')) + '</button></div>' +
         '<div class="home-tip" id="so-tip" hidden></div>' +
       '</div>' +
       '<div class="home-ctl so-ctl">' +
@@ -4109,6 +4120,7 @@ function frameAll(){ var m = 0; D.planets.forEach(function(p){ var q = at(p, S.t
 
 /* ---------- dessin ---------- */
 function render(){
+  if (S.mode === '3d') return render3();
   var svg = $('so-svg'); if (!svg) return;
   var w = Math.max(200, svg.clientWidth), h = Math.max(200, svg.clientHeight), k = 2 * S.R / Math.min(w, h), t = S.t, cx = S.c[0], cy = S.c[1];
   svg.setAttribute('viewBox', '0 0 ' + w + ' ' + h);
@@ -4212,14 +4224,176 @@ function ui(){
   var cap = [];
   MISSIONS.forEach(function(m){ var st = statusText(status(m, t)), el = document.querySelector('#so-probes [data-sf="probe:' + m.id + '"] [data-st]'); if (el && el.textContent !== st) el.textContent = st; cap.push(m.short + colon() + st); });
   var fn = S.focus ? (/^probe:/.test(S.focus) ? mission(S.focus.slice(6)).short : T(S.focus)) : T('le Soleil');
-  $('so-cap').textContent = T('Vue de dessus du Système solaire au') + ' ' + fmt(t) + ', ' + T('centrée sur') + ' ' + fn + '. ' + cap.join(' ; ') + '.';
+  $('so-cap').textContent = T(S.mode === '3d' ? 'Vue en 3D du Système solaire au' : 'Vue de dessus du Système solaire au') + ' ' + fmt(t) + ', ' + T('centrée sur') + ' ' + fn + '. ' + cap.join(' ; ') + '.';
 }
 function note(){
   $('so-note').innerHTML = LIVE.warn(D.fetched, 14) + esc(T('Positions : JPL Horizons, vecteurs héliocentriques projetés sur le plan de l\'écliptique J2000, téléchargés le') + ' ' + fmt(TF) + (T1 > TF + 1 ? ' ; ' + T('au-delà, prévision Horizons jusqu\'au') + ' ' + fmt(T1) : '') + '. ' +
     T('Distances à l\'échelle. Soleil, planètes et Lune à l\'échelle dès qu\'ils dépassent quelques pixels ; en deçà, et pour les autres satellites et les sondes, des points de taille fixe.') + ' ' +
     T('Satellites placés à partir des éléments orbitaux Horizons (tous les 180 jours, 30 pour les plus rapides), interpolés entre deux dates : position approchée (≈, quelques degrés sur l\'orbite au plus).') + ' ' +
     T('Une sonde en orbite est marquée de loin par un anneau de sa couleur. En zoomant sur son corps, son orbite réelle apparaît (Horizons, centrée sur le corps, une fenêtre par an à partir du 15 janvier ; en tirets, la partie cachée derrière le corps) : entre deux fenêtres, la sonde y est placée en répétant ce tour (≈, la phase dérive). En lecture rapide, seule l\'orbite est tracée.') ) +
+    (S.mode === '3d' ? ' ' + T(hasZ(D.planets[0]) ? 'Vue 3D : mêmes positions, avec la hauteur au-dessus du plan de l\'écliptique donnée par Horizons ; glisser ou flèches du clavier pour tourner, molette ou + et − pour zoomer.' : 'Vue 3D : hauteurs au-dessus de l\'écliptique pas encore téléchargées, tous les corps sont posés sur l\'écliptique (≈) ; glisser ou flèches du clavier pour tourner, molette ou + et − pour zoomer.') : '') +
     ' <a class="src" href="https://ssd.jpl.nasa.gov/horizons/" rel="noopener" target="_blank">JPL Horizons</a> <a class="src" href="https://nssdc.gsfc.nasa.gov/planetary/factsheet/" rel="noopener" target="_blank">NASA NSSDCA</a>';
+}
+
+/* ---------- vue 3D (three.js r128, déjà chargé pour les maquettes) ----------
+   Mêmes positions que la vue de dessus, avec la hauteur au-dessus de l'écliptique (champ z des séries Horizons ; s'il manque,
+   les corps sont posés sur l'écliptique et la note le dit). Repère three.js : X = x écliptique, Y = z (nord de l'écliptique), Z = −y.
+   Pour garder la précision en zoomant sur un satellite, tout est dessiné relativement au point visé (calcul en double précision),
+   et le demi-champ S.R (UA) de la vue de dessus sert de distance de caméra : le zoom, le cadrage et le suivi sont partagés. */
+var V3 = null, FOV = 45, TANH = Math.tan(FOV / 2 * Math.PI / 180);
+S.mode = '2d'; S.az = -1.15; S.el = 0.5;
+function hasZ(s){ return !!(s && s.z && s.z.length >= s.n); }
+function atz(s, t){
+  if (!hasZ(s)) return 0;
+  var f = Math.max(0, Math.min((t - s.t) / s.step, s.n - 1)), i = Math.min(s.n - 2, Math.floor(f)), u = f - i, a = s.z;
+  return cr(a[Math.max(0, i - 1)], a[i], a[i + 1], a[Math.min(s.n - 1, i + 2)], u);
+}
+function kep3(el, E){   /* comme kep(), avec la hauteur au-dessus de l'écliptique (km) */
+  var a = el[1], e = el[2], i = el[3]*RD, O = el[4]*RD, w = el[5]*RD, x = a * (Math.cos(E) - e), y = a * Math.sqrt(1 - e*e) * Math.sin(E);
+  var cO = Math.cos(O), sO = Math.sin(O), cw = Math.cos(w), sw = Math.sin(w), ci = Math.cos(i), si = Math.sin(i);
+  return [(cO*cw - sO*sw*ci) * x + (-cO*sw - sO*cw*ci) * y, (sO*cw + cO*sw*ci) * x + (-sO*sw + cO*cw*ci) * y, sw*si * x + cw*si * y];
+}
+function moon3(m, t){ var el = moonEl(m, t), M = (el[6] % 360) * RD, E = M; for (var k = 0; k < 8; k++) E = E - (E - el[2] * Math.sin(E) - M) / (1 - el[2] * Math.cos(E)); return kep3(el, E); }
+/* position héliocentrique [x, y, z] (UA), comme posOf() */
+function pos3(f, t){
+  if (!f) return [0, 0, 0];
+  var p = planet(f); if (p){ var q = at(p, t); return q && [q[0], q[1], atz(p, t)]; }
+  if (/^probe:/.test(f)){ var id = f.slice(6), st = status(mission(id), t);
+    if (st.k === 'orbite') return pos3(st.body, t);
+    var s = probe(id), te = s && Math.min(t, s.t + s.step * (s.n - 1)), r = s && at(s, te); return r && [r[0], r[1], atz(s, te)]; }
+  var mo = (D.moons || []).filter(function(x){ return x.name === f; })[0]; if (!mo) return null;
+  var c = pos3(HZ[mo.center], t), o = moon3(mo, t); return c && [c[0] + o[0] / AU, c[1] + o[1] / AU, c[2] + o[2] / AU];
+}
+function v3(p, o){ return new THREE.Vector3(p[0] - o[0], p[2] - o[2], -(p[1] - o[1])); }
+function init3(){
+  var wrap = $('so-wrap');
+  if (V3){ wrap.insertBefore(V3.renderer.domElement, wrap.firstChild); wrap.insertBefore(V3.labs, V3.renderer.domElement.nextSibling); return true; }
+  if (!window.THREE) return false;
+  var r; try { r = new THREE.WebGLRenderer({ antialias:true, logarithmicDepthBuffer:true }); } catch(e){ return false; }
+  r.setPixelRatio(Math.min(2, window.devicePixelRatio || 1)); r.setClearColor(0x05070A, 1); r.outputEncoding = THREE.sRGBEncoding;
+  var cv = r.domElement; cv.id = 'so-gl'; cv.className = 'so-gl'; cv.tabIndex = 0; cv.setAttribute('role', 'img'); cv.setAttribute('aria-labelledby', 'so-cap');
+  var scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(FOV, 1, 1e-7, 1e4), root = new THREE.Group(); scene.add(root);
+  scene.add(new THREE.AmbientLight(0xffffff, 0.22)); var light = new THREE.PointLight(0xffffff, 1.25, 0, 0); scene.add(light);
+  var ball = new THREE.SphereGeometry(1, 64, 32);
+  var sun = new THREE.Mesh(ball, new THREE.MeshBasicMaterial({ color:0xFFD54F })); scene.add(sun);
+  var bodies = {}, orbits = new THREE.Group(); root.add(orbits);
+  D.planets.forEach(function(p){
+    bodies[p.name] = new THREE.Mesh(ball, new THREE.MeshLambertMaterial({ color:PCOL[p.name] })); scene.add(bodies[p.name]);
+    var a = loop(p), oz = p.orbit_z || [], pts = [];
+    for (var i = 0; i < a.length; i += 2) pts.push(new THREE.Vector3(a[i], oz[i / 2] || 0, -a[i + 1]));
+    var ln = new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color:PCOL[p.name], transparent:true, opacity:0.5 })); orbits.add(ln);
+  });
+  (D.moons || []).forEach(function(m){ bodies[m.name] = new THREE.Mesh(ball, new THREE.MeshLambertMaterial({ color:0xE3E6E8 })); scene.add(bodies[m.name]); });
+  var probes = {};
+  MISSIONS.forEach(function(m, i){ var c = SCOL[i % SCOL.length];
+    probes[m.id] = { dot:new THREE.Mesh(ball, new THREE.MeshBasicMaterial({ color:c })), trail:new THREE.Line(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ color:c })),
+      orb:new THREE.Line(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ color:c, transparent:true, opacity:0.8 })), c:c };
+    scene.add(probes[m.id].dot); root.add(probes[m.id].trail); scene.add(probes[m.id].orb); });
+  var labs = document.createElement('div'); labs.className = 'so-labs3'; labs.setAttribute('aria-hidden', 'true');
+  wrap.insertBefore(cv, wrap.firstChild); wrap.insertBefore(labs, cv.nextSibling);
+  V3 = { renderer:r, scene:scene, cam:cam, root:root, light:light, sun:sun, bodies:bodies, probes:probes, labs:labs, trailT:null };
+  events3(cv);
+  return true;
+}
+/* sillage d'une sonde en croisière : du lancement à t (ou à l'arrivée) ; reconstruit seulement quand la date change */
+function trail3(m, s, e){
+  var n = Math.floor((e - s.t) / s.step), pts = [];
+  for (var j = 0; j <= n; j++) pts.push(new THREE.Vector3(s.xy[2*j], hasZ(s) ? s.z[j] : 0, -s.xy[2*j+1]));
+  var q = at(s, e); if (q) pts.push(new THREE.Vector3(q[0], atz(s, e), -q[1]));
+  return pts;
+}
+function render3(){
+  var cv = $('so-gl'); if (!cv || !V3) return;
+  var w = Math.max(200, cv.parentNode.clientWidth), h = Math.max(200, cv.parentNode.clientHeight), t = S.t;
+  if (cv.width !== Math.round(w * V3.renderer.getPixelRatio()) || cv.height !== Math.round(h * V3.renderer.getPixelRatio())){ V3.renderer.setSize(w, h); V3.cam.aspect = w / h; V3.cam.updateProjectionMatrix(); }
+  var tg = S.focus ? (pos3(S.focus, t) || [S.c[0], S.c[1], 0]) : [S.c[0], S.c[1], 0], dist = S.R / TANH;
+  var cam = V3.cam, ce = Math.cos(S.el); cam.position.set(dist * ce * Math.cos(S.az), dist * Math.sin(S.el), dist * ce * Math.sin(S.az)); cam.lookAt(0, 0, 0);
+  cam.near = dist * 1e-4; cam.far = dist * 1e4 + 200; cam.updateProjectionMatrix(); cam.updateMatrixWorld();
+  V3.root.position.copy(v3([0, 0, 0], tg));
+  var px = 2 * TANH / h;   /* taille angulaire d'un pixel (par unité de distance) */
+  function size(mesh, p, rKm, minPx){ mesh.position.copy(v3(p, tg)); var d = mesh.position.distanceTo(cam.position); mesh.scale.setScalar(Math.max(rKm / AU, d * px * minPx)); return mesh.position; }
+  var labs = [], hits = [], html = '';
+  var occ = [];   /* corps assez gros à l'écran pour cacher ce qui passe derrière eux : [centre, rayon] */
+  function hidden(v){
+    var o = cam.position, d = v.clone().sub(o), L = d.length(); d.divideScalar(L);
+    return occ.some(function(b){ var oc = b[0].clone().sub(o), tc = oc.dot(d); if (tc <= 0 || tc >= L - b[1] * 1.001) return false; return oc.lengthSq() - tc * tc < b[1] * b[1]; });
+  }
+  function lab(v, txt, f, c, r, cls){
+    if (hidden(v)) return;
+    var q = v.clone().project(cam); if (q.z > 1 || q.z < -1) return; var x = (q.x + 1) / 2 * w, y = (1 - q.y) / 2 * h; if (x < -40 || x > w + 40 || y < -40 || y > h + 40) return;
+    if (f != null) hits.push([x, y, txt, f, r || 6]);
+    var lw = txt.length * 6.6 + 4; if (labs.some(function(b){ return Math.abs(b[0] - x - lw / 2) < (lw + b[2]) / 2 + 2 && Math.abs(b[1] - y) < 14; })) return;
+    labs.push([x + lw / 2, y, lw]); html += '<span class="' + (cls || '') + '" style="left:' + (x + 8).toFixed(0) + 'px;top:' + (y - 18).toFixed(0) + 'px' + (c ? ';color:' + c : '') + '">' + esc(txt) + '</span>';
+  }
+  var sp = size(V3.sun, [0, 0, 0], RSUN, 6); V3.light.position.copy(sp); lab(sp, T('Soleil'), '', null, 8);
+  var pos = {};
+  D.planets.forEach(function(p){ var q = pos3(p.name, t), m = V3.bodies[p.name]; m.visible = !!q; if (!q) return; pos[p.name] = q;
+    var v = size(m, q, RAD[p.name], 4.5); if (m.scale.x > cam.position.distanceTo(v) * px * 8) occ.push([v.clone(), m.scale.x]); lab(v, T(p.name), p.name, null, 8);
+    moonsOf(p.name).forEach(function(mo){ var el = moonEl(mo, t), mm = V3.bodies[mo.name], far = el[1] / AU < cam.position.distanceTo(v) * px * 5;
+      mm.visible = !far; if (far) return; var o = moon3(mo, t), mq = [q[0] + o[0] / AU, q[1] + o[1] / AU, q[2] + o[2] / AU];
+      var mv = size(mm, mq, RAD[mo.name] || 0, 3); if (el[1] / AU > cam.position.distanceTo(v) * px * 26) lab(mv, T(mo.name), mo.name === 'Lune' ? 'Lune' : p.name, null, 5, 'so-ml'); });
+  });
+  (D.moons || []).forEach(function(mo){ if (!pos[HZ[mo.center]]) V3.bodies[mo.name].visible = false; });
+  var rebuild = V3.trailT !== t;
+  MISSIONS.forEach(function(m){
+    var P = V3.probes[m.id], s = probe(m.id), st = status(m, t); P.dot.visible = P.trail.visible = P.orb.visible = false;
+    if (!s || st.k === 'avant') return;
+    var arr = (m.events || []).filter(function(e){ return e.type === 'arrival' || e.type === 'orbit'; })[0], tc = arr ? day(arr.date) : Infinity;
+    if (S.R > 0.02){ if (rebuild) P.trail.geometry.setFromPoints(trail3(m, s, Math.min(t, tc, s.t + s.step * (s.n - 1)))); P.trail.visible = true; P.trail.material.opacity = st.k === 'fin' ? 0.35 : 1; P.trail.material.transparent = st.k === 'fin'; }
+    if (st.k === 'fin') return;
+    var p3 = pos3('probe:' + m.id, t); if (!p3) return;
+    if (st.k === 'orbite'){
+      var ob = orbitAt(m.id, t), bp = pos[st.body] || pos3(st.body, t);
+      if (ob && bp){ var sm = ob.s, pts = [], nn = sm.per ? Math.min(sm.xy.length / 2, Math.ceil(sm.per) + 2) : sm.xy.length / 2;
+        for (var i = 0; i < nn; i++) pts.push(v3([bp[0] + sm.xy[2*i] / AU, bp[1] + sm.xy[2*i+1] / AU, bp[2] + (sm.z ? sm.z[i] : 0) / AU], tg));
+        P.orb.geometry.setFromPoints(pts); P.orb.visible = sm.rmax / AU > cam.position.distanceTo(v3(bp, tg)) * px * 9;
+        var oq = P.orb.visible && onOrbit(sm, t), zz = 0;
+        if (oq){ var j = Math.min(sm.z ? sm.z.length - 1 : 0, Math.round((t - sm.tt) * 1440 / sm.step_min % (sm.per || 1e9))); zz = sm.z ? sm.z[Math.max(0, j)] : 0; p3 = [bp[0] + oq[0] / AU, bp[1] + oq[1] / AU, bp[2] + zz / AU]; }
+        else if (P.orb.visible) p3 = null;
+      }
+      if (!p3){ lab(v3(bp, tg), m.short, 'probe:' + m.id, P.c, 6, 'so-pl'); return; }
+    }
+    P.dot.visible = true; var pv = size(P.dot, p3, 0, 4); lab(pv, m.short, 'probe:' + m.id, P.c, 6, 'so-pl');
+  });
+  V3.trailT = t;
+  V3.renderer.render(V3.scene, cam);
+  V3.labs.innerHTML = html; S.hits = hits;
+  ui();
+}
+function events3(cv){
+  var P = {}, drag = null, tip = $('so-tip');
+  function loc(e){ var r = cv.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; }
+  function zoom3(f){ S.R = Math.min(RMAX, Math.max(RMIN, S.R * f)); S.goal = null; follow(); kick(); }
+  cv.addEventListener('wheel', function(e){ e.preventDefault(); zoom3(Math.exp(Math.max(-1, Math.min(1, e.deltaY * (e.deltaMode ? 0.05 : 0.0018))))); }, { passive:false });
+  cv.addEventListener('dblclick', function(e){ zoom3(e.shiftKey ? 2.5 : 0.4); });
+  cv.addEventListener('pointerdown', function(e){ try { cv.setPointerCapture(e.pointerId); } catch(x){} P[e.pointerId] = loc(e); drag = { moved:0 }; });
+  cv.addEventListener('pointermove', function(e){
+    var p = loc(e), ids = Object.keys(P);
+    if (ids.length === 2 && P[e.pointerId]){ var o = ids.filter(function(i){ return +i !== e.pointerId; })[0], a = P[o], b0 = P[e.pointerId], d0 = Math.hypot(a[0] - b0[0], a[1] - b0[1]), d1 = Math.hypot(a[0] - p[0], a[1] - p[1]);
+      P[e.pointerId] = p; if (d0 > 0 && d1 > 0) zoom3(d0 / d1); if (drag) drag.moved = 99; return; }
+    if (P[e.pointerId] && drag){ var q = P[e.pointerId]; drag.moved += Math.hypot(p[0] - q[0], p[1] - q[1]); P[e.pointerId] = p;
+      if (drag.moved > 4){ S.az += (p[0] - q[0]) * 0.008; S.el = Math.max(-1.45, Math.min(1.45, S.el + (p[1] - q[1]) * 0.008)); kick(); tip.hidden = true; return; } }
+    var h = hitAt(p[0], p[1]); tip.hidden = !h; if (h){ tip.textContent = h[2]; tip.style.left = (p[0] + 22) + 'px'; tip.style.top = (p[1] - 6) + 'px'; }
+    cv.style.cursor = h && h[3] != null ? 'pointer' : 'grab';
+  });
+  function up(e){ var p = loc(e); delete P[e.pointerId];
+    if (drag && drag.moved <= 4 && !Object.keys(P).length){ var h = hitAt(p[0], p[1]); if (h && h[3] != null) setFocus(h[3]); }
+    if (!Object.keys(P).length) drag = null; }
+  cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', function(e){ delete P[e.pointerId]; drag = null; });
+  cv.addEventListener('pointerleave', function(){ tip.hidden = true; });
+  /* clavier : flèches pour tourner, + et − pour zoomer */
+  cv.addEventListener('keydown', function(e){
+    var k = e.key, d = 0.08;
+    if (k === 'ArrowLeft') S.az -= d; else if (k === 'ArrowRight') S.az += d; else if (k === 'ArrowUp') S.el = Math.min(1.45, S.el + d); else if (k === 'ArrowDown') S.el = Math.max(-1.45, S.el - d);
+    else if (k === '+' || k === '=') return zoom3(1 / 1.4), e.preventDefault(); else if (k === '-') return zoom3(1.4), e.preventDefault(); else return;
+    e.preventDefault(); kick(); });
+}
+function setMode(m){
+  if (m === '3d' && !init3()){ S.mode = '2d'; $('so-3d').hidden = true; return; }
+  S.mode = m; var is3 = m === '3d', b = $('so-3d');
+  $('so-svg').style.display = is3 ? 'none' : ''; if (V3){ V3.renderer.domElement.style.display = is3 ? '' : 'none'; V3.labs.style.display = is3 ? '' : 'none'; }
+  b.setAttribute('aria-pressed', is3); b.textContent = T(is3 ? 'Vue de dessus' : 'Vue 3D');
+  note(); kick();
 }
 
 /* ---------- animation et caméra ---------- */
@@ -4248,6 +4422,7 @@ function stop(){ S.run = false; S.last = 0; if (S.raf) cancelAnimationFrame(S.ra
 function play(on){ S.run = on; if (on && S.t >= T1 - 0.01) S.t = T0; S.last = 0; kick(); }
 /* zoom autour d'un point de l'écran : le point visé reste sous le curseur ; trop loin, la vue cesse de suivre */
 function zoomAt(px, py, f){
+  if (S.mode === '3d'){ S.R = Math.min(RMAX, Math.max(RMIN, S.R * f)); S.goal = null; follow(); kick(); return; }
   var svg = $('so-svg'), w = svg.clientWidth, h = svg.clientHeight, k = 2 * S.R / Math.min(w, h);
   var wx = S.c[0] + (px - w / 2) * k, wy = S.c[1] - (py - h / 2) * k;
   S.R = Math.min(RMAX, Math.max(RMIN, S.R * f)); var k2 = 2 * S.R / Math.min(w, h);
@@ -4267,6 +4442,8 @@ function mount(){
   var inp = $('so-t'); inp.min = T0; inp.max = T1;
   if (S.t == null || S.t < T0 || S.t > T1) S.t = Math.min(T1, now());   /* par défaut : maintenant */
   side(); moonsPanel(); note();
+  $('so-3d').addEventListener('click', function(){ setMode(S.mode === '3d' ? '2d' : '3d'); });
+  if (S.mode === '3d') setMode('3d');
   inp.addEventListener('input', function(){ S.t = +inp.value; kick(); });
   $('so-now').addEventListener('click', function(){ S.t = Math.min(T1, now()); kick(); });
   $('so-speed').addEventListener('change', function(e){ S.speed = +e.target.value; kick(); });

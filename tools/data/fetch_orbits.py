@@ -62,12 +62,12 @@ def query(cmd, center, start, stop, step, units="AU-D"):
     m = re.search(r"\$\$SOE(.*?)\$\$EOE", res, re.S)
     if not m: raise RuntimeError("réponse Horizons sans vecteurs pour " + cmd + " : " + res[:300])
     return [l for l in m.group(1).strip().splitlines()]
-def vectors(cmd, center, start, stop, step, prec=5):
+def vectors(cmd, center, start, stop, step, prec=5, z=False):
     out = []
     for line in query(cmd, center, start, stop, step):
         p = [x.strip() for x in line.split(",")]
         d = p[1].replace("A.D. ", "")
-        out.append([d[:11] if step.endswith("d") else d[:17], round(float(p[2]), prec), round(float(p[3]), prec)])   # date, x, y (UA)
+        out.append([d[:11] if step.endswith("d") else d[:17], round(float(p[2]), prec), round(float(p[3]), prec)] + ([round(float(p[4]), prec)] if z else []))   # date, x, y (UA) [, z]
     return out
 def position(cmd, center, date, prec):
     d = datetime.date.fromisoformat(date)
@@ -87,7 +87,7 @@ def build(mid, c):
     json.dump(data, open(path, "w"), separators=(",", ":"), ensure_ascii=False)
     print(mid, len(data["probe"]), "points ->", path)
 # vue d'ensemble (accueil « Système solaire ») : positions héliocentriques des planètes, de Pluton et des sondes, éléments des satellites, à pas régulier,
-# du lancement de Cassini à aujourd'hui ; chaque série = { t0, step (jours), xy:[x0, y0, x1, y1, …] } en UA (3 décimales ≈ 150 000 km)
+# du lancement de Cassini à aujourd'hui ; chaque série = { t0, step (jours), xy:[x0, y0, x1, y1, …], z:[z0, z1, …] } en UA (3 décimales ≈ 150 000 km)
 SOLAR_T0 = "1997-10-01"
 # planètes et Pluton : (nom, id Horizons, pas de la série datée en jours, période orbitale approchée en jours, servant seulement à
 # échantillonner un tour complet pour tracer l'orbite)
@@ -150,8 +150,9 @@ def probe_orbits(today):
         out.append({"id": mid, "body": body, "center": cen, "samples": samples})
     return out
 def series(cmd, start, stop, step_d):
-    v = vectors(cmd, SUN, start, stop, f"{step_d} d", 3)
-    return {"t0": v[0][0], "step": step_d, "n": len(v), "xy": [c for p in v for c in p[1:]]}
+    # z : hauteur au-dessus du plan de l'écliptique (UA), pour la vue 3D de l'accueil
+    v = vectors(cmd, SUN, start, stop, f"{step_d} d", 3, z=True)
+    return {"t0": v[0][0], "step": step_d, "n": len(v), "xy": [c for p in v for c in p[1:3]], "z": [p[3] for p in v]}
 def solar():
     today = datetime.date.today().isoformat()
     # planètes et satellites : jusqu'à deux ans après le téléchargement (éphémérides calculées par Horizons, signalées « prévision » sur la page),
@@ -163,7 +164,7 @@ def solar():
     for name, hid, st, per in PLANETS:
         o0 = d0 if per < 60000 else datetime.date(1950, 1, 1)   # Horizons ne donne pas Pluton après 2199 : son tour commence en 1950
         o = series(hid, o0.isoformat(), (o0 + datetime.timedelta(days=per + per // 240 + 1)).isoformat(), max(1, per // 240))
-        out["planets"].append(dict(name=name, horizons=hid, orbit=o["xy"], **series(hid, SOLAR_T0, until, st)))
+        out["planets"].append(dict(name=name, horizons=hid, orbit=o["xy"], orbit_z=o["z"], **series(hid, SOLAR_T0, until, st)))
         print("planète", name, out["planets"][-1]["n"], "orbite", o["n"])
     out["moons"] = []
     for name, hid, center in MOONS:
