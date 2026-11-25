@@ -1,0 +1,39 @@
+name: Liens et licences
+# Chaque mois : vérifie toutes les adresses citées (registre des crédits, sources des fiches) et le texte des pages de licence
+# (socle/data/check_links.py). S'il y a quelque chose à relire, ouvre ou met à jour l'issue « Liens et licences à relire ».
+# Rien n'est retiré automatiquement.
+on:
+  schedule:
+    - cron: '0 18 1 * *'   # le 1er du mois, 19 h ou 20 h à Paris, hors des heures sans commit
+  workflow_dispatch:
+permissions:
+  contents: write
+  issues: write
+concurrency: { group: liens, cancel-in-progress: false }
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - run: pip install --quiet requests
+      - name: Vérifier les liens et les licences
+        id: check
+        run: python socle/data/check_links.py --report rapport.md
+        continue-on-error: true
+      - name: Garder les empreintes des pages de licence
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add tools/liens-etat.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Liens et licences : vérification mensuelle"
+          git pull --rebase origin main && git push
+      - name: Issue à relire
+        if: steps.check.outcome == 'failure'
+        env: { GH_TOKEN: '${{ github.token }}' }
+        run: |
+          n=$(gh issue list --state open --search 'in:title "Liens et licences à relire"' --json number --jq '.[0].number')
+          if [ -n "$n" ]; then gh issue comment "$n" --body-file rapport.md; else gh issue create --title "Liens et licences à relire" --body-file rapport.md; fi

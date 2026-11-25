@@ -120,7 +120,7 @@ function highlight(){
   M.meshes.forEach(function(o){ var m = o.material, k = o.userData.part; if (!m.emissive) return;
     if (m.userData.c0 === undefined){ m.userData.c0 = m.color.clone(); m.userData.e0 = m.emissive.clone(); }
     m.emissive.copy(m.userData.e0); m.color.copy(m.userData.c0);
-    if (k && k === sel){ m.emissive.setHex(0x3D7BFF); m.emissiveIntensity = 0.35; }
+    if (k && k === sel){ m.emissive.setHex({{mark3d}}); m.emissiveIntensity = 0.35; }
     else if (k && k === hov){ m.emissive.setHex(0xffffff); m.emissiveIntensity = 0.1; }
     else if (sel) m.color.multiplyScalar(0.5); });
 }

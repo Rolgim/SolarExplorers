@@ -3,7 +3,7 @@
    Les textes français sont dans les sources ; les textes anglais sont dans src/en/ et appliqués par src/i18n.js. */
 var OBS_LANG = (function(){
   var m = /^#(en|fr)-/.exec(location.hash || ''), v = m && m[1];
-  if (!v) try { v = localStorage.getItem('sse-lang'); } catch(e){}
+  if (!v) try { v = localStorage.getItem('{{langKey}}'); } catch(e){}
   if (v !== 'en' && v !== 'fr') v = 'en';   /* anglais par défaut ; le français se choisit par le bouton FR ou un lien #fr-… */
   try { document.documentElement.lang = v; } catch(e){}
   return v;

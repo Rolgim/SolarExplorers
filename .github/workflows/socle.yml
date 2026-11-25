@@ -1,0 +1,26 @@
+name: Socle commun
+# Chaque lundi soir : copie le socle depuis Rolgim/rolgim.github.io (dossier socle/) et, s'il a changé,
+# pousse la mise à jour sur la branche socle-maj (le workflow Tests la vérifie ; à fusionner après relecture).
+on:
+  schedule:
+    - cron: '30 17 * * 1'   # 18 h 30 ou 19 h 30 à Paris, hors des heures sans commit
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  sync:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: node socle/sync.js
+      - name: Pousser sur socle-maj si le socle a changé
+        run: |
+          git add -A socle socle.lock.json index.html
+          git diff --cached --quiet && echo "Socle déjà à jour" && exit 0
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Socle commun : mise à jour depuis Rolgim/rolgim.github.io"
+          git push -f origin HEAD:socle-maj
+          echo "::notice::Socle mis à jour sur la branche socle-maj : ouvrir une pull request vers main"
