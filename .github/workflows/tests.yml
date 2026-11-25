@@ -10,7 +10,7 @@ jobs:
   smoke:
     # ubuntu-latest est passé à 26.04, que Playwright 1.56 ne prend pas en charge
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    timeout-minutes: 45   # le parcours a11y des 172 pages dépasse 20 min
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
