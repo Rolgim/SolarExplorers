@@ -1,5 +1,6 @@
 /* Textes d'interface en anglais : clé = texte français tel qu'il est écrit dans le code ou dans body.html. */
 var EN_UI = {
+  "Page d'accueil des trois sites":"Home page of the three sites",
   'orbite en schéma de principe (tailles, altitude, inclinaison et vitesse non respectées)':'schematic orbit (sizes, altitude, inclination and speed not to scale)',
   'Vue d\'orbite':'Orbit view', 'Pause':'Pause', 'Sonde':'Spacecraft',
   "Solar System Scope, texture « Mars » 2k, d'après des données de la NASA":'Solar System Scope, 2k “Mars” texture, based on NASA data',

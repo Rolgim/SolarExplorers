@@ -7,6 +7,8 @@
 'use strict';
 function $(id){ return document.getElementById(id); }
 function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+/* titre et maison de l'en-tête : page d'accueil commune des trois sites (https://rolgim.github.io/), dans la même langue */
+document.querySelectorAll('.hub-link, .home-link').forEach(function(a){ a.href = 'https://rolgim.github.io/#' + OBS_LANG; });
 function mission(id){ for (var i = 0; i < MISSIONS.length; i++) if (MISSIONS[i].id === id) return MISSIONS[i]; return null; }
 var T = OBS_T;
 
