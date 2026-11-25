@@ -35,7 +35,9 @@
     "socle:viewer.js",
     "solar.js",
     "views.js",
-    "optics.js",
+    "optics-data.js",
+    "socle:optics.js",
+    "socle:missionkit.js",
     "missionpage.js",
     "app.js"
   ]
