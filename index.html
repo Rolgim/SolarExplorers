@@ -4270,6 +4270,21 @@ function pos3(f, t){
   var mo = (D.moons || []).filter(function(x){ return x.name === f; })[0]; if (!mo) return null;
   var c = pos3(HZ[mo.center], t), o = moon3(mo, t); return c && [c[0] + o[0] / AU, c[1] + o[1] / AU, c[2] + o[2] / AU];
 }
+var ARC_K = 6, ARC_N = 160;   /* l'arc fin remplace ARC_K sommets de part et d'autre de la planète, avec ARC_N points */
+var PERIOD = { 'Mercure':87.969, 'Vénus':224.701, 'Terre':365.256, 'Mars':686.98, 'Jupiter':4332.59, 'Saturne':10759.22, 'Uranus':30688.5, 'Neptune':60182, 'Pluton':90560 };   /* périodes sidérales, jours (NSSDCA) */
+function arc3(p, t){
+  var o = p._orb; if (!o) return; var q = at(p, t), arr = o.line.geometry.attributes.position.array, k = 0, i, j;
+  function put(x, y, z){ arr[k++] = x; arr[k++] = z; arr[k++] = -y; }
+  /* sommet de la boucle le plus proche de la planète */
+  var best = 0, bd = Infinity; if (q) for (i = 0; i < o.N; i++){ var d = (o.a[2*i] - q[0]) * (o.a[2*i] - q[0]) + (o.a[2*i+1] - q[1]) * (o.a[2*i+1] - q[1]); if (d < bd){ bd = d; best = i; } }
+  var dt = (PERIOD[p.name] || 365.25) / o.N, ok = !!q && at(p, t - o.M * dt) && at(p, t + o.M * dt);
+  for (j = o.M + 1; j < o.N - o.M; j++){ i = (best + j) % o.N; put(o.a[2*i], o.a[2*i+1], o.z[i] || 0); }
+  for (j = 0; j < ARC_N; j++){
+    if (ok){ var tt = t + (j / (ARC_N - 1) * 2 - 1) * o.M * dt, r = at(p, tt); put(r[0], r[1], atz(p, tt)); }
+    else { i = (best - o.M + Math.round(j / (ARC_N - 1) * 2 * o.M) + o.N) % o.N; put(o.a[2*i], o.a[2*i+1], o.z[i] || 0); }
+  }
+  o.line.geometry.attributes.position.needsUpdate = true;
+}
 function v3(p, o){ return new THREE.Vector3(p[0] - o[0], p[2] - o[2], -(p[1] - o[1])); }
 function init3(){
   var wrap = $('so-wrap');
@@ -4285,9 +4300,12 @@ function init3(){
   var bodies = {}, orbits = new THREE.Group(); root.add(orbits);
   D.planets.forEach(function(p){
     bodies[p.name] = new THREE.Mesh(ball, new THREE.MeshLambertMaterial({ color:PCOL[p.name] })); scene.add(bodies[p.name]);
-    var a = loop(p), oz = p.orbit_z || [], pts = [];
-    for (var i = 0; i < a.length; i += 2) pts.push(new THREE.Vector3(a[i], oz[i / 2] || 0, -a[i + 1]));
-    var ln = new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color:PCOL[p.name], transparent:true, opacity:0.5 })); orbits.add(ln);
+    /* orbite : la boucle d'un tour (un point par degré environ) ; autour de la planète, un arc fin recalculé à chaque image
+       avec la même interpolation que sa position (arc3), sinon, de près, la planète semble tourner autour des cordes de la boucle */
+    var a = loop(p), N = a.length / 2, M = Math.min(ARC_K, Math.floor(N / 4)), cnt = N - (2 * M + 1) + ARC_N;
+    var g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(cnt * 3), 3));
+    var ln = new THREE.LineLoop(g, new THREE.LineBasicMaterial({ color:PCOL[p.name], transparent:true, opacity:0.5 })); ln.frustumCulled = false; orbits.add(ln);
+    p._orb = { line:ln, a:a, z:p.orbit_z || [], N:N, M:M };
   });
   (D.moons || []).forEach(function(m){ bodies[m.name] = new THREE.Mesh(ball, new THREE.MeshLambertMaterial({ color:0xE3E6E8 })); scene.add(bodies[m.name]); });
   var probes = {};
@@ -4333,7 +4351,7 @@ function render3(){
   }
   var sp = size(V3.sun, [0, 0, 0], RSUN, 6); V3.light.position.copy(sp); lab(sp, T('Soleil'), '', null, 8);
   var pos = {};
-  D.planets.forEach(function(p){ var q = pos3(p.name, t), m = V3.bodies[p.name]; m.visible = !!q; if (!q) return; pos[p.name] = q;
+  D.planets.forEach(function(p){ var q = pos3(p.name, t), m = V3.bodies[p.name]; arc3(p, t); m.visible = !!q; if (!q) return; pos[p.name] = q;
     var v = size(m, q, RAD[p.name], 4.5); if (m.scale.x > cam.position.distanceTo(v) * px * 8) occ.push([v.clone(), m.scale.x]); lab(v, T(p.name), p.name, null, 8);
     moonsOf(p.name).forEach(function(mo){ var el = moonEl(mo, t), mm = V3.bodies[mo.name], far = el[1] / AU < cam.position.distanceTo(v) * px * 5;
       mm.visible = !far; if (far) return; var o = moon3(mo, t), mq = [q[0] + o[0] / AU, q[1] + o[1] / AU, q[2] + o[2] / AU];
