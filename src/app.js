@@ -54,7 +54,7 @@ function fiche(m){
   var h = '<p class="desc">' + esc(m.desc || '') + '</p>';
   (m.sections || []).forEach(function(sec){
     h += '<h3>' + esc(sec.title) + '</h3><table class="sk-table"><tbody>' + sec.rows.map(function(r){
-      return '<tr><th scope="row">' + esc(r[0]) + '</th><td>' + esc(OBS_NUM(r[1])) + src(m, r[2]) + '</td></tr>';
+      return '<tr><th scope="row">' + esc(r[0]) + '</th><td>' + LaunchLinks.html(esc(OBS_NUM(r[1]))) + src(m, r[2]) + '</td></tr>';
     }).join('') + '</tbody></table>';
   });
   return h + bodyCredit(m) + '<button class="cta" data-go="' + m.id + '-donnees">' + T('Mission et instruments') + '<small>' + T('Instruments, trajectoire réelle et données tirées des archives.') + '</small></button>';

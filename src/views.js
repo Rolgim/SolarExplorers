@@ -141,7 +141,7 @@ function rowsTable(L, idx, title, cap){
   var rows = '';
   L.forEach(function(m){ var s = m.sections && m.sections[idx]; if (!s) return;
     s.rows.forEach(function(r, j){ rows += '<tr' + (j ? '' : ' class="first"') + '><td class="o" style="--c:' + col(m) + '">' + (j ? '' : '<a href="#' + m.id + '">' + esc(m.short) + '</a><small class="cp-sec">' + esc(s.title) + '</small>') + '</td>' +
-      '<td class="n">' + esc(r[0]) + '</td><td>' + esc(OBS_NUM(r[1])) + src(m, r[2]) + '</td></tr>'; }); });
+      '<td class="n">' + esc(r[0]) + '</td><td>' + LaunchLinks.html(esc(OBS_NUM(r[1]))) + src(m, r[2]) + '</td></tr>'; }); });
   return '<div class="isec"><h3>' + esc(T(title)) + '</h3><div class="tablewrap"><table class="ctable cp-rows"><thead><tr><th scope="col">' + esc(T('Mission')) + '</th><th scope="col">' + esc(T('Élément')) + '</th><th scope="col">' + esc(T('Valeur et source')) + '</th></tr></thead><tbody>' + rows + '</tbody></table></div>' +
     '<div class="cap">' + esc(T(cap)) + '</div></div>';
 }
