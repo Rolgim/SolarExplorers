@@ -39,6 +39,7 @@
     "socle:optics.js",
     "socle:missionkit.js",
     "missionpage.js",
+    "socle:launchlinks.js",
     "app.js"
   ]
 }

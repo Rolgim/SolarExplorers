@@ -4651,7 +4651,7 @@ function rowsTable(L, idx, title, cap){
   var rows = '';
   L.forEach(function(m){ var s = m.sections && m.sections[idx]; if (!s) return;
     s.rows.forEach(function(r, j){ rows += '<tr' + (j ? '' : ' class="first"') + '><td class="o" style="--c:' + col(m) + '">' + (j ? '' : '<a href="#' + m.id + '">' + esc(m.short) + '</a><small class="cp-sec">' + esc(s.title) + '</small>') + '</td>' +
-      '<td class="n">' + esc(r[0]) + '</td><td>' + esc(OBS_NUM(r[1])) + src(m, r[2]) + '</td></tr>'; }); });
+      '<td class="n">' + esc(r[0]) + '</td><td>' + LaunchLinks.html(esc(OBS_NUM(r[1]))) + src(m, r[2]) + '</td></tr>'; }); });
   return '<div class="isec"><h3>' + esc(T(title)) + '</h3><div class="tablewrap"><table class="ctable cp-rows"><thead><tr><th scope="col">' + esc(T('Mission')) + '</th><th scope="col">' + esc(T('Élément')) + '</th><th scope="col">' + esc(T('Valeur et source')) + '</th></tr></thead><tbody>' + rows + '</tbody></table></div>' +
     '<div class="cap">' + esc(T(cap)) + '</div></div>';
 }
@@ -5185,6 +5185,36 @@ function html(m, sec, X){
 return { html:html };
 })();
 
+/* Liens vers le site des lanceurs (https://rolgim.github.io/Launchers/) : dans un texte déjà échappé (fiche, déroulé de mission),
+   le nom d'un lanceur présent sur ce site devient un lien vers sa page, dans la langue de la page.
+   LaunchLinks.html(texteÉchappé) -> HTML ; un lien par lanceur et par texte au plus.
+   Prudence : « Soyouz-Fregat » n'est relié à Soyouz-2 que depuis Kourou (Soyouz ST, de la famille Soyouz-2) ; les Soyouz-FG/Fregat
+   de Baïkonour (Mars Express, Venus Express) n'en sont pas. Vega (sans « -C ») n'a pas de page. */
+var LaunchLinks = (function(){
+  var L = [
+    [/Falcon Heavy/, 'falconheavy'],
+    [/Falcon 9/, 'falcon9'],
+    [/Ariane 6(?:2|4)?\b/, 'ariane6'],
+    [/Ariane 5(?: ECA| ES| GS| G\+?)?/, 'ariane5'],
+    [/Vega-C/, 'vegac'],
+    [/\bSLS\b/, 'sls'],
+    [/Soyouz-2(?:\.1[ab])?|Soyuz-2(?:\.1[ab])?|(?:Soyouz|Soyuz)[- ]Fr[ée]gat[e]?(?=,? (?:depuis |from )?Kourou)/, 'soyuz2'],
+    [/Longue Marche 5B?|Long March 5B?/, 'cz5'],
+    [/\bVega\b(?![- ]?C\b)/, 'vega'], [/Saturn V\b/, 'saturnv'],
+    [/[Nn]avette(?: spatiale)?(?: (?:Atlantis|Discovery|Columbia|Endeavour|Challenger))?|Space Shuttle(?: (?:Atlantis|Discovery|Columbia|Endeavour|Challenger))?/, 'shuttle'],
+    [/Delta II\b(?: Heavy| \d{4}H?(?:-\d+L)?)?/, 'delta2'], [/Atlas V\b(?: \d{3})?/, 'atlas5'], [/Titan IVB?(?:\/Centaur)?/, 'titan4'],
+    [/Proton-M(?:\/(?:Briz|Breeze)-M)?/, 'protonm'], [/\bH-IIA\b/, 'h2a'], [/\bPSLV(?:-C\d+|-XL)?\b/, 'pslv']
+  ];
+  function html(h){
+    var en = typeof OBS_LANG !== 'undefined' && OBS_LANG === 'en', title = en ? 'Launcher page, on the Launchers site' : 'Page du lanceur, sur le site Lanceurs';
+    L.forEach(function(p){
+      h = h.replace(p[0], function(m){ return '<a class="ln-link" href="https://rolgim.github.io/Launchers/#' + (en ? 'en' : 'fr') + '-' + p[1] + '" title="' + title + '">' + m + '</a>'; });
+    });
+    return h;
+  }
+  return { html:html };
+})();
+
 /* =================================================================
    APPLICATION — en-tête, routage par ancre, pages.
    Squelette (étape 1 du dossier de lancement) : la vue 3D d'Observatories v1.0 (src/app.js là-bas)
@@ -5241,7 +5271,7 @@ function fiche(m){
   var h = '<p class="desc">' + esc(m.desc || '') + '</p>';
   (m.sections || []).forEach(function(sec){
     h += '<h3>' + esc(sec.title) + '</h3><table class="sk-table"><tbody>' + sec.rows.map(function(r){
-      return '<tr><th scope="row">' + esc(r[0]) + '</th><td>' + esc(OBS_NUM(r[1])) + src(m, r[2]) + '</td></tr>';
+      return '<tr><th scope="row">' + esc(r[0]) + '</th><td>' + LaunchLinks.html(esc(OBS_NUM(r[1]))) + src(m, r[2]) + '</td></tr>';
     }).join('') + '</tbody></table>';
   });
   return h + bodyCredit(m) + '<button class="cta" data-go="' + m.id + '-donnees">' + T('Mission et instruments') + '<small>' + T('Instruments, trajectoire réelle et données tirées des archives.') + '</small></button>';
